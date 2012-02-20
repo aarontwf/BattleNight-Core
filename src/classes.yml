@@ -1,0 +1,32 @@
+# BattleNight Version: 1.0.7
+# Classes Configuration File
+#
+# Add Classes as you wish but do not use spaces in names.
+# Items are i:dxa, i=Item d=data a=Ammount.  Data and ammount are optional
+# Each class must have at least 2 items, use the dummyitem if you only want 1
+# The DummyItem can also be used as a spacer (examples bellow)
+# Remember, potions can not be stacked
+
+DummyItem: 6
+
+Classes:
+    Pyro:
+        Armor: 298,299,300,301
+        Items: 259,46x2,6,6,6,6,6,6,373:8195
+    Tank:
+        Armor: 310,311,312,313
+        Items: 272,6
+    Swordsman:
+        Armor: 306,307,308,309
+        Items: 276,6,6,6,6,6,6,6,373:8233
+    Archer:
+        Armor: 302,303,304,305
+        Items: 261,262x64,262x64
+    Medic:
+        Armor: 298,303,304,305
+        Items: 283,6,322x4,6,373:16389,373:16389,373:16385
+    Magician:
+        Armor: 6,6
+        Items: 268,6,373:8258,6,6,373:16388,373:16392,373:16394,373:16396
+        
+        

@@ -1,0 +1,39 @@
+name: BattleNight
+author: LimeByte
+version: 1.0.7
+description: Player Vs Player, RPG like Battle.
+
+main: me.limebyte.battlenight.core.BattleNight
+load: POSTWORLD
+
+website: http://dev.bukkit.org/server-mods/battlenight/
+dev-url: http://dev.bukkit.org/server-mods/battlenight/
+database: false
+
+softdepend: [Pail]
+
+commands:
+  bn:
+    description: Base command for the BattleNight plug-in.
+    aliases: [battlenight, battleknight, bnight]
+    usage: |
+        /<command> help - Show the help menu
+        
+permissions:
+    battlenight.user:
+        description: Allows you to use user commands.
+        default: false
+    battlenight.moderator:
+        description: Allows you to use moderator commands.
+        default: false
+    battlenight.admin:
+        description: Allows you to use admin commands.
+        default: false
+        
+    battlenight.*:
+        description: Gives you all BattleNight permissions.
+        default: false
+        children:
+            battlenight.user: true
+            battlenight.admin: true
+            battlenight.moderator: true

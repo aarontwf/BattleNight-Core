@@ -1,0 +1,23 @@
+# BattleNight Version: 1.0.7
+# Main Configuration File
+#
+# Set classes in classes.yml
+# StopHealthRegen sets the users hunger level at a neutral postion where it prevents health regeneration.
+# FriendlyFire when disabled, stops players on the same team attacking each other.
+# InventoryType is what you want to do with the players inventory when they join a Battle.
+# Possibe InventoryType values: prompt, clear
+# ReadyBlock is the block you punch when your team is ready.
+# Debug just adds more details on plugin enable.
+# Remember to use spaces not tabs.
+
+UsePermissions: false
+
+FriendlyFire: false
+
+StopHealthRegen: true
+
+InventoryType: prompt
+
+ReadyBlock: 42
+
+Debug: false
