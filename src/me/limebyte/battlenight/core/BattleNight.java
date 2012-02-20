@@ -417,11 +417,11 @@ public class BattleNight extends JavaPlugin {
 					}
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("kick") && hasPerm(Perm.ADMIN, player)) {
+				else if (fightCmd[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, player)) {
 					tellPlayer(player, Track.SPECIFY_PLAYER);
 				}
 
-				else if ((fightCmd[0].equalsIgnoreCase("kickall") || fightCmd[0].equalsIgnoreCase("endgame")) && hasPerm(Perm.ADMIN, player)) {
+				else if ((fightCmd[0].equalsIgnoreCase("kickall") || fightCmd[0].equalsIgnoreCase("endgame")) && hasPerm(Perm.MOD, player)) {
 					endBattle();
 					tellPlayer(player, Track.BATTLE_ENDED);
 				}
@@ -474,7 +474,7 @@ public class BattleNight extends JavaPlugin {
 				}
 			}
 			if (args.length == 2) {
-				if (fightCmd[0].equalsIgnoreCase("kick") && hasPerm(Perm.ADMIN, player)) {
+				if (fightCmd[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, player)) {
 					Player badplayer = Bukkit.getPlayerExact(fightCmd[1]);
 					if (badplayer.isOnline()) {
 						if (BattleUsersTeam.containsKey(badplayer.getName())) {
@@ -867,7 +867,7 @@ public class BattleNight extends JavaPlugin {
 	}
 
 	public enum Perm {
-		ADMIN, USER
+		ADMIN, MOD, USER
 	}
 
 	public boolean hasPerm(BattleNight.Perm perm, Player player){
@@ -876,6 +876,18 @@ public class BattleNight extends JavaPlugin {
 				return true;
 			}
 			else if((configUsePermissions && !player.hasPermission("battlenight.admin")) || (!configUsePermissions && !player.isOp())){
+				tellPlayer(player, Track.NO_PERMISSION);
+				return false;
+			} else {
+				tellPlayer(player, Track.CONFIG_UNSET);
+				return false;
+			}
+		}
+		if(perm.equals(Perm.MOD)){
+			if((configUsePermissions && player.hasPermission("battlenight.moderator")) || (!configUsePermissions && player.isOp())){
+				return true;
+			}
+			else if((configUsePermissions && !player.hasPermission("battlenight.moderator")) || (!configUsePermissions && !player.isOp())){
 				tellPlayer(player, Track.NO_PERMISSION);
 				return false;
 			} else {
