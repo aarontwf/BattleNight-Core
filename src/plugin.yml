@@ -10,8 +10,6 @@ website: http://dev.bukkit.org/server-mods/battlenight/
 dev-url: http://dev.bukkit.org/server-mods/battlenight/
 database: false
 
-softdepend: [Pail]
-
 commands:
   bn:
     description: Base command for the BattleNight plug-in.
