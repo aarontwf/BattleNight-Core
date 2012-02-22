@@ -1,7 +1,7 @@
 name: BattleNight
 author: LimeByte
 version: 1.0.7
-description: Player Vs Player, RPG like Battle.
+description: Player Vs Player Arena Battle plugin.
 
 main: me.limebyte.battlenight.core.BattleNight
 load: POSTWORLD
