@@ -120,9 +120,6 @@ public class BattleNight extends JavaPlugin {
 	//////////////////////
 	public void onEnable() {
 
-		// Enabling Message
-		log.info("[BattleNight] enabling...");
-
 		// Initialise Files and FileConfigurations
 		configFile = new File(getDataFolder(), "config.yml");							///////////////////////////////////////////////////////////
 		classesFile = new File(getDataFolder(), "classes.yml");							//  Creates Virtual Files( /Plugins/BattleNight/*.yml )  //
