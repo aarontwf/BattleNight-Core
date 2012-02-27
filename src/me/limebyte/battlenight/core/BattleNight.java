@@ -367,7 +367,6 @@ public class BattleNight extends JavaPlugin {
 									player.getInventory().clear();
 									clearArmorSlots(player);
 									player.setGameMode(GameMode.SURVIVAL);
-									player.setPlayerListName(ChatColor.BLUE + player.getName());
 									goToWaypoint(player, "bluelounge");
 									BattleUsersTeam.put(player.getName(), "blue");
 									tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
@@ -376,10 +375,10 @@ public class BattleNight extends JavaPlugin {
 									playersInLounge = true;
 									if(player.getName().length() > 15) {
 										int ammountOffName = player.getName().length() -15;
-										player.setPlayerListName(ChatColor.RED + shortenString(player.getName(), ammountOffName));
+										player.setPlayerListName(ChatColor.BLUE + shortenString(player.getName(), ammountOffName));
 									}
 									else {
-										player.setPlayerListName(ChatColor.RED + player.getName());
+										player.setPlayerListName(ChatColor.BLUE + player.getName());
 									}
 								}
 							}
