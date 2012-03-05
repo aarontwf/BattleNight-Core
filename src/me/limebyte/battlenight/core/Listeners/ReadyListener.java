@@ -35,7 +35,7 @@ public class ReadyListener implements Listener {
 					if ((plugin.teamReady("blue")) && (plugin.blueTeamIronClicked)) {
 						plugin.playersInLounge = false;
 						plugin.teleportAllToSpawn();
-						setHunger();
+						preparePlayer();
 						plugin.battleInProgress = true;
 						plugin.tellEveryone("Let the Battle begin!");
 					}
@@ -46,7 +46,7 @@ public class ReadyListener implements Listener {
 					if ((plugin.teamReady("red")) && (plugin.redTeamIronClicked)) {
 						plugin.playersInLounge = false;
 						plugin.teleportAllToSpawn();
-						setHunger();
+						preparePlayer();
 						plugin.battleInProgress = true;
 						plugin.tellEveryone("Let the Battle begin!");
 					}
@@ -58,13 +58,14 @@ public class ReadyListener implements Listener {
 		}
 	}
 	
-	public void setHunger() {
+	public void preparePlayer() {
 		if(plugin.configStopHealthRegen) {
 			Set<String> set = plugin.BattleUsersTeam.keySet();
 			Iterator<String> iter = set.iterator();
 			while (iter.hasNext()) {
 				Object o = iter.next();
 				Player z = plugin.getServer().getPlayer(o.toString());
+				z.setHealth(z.getMaxHealth());
 				z.setFoodLevel(16);
 			}
 		}
