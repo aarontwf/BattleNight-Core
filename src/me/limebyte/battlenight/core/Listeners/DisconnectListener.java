@@ -27,6 +27,7 @@ public class DisconnectListener implements Listener {
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerKick(PlayerKickEvent event) {
 		Player player = event.getPlayer();
 		if (plugin.BattleUsersTeam.containsKey(player.getName())) {
