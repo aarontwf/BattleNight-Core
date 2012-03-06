@@ -35,7 +35,7 @@ public class ReadyListener implements Listener {
 					if ((plugin.teamReady("blue")) && (plugin.blueTeamIronClicked)) {
 						plugin.playersInLounge = false;
 						plugin.teleportAllToSpawn();
-						preparePlayer();
+						preparePlayers();
 						plugin.battleInProgress = true;
 						plugin.tellEveryone("Let the Battle begin!");
 					}
@@ -46,7 +46,7 @@ public class ReadyListener implements Listener {
 					if ((plugin.teamReady("red")) && (plugin.redTeamIronClicked)) {
 						plugin.playersInLounge = false;
 						plugin.teleportAllToSpawn();
-						preparePlayer();
+						preparePlayers();
 						plugin.battleInProgress = true;
 						plugin.tellEveryone("Let the Battle begin!");
 					}
@@ -58,20 +58,21 @@ public class ReadyListener implements Listener {
 		}
 	}
 	
-	public void preparePlayer() {
-		Set<String> set = plugin.BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		
-		while (iter.hasNext()) {
-			Object o = iter.next();
+	public void preparePlayers() {
+		Set<String> set1 = plugin.BattleUsersTeam.keySet();
+		Iterator<String> iter1 = set1.iterator();
+		while (iter1.hasNext()) {
+			Object o = iter1.next();
 			Player z = plugin.getServer().getPlayer(o.toString());
 			z.setHealth(z.getMaxHealth());
 			z.setTotalExperience(0);
 		}
 		
 		if(plugin.configStopHealthRegen) {
-			while (iter.hasNext()) {
-				Object o = iter.next();
+			Set<String> set2 = plugin.BattleUsersTeam.keySet();
+			Iterator<String> iter2 = set2.iterator();
+			while (iter2.hasNext()) {
+				Object o = iter2.next();
 				Player z = plugin.getServer().getPlayer(o.toString());
 				z.setFoodLevel(16);
 			}
