@@ -59,13 +59,20 @@ public class ReadyListener implements Listener {
 	}
 	
 	public void preparePlayer() {
+		Set<String> set = plugin.BattleUsersTeam.keySet();
+		Iterator<String> iter = set.iterator();
+		
+		while (iter.hasNext()) {
+			Object o = iter.next();
+			Player z = plugin.getServer().getPlayer(o.toString());
+			z.setHealth(z.getMaxHealth());
+			z.setTotalExperience(0);
+		}
+		
 		if(plugin.configStopHealthRegen) {
-			Set<String> set = plugin.BattleUsersTeam.keySet();
-			Iterator<String> iter = set.iterator();
 			while (iter.hasNext()) {
 				Object o = iter.next();
 				Player z = plugin.getServer().getPlayer(o.toString());
-				z.setHealth(z.getMaxHealth());
 				z.setFoodLevel(16);
 			}
 		}
