@@ -25,19 +25,6 @@ public class DisconnectListener implements Listener {
 		else if (plugin.BattleSpectators.containsKey(player.getName())) {
 			plugin.removeSpectator(player);
 		}
-		/*if (plugin.BattleUsersTeam.containsKey(player.getName())) {
-			if (plugin.BattleUsersTeam.get(player.getName()) == "red") {
-				plugin.redTeam -= 1;
-			}
-			else {
-				plugin.blueTeam -= 1;
-			}
-			im.clearInv(player);
-			player.getInventory().clear();
-			plugin.BattleUsersTeam.remove(player.getName());
-			plugin.BattleUsersClass.remove(player.getName());
-			plugin.goToWaypoint(player, "exit");
-		}*/
 	}
 	
 	public void onPlayerKick(PlayerKickEvent event) {
