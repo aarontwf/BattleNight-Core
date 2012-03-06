@@ -13,7 +13,6 @@ import org.bukkit.event.HandlerList;
 * Thrown when the current Battle ends.
 */
 
-@SuppressWarnings("serial")
 public class BattleEndEvent extends Event {
 
 	// Get Main Class

@@ -8,7 +8,6 @@ import org.bukkit.event.HandlerList;
 * Thrown when both teams are ready.
 */
 
-@SuppressWarnings("serial")
 public class BattleStartEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
