@@ -92,12 +92,15 @@ public class BattleNight extends JavaPlugin {
 	// classes.yml Values
 	public int classesDummyItem = 6;
 
-	File configFile;            		/////////////////////
-	File classesFile;          			//  Declare Files  //
-	File waypointsFile;					//				   //
-	FileConfiguration config;	        //////////////////////////////////
-	FileConfiguration classes;			//  Declare FileConfigurations  //
-	FileConfiguration waypoints;		//////////////////////////////////
+	// Declare Files and FileConfigurations
+	File configFile;
+	File classesFile;
+	File waypointsFile;
+	File playerFile;
+	FileConfiguration config;
+	FileConfiguration classes;
+	FileConfiguration waypoints;
+	FileConfiguration players;
 
 	public int redTeam = 0;
 	public int blueTeam = 0;
@@ -120,9 +123,10 @@ public class BattleNight extends JavaPlugin {
 	public void onEnable() {
 
 		// Initialise Files and FileConfigurations
-		configFile = new File(getDataFolder(), "config.yml");							///////////////////////////////////////////////////////////
-		classesFile = new File(getDataFolder(), "classes.yml");							//  Creates Virtual Files( /Plugins/BattleNight/*.yml )  //
-		waypointsFile = new File(getDataFolder() + "/PluginData", "waypoints.dat");		///////////////////////////////////////////////////////////
+		configFile = new File(getDataFolder(), "config.yml");
+		classesFile = new File(getDataFolder(), "classes.yml");
+		waypointsFile = new File(getDataFolder() + "/PluginData", "waypoints.dat");
+		playerFile = new File(getDataFolder() + "/PluginData", "players.dat");
 
 		// Use firstRun(); method
 		try {
@@ -135,6 +139,7 @@ public class BattleNight extends JavaPlugin {
 		config = new YamlConfiguration();
 		classes = new YamlConfiguration();
 		waypoints = new YamlConfiguration();
+		players = new YamlConfiguration();
 		loadYamls();
 
 		// Event Registration
@@ -161,7 +166,7 @@ public class BattleNight extends JavaPlugin {
 		configReadyBlock  = config.getInt("ReadyBlock");
 		configDebug = config.getBoolean("Debug");
 
-		classesDummyItem     	= classes.getInt("DummyItem");
+		classesDummyItem = classes.getInt("DummyItem");
 		for (String className : classes.getConfigurationSection("Classes").getKeys(false)){
 			BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
 		}
@@ -202,6 +207,10 @@ public class BattleNight extends JavaPlugin {
 			waypointsFile.getParentFile().mkdirs();
 			copy(getResource("waypoints.dat"), waypointsFile);
 		}
+		if(!playerFile.exists()){
+			playerFile.getParentFile().mkdirs();
+			copy(getResource("players.dat"), playerFile);
+		}
 	}
 
 
@@ -228,6 +237,7 @@ public class BattleNight extends JavaPlugin {
 			config.load(configFile);
 			classes.load(classesFile);
 			waypoints.load(waypointsFile);
+			players.load(playerFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -248,6 +258,7 @@ public class BattleNight extends JavaPlugin {
 			config.save(configFile);
 			classes.save(classesFile);
 			waypoints.save(waypointsFile);
+			players.save(playerFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
