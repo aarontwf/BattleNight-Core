@@ -755,21 +755,22 @@ public class BattleNight extends JavaPlugin {
 	}
 
 	public void killFeed(String msg) {
-		Set<String> set = BattleUsersTeam.keySet();
-		Set<String> set2 = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		Iterator<String> iter2 = set2.iterator();
 		LinkedList<Player> told = new LinkedList<Player>();
-		while (iter.hasNext()) {
-			Object o = iter.next();
+		
+		Set<String> inGameSet = BattleUsersTeam.keySet();
+		Iterator<String> inGameIter = inGameSet.iterator();
+		while (inGameIter.hasNext()) {
+			Object o = inGameIter.next();
 			Player z = getServer().getPlayer(o.toString());
-			if(!told.contains(z)) {
-				z.sendMessage(BNKTag + msg);
-				told.add(z);
-			}
+			
+			z.sendMessage(BNKTag + msg);
+			told.add(z);
 		}
-		while (iter2.hasNext()) {
-			Object o = iter2.next();
+		
+		Set<String> spectatorSet = BattleSpectators.keySet();
+		Iterator<String> spectatorIter = spectatorSet.iterator();
+		while (spectatorIter.hasNext()) {
+			Object o = spectatorIter.next();
 			Player z = getServer().getPlayer(o.toString());
 			if(!told.contains(z)) {
 				z.sendMessage(BNKTag + msg);
