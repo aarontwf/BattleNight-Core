@@ -981,7 +981,6 @@ public class BattleNight extends JavaPlugin {
 	
 	public void addSpectator(Player player, String type) {
 		if(type.equals("death")) {
-			goToWaypoint(player, "spectator");
 			BattleSpectators.put(player.getName(), "death");
 			tellPlayer(player, Track.WELCOME_SPECTATOR_DEATH);
 		}
