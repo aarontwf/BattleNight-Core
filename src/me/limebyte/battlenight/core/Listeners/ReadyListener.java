@@ -66,6 +66,7 @@ public class ReadyListener implements Listener {
 			Player z = plugin.getServer().getPlayer(o.toString());
 			z.setHealth(z.getMaxHealth());
 			z.setTotalExperience(0);
+			z.setFoodLevel(18);
 		}
 		
 		if(plugin.configStopHealthRegen) {
