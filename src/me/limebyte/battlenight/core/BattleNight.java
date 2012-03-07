@@ -75,7 +75,6 @@ public class BattleNight extends JavaPlugin {
 	private final TeleportListener teleportListener = new TeleportListener(this);
 	private final SignChanger blockListener = new SignChanger(this);
 	private final PotionListener potionListener = new PotionListener(this);
-	//private final PailGUI pail = new PailGUI(this);
 
 	public boolean redTeamIronClicked = false;
 	public boolean blueTeamIronClicked = false;
