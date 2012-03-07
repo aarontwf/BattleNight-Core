@@ -981,6 +981,7 @@ public class BattleNight extends JavaPlugin {
 	
 	public void addSpectator(Player player, String type) {
 		if(type.equals("death")) {
+			goToWaypoint(player, "spectator");
 			BattleSpectators.put(player.getName(), "death");
 			tellPlayer(player, Track.WELCOME_SPECTATOR_DEATH);
 		}
@@ -1048,6 +1049,7 @@ public class BattleNight extends JavaPlugin {
 					goToWaypoint(z, "exit");
 					z.setPlayerListName(ChatColor.WHITE + z.getName());
 				}
+				removeAllSpectators();
 				cleanSigns();
 				battleInProgress = false;
 				redTeamIronClicked = false;
@@ -1086,7 +1088,6 @@ public class BattleNight extends JavaPlugin {
 				clearArmorSlots(player);
 				BattleUsersTeam.remove(player.getName());
 				BattleUsersClass.remove(player.getName());
-				goToWaypoint(player, "exit");
 				player.setPlayerListName(ChatColor.WHITE + player.getName());
 			}
 		}
