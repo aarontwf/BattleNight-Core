@@ -189,7 +189,7 @@ public class BattleNight extends JavaPlugin {
 		}
 
 		// Enable Message
-		log.info("[BattleNight] Version " + pdfFile.getVersion() + " enabled!");
+		log.info("[BattleNight] Version " + pdfFile.getVersion() + " enabled successfully.");
 		log.info("[BattleNight] Made by LimeByte.");
 	}
 
