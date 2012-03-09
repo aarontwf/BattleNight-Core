@@ -1,8 +1,5 @@
 package me.limebyte.battlenight.core.Listeners;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import me.limebyte.battlenight.core.BattleNight;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -35,7 +32,6 @@ public class ReadyListener implements Listener {
 					if ((plugin.teamReady("blue")) && (plugin.blueTeamIronClicked)) {
 						plugin.playersInLounge = false;
 						plugin.teleportAllToSpawn();
-						preparePlayers();
 						plugin.battleInProgress = true;
 						plugin.tellEveryone("Let the Battle begin!");
 					}
@@ -46,7 +42,6 @@ public class ReadyListener implements Listener {
 					if ((plugin.teamReady("red")) && (plugin.redTeamIronClicked)) {
 						plugin.playersInLounge = false;
 						plugin.teleportAllToSpawn();
-						preparePlayers();
 						plugin.battleInProgress = true;
 						plugin.tellEveryone("Let the Battle begin!");
 					}
@@ -55,31 +50,6 @@ public class ReadyListener implements Listener {
 			else if ((block.getTypeId() == plugin.configReadyBlock) && (plugin.BattleUsersTeam.containsKey(player.getName()) && (plugin.playersInLounge))) {
 				player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
 			}
-		}
-	}
-	
-	public void preparePlayers() {
-		Set<String> set1 = plugin.BattleUsersTeam.keySet();
-		Iterator<String> iter1 = set1.iterator();
-		while (iter1.hasNext()) {
-			Object o = iter1.next();
-			Player z = plugin.getServer().getPlayer(o.toString());
-			z.setHealth(z.getMaxHealth());
-			z.setTotalExperience(0);
-			z.setFoodLevel(18);
-		}
-		
-		if(plugin.configStopHealthRegen) {
-			Set<String> set2 = plugin.BattleUsersTeam.keySet();
-			Iterator<String> iter2 = set2.iterator();
-			while (iter2.hasNext()) {
-				Object o = iter2.next();
-				Player z = plugin.getServer().getPlayer(o.toString());
-				z.setFoodLevel(16);
-			}
-		}
-		else {
-			return;
 		}
 	}
 }

@@ -51,7 +51,7 @@ public class BattleNight extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version =  "v1.0.9";		//TODO Update
+	public static final String Version =  "v1.0.10";		//TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -263,14 +263,20 @@ public class BattleNight extends JavaPlugin {
 			e.printStackTrace();
 		}
 	}
-
-	// Waypoints Save Method
-	public void saveWaypoints() {
+	
+	public void saveYAML(ConfigFile file) {
 		try {
-			waypoints.save(waypointsFile);
+			if (file.equals(ConfigFile.Main)) config.save(configFile);
+			if (file.equals(ConfigFile.Classes)) classes.save(classesFile);
+			if (file.equals(ConfigFile.Waypoints)) waypoints.save(waypointsFile);
+			if (file.equals(ConfigFile.Players)) players.save(playerFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public enum ConfigFile {
+		Main, Classes, Waypoints, Players
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
@@ -352,59 +358,17 @@ public class BattleNight extends JavaPlugin {
 				}
 
 				else if (fightCmd[0].equalsIgnoreCase("join") && hasPerm(Perm.USER, player)) {
-					if (isSetup() && !battleInProgress) {
-						if((configInventoryType.equals("prompt") && emptyInventory(player)) || configInventoryType.equals("clear")) {
-							if (!BattleUsersTeam.containsKey(player.getName())) {
-								if (blueTeam > redTeam) {
-									player.getInventory().clear();
-									clearArmorSlots(player);
-									player.setGameMode(GameMode.SURVIVAL);
-									goToWaypoint(player, "redlounge");
-									BattleUsersTeam.put(player.getName(), "red");
-									tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
-									tellEveryoneExcept(player, player.getName() + " has joined team " + ChatColor.RED + "<Red>");
-									redTeam += 1;
-									playersInLounge = true;
-									if(player.getName().length() > 15) {
-										int ammountOffName = player.getName().length() -15;
-										player.setPlayerListName(ChatColor.RED + shortenString(player.getName(), ammountOffName));
-									}
-									else {
-										player.setPlayerListName(ChatColor.RED + player.getName());
-									}
-								}
-								else {
-									player.getInventory().clear();
-									clearArmorSlots(player);
-									player.setGameMode(GameMode.SURVIVAL);
-									goToWaypoint(player, "bluelounge");
-									BattleUsersTeam.put(player.getName(), "blue");
-									tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
-									tellEveryoneExcept(player, player.getName() + " has joined team " + ChatColor.BLUE + "<Blue>");
-									blueTeam += 1;
-									playersInLounge = true;
-									if(player.getName().length() > 15) {
-										int ammountOffName = player.getName().length() -15;
-										player.setPlayerListName(ChatColor.BLUE + shortenString(player.getName(), ammountOffName));
-									}
-									else {
-										player.setPlayerListName(ChatColor.BLUE + player.getName());
-									}
-								}
-							}
-							else {
-								tellPlayer(player, Track.ALREADY_IN_TEAM);
-							}
-						}
-						else {
-							tellPlayer(player, Track.MUST_HAVE_EMPTY);
-						}
+					if (isSetup() && !battleInProgress && !BattleUsersTeam.containsKey(player.getName())) {
+						addPlayer(player);
 					}
 					else if (!isSetup()) {
 						tellPlayer(player, Track.WAYPOINTS_UNSET);
 					}
 					else if (battleInProgress) {
 						tellPlayer(player, Track.BATTLE_IN_PROGRESS);
+					}
+					else if (BattleUsersTeam.containsKey(player.getName())) {
+						tellPlayer(player, Track.ALREADY_IN_TEAM);
 					}
 				}
 
@@ -512,7 +476,7 @@ public class BattleNight extends JavaPlugin {
 		waypoints.set("coords." + place + ".z", location.getZ());
 		waypoints.set("coords." + place + ".yaw", location.getYaw());
 		waypoints.set("coords." + place + ".pitch", location.getPitch());
-		saveWaypoints();
+		saveYAML(ConfigFile.Waypoints);
 	}
 
 	//Get Coords from waypoints.data
@@ -1005,6 +969,44 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 	
+	public void addPlayer(Player player) {
+		if(preparePlayer(player)) {
+			if (blueTeam > redTeam) {
+				goToWaypoint(player, "redlounge");
+				BattleUsersTeam.put(player.getName(), "red");
+				tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
+				tellEveryoneExcept(player, player.getName() + " has joined team " + ChatColor.RED + "<Red>");
+				redTeam += 1;
+				playersInLounge = true;
+				if(player.getName().length() > 15) {
+					int ammountOffName = player.getName().length() -15;
+					player.setPlayerListName(ChatColor.RED + shortenString(player.getName(), ammountOffName));
+				}
+				else {
+					player.setPlayerListName(ChatColor.RED + player.getName());
+				}
+			}
+			else {
+				goToWaypoint(player, "bluelounge");
+				BattleUsersTeam.put(player.getName(), "blue");
+				tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
+				tellEveryoneExcept(player, player.getName() + " has joined team " + ChatColor.BLUE + "<Blue>");
+				blueTeam += 1;
+				playersInLounge = true;
+				if(player.getName().length() > 15) {
+					int ammountOffName = player.getName().length() -15;
+					player.setPlayerListName(ChatColor.BLUE + shortenString(player.getName(), ammountOffName));
+				}
+				else {
+					player.setPlayerListName(ChatColor.BLUE + player.getName());
+				}
+			}
+		}
+		else {
+			tellPlayer(player, Track.MUST_HAVE_EMPTY);
+		}
+	}
+	
 	public void removePlayer(Player player, String message1, String message2) {
 		if (BattleUsersTeam.containsKey(player.getName())) {
 			if (BattleUsersTeam.get(player.getName()) == "red") {
@@ -1170,5 +1172,34 @@ public class BattleNight extends JavaPlugin {
 	  }
 	  String result = sb.toString() + "...";
 	  return result;
+  }
+  
+  private boolean preparePlayer(Player p) {
+	  if(config.getString("InventoryType").equalsIgnoreCase("prompt") && !emptyInventory(p)) return false;
+	  
+	  String name = p.getName();
+	  
+	  if(!players.contains(p.getName())) {
+		  players.set(name+".stats.games", 0);
+		  players.set(name+".stats.kills", 0);
+		  players.set(name+".stats.deaths", 0);
+	  }
+	  
+	  players.set(name+".saves.gamemode", p.getGameMode());
+	  players.set(name+".saves.health", p.getHealth());
+	  players.set(name+".saves.hunger", p.getFoodLevel());
+	  players.set(name+".saves.experience", p.getTotalExperience());
+	  
+	  saveYAML(ConfigFile.Players);
+	  
+	  p.setGameMode(GameMode.SURVIVAL);
+	  p.setHealth(p.getMaxHealth());
+	  if(config.getBoolean("StopHealthRegen")) p.setFoodLevel(16); else p.setFoodLevel(18);
+	  p.getInventory().clear();
+	  clearArmorSlots(p);
+	  p.setTotalExperience(0);
+	  p.setExp(0);
+	  
+	  return true;
   }
 }
