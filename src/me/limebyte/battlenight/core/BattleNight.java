@@ -1185,21 +1185,32 @@ public class BattleNight extends JavaPlugin {
 		  players.set(name+".stats.deaths", 0);
 	  }
 	  
+	  players.set(name+".saves.displayname", p.getDisplayName());
+	  players.set(name+".saves.exp", p.getExp());
+	  players.set(name+".saves.fireticks", p.getFireTicks());
+	  players.set(name+".saves.foodlevel", p.getFoodLevel());
 	  players.set(name+".saves.gamemode", p.getGameMode());
 	  players.set(name+".saves.health", p.getHealth());
-	  players.set(name+".saves.hunger", p.getFoodLevel());
-	  players.set(name+".saves.experience", p.getTotalExperience());
+	  players.set(name+".saves.level", p.getLevel());
+	  players.set(name+".saves.listname", p.getPlayerListName());
+	  players.set(name+".saves.remainingair", p.getRemainingAir());
+	  players.set(name+".saves.saturation", p.getSaturation());
+	  players.set(name+".saves.totalexperience", p.getTotalExperience());
+	  
+	  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
+		  // Save their inventory
+	  }
 	  
 	  saveYAML(ConfigFile.Players);
 	  
+	  p.setExp(0);
+	  p.setFireTicks(0);
+	  if(config.getBoolean("StopHealthRegen")) p.setFoodLevel(16); else p.setFoodLevel(18);
 	  p.setGameMode(GameMode.SURVIVAL);
 	  p.setHealth(p.getMaxHealth());
-	  if(config.getBoolean("StopHealthRegen")) p.setFoodLevel(16); else p.setFoodLevel(18);
-	  p.getInventory().clear();
-	  clearArmorSlots(p);
-	  p.setTotalExperience(0);
-	  p.setExp(0);
-	  
+	  p.setLevel(0);
+	  // TODO p.setSaturation(value);
+	  p.setTotalExperience(0);	  
 	  return true;
   }
 }
