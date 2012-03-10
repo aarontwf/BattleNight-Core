@@ -51,7 +51,7 @@ public class BattleNight extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version =  "v1.0.10";		//TODO Update
+	public static final String Version =  "v1.0.11";		//TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -1039,7 +1039,7 @@ public class BattleNight extends JavaPlugin {
 				clearArmorSlots(player);
 				BattleUsersClass.remove(player.getName());
 				goToWaypoint(player, "exit");
-				player.setPlayerListName(ChatColor.WHITE + player.getName());
+				restorePlayer(player);
 				Set<String> set = BattleUsersTeam.keySet();
 				Iterator<String> iter = set.iterator();
 				while (iter.hasNext()) {
@@ -1048,7 +1048,7 @@ public class BattleNight extends JavaPlugin {
 					z.getInventory().clear();
 					clearArmorSlots(z);
 					goToWaypoint(z, "exit");
-					z.setPlayerListName(ChatColor.WHITE + z.getName());
+					restorePlayer(z);
 				}
 				removeAllSpectators();
 				cleanSigns();
@@ -1070,7 +1070,7 @@ public class BattleNight extends JavaPlugin {
 					clearArmorSlots(z);
 					z.getInventory().clear();
 					goToWaypoint(z, "exit");
-					z.setPlayerListName(ChatColor.WHITE + z.getName());
+					restorePlayer(z);
 				}
 				Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
 				cleanSigns();
@@ -1089,7 +1089,7 @@ public class BattleNight extends JavaPlugin {
 				clearArmorSlots(player);
 				BattleUsersTeam.remove(player.getName());
 				BattleUsersClass.remove(player.getName());
-				player.setPlayerListName(ChatColor.WHITE + player.getName());
+				restorePlayer(player);
 			}
 		}
 		else {
@@ -1128,7 +1128,7 @@ public class BattleNight extends JavaPlugin {
 			z.getInventory().clear();
 			clearArmorSlots(z);
 			goToWaypoint(z, "exit");
-			z.setPlayerListName(ChatColor.WHITE + z.getName());
+			restorePlayer(z);
 		}
 		cleanSigns();
 		battleInProgress = false;
@@ -1179,13 +1179,12 @@ public class BattleNight extends JavaPlugin {
 	  
 	  String name = p.getName();
 	  
-	  if(!players.contains(p.getName())) {
+	  if(!players.contains(name)) {
 		  players.set(name+".stats.games", 0);
 		  players.set(name+".stats.kills", 0);
 		  players.set(name+".stats.deaths", 0);
 	  }
 	  
-	  players.set(name+".saves.displayname", p.getDisplayName());
 	  players.set(name+".saves.exp", p.getExp());
 	  players.set(name+".saves.fireticks", p.getFireTicks());
 	  players.set(name+".saves.foodlevel", p.getFoodLevel());
@@ -1212,5 +1211,28 @@ public class BattleNight extends JavaPlugin {
 	  // TODO p.setSaturation(value);
 	  p.setTotalExperience(0);	  
 	  return true;
+  }
+  
+  private void restorePlayer(Player p) {
+	  
+	  String name = p.getName();
+	  try {
+		  p.setExp((Float) players.get(name+".saves.exp", 0));
+		  p.setFireTicks(players.getInt(name+".saves.fireticks", 0));
+		  p.setFoodLevel(players.getInt(name+".saves.foodlevel", 0));
+		  p.setGameMode((GameMode) players.get(name+".saves.gamemode", GameMode.SURVIVAL));
+		  p.setHealth(players.getInt(name+".saves.health", p.getMaxHealth()));
+		  p.setLevel(players.getInt(name+".saves.level", 0));
+		  p.setPlayerListName(players.getString(name+".saves.listname"));
+		  p.setRemainingAir(players.getInt(name+".saves.remainingair", 0));
+		  p.setSaturation(players.getInt(name+".saves.saturation", 0));
+		  p.setTotalExperience(players.getInt(name+".saves.totalexperience", 0));
+		  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
+			  // Restore their inventory
+		  }
+	  }
+	  catch(NullPointerException e) {
+		  log.warning("[BattleNight] Failed to restore data for player: "+name+".");
+	  }
   }
 }
