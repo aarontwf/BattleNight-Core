@@ -1187,10 +1187,13 @@ public class BattleNight extends JavaPlugin {
 		  players.set(name+".stats.deaths", 0);
 	  }
 	  
+	  int Gamemode = 0;
+	  if (p.getGameMode().equals(GameMode.CREATIVE)) Gamemode = 1;
+	  
 	  players.set(name+".saves.exp", p.getExp());
 	  players.set(name+".saves.fireticks", p.getFireTicks());
 	  players.set(name+".saves.foodlevel", p.getFoodLevel());
-	  players.set(name+".saves.gamemode", p.getGameMode());
+	  players.set(name+".saves.gamemode", Gamemode);
 	  players.set(name+".saves.health", p.getHealth());
 	  players.set(name+".saves.level", p.getLevel());
 	  players.set(name+".saves.listname", p.getPlayerListName());
@@ -1200,7 +1203,8 @@ public class BattleNight extends JavaPlugin {
 	  players.set(name+".saves.potioneffects", p.getActivePotionEffects());
 	  
 	  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
-		  // Save their inventory
+		  players.set(name+".saves.inventory.main", p.getInventory().getContents());
+		  players.set(name+".saves.inventory.armor", p.getInventory().getArmorContents());
 	  }
 	  
 	  saveYAML(ConfigFile.Players);
@@ -1212,7 +1216,9 @@ public class BattleNight extends JavaPlugin {
 	  p.setHealth(p.getMaxHealth());
 	  p.setLevel(0);
 	  // TODO p.setSaturation(value);
-	  p.setTotalExperience(0);	  
+	  p.setTotalExperience(0);
+	  p.getInventory().clear();
+	  clearArmorSlots(p);
 	  return true;
   }
   
@@ -1221,10 +1227,13 @@ private void restorePlayer(Player p) {
 	  
 	  String name = p.getName();
 	  try {
+		  GameMode Gamemode = GameMode.SURVIVAL;
+		  if (players.getInt(name+".saves.gamemode") == 1) Gamemode = GameMode.CREATIVE;
+		  
 		  p.setExp((Float) players.get(name+".saves.exp", 0));
 		  p.setFireTicks(players.getInt(name+".saves.fireticks", 0));
 		  p.setFoodLevel(players.getInt(name+".saves.foodlevel", 0));
-		  p.setGameMode((GameMode) players.get(name+".saves.gamemode", GameMode.SURVIVAL));
+		  p.setGameMode(Gamemode);
 		  p.setHealth(players.getInt(name+".saves.health", p.getMaxHealth()));
 		  p.setLevel(players.getInt(name+".saves.level", 0));
 		  p.setPlayerListName(players.getString(name+".saves.listname"));
@@ -1234,7 +1243,8 @@ private void restorePlayer(Player p) {
 		  p.addPotionEffects((Collection<PotionEffect>) players.get(name+".saves.potioneffects"));
 		  
 		  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
-			  // Restore their inventory
+			  p.getInventory().setContents((ItemStack[]) players.get(name+".saves.inventory.main"));
+			  p.getInventory().setArmorContents((ItemStack[]) players.get(name+".saves.inventory.armor"));
 		  }
 	  }
 	  catch(NullPointerException e) {
