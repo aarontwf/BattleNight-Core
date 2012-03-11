@@ -6,11 +6,7 @@ import org.bukkit.entity.Player;
 
 public class Util {
 	
-	// Get Main Class
-	public static BattleNight plugin;
-	public Util(BattleNight instance) {
-		plugin = instance;
-	}
+	BattleNight plugin = new BattleNight();
 	
 	public boolean isInTeam(Player player, String team) {
 		if (plugin.BattleUsersTeam.containsKey(player.getName())) {

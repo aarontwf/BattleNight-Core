@@ -20,7 +20,7 @@ public class DeathListener implements Listener {
 		plugin = instance;
 	}
 	
-	private Util util;
+	Util util = new Util();
 	
 	// Called when player dies
 	@EventHandler(priority = EventPriority.HIGHEST)
