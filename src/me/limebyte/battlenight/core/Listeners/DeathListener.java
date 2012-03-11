@@ -1,8 +1,6 @@
 package me.limebyte.battlenight.core.Listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Other.Util;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -19,8 +17,6 @@ public class DeathListener implements Listener {
 	public DeathListener(BattleNight instance) {
 		plugin = instance;
 	}
-	
-	Util util = new Util();
 	
 	// Called when player dies
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -39,12 +35,12 @@ public class DeathListener implements Listener {
 						String killerName;
 						
 						// Colour Names
-						if (util.isInTeam(killer, "blue")) 		killerName = ChatColor.BLUE + killer.getName();
-						else if (util.isInTeam(killer, "red"))  killerName = ChatColor.RED + killer.getName();
+						if (isInTeam(killer, "blue")) 		killerName = ChatColor.BLUE + killer.getName();
+						else if (isInTeam(killer, "red"))  killerName = ChatColor.RED + killer.getName();
 						else 									killerName = ChatColor.BLACK + killer.getName();
 						
-						if (util.isInTeam(player, "blue")) 		playerName = ChatColor.BLUE + player.getName();
-						else if (util.isInTeam(player, "red"))  playerName = ChatColor.RED + player.getName();
+						if (isInTeam(player, "blue")) 		playerName = ChatColor.BLUE + player.getName();
+						else if (isInTeam(player, "red"))  playerName = ChatColor.RED + player.getName();
 						else 									playerName = ChatColor.BLACK + player.getName();
 						// ------------
 						
@@ -63,6 +59,19 @@ public class DeathListener implements Listener {
 					plugin.BattleUsersRespawn.put(name, "true");
 				}
 			}
+		}
+	}
+	
+	private boolean isInTeam(Player player, String team) {
+		if (plugin.BattleUsersTeam.containsKey(player.getName())) {
+			if ((plugin.BattleUsersTeam.get(player.getName()) == team)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		else {
+			return false;
 		}
 	}
 }
