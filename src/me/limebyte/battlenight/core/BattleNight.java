@@ -53,7 +53,7 @@ public class BattleNight extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version =  "v1.0.11";		//TODO Update
+	public static final String Version =  "v1.0.12";		//TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
