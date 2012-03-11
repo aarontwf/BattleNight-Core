@@ -790,13 +790,15 @@ public class BattleNight extends JavaPlugin {
 	}
 	
 	public void tellEveryone(Track track) {
-		Set<String> set = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			Player z = getServer().getPlayer(o.toString());
-			z.sendMessage(BNTag + track.msg);
-		}
+		try {
+			Set<String> set = BattleUsersTeam.keySet();
+			Iterator<String> iter = set.iterator();
+			while (iter.hasNext()) {
+				Object o = iter.next();
+				Player z = getServer().getPlayer(o.toString());
+				z.sendMessage(BNTag + track.msg);
+			}
+		} catch (NullPointerException e) {}
 	}
 
 	public void teleportAllToSpawn() {
