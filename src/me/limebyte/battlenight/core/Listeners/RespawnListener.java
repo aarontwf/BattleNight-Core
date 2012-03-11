@@ -29,7 +29,7 @@ public class RespawnListener implements Listener {
 			} else {
 				event.setRespawnLocation(plugin.getCoords("exit"));
 			}
-
+			plugin.removePlayer(player, null, "You have been removed from the Battle because you were killed.");
 			plugin.BattleUsersRespawn.remove(player.getName());
 		}
 	}

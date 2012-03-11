@@ -50,11 +50,9 @@ public class DeathListener implements Listener {
 						
 						plugin.killFeed(killerName + ChatColor.GRAY + " killed " + playerName + ".");
 						plugin.BattleUsersRespawn.put(name, "true");
-						plugin.removePlayer(player, null, "You have been removed from the Battle because you were killed.");
 					} catch (NullPointerException error) {
 						plugin.killFeed(ChatColor.RED + name + ChatColor.GRAY + " was killed.");
 						plugin.BattleUsersRespawn.put(name, "true");
-						plugin.removePlayer(player, null, "You have been removed from the Battle because you were killed.");
 						if(plugin.configDebug){
 							BattleNight.log.info("[BattleNight] Could not find killer for player: " + name);
 						}
