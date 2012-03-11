@@ -55,7 +55,6 @@ public class DeathListener implements Listener {
 					}
 				}
 				else if(plugin.playersInLounge){
-					plugin.removePlayer(player, "has been removed from the Battle because they were killed in a lounge.", "You have been removed from the Battle because you were killed in a lounge.");
 					plugin.BattleUsersRespawn.put(name, "true");
 				}
 			}
