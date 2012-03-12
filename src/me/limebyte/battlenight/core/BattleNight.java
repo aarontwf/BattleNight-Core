@@ -43,6 +43,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 
 public class BattleNight extends JavaPlugin {
 
@@ -1207,6 +1208,7 @@ public class BattleNight extends JavaPlugin {
 	  
 	  saveYAML(ConfigFile.Players);
 	  
+	  // Reset Player
 	  p.setExp(0);
 	  p.setFireTicks(0);
 	  if(config.getBoolean("StopHealthRegen")) p.setFoodLevel(16); else p.setFoodLevel(18);
@@ -1215,6 +1217,7 @@ public class BattleNight extends JavaPlugin {
 	  p.setLevel(0);
 	  // TODO p.setSaturation(value);
 	  p.setTotalExperience(0);
+	  removePotionEffects(p);
 	  p.getInventory().clear();
 	  clearArmorSlots(p);
 	  return true;
@@ -1247,4 +1250,23 @@ private void restorePlayer(Player p) {
 		  log.warning("[BattleNight] Failed to restore data for player: "+name+".");
 	  }
   }
+
+	private void removePotionEffects(Player p) {
+		  p.removePotionEffect(PotionEffectType.BLINDNESS);
+		  p.removePotionEffect(PotionEffectType.CONFUSION);
+		  p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+		  p.removePotionEffect(PotionEffectType.FAST_DIGGING);
+		  p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+		  p.removePotionEffect(PotionEffectType.HARM);
+		  p.removePotionEffect(PotionEffectType.HEAL);
+		  p.removePotionEffect(PotionEffectType.HUNGER);
+		  p.removePotionEffect(PotionEffectType.JUMP);
+		  p.removePotionEffect(PotionEffectType.POISON);
+		  p.removePotionEffect(PotionEffectType.REGENERATION);
+		  p.removePotionEffect(PotionEffectType.SLOW);
+		  p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+		  p.removePotionEffect(PotionEffectType.SPEED);
+		  p.removePotionEffect(PotionEffectType.WATER_BREATHING);
+		  p.removePotionEffect(PotionEffectType.WEAKNESS);
+	}
 }
