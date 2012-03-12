@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +25,6 @@ import me.limebyte.battlenight.core.Listeners.RespawnListener;
 import me.limebyte.battlenight.core.Listeners.SignChanger;
 import me.limebyte.battlenight.core.Listeners.SignListener;
 import me.limebyte.battlenight.core.Listeners.TeleportListener;
-
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 
 import org.bukkit.Bukkit;
@@ -45,7 +43,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 
 public class BattleNight extends JavaPlugin {
 
@@ -1202,7 +1199,6 @@ public class BattleNight extends JavaPlugin {
 	  players.set(name+".saves.remainingair", p.getRemainingAir());
 	  players.set(name+".saves.saturation", p.getSaturation());
 	  players.set(name+".saves.totalexperience", p.getTotalExperience());
-	  players.set(name+".saves.potioneffects", p.getActivePotionEffects());
 	  
 	  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
 		  players.set(name+".saves.inventory.main", p.getInventory().getContents());
@@ -1224,7 +1220,6 @@ public class BattleNight extends JavaPlugin {
 	  return true;
   }
   
-  @SuppressWarnings("unchecked")
 private void restorePlayer(Player p) {
 	  
 	  String name = p.getName();
@@ -1242,7 +1237,6 @@ private void restorePlayer(Player p) {
 		  p.setRemainingAir(players.getInt(name+".saves.remainingair", 0));
 		  p.setSaturation(players.getInt(name+".saves.saturation", 0));
 		  p.setTotalExperience(players.getInt(name+".saves.totalexperience", 0));
-		  p.addPotionEffects((Collection<PotionEffect>) players.get(name+".saves.potioneffects"));
 		  
 		  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
 			  p.getInventory().setContents((ItemStack[]) players.get(name+".saves.inventory.main"));
