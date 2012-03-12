@@ -1210,12 +1210,13 @@ public class BattleNight extends JavaPlugin {
 	  
 	  // Reset Player
 	  p.setExp(0);
-	  p.setFireTicks(0);
+	  p.setFireTicks(-20);
 	  if(config.getBoolean("StopHealthRegen")) p.setFoodLevel(16); else p.setFoodLevel(18);
 	  p.setGameMode(GameMode.SURVIVAL);
 	  p.setHealth(p.getMaxHealth());
 	  p.setLevel(0);
-	  // TODO p.setSaturation(value);
+	  p.setRemainingAir(300);
+	  p.setSaturation(5);
 	  p.setTotalExperience(0);
 	  removePotionEffects(p);
 	  p.getInventory().clear();
@@ -1228,17 +1229,17 @@ private void restorePlayer(Player p) {
 	  String name = p.getName();
 	  try {
 		  GameMode Gamemode = GameMode.SURVIVAL;
-		  if (players.getInt(name+".saves.gamemode") == 1) Gamemode = GameMode.CREATIVE;
+		  if (players.getInt(name+".saves.gamemode", 0) == 1) Gamemode = GameMode.CREATIVE;
 		  
 		  p.setExp((Float) players.get(name+".saves.exp", 0));
-		  p.setFireTicks(players.getInt(name+".saves.fireticks", 0));
-		  p.setFoodLevel(players.getInt(name+".saves.foodlevel", 0));
+		  p.setFireTicks(players.getInt(name+".saves.fireticks", -20));
+		  p.setFoodLevel(players.getInt(name+".saves.foodlevel", 18));
 		  p.setGameMode(Gamemode);
 		  p.setHealth(players.getInt(name+".saves.health", p.getMaxHealth()));
 		  p.setLevel(players.getInt(name+".saves.level", 0));
-		  p.setPlayerListName(players.getString(name+".saves.listname"));
-		  p.setRemainingAir(players.getInt(name+".saves.remainingair", 0));
-		  p.setSaturation(players.getInt(name+".saves.saturation", 0));
+		  p.setPlayerListName(players.getString(name+".saves.listname", p.getDisplayName()));
+		  p.setRemainingAir(players.getInt(name+".saves.remainingair", 300));
+		  p.setSaturation(players.getInt(name+".saves.saturation", 5));
 		  p.setTotalExperience(players.getInt(name+".saves.totalexperience", 0));
 		  
 		  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
