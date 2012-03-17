@@ -4,8 +4,8 @@ import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,20 +21,19 @@ public class PotionListener implements Listener {
 		plugin = instance;
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPotionSplash(PotionSplashEvent event) {
-			Entity entity = event.getEntity();
-			if(entity instanceof Player) {
-				Player thrower = (Player) entity;
-				String throwerName = thrower.getName();
-				if (plugin.BattleUsersTeam.containsKey(throwerName) && plugin.playersInLounge) {
-					event.setCancelled(true);
+			ThrownPotion potion = event.getEntity();
+			if(potion.getShooter() instanceof Player) {
+				Player thrower = (Player) potion.getShooter();
+				if (plugin.BattleUsersTeam.containsKey(thrower.getName()) && plugin.playersInLounge) {
+					potion.remove();
 					thrower.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Not so fast! No Cheating!");
 				}
 			}
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPotionDrink(PlayerInteractEvent event) {
 		if(event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
 			Player drinker = event.getPlayer();
