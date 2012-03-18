@@ -24,7 +24,6 @@ import me.limebyte.battlenight.core.Listeners.ReadyListener;
 import me.limebyte.battlenight.core.Listeners.RespawnListener;
 import me.limebyte.battlenight.core.Listeners.SignChanger;
 import me.limebyte.battlenight.core.Listeners.SignListener;
-import me.limebyte.battlenight.core.Listeners.TeleportListener;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 
 import org.bukkit.Bukkit;
@@ -72,7 +71,6 @@ public class BattleNight extends JavaPlugin {
 	private final DamageListener damageListener = new DamageListener(this);
 	private final DropListener dropListener = new DropListener(this);
 	private final DisconnectListener disconnectListener = new DisconnectListener(this);
-	private final TeleportListener teleportListener = new TeleportListener(this);
 	private final SignChanger blockListener = new SignChanger(this);
 	private final CheatListener cheatListener = new CheatListener(this);
 
@@ -152,7 +150,6 @@ public class BattleNight extends JavaPlugin {
 		pm.registerEvents(dropListener, this);
 		pm.registerEvents(damageListener, this);
 		pm.registerEvents(disconnectListener, this);
-		pm.registerEvents(teleportListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(cheatListener, this);
 
