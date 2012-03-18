@@ -19,7 +19,7 @@ import me.limebyte.battlenight.core.Listeners.DamageListener;
 import me.limebyte.battlenight.core.Listeners.DeathListener;
 import me.limebyte.battlenight.core.Listeners.DisconnectListener;
 import me.limebyte.battlenight.core.Listeners.DropListener;
-import me.limebyte.battlenight.core.Listeners.PotionListener;
+import me.limebyte.battlenight.core.Listeners.CheatListener;
 import me.limebyte.battlenight.core.Listeners.ReadyListener;
 import me.limebyte.battlenight.core.Listeners.RespawnListener;
 import me.limebyte.battlenight.core.Listeners.SignChanger;
@@ -74,7 +74,7 @@ public class BattleNight extends JavaPlugin {
 	private final DisconnectListener disconnectListener = new DisconnectListener(this);
 	private final TeleportListener teleportListener = new TeleportListener(this);
 	private final SignChanger blockListener = new SignChanger(this);
-	private final PotionListener potionListener = new PotionListener(this);
+	private final CheatListener cheatListener = new CheatListener(this);
 
 	public boolean redTeamIronClicked = false;
 	public boolean blueTeamIronClicked = false;
@@ -154,7 +154,7 @@ public class BattleNight extends JavaPlugin {
 		pm.registerEvents(disconnectListener, this);
 		pm.registerEvents(teleportListener, this);
 		pm.registerEvents(blockListener, this);
-		pm.registerEvents(potionListener, this);
+		pm.registerEvents(cheatListener, this);
 
 		// Configuration
 		final FileConfiguration config = getConfig();
