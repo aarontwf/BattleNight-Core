@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.Listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -22,49 +22,49 @@ public class DamageListener implements Listener {
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent)event;
-			if(!canBeDamaged(subEvent)) {
-				event.setCancelled(true);
-			}
-			else {
-				event.setCancelled(false);
-			}
+			if(!canBeDamaged(subEvent)) event.setCancelled(true);
+			else event.setCancelled(false);
 		}
 	}
 	
 	private boolean canBeDamaged(EntityDamageByEntityEvent event) {
-		Entity damager = event.getDamager();
-		Entity damaged = event.getEntity();
 		
-		if(!(damaged instanceof Player)) return true;
+		if(!(event.getEntity() instanceof Player)) return true;
 		
-		if (damager == damaged) return true;
-		if (damager instanceof Projectile) damager = ((Projectile)damager).getShooter();
+		if (event.getDamager() == event.getEntity()) return true;
 		
-		if(!(damager instanceof Player)) return true;
+		Player damaged = (Player) event.getEntity();
+		Player damager;
 		
-		if(!isInBattle((Player) damager) || !isInBattle((Player) damaged)) return true;
+		if (event.getDamager() instanceof Projectile) {
+			LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
+			if (shooter instanceof Player) damager = (Player) shooter;
+			else return true;
+		}
+		else if (event.getDamager() instanceof Player) {
+			damager = (Player) event.getDamager();
+		}
+		else {
+			return true;
+		}
 		
-		if(areEnemies((Player) damager, (Player) damaged) && !plugin.playersInLounge) return true;
+		if(plugin.BattleSpectators.containsKey(damager.getName())) return false;
 		
-		return false;
-	}
-	
-	private boolean isInBattle(Player player) {
-		if (plugin.BattleUsersTeam.containsKey(player.getName())) return true;
-		else return false;
+		if(plugin.BattleUsersTeam.containsKey(damager.getName()) && plugin.BattleUsersTeam.containsKey(damaged.getName())) {
+			if(plugin.playersInLounge) return false;
+			if(areEnemies(damager, damaged)) {
+				return true;
+			}
+			else {
+				if(plugin.configFriendlyFire) return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	private boolean areEnemies(Player player1, Player player2) {
-		if(plugin.BattleUsersTeam.get(player1.getName()) == "red" && plugin.BattleUsersTeam.get(player2.getName()) == "blue") {
-			return true;
-		}
-		else if(plugin.BattleUsersTeam.get(player1.getName()) == "blue" && plugin.BattleUsersTeam.get(player2.getName()) == "red") {
-			return true;
-		}
-		else if(plugin.BattleUsersTeam.get(player2.getName()) == "red" && plugin.BattleUsersTeam.get(player1.getName()) == "blue") {
-			return true;
-		}
-		else if(plugin.BattleUsersTeam.get(player2.getName()) == "blue" && plugin.BattleUsersTeam.get(player1.getName()) == "red") {
+		if(plugin.BattleUsersTeam.get(player1.getName()) != plugin.BattleUsersTeam.get(player2.getName())) {
 			return true;
 		}
 		else {
