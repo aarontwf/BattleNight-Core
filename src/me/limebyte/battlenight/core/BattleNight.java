@@ -95,7 +95,7 @@ public class BattleNight extends JavaPlugin {
 	File classesFile;
 	File waypointsFile;
 	File playerFile;
-	FileConfiguration config;
+	public FileConfiguration config;
 	FileConfiguration classes;
 	FileConfiguration waypoints;
 	FileConfiguration players;
@@ -431,8 +431,7 @@ public class BattleNight extends JavaPlugin {
 
 				else if(fightCmd[0].equalsIgnoreCase("test")) {
 					ItemStack gs = new ItemStack(Material.GLOWSTONE);
-					player.getInventory().setLeggings(gs);
-					player.getInventory().setChestplate(gs);
+					player.getInventory().setHelmet(gs);
 				}
 
 				else
