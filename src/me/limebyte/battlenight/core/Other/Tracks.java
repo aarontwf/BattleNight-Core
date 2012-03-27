@@ -14,11 +14,12 @@ public class Tracks {
 		MUST_HAVE_EMPTY				("You must have an empty inventory to join the Battle."),
 		CONFIG_UNSET				("The config file has not been set up!"),
 		NO_PERMISSION				("You do not have permission to use this command."),
-		INVALID_COMAND				("Invalid Command."),
+		INVALID_COMAND				("Invalid Command.  Type '/bn help' for help."),
 		SPECIFY_PLAYER				("Please specify a player."),
 		ALREADY_IN_TEAM				("You have already joined a team!"),
 		NOT_IN_TEAM					("You are not in a team."),
 		NO_TP						("You a currently in a Battle and are not allowed to teleport.  To leave the Battle use '/bn leave'."),
+		NO_CHEATING					("Not so fast! No Cheating!"),
 		
 		WAYPOINTS_UNSET				("All waypoints must be set up first."),
 		RED_LOUNGE_SET				("Red Lounge Waypoint Set."),
