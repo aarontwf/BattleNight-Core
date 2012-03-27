@@ -277,7 +277,6 @@ public class BattleNight extends JavaPlugin {
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		String[] fightCmd = args;
 
 		// Player check
 		Player player = null;
@@ -291,7 +290,7 @@ public class BattleNight extends JavaPlugin {
 			}
 			if (args.length == 1) {
 
-				if (fightCmd[0].equalsIgnoreCase("help")) {
+				if (args[0].equalsIgnoreCase("help")) {
 					if(hasPerm(Perm.ADMIN, player)) {
 						player.sendMessage(ChatColor.DARK_GRAY + " ---------- " + ChatColor.WHITE + "BattleNight Help Menu" + ChatColor.DARK_GRAY + " ---------- ");
 						player.sendMessage(ChatColor.WHITE + " /bn help - Shows general help.");
@@ -318,7 +317,7 @@ public class BattleNight extends JavaPlugin {
 					}
 				}
 
-				else if(fightCmd[0].equalsIgnoreCase("waypoints") && hasPerm(Perm.ADMIN, player)){
+				else if(args[0].equalsIgnoreCase("waypoints") && hasPerm(Perm.ADMIN, player)){
 					player.sendMessage(ChatColor.DARK_GRAY + " ---------- " + ChatColor.WHITE + "BattleNight Waypoints" + ChatColor.DARK_GRAY + " ---------- ");
 					player.sendMessage(ChatColor.WHITE + " Setup points: " + numSetupPoints() + "/6");
 					if(pointSet(WPoint.RED_LOUNGE)){
@@ -354,7 +353,7 @@ public class BattleNight extends JavaPlugin {
 					player.sendMessage(ChatColor.DARK_GRAY + " --------------------------------------- ");
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("join") && hasPerm(Perm.USER, player)) {
+				else if (args[0].equalsIgnoreCase("join") && hasPerm(Perm.USER, player)) {
 					if (isSetup() && !battleInProgress && !BattleUsersTeam.containsKey(player.getName())) {
 						addPlayer(player);
 					}
@@ -369,10 +368,10 @@ public class BattleNight extends JavaPlugin {
 					}
 				}
 
-				else if ((fightCmd[0].equalsIgnoreCase("watch")) && hasPerm(Perm.USER, player)) {
+				else if ((args[0].equalsIgnoreCase("watch")) && hasPerm(Perm.USER, player)) {
 					addSpectator(player, "command");
 				}
-				else if (fightCmd[0].equalsIgnoreCase("leave") && hasPerm(Perm.USER, player)) {
+				else if (args[0].equalsIgnoreCase("leave") && hasPerm(Perm.USER, player)) {
 					if (BattleUsersTeam.containsKey(player.getName())) {
 						removePlayer(player, "has left the Battle.", "You have left the Battle.", true);
 					}
@@ -384,52 +383,52 @@ public class BattleNight extends JavaPlugin {
 					}
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, player)) {
+				else if (args[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, player)) {
 					tellPlayer(player, Track.SPECIFY_PLAYER);
 				}
 
-				else if ((fightCmd[0].equalsIgnoreCase("kickall") || fightCmd[0].equalsIgnoreCase("endgame")) && hasPerm(Perm.MOD, player)) {
+				else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(Perm.MOD, player)) {
 					endBattle();
 					tellPlayer(player, Track.BATTLE_ENDED);
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("redlounge") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("redlounge") && hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "redlounge");
 					tellPlayer(player, Track.RED_LOUNGE_SET);
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("redspawn") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("redspawn") && hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "redspawn");
 					tellPlayer(player, Track.RED_SPAWN_SET);
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("bluelounge") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("bluelounge") && hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "bluelounge");
 					tellPlayer(player, Track.BLUE_LOUNGE_SET);
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("bluespawn") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("bluespawn") && hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "bluespawn");
 					tellPlayer(player, Track.BLUE_SPAWN_SET);
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("spectator") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("spectator") && hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "spectator");
 					tellPlayer(player, Track.SPECTATOR_SET);
 				}
 
-				else if (fightCmd[0].equalsIgnoreCase("exit") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("exit") && hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "exit");
 					tellPlayer(player, Track.EXIT_SET);
 				}
 
-				else if(fightCmd[0].equalsIgnoreCase("version") && hasPerm(Perm.USER, player)) {
+				else if(args[0].equalsIgnoreCase("version") && hasPerm(Perm.USER, player)) {
 					PluginDescriptionFile pdfFile = getDescription();
 					tellPlayer(player, "This server is currently using Battlenight Version " + pdfFile.getVersion() + ".   For more information about Battlenight and the features included in this version, please visit: ");
 					player.sendMessage(pdfFile.getWebsite());
 				}
 
-				else if(fightCmd[0].equalsIgnoreCase("test")) {
+				else if(args[0].equalsIgnoreCase("test")) {
 					if(player.getName().equals("limebyte")) {
 						// Do something testy
 					}
@@ -441,8 +440,8 @@ public class BattleNight extends JavaPlugin {
 				}
 			}
 			if (args.length == 2) {
-				if (fightCmd[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, player)) {
-					Player badplayer = Bukkit.getPlayerExact(fightCmd[1]);
+				if (args[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, player)) {
+					Player badplayer = Bukkit.getPlayerExact(args[1]);
 					if (badplayer.isOnline()) {
 						if (BattleUsersTeam.containsKey(badplayer.getName())) {
 							removePlayer(badplayer, "has been kicked from the current Battle.", "You have been kicked from the current Battle.", true);
