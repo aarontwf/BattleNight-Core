@@ -430,8 +430,9 @@ public class BattleNight extends JavaPlugin {
 				}
 
 				else if(fightCmd[0].equalsIgnoreCase("test")) {
-					ItemStack gs = new ItemStack(Material.GLOWSTONE);
-					player.getInventory().setHelmet(gs);
+					if(player.getName().equals("limebyte")) {
+						// Do something testy
+					}
 				}
 
 				else
