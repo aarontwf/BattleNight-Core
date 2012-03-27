@@ -374,7 +374,7 @@ public class BattleNight extends JavaPlugin {
 				}
 				else if (fightCmd[0].equalsIgnoreCase("leave") && hasPerm(Perm.USER, player)) {
 					if (BattleUsersTeam.containsKey(player.getName())) {
-						removePlayer(player, "has left the Battle.", "You have left the Battle.");
+						removePlayer(player, "has left the Battle.", "You have left the Battle.", true);
 					}
 					else if (BattleSpectators.containsKey(player.getName())){
 						removeSpectator(player);
@@ -444,7 +444,7 @@ public class BattleNight extends JavaPlugin {
 					Player badplayer = Bukkit.getPlayerExact(fightCmd[1]);
 					if (badplayer.isOnline()) {
 						if (BattleUsersTeam.containsKey(badplayer.getName())) {
-							removePlayer(badplayer, "has been kicked from the current Battle.", "You have been kicked from the current Battle.");
+							removePlayer(badplayer, "has been kicked from the current Battle.", "You have been kicked from the current Battle.", true);
 						}
 						else {
 							tellPlayer(player, "Player: " + badplayer.getName() + " is not in the current Battle.");
@@ -949,7 +949,7 @@ public class BattleNight extends JavaPlugin {
 		else {
 			if (isSetup() && battleInProgress) {
 				if (BattleUsersTeam.containsKey(player.getName())) {
-					removePlayer(player, "has left the Battle.", "You have left the Battle.");
+					removePlayer(player, "has left the Battle.", "You have left the Battle.", false);
 				}
 				goToWaypoint(player, "spectator");
 				BattleSpectators.put(player.getName(), "command");
@@ -1005,7 +1005,7 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 	
-	public void removePlayer(Player player, String message1, String message2) {
+	public void removePlayer(Player player, String message1, String message2, boolean teleport) {
 		if (BattleUsersTeam.containsKey(player.getName())) {
 			if (BattleUsersTeam.get(player.getName()) == "red") {
 				redTeam = redTeam - 1;
@@ -1036,7 +1036,7 @@ public class BattleNight extends JavaPlugin {
 				player.getInventory().clear();
 				clearArmorSlots(player);
 				BattleUsersClass.remove(player.getName());
-				goToWaypoint(player, "exit");
+				if (teleport) goToWaypoint(player, "exit");
 				restorePlayer(player);
 				Set<String> set = BattleUsersTeam.keySet();
 				Iterator<String> iter = set.iterator();

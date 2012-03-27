@@ -21,7 +21,7 @@ public class RespawnListener implements Listener {
 		Player player = event.getPlayer();
 		if (plugin.BattleUsersRespawn.containsKey(player.getName())) {
 			
-			plugin.removePlayer(player, null, "You have been removed from the Battle because you were killed.");
+			plugin.removePlayer(player, null, "You have been removed from the Battle because you were killed.", true);
 			
 			// If the Battle is still going on, take them to the spectator area to watch
 			if(plugin.battleInProgress){
