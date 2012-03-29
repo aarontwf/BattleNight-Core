@@ -1,6 +1,6 @@
 name: BattleNight
 author: LimeByte
-version: 1.0.13
+version: 1.1
 description: Player Vs Player Arena Battle plugin.
 
 main: me.limebyte.battlenight.core.BattleNight
