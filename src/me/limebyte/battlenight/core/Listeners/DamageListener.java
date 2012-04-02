@@ -22,7 +22,7 @@ public class DamageListener implements Listener {
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent)event;
-			if(!canBeDamaged(subEvent)) event.setCancelled(true);
+			if(!canBeDamaged(subEvent) || event.isCancelled()) event.setCancelled(true);
 			else event.setCancelled(false);
 		}
 	}
