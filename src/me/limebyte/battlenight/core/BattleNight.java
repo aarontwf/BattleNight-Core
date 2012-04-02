@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import me.limebyte.battlenight.core.API.BattleEndEvent;
+import me.limebyte.battlenight.core.Hooks.Metrics;
 import me.limebyte.battlenight.core.Listeners.DamageListener;
 import me.limebyte.battlenight.core.Listeners.DeathListener;
 import me.limebyte.battlenight.core.Listeners.DisconnectListener;
@@ -50,7 +51,7 @@ public class BattleNight extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version =  "v1.1";		//TODO Update
+	public static final String Version =  "v1.1.1";		//TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -152,7 +153,15 @@ public class BattleNight extends JavaPlugin {
 		pm.registerEvents(disconnectListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(cheatListener, this);
-
+		
+		// Metrics
+		try {
+		    Metrics metrics = new Metrics(this);
+		    metrics.start();
+		} catch (IOException e) {
+		    // Failed to submit the stats :-(
+		}
+		
 		// Configuration
 		final FileConfiguration config = getConfig();
 
