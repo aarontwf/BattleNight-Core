@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.Hooks;
+package me.limebyte.battlenight.core.old.Hooks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

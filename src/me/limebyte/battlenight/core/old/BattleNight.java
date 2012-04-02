@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.old;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,18 +14,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import me.limebyte.battlenight.core.API.BattleEndEvent;
-import me.limebyte.battlenight.core.Hooks.Metrics;
-import me.limebyte.battlenight.core.Listeners.DamageListener;
-import me.limebyte.battlenight.core.Listeners.DeathListener;
-import me.limebyte.battlenight.core.Listeners.DisconnectListener;
-import me.limebyte.battlenight.core.Listeners.DropListener;
-import me.limebyte.battlenight.core.Listeners.CheatListener;
-import me.limebyte.battlenight.core.Listeners.ReadyListener;
-import me.limebyte.battlenight.core.Listeners.RespawnListener;
-import me.limebyte.battlenight.core.Listeners.SignChanger;
-import me.limebyte.battlenight.core.Listeners.SignListener;
-import me.limebyte.battlenight.core.Other.Tracks.Track;
+import me.limebyte.battlenight.core.old.API.BattleEndEvent;
+import me.limebyte.battlenight.core.old.Hooks.Metrics;
+import me.limebyte.battlenight.core.old.Listeners.DamageListener;
+import me.limebyte.battlenight.core.old.Listeners.DeathListener;
+import me.limebyte.battlenight.core.old.Listeners.DisconnectListener;
+import me.limebyte.battlenight.core.old.Listeners.DropListener;
+import me.limebyte.battlenight.core.old.Listeners.CheatListener;
+import me.limebyte.battlenight.core.old.Listeners.ReadyListener;
+import me.limebyte.battlenight.core.old.Listeners.RespawnListener;
+import me.limebyte.battlenight.core.old.Listeners.SignChanger;
+import me.limebyte.battlenight.core.old.Listeners.SignListener;
+import me.limebyte.battlenight.core.old.Other.Tracks.Track;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

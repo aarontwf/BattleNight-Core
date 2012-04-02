@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.Other;
+package me.limebyte.battlenight.core.old.Other;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.old.BattleNight;
 
 public class GUI {
 	private JFrame frmBattleNight;

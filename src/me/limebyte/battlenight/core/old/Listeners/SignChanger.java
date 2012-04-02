@@ -1,6 +1,6 @@
-package me.limebyte.battlenight.core.Listeners;
+package me.limebyte.battlenight.core.old.Listeners;
 
-import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.old.BattleNight;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
