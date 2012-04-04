@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.old.Other;
+package me.limebyte.battlenight.core.Other;
 
 import org.bukkit.ChatColor;
 

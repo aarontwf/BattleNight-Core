@@ -1,8 +1,8 @@
-package me.limebyte.battlenight.core.old.API;
+package me.limebyte.battlenight.core.API;
 
 import java.util.Map;
 
-import me.limebyte.battlenight.core.old.BattleNight;
+import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
