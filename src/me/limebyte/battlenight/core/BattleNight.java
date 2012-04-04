@@ -51,7 +51,7 @@ public class BattleNight extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version =  "v1.1.1";		//TODO Update
+	public static final String Version =  "v1.1.2";		//TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -989,12 +989,9 @@ public class BattleNight extends JavaPlugin {
 				tellEveryoneExcept(player, player.getName() + " has joined team " + ChatColor.RED + "<Red>");
 				redTeam += 1;
 				playersInLounge = true;
-				if(player.getName().length() > 15) {
-					int ammountOffName = player.getName().length() -15;
-					player.setPlayerListName(ChatColor.RED + shortenString(player.getName(), ammountOffName));
-				}
-				else {
-					player.setPlayerListName(ChatColor.RED + player.getName());
+				if(player.getName().length() > 16) {
+					String listname = ChatColor.GRAY + "[BN] " + ChatColor.RED + "[R] " + player.getDisplayName();
+					player.setPlayerListName(listname.substring(0, 16));
 				}
 			}
 			else {
@@ -1004,12 +1001,9 @@ public class BattleNight extends JavaPlugin {
 				tellEveryoneExcept(player, player.getName() + " has joined team " + ChatColor.BLUE + "<Blue>");
 				blueTeam += 1;
 				playersInLounge = true;
-				if(player.getName().length() > 15) {
-					int ammountOffName = player.getName().length() -15;
-					player.setPlayerListName(ChatColor.BLUE + shortenString(player.getName(), ammountOffName));
-				}
-				else {
-					player.setPlayerListName(ChatColor.BLUE + player.getName());
+				if(player.getName().length() > 16) {
+					String listname = ChatColor.GRAY + "[BN] " + ChatColor.BLUE + "[B] " + player.getDisplayName();
+					player.setPlayerListName(listname.substring(0, 16));
 				}
 			}
 		}
@@ -1173,16 +1167,6 @@ public class BattleNight extends JavaPlugin {
 	    player.getInventory().setBoots(null);
 	    player.getInventory().setChestplate(null);
 	    player.getInventory().setLeggings(null);
-  }
-  
-  private String shortenString(String string, int ammontOff) {
-	  StringBuilder sb = new StringBuilder(string);
-	  for (int i = 0; i < (ammontOff -3); i++) {
-		  int lastChar = sb.length()-1;
-		  sb.deleteCharAt(lastChar);
-	  }
-	  String result = sb.toString() + "...";
-	  return result;
   }
   
   private boolean preparePlayer(Player p) {
