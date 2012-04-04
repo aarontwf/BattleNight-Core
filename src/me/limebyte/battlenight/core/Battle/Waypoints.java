@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.Battle;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.Configuration.Config;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 

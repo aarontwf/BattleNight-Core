@@ -1,10 +1,11 @@
 package me.limebyte.battlenight.core;
 
+import java.util.logging.Logger;
+
 import me.limebyte.battlenight.core.Configuration.Config;
+
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.logging.Logger;
 
 /**
  * @author LimeByte.

@@ -1,12 +1,13 @@
 package me.limebyte.battlenight.core.Configuration;
 
-import me.limebyte.battlenight.core.BattleNight;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import me.limebyte.battlenight.core.BattleNight;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @author LimeByte.

@@ -21,7 +21,8 @@ public class BattleStartEvent extends Event {
 		return battlenightPlayers;
 	}
 	
-    public HandlerList getHandlers() {
+    @Override
+	public HandlerList getHandlers() {
         return handlers;
     }
  

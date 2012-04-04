@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core.old.Listeners;
 
 import me.limebyte.battlenight.core.old.BattleNight;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -23,8 +24,8 @@ public class ReadyListener implements Listener {
 		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 			Block block = event.getClickedBlock();
 			Player player = event.getPlayer();
-			if ((block.getTypeId() == plugin.configReadyBlock) && (plugin.BattleUsersTeam.containsKey(player.getName()) && (plugin.playersInLounge)) && (plugin.teamReady((String)plugin.BattleUsersTeam.get(player.getName())))) {
-				String color = (String)plugin.BattleUsersTeam.get(player.getName());
+			if ((block.getTypeId() == plugin.configReadyBlock) && (plugin.BattleUsersTeam.containsKey(player.getName()) && (plugin.playersInLounge)) && (plugin.teamReady(plugin.BattleUsersTeam.get(player.getName())))) {
+				String color = plugin.BattleUsersTeam.get(player.getName());
 
 				if (color == "red") {
 					plugin.redTeamIronClicked = true;

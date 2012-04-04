@@ -53,7 +53,8 @@ public class BattleEndEvent extends Event {
 		return output;
 	}
 	
-    public HandlerList getHandlers() {
+    @Override
+	public HandlerList getHandlers() {
         return handlers;
     }
  

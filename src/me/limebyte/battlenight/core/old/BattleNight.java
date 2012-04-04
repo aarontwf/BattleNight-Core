@@ -16,11 +16,11 @@ import java.util.logging.Logger;
 
 import me.limebyte.battlenight.core.old.API.BattleEndEvent;
 import me.limebyte.battlenight.core.old.Hooks.Metrics;
+import me.limebyte.battlenight.core.old.Listeners.CheatListener;
 import me.limebyte.battlenight.core.old.Listeners.DamageListener;
 import me.limebyte.battlenight.core.old.Listeners.DeathListener;
 import me.limebyte.battlenight.core.old.Listeners.DisconnectListener;
 import me.limebyte.battlenight.core.old.Listeners.DropListener;
-import me.limebyte.battlenight.core.old.Listeners.CheatListener;
 import me.limebyte.battlenight.core.old.Listeners.ReadyListener;
 import me.limebyte.battlenight.core.old.Listeners.RespawnListener;
 import me.limebyte.battlenight.core.old.Listeners.SignChanger;
@@ -107,6 +107,7 @@ public class BattleNight extends JavaPlugin {
 	//////////////////////
 	// Plug-in Disable  //
 	//////////////////////
+	@Override
 	public void onDisable() {
 		if(battleInProgress || playersInLounge) {
 			log.info("[BattleNight] Ending current Battle...");
@@ -119,6 +120,7 @@ public class BattleNight extends JavaPlugin {
 	/////////////////////
 	//  Plug-in Enable  //
 	//////////////////////
+	@Override
 	public void onEnable() {
 
 		// Initialise Files and FileConfigurations
@@ -285,6 +287,7 @@ public class BattleNight extends JavaPlugin {
 		Main, Classes, Waypoints, Players
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 
 		// Player check
@@ -524,6 +527,7 @@ public class BattleNight extends JavaPlugin {
 			this.name = name;
 		}
 		private final String name;
+		@Override
 		public String toString() {
 			return name;
 		}

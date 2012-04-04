@@ -1,9 +1,9 @@
 package me.limebyte.battlenight.core.Configuration;
 
-import org.bukkit.entity.Player;
-
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.toBinaryString;
+
+import org.bukkit.entity.Player;
 
 /**
  * @author LimeByte.

@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.old.Other;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +15,7 @@ public class GUI {
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					GUI window = new GUI();
