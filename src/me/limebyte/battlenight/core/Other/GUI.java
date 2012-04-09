@@ -20,14 +20,13 @@ public class GUI {
 				try {
 					GUI window = new GUI();
 					window.frmBattleNight.setVisible(true);
-				} 
-				catch (Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
- 
+
 	public GUI() {
 		initialize();
 	}
@@ -39,14 +38,21 @@ public class GUI {
 		this.frmBattleNight = new JFrame();
 		this.frmBattleNight.setAlwaysOnTop(true);
 		this.frmBattleNight.setResizable(false);
-		this.frmBattleNight.setIconImage(Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/me/limebyte/battlenight/media/Warning.gif")));
+		this.frmBattleNight
+				.setIconImage(Toolkit
+						.getDefaultToolkit()
+						.getImage(
+								GUI.class
+										.getResource("/me/limebyte/battlenight/media/Warning.gif")));
 		this.frmBattleNight.setTitle("BattleNight " + BattleNight.Version);
 		this.frmBattleNight.setBounds(100, 100, 345, 168);
-		this.frmBattleNight.setLocation(screenWidth / 2 - 172, screenHeight / 2 - 94);
+		this.frmBattleNight.setLocation(screenWidth / 2 - 172,
+				screenHeight / 2 - 94);
 		this.frmBattleNight.setDefaultCloseOperation(3);
 
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(GUI.class.getResource("/me/limebyte/battlenight/media/Frame.gif")));
+		label.setIcon(new ImageIcon(GUI.class
+				.getResource("/me/limebyte/battlenight/media/Frame.gif")));
 		this.frmBattleNight.getContentPane().add(label, "North");
 	}
 }

@@ -9,9 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class RespawnListener implements Listener {
-	
+
 	// Get Main Class
 	public static BattleNight plugin;
+
 	public RespawnListener(BattleNight instance) {
 		plugin = instance;
 	}
@@ -20,19 +21,24 @@ public class RespawnListener implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
 		if (plugin.BattleUsersRespawn.containsKey(player.getName())) {
-			
-			plugin.removePlayer(player, null, "You have been removed from the Battle because you were killed.", true);
-			
-			// If the Battle is still going on, take them to the spectator area to watch
-			if(plugin.battleInProgress){
+
+			plugin.removePlayer(
+					player,
+					null,
+					"You have been removed from the Battle because you were killed.",
+					true);
+
+			// If the Battle is still going on, take them to the spectator area
+			// to watch
+			if (plugin.battleInProgress) {
 				event.setRespawnLocation(plugin.getCoords("spectator"));
 				plugin.addSpectator(player, "death");
-			// Else, take them to the exit area
+				// Else, take them to the exit area
 			} else {
 				event.setRespawnLocation(plugin.getCoords("exit"));
 			}
 			plugin.BattleUsersRespawn.remove(player.getName());
 		}
 	}
-	
+
 }

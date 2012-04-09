@@ -13,6 +13,7 @@ public class DropListener implements Listener {
 
 	// Get Main Class
 	public static BattleNight plugin;
+
 	public DropListener(BattleNight instance) {
 		plugin = instance;
 	}
@@ -21,7 +22,8 @@ public class DropListener implements Listener {
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		if (plugin.BattleUsersTeam.containsKey(player.getName())) {
-			player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Not so fast! No Cheating!");
+			player.sendMessage(ChatColor.GRAY + "[BattleNight] "
+					+ ChatColor.WHITE + "Not so fast! No Cheating!");
 			event.setCancelled(true);
 		}
 	}

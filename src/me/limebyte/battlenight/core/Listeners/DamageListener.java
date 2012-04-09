@@ -15,62 +15,71 @@ public class DamageListener implements Listener {
 
 	// Get Main Class
 	public static BattleNight plugin;
+
 	public DamageListener(BattleNight instance) {
 		plugin = instance;
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event instanceof EntityDamageByEntityEvent) {
-			EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent)event;
-			if(!canBeDamaged(subEvent) || event.isCancelled()) event.setCancelled(true);
-			else event.setCancelled(false);
+			EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+			if (!canBeDamaged(subEvent) || event.isCancelled())
+				event.setCancelled(true);
+			else
+				event.setCancelled(false);
 		}
 	}
-	
+
 	private boolean canBeDamaged(EntityDamageByEntityEvent event) {
-		
-		if(!(event.getEntity() instanceof Player)) return true;
-		
-		if (event.getDamager() == event.getEntity()) return true;
-		
+
+		if (!(event.getEntity() instanceof Player))
+			return true;
+
+		if (event.getDamager() == event.getEntity())
+			return true;
+
 		Player damaged = (Player) event.getEntity();
 		Player damager;
-		
+
 		if (event.getDamager() instanceof Projectile) {
-			LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
-			if (shooter instanceof Player) damager = (Player) shooter;
-			else return true;
-		}
-		else if (event.getDamager() instanceof Player) {
+			LivingEntity shooter = ((Projectile) event.getDamager())
+					.getShooter();
+			if (shooter instanceof Player)
+				damager = (Player) shooter;
+			else
+				return true;
+		} else if (event.getDamager() instanceof Player) {
 			damager = (Player) event.getDamager();
-		}
-		else {
+		} else {
 			return true;
 		}
-		
-		if(plugin.BattleSpectators.containsKey(damager.getName())) return false;
-		
-		if(plugin.BattleUsersTeam.containsKey(damager.getName()) && plugin.BattleUsersTeam.containsKey(damaged.getName())) {
-			if(plugin.playersInLounge) return false;
-			if(areEnemies(damager, damaged)) {
+
+		if (plugin.BattleSpectators.containsKey(damager.getName()))
+			return false;
+
+		if (plugin.BattleUsersTeam.containsKey(damager.getName())
+				&& plugin.BattleUsersTeam.containsKey(damaged.getName())) {
+			if (plugin.playersInLounge)
+				return false;
+			if (areEnemies(damager, damaged)) {
 				return true;
-			}
-			else {
-				if(plugin.configFriendlyFire) return false;
+			} else {
+				if (plugin.configFriendlyFire)
+					return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	private boolean areEnemies(Player player1, Player player2) {
-		if(plugin.BattleUsersTeam.get(player1.getName()) != plugin.BattleUsersTeam.get(player2.getName())) {
+		if (plugin.BattleUsersTeam.get(player1.getName()) != plugin.BattleUsersTeam
+				.get(player2.getName())) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
-	
+
 }

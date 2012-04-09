@@ -49,9 +49,11 @@ public class BattleNight extends JavaPlugin {
 
 	// Variables
 	public static final Logger log = Logger.getLogger("Minecraft");
-	public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
-	public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version =  "v1.1.3";		//TODO Update
+	public static final String BNTag = ChatColor.GRAY + "[BattleNight] "
+			+ ChatColor.WHITE;
+	public static final String BNKTag = ChatColor.GRAY
+			+ "[BattleNight KillFeed] " + ChatColor.WHITE;
+	public static final String Version = "v1.1.3"; // TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -71,7 +73,8 @@ public class BattleNight extends JavaPlugin {
 	private final DeathListener deathListener = new DeathListener(this);
 	private final DamageListener damageListener = new DamageListener(this);
 	private final DropListener dropListener = new DropListener(this);
-	private final DisconnectListener disconnectListener = new DisconnectListener(this);
+	private final DisconnectListener disconnectListener = new DisconnectListener(
+			this);
 	private final SignChanger blockListener = new SignChanger(this);
 	private final CheatListener cheatListener = new CheatListener(this);
 
@@ -84,8 +87,8 @@ public class BattleNight extends JavaPlugin {
 	public boolean configUsePermissions = false;
 	public boolean configFriendlyFire = false;
 	public boolean configStopHealthRegen = true;
-	public String  configInventoryType = "prompt";
-	public int     configReadyBlock = 42;
+	public String configInventoryType = "prompt";
+	public int configReadyBlock = 42;
 	public boolean configDebug = false;
 
 	// classes.yml Values
@@ -104,29 +107,31 @@ public class BattleNight extends JavaPlugin {
 	public int redTeam = 0;
 	public int blueTeam = 0;
 
-	//////////////////////
-	// Plug-in Disable  //
-	//////////////////////
+	// ////////////////////
+	// Plug-in Disable //
+	// ////////////////////
 	@Override
 	public void onDisable() {
-		if(battleInProgress || playersInLounge) {
+		if (battleInProgress || playersInLounge) {
 			log.info("[BattleNight] Ending current Battle...");
 			endBattle();
 		}
 		PluginDescriptionFile pdfFile = getDescription();
-		log.info("[BattleNight] Version " + pdfFile.getVersion() + " has been disabled.");
+		log.info("[BattleNight] Version " + pdfFile.getVersion()
+				+ " has been disabled.");
 	}
 
-	/////////////////////
-	//  Plug-in Enable  //
-	//////////////////////
+	// ///////////////////
+	// Plug-in Enable //
+	// ////////////////////
 	@Override
 	public void onEnable() {
 
 		// Initialise Files and FileConfigurations
 		configFile = new File(getDataFolder(), "config.yml");
 		classesFile = new File(getDataFolder(), "classes.yml");
-		waypointsFile = new File(getDataFolder() + "/PluginData", "waypoints.dat");
+		waypointsFile = new File(getDataFolder() + "/PluginData",
+				"waypoints.dat");
 		playerFile = new File(getDataFolder() + "/PluginData", "players.dat");
 
 		// Use firstRun(); method
@@ -155,15 +160,15 @@ public class BattleNight extends JavaPlugin {
 		pm.registerEvents(disconnectListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(cheatListener, this);
-		
+
 		// Metrics
 		try {
-		    Metrics metrics = new Metrics(this);
-		    metrics.start();
+			Metrics metrics = new Metrics(this);
+			metrics.start();
 		} catch (IOException e) {
-		    // Failed to submit the stats :-(
+			// Failed to submit the stats :-(
 		}
-		
+
 		// Configuration
 		final FileConfiguration config = getConfig();
 
@@ -171,23 +176,27 @@ public class BattleNight extends JavaPlugin {
 		configFriendlyFire = config.getBoolean("FriendlyFire");
 		configStopHealthRegen = config.getBoolean("StopHealthRegen");
 		configInventoryType = config.getString("InventoryType").toLowerCase();
-		configReadyBlock  = config.getInt("ReadyBlock");
+		configReadyBlock = config.getInt("ReadyBlock");
 		configDebug = config.getBoolean("Debug");
 
 		classesDummyItem = classes.getInt("DummyItem");
-		for (String className : classes.getConfigurationSection("Classes").getKeys(false)){
-			BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
+		for (String className : classes.getConfigurationSection("Classes")
+				.getKeys(false)) {
+			BattleClasses.put(className,
+					classes.getString("Classes." + className + ".Items", null));
 		}
-		for (String className : classes.getConfigurationSection("Classes").getKeys(false)){
-			BattleArmor.put(className, classes.getString("Classes." + className + ".Armor", null));
+		for (String className : classes.getConfigurationSection("Classes")
+				.getKeys(false)) {
+			BattleArmor.put(className,
+					classes.getString("Classes." + className + ".Armor", null));
 		}
-		ClassList 	= classes.getConfigurationSection("Classes").getKeys(false);
+		ClassList = classes.getConfigurationSection("Classes").getKeys(false);
 
 		// Debug
-		if(configDebug) {
-			if (configUsePermissions){
+		if (configDebug) {
+			if (configUsePermissions) {
 				log.info("[BattleNight] Permissions Enabled.");
-			} else if (!configUsePermissions){
+			} else if (!configUsePermissions) {
 				log.info("[BattleNight] Permissions Disabled, using Op.");
 			} else {
 				log.warning("[BattleNight] Permissions not setup in config!");
@@ -197,30 +206,34 @@ public class BattleNight extends JavaPlugin {
 		}
 
 		// Enable Message
-		log.info("[BattleNight] Version " + pdfFile.getVersion() + " enabled successfully.");
+		log.info("[BattleNight] Version " + pdfFile.getVersion()
+				+ " enabled successfully.");
 		log.info("[BattleNight] Made by LimeByte.");
 	}
 
 	// Fill Configuration Files with Defaults
 	private void firstRun() throws Exception {
-		if(!configFile.exists()){                        // Checks If The YAML File Does Not Exist
-			configFile.getParentFile().mkdirs();         // Creates the /Plugins/BattleNight/ Directory If Not Found
-			copy(getResource("config.yml"), configFile); // Copies the YAML From Your Jar to the Folder
+		if (!configFile.exists()) { // Checks If The YAML File Does Not Exist
+			configFile.getParentFile().mkdirs(); // Creates the
+													// /Plugins/BattleNight/
+													// Directory If Not Found
+			copy(getResource("config.yml"), configFile); // Copies the YAML From
+															// Your Jar to the
+															// Folder
 		}
-		if(!classesFile.exists()){
+		if (!classesFile.exists()) {
 			classesFile.getParentFile().mkdirs();
 			copy(getResource("classes.yml"), classesFile);
 		}
-		if(!waypointsFile.exists()){
+		if (!waypointsFile.exists()) {
 			waypointsFile.getParentFile().mkdirs();
 			copy(getResource("waypoints.dat"), waypointsFile);
 		}
-		if(!playerFile.exists()){
+		if (!playerFile.exists()) {
 			playerFile.getParentFile().mkdirs();
 			copy(getResource("players.dat"), playerFile);
 		}
 	}
-
 
 	// YAML Copy Method
 	public void copy(InputStream in, File file) {
@@ -228,8 +241,8 @@ public class BattleNight extends JavaPlugin {
 			OutputStream out = new FileOutputStream(file);
 			byte[] buf = new byte[1024];
 			int len;
-			while((len=in.read(buf))!=-1){
-				out.write(buf,0,len);
+			while ((len = in.read(buf)) != -1) {
+				out.write(buf, 0, len);
 			}
 			out.close();
 			in.close();
@@ -237,7 +250,6 @@ public class BattleNight extends JavaPlugin {
 			e.printStackTrace();
 		}
 	}
-
 
 	// YAML Load Method
 	public void loadYamls() {
@@ -271,24 +283,29 @@ public class BattleNight extends JavaPlugin {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void saveYAML(ConfigFile file) {
 		try {
-			if (file.equals(ConfigFile.Main)) config.save(configFile);
-			if (file.equals(ConfigFile.Classes)) classes.save(classesFile);
-			if (file.equals(ConfigFile.Waypoints)) waypoints.save(waypointsFile);
-			if (file.equals(ConfigFile.Players)) players.save(playerFile);
+			if (file.equals(ConfigFile.Main))
+				config.save(configFile);
+			if (file.equals(ConfigFile.Classes))
+				classes.save(classesFile);
+			if (file.equals(ConfigFile.Waypoints))
+				waypoints.save(waypointsFile);
+			if (file.equals(ConfigFile.Players))
+				players.save(playerFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public enum ConfigFile {
 		Main, Classes, Waypoints, Players
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command,
+			String commandLabel, String[] args) {
 
 		// Player check
 		Player player = null;
@@ -303,166 +320,219 @@ public class BattleNight extends JavaPlugin {
 			if (args.length == 1) {
 
 				if (args[0].equalsIgnoreCase("help")) {
-					if(hasPerm(Perm.ADMIN, player)) {
-						player.sendMessage(ChatColor.DARK_GRAY + " ---------- " + ChatColor.WHITE + "BattleNight Help Menu" + ChatColor.DARK_GRAY + " ---------- ");
-						player.sendMessage(ChatColor.WHITE + " /bn help - Shows general help.");
-						player.sendMessage(ChatColor.WHITE + " /bn waypoints - Shows set/unset waypoints.");
-						player.sendMessage(ChatColor.WHITE + " /bn version - Shows the version of BattleNight in use.");
-						player.sendMessage(ChatColor.WHITE + " /bn join - Join the Battle.");
-						player.sendMessage(ChatColor.WHITE + " /bn leave - Leave the Battle.");
-						player.sendMessage(ChatColor.WHITE + " /bn watch - Watch the Battle.");
-						player.sendMessage(ChatColor.WHITE + " /bn kick [player] - Kick a player from the Battle.");
-						player.sendMessage(ChatColor.WHITE + " /bn kickall - Kick all players in the Battle.");
-						player.sendMessage(ChatColor.DARK_GRAY + " --------------------------------------- ");
-					}
-					else if (hasPerm(Perm.USER, player)) {
-						player.sendMessage(ChatColor.DARK_GRAY + " ---------- " + ChatColor.WHITE + "BattleNight Help Menu" + ChatColor.DARK_GRAY + " ---------- ");
-						player.sendMessage(ChatColor.WHITE + " /bn help - Shows general help.");
-						player.sendMessage(ChatColor.WHITE + " /bn version - Shows the version of BattleNight in use.");
-						player.sendMessage(ChatColor.WHITE + " /bn join - Join the Battle.");
-						player.sendMessage(ChatColor.WHITE + " /bn leave - Leave the Battle.");
-						player.sendMessage(ChatColor.WHITE + " /bn watch - Watch the Battle");
-						player.sendMessage(ChatColor.DARK_GRAY + " --------------------------------------- ");
-					}
-					else {
+					if (hasPerm(Perm.ADMIN, player)) {
+						player.sendMessage(ChatColor.DARK_GRAY + " ---------- "
+								+ ChatColor.WHITE + "BattleNight Help Menu"
+								+ ChatColor.DARK_GRAY + " ---------- ");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn help - Shows general help.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn waypoints - Shows set/unset waypoints.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn version - Shows the version of BattleNight in use.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn join - Join the Battle.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn leave - Leave the Battle.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn watch - Watch the Battle.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn kick [player] - Kick a player from the Battle.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn kickall - Kick all players in the Battle.");
+						player.sendMessage(ChatColor.DARK_GRAY
+								+ " --------------------------------------- ");
+					} else if (hasPerm(Perm.USER, player)) {
+						player.sendMessage(ChatColor.DARK_GRAY + " ---------- "
+								+ ChatColor.WHITE + "BattleNight Help Menu"
+								+ ChatColor.DARK_GRAY + " ---------- ");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn help - Shows general help.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn version - Shows the version of BattleNight in use.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn join - Join the Battle.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn leave - Leave the Battle.");
+						player.sendMessage(ChatColor.WHITE
+								+ " /bn watch - Watch the Battle");
+						player.sendMessage(ChatColor.DARK_GRAY
+								+ " --------------------------------------- ");
+					} else {
 						tellPlayer(player, Track.NO_PERMISSION);
 					}
 				}
 
-				else if(args[0].equalsIgnoreCase("waypoints") && hasPerm(Perm.ADMIN, player)){
-					player.sendMessage(ChatColor.DARK_GRAY + " ---------- " + ChatColor.WHITE + "BattleNight Waypoints" + ChatColor.DARK_GRAY + " ---------- ");
-					player.sendMessage(ChatColor.WHITE + " Setup points: " + numSetupPoints() + "/6");
-					if(pointSet(WPoint.RED_LOUNGE)){
-						player.sendMessage(ChatColor.GREEN + " Red Lounge" + ChatColor.WHITE + " (/bn redlounge)");
+				else if (args[0].equalsIgnoreCase("waypoints")
+						&& hasPerm(Perm.ADMIN, player)) {
+					player.sendMessage(ChatColor.DARK_GRAY + " ---------- "
+							+ ChatColor.WHITE + "BattleNight Waypoints"
+							+ ChatColor.DARK_GRAY + " ---------- ");
+					player.sendMessage(ChatColor.WHITE + " Setup points: "
+							+ numSetupPoints() + "/6");
+					if (pointSet(WPoint.RED_LOUNGE)) {
+						player.sendMessage(ChatColor.GREEN + " Red Lounge"
+								+ ChatColor.WHITE + " (/bn redlounge)");
 					} else {
-						player.sendMessage(ChatColor.RED + " Red Lounge" + ChatColor.WHITE + " (/bn redlounge)");
+						player.sendMessage(ChatColor.RED + " Red Lounge"
+								+ ChatColor.WHITE + " (/bn redlounge)");
 					}
-					if(pointSet(WPoint.BLUE_LOUNGE)){
-						player.sendMessage(ChatColor.GREEN + " Blue Lounge" + ChatColor.WHITE + " (/bn bluelounge)");
+					if (pointSet(WPoint.BLUE_LOUNGE)) {
+						player.sendMessage(ChatColor.GREEN + " Blue Lounge"
+								+ ChatColor.WHITE + " (/bn bluelounge)");
 					} else {
-						player.sendMessage(ChatColor.RED + " Blue Lounge" + ChatColor.WHITE + " (/bn bluelounge)");
+						player.sendMessage(ChatColor.RED + " Blue Lounge"
+								+ ChatColor.WHITE + " (/bn bluelounge)");
 					}
-					if(pointSet(WPoint.RED_SPAWN)){
-						player.sendMessage(ChatColor.GREEN + " Red Spawn" + ChatColor.WHITE + " (/bn redspawn)");
+					if (pointSet(WPoint.RED_SPAWN)) {
+						player.sendMessage(ChatColor.GREEN + " Red Spawn"
+								+ ChatColor.WHITE + " (/bn redspawn)");
 					} else {
-						player.sendMessage(ChatColor.RED + " Red Spawn" + ChatColor.WHITE + " (/bn redspawn)");
+						player.sendMessage(ChatColor.RED + " Red Spawn"
+								+ ChatColor.WHITE + " (/bn redspawn)");
 					}
-					if(pointSet(WPoint.BLUE_SPAWN)){
-						player.sendMessage(ChatColor.GREEN + " Blue Spawn" + ChatColor.WHITE + " (/bn bluespawn)");
+					if (pointSet(WPoint.BLUE_SPAWN)) {
+						player.sendMessage(ChatColor.GREEN + " Blue Spawn"
+								+ ChatColor.WHITE + " (/bn bluespawn)");
 					} else {
-						player.sendMessage(ChatColor.RED + " Blue Spawn" + ChatColor.WHITE + " (/bn bluespawn)");
+						player.sendMessage(ChatColor.RED + " Blue Spawn"
+								+ ChatColor.WHITE + " (/bn bluespawn)");
 					}
-					if(pointSet(WPoint.SPECTATOR)){
-						player.sendMessage(ChatColor.GREEN + " Spectator" + ChatColor.WHITE + " (/bn spectator)");
+					if (pointSet(WPoint.SPECTATOR)) {
+						player.sendMessage(ChatColor.GREEN + " Spectator"
+								+ ChatColor.WHITE + " (/bn spectator)");
 					} else {
-						player.sendMessage(ChatColor.RED + " Spectator" + ChatColor.WHITE + " (/bn spectator)");
+						player.sendMessage(ChatColor.RED + " Spectator"
+								+ ChatColor.WHITE + " (/bn spectator)");
 					}
-					if(pointSet(WPoint.EXIT)){
-						player.sendMessage(ChatColor.GREEN + " Exit" + ChatColor.WHITE + " (/bn exit)");
+					if (pointSet(WPoint.EXIT)) {
+						player.sendMessage(ChatColor.GREEN + " Exit"
+								+ ChatColor.WHITE + " (/bn exit)");
 					} else {
-						player.sendMessage(ChatColor.RED + " Exit" + ChatColor.WHITE + " (/bn exit)");
+						player.sendMessage(ChatColor.RED + " Exit"
+								+ ChatColor.WHITE + " (/bn exit)");
 					}
-					player.sendMessage(ChatColor.DARK_GRAY + " --------------------------------------- ");
+					player.sendMessage(ChatColor.DARK_GRAY
+							+ " --------------------------------------- ");
 				}
 
-				else if (args[0].equalsIgnoreCase("join") && hasPerm(Perm.USER, player)) {
-					if (isSetup() && !battleInProgress && !BattleUsersTeam.containsKey(player.getName())) {
+				else if (args[0].equalsIgnoreCase("join")
+						&& hasPerm(Perm.USER, player)) {
+					if (isSetup() && !battleInProgress
+							&& !BattleUsersTeam.containsKey(player.getName())) {
 						addPlayer(player);
-					}
-					else if (!isSetup()) {
+					} else if (!isSetup()) {
 						tellPlayer(player, Track.WAYPOINTS_UNSET);
-					}
-					else if (battleInProgress) {
+					} else if (battleInProgress) {
 						tellPlayer(player, Track.BATTLE_IN_PROGRESS);
-					}
-					else if (BattleUsersTeam.containsKey(player.getName())) {
+					} else if (BattleUsersTeam.containsKey(player.getName())) {
 						tellPlayer(player, Track.ALREADY_IN_TEAM);
 					}
 				}
 
-				else if ((args[0].equalsIgnoreCase("watch")) && hasPerm(Perm.USER, player)) {
+				else if ((args[0].equalsIgnoreCase("watch"))
+						&& hasPerm(Perm.USER, player)) {
 					addSpectator(player, "command");
-				}
-				else if (args[0].equalsIgnoreCase("leave") && hasPerm(Perm.USER, player)) {
+				} else if (args[0].equalsIgnoreCase("leave")
+						&& hasPerm(Perm.USER, player)) {
 					if (BattleUsersTeam.containsKey(player.getName())) {
-						removePlayer(player, "has left the Battle.", "You have left the Battle.", true);
-					}
-					else if (BattleSpectators.containsKey(player.getName())){
+						removePlayer(player, "has left the Battle.",
+								"You have left the Battle.", true);
+					} else if (BattleSpectators.containsKey(player.getName())) {
 						removeSpectator(player);
-					}
-					else {
+					} else {
 						tellPlayer(player, Track.NOT_IN_TEAM);
 					}
 				}
 
-				else if (args[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, player)) {
+				else if (args[0].equalsIgnoreCase("kick")
+						&& hasPerm(Perm.MOD, player)) {
 					tellPlayer(player, Track.SPECIFY_PLAYER);
 				}
 
-				else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(Perm.MOD, player)) {
+				else if ((args[0].equalsIgnoreCase("kickall") || args[0]
+						.equalsIgnoreCase("endgame"))
+						&& hasPerm(Perm.MOD, player)) {
 					endBattle();
 					tellPlayer(player, Track.BATTLE_ENDED);
 				}
 
-				else if (args[0].equalsIgnoreCase("redlounge") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("redlounge")
+						&& hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "redlounge");
 					tellPlayer(player, Track.RED_LOUNGE_SET);
 				}
 
-				else if (args[0].equalsIgnoreCase("redspawn") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("redspawn")
+						&& hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "redspawn");
 					tellPlayer(player, Track.RED_SPAWN_SET);
 				}
 
-				else if (args[0].equalsIgnoreCase("bluelounge") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("bluelounge")
+						&& hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "bluelounge");
 					tellPlayer(player, Track.BLUE_LOUNGE_SET);
 				}
 
-				else if (args[0].equalsIgnoreCase("bluespawn") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("bluespawn")
+						&& hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "bluespawn");
 					tellPlayer(player, Track.BLUE_SPAWN_SET);
 				}
 
-				else if (args[0].equalsIgnoreCase("spectator") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("spectator")
+						&& hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "spectator");
 					tellPlayer(player, Track.SPECTATOR_SET);
 				}
 
-				else if (args[0].equalsIgnoreCase("exit") && hasPerm(Perm.ADMIN, player)) {
+				else if (args[0].equalsIgnoreCase("exit")
+						&& hasPerm(Perm.ADMIN, player)) {
 					setCoords(player, "exit");
 					tellPlayer(player, Track.EXIT_SET);
 				}
 
-				else if(args[0].equalsIgnoreCase("version") && hasPerm(Perm.USER, player)) {
+				else if (args[0].equalsIgnoreCase("version")
+						&& hasPerm(Perm.USER, player)) {
 					PluginDescriptionFile pdfFile = getDescription();
-					tellPlayer(player, "This server is currently using Battlenight Version " + pdfFile.getVersion() + ".   For more information about Battlenight and the features included in this version, please visit: ");
+					tellPlayer(
+							player,
+							"This server is currently using Battlenight Version "
+									+ pdfFile.getVersion()
+									+ ".   For more information about Battlenight and the features included in this version, please visit: ");
 					player.sendMessage(pdfFile.getWebsite());
 				}
 
-				else if(args[0].equalsIgnoreCase("test")) {
-					if(player.getName().equals("limebyte")) {
+				else if (args[0].equalsIgnoreCase("test")) {
+					if (player.getName().equals("limebyte")) {
 						// Do something testy
 					}
 				}
 
-				else
-				{
+				else {
 					tellPlayer(player, Track.INVALID_COMAND);
 				}
 			}
 			if (args.length == 2) {
-				if (args[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, player)) {
+				if (args[0].equalsIgnoreCase("kick")
+						&& hasPerm(Perm.MOD, player)) {
 					Player badplayer = Bukkit.getPlayerExact(args[1]);
 					if (badplayer.isOnline()) {
 						if (BattleUsersTeam.containsKey(badplayer.getName())) {
-							removePlayer(badplayer, "has been kicked from the current Battle.", "You have been kicked from the current Battle.", true);
+							removePlayer(
+									badplayer,
+									"has been kicked from the current Battle.",
+									"You have been kicked from the current Battle.",
+									true);
+						} else {
+							tellPlayer(player, "Player: " + badplayer.getName()
+									+ " is not in the current Battle.");
 						}
-						else {
-							tellPlayer(player, "Player: " + badplayer.getName() + " is not in the current Battle.");
-						}	
 					} else {
-						tellPlayer(player, "Can't find user " + badplayer.getName() + ". No kick.");
+						tellPlayer(player,
+								"Can't find user " + badplayer.getName()
+										+ ". No kick.");
 					}
 				}
 			}
@@ -474,7 +544,7 @@ public class BattleNight extends JavaPlugin {
 		return false;
 	}
 
-	//Set Coords and put in waypoints.data
+	// Set Coords and put in waypoints.data
 	public void setCoords(Player player, String place) {
 		Location location = player.getLocation();
 		loadWaypoints();
@@ -487,8 +557,8 @@ public class BattleNight extends JavaPlugin {
 		saveYAML(ConfigFile.Waypoints);
 	}
 
-	//Get Coords from waypoints.data
-	public Location getCoords(String place){
+	// Get Coords from waypoints.data
+	public Location getCoords(String place) {
 		loadWaypoints();
 		Double x = waypoints.getDouble("coords." + place + ".x", 0);
 		Double y = waypoints.getDouble("coords." + place + ".y", 0);
@@ -499,7 +569,8 @@ public class BattleNight extends JavaPlugin {
 			try {
 				yaw = Float.parseFloat(yawToParse);
 			} catch (NumberFormatException nfe) {
-				//log it, do whatever you want, it's not a float. Maybe give it a default value
+				// log it, do whatever you want, it's not a float. Maybe give it
+				// a default value
 			}
 		}
 		String pitchToParse = waypoints.getString("coords." + place + ".pitch");
@@ -508,55 +579,58 @@ public class BattleNight extends JavaPlugin {
 			try {
 				pitch = Float.parseFloat(pitchToParse);
 			} catch (NumberFormatException nfe) {
-				//log it, do whatever you want, it's not a float. Maybe give it a default value
+				// log it, do whatever you want, it's not a float. Maybe give it
+				// a default value
 			}
 		}
-		World world = Bukkit.getServer().getWorld(waypoints.getString("coords." + place + ".world"));
+		World world = Bukkit.getServer().getWorld(
+				waypoints.getString("coords." + place + ".world"));
 		return new Location(world, x, y, z, yaw, pitch);
 	}
 
-	private enum WPoint{
-		RED_LOUNGE	("redlounge"),
-		RED_SPAWN 	("redspawn"),
-		BLUE_LOUNGE	("bluelounge"),
-		BLUE_SPAWN	("bluespawn"),
-		SPECTATOR	("spectator"),
-		EXIT		("exit");
+	private enum WPoint {
+		RED_LOUNGE("redlounge"), RED_SPAWN("redspawn"), BLUE_LOUNGE(
+				"bluelounge"), BLUE_SPAWN("bluespawn"), SPECTATOR("spectator"), EXIT(
+				"exit");
 
 		private WPoint(String name) {
 			this.name = name;
 		}
+
 		private final String name;
+
 		@Override
 		public String toString() {
 			return name;
 		}
 	}
 
-	public boolean pointSet(WPoint waypoint){
+	public boolean pointSet(WPoint waypoint) {
 		loadWaypoints();
-		try{
-			Set<String> set = waypoints.getConfigurationSection("coords").getKeys(false);
+		try {
+			Set<String> set = waypoints.getConfigurationSection("coords")
+					.getKeys(false);
 			List<String> setpoints = new ArrayList<String>(set);
-			if(setpoints.contains(waypoint.name)){
+			if (setpoints.contains(waypoint.name)) {
 				return true;
 			} else {
 				return false;
 			}
-		} catch(NullPointerException e) {
+		} catch (NullPointerException e) {
 			return false;
 		}
 	}
 
-	//Check if all Waypoints have been set.
-	public Boolean isSetup(){
+	// Check if all Waypoints have been set.
+	public Boolean isSetup() {
 		loadWaypoints();
-		if(!waypoints.isSet("coords")){
+		if (!waypoints.isSet("coords")) {
 			return false;
 		} else {
-			Set<String> set = waypoints.getConfigurationSection("coords").getKeys(false);
+			Set<String> set = waypoints.getConfigurationSection("coords")
+					.getKeys(false);
 			List<String> list = new ArrayList<String>(set);
-			if(list.size() == 6){
+			if (list.size() == 6) {
 				return true;
 			} else {
 				return false;
@@ -564,105 +638,88 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 
-	public int numSetupPoints(){
+	public int numSetupPoints() {
 		loadWaypoints();
-		if(!waypoints.isSet("coords")){
+		if (!waypoints.isSet("coords")) {
 			return 0;
-		}
-		else{
-			Set<String> set = waypoints.getConfigurationSection("coords").getKeys(false);
+		} else {
+			Set<String> set = waypoints.getConfigurationSection("coords")
+					.getKeys(false);
 			List<String> list = new ArrayList<String>(set);
 			return list.size();
 		}
 	}
 
-	//Give Player Class Items
-	public void giveItems(Player player){
+	// Give Player Class Items
+	public void giveItems(Player player) {
 		String playerClass = BattleUsersClass.get(player.getName());
 		String rawItems = BattleClasses.get(playerClass);
 		String ArmorList = BattleArmor.get(playerClass);
 		String[] items;
 		items = rawItems.split(",");
-		for(int i=0; i < items.length; i++){
+		for (int i = 0; i < items.length; i++) {
 			String item = items[i];
 			player.getInventory().setItem(i, parseItem(item));
-			if(player.getInventory().contains(classesDummyItem)){
+			if (player.getInventory().contains(classesDummyItem)) {
 				player.getInventory().remove(classesDummyItem);
 			}
 		}
 		// Set Armor
 		// Helmets
-		if(ArmorList.contains("298")){
+		if (ArmorList.contains("298")) {
 			player.getInventory().setHelmet(new ItemStack(298, 1));
-		}
-		else if(ArmorList.contains("302")){
+		} else if (ArmorList.contains("302")) {
 			player.getInventory().setHelmet(new ItemStack(302, 1));
-		}
-		else if(ArmorList.contains("306")){
+		} else if (ArmorList.contains("306")) {
 			player.getInventory().setHelmet(new ItemStack(306, 1));
-		}
-		else if(ArmorList.contains("310")){
+		} else if (ArmorList.contains("310")) {
 			player.getInventory().setHelmet(new ItemStack(310, 1));
-		}
-		else if(ArmorList.contains("314")){
+		} else if (ArmorList.contains("314")) {
 			player.getInventory().setHelmet(new ItemStack(314, 1));
 		}
 		// Chestplates
-		if(ArmorList.contains("299")){
+		if (ArmorList.contains("299")) {
 			player.getInventory().setChestplate(new ItemStack(299, 1));
-		}
-		else if(ArmorList.contains("303")){
+		} else if (ArmorList.contains("303")) {
 			player.getInventory().setChestplate(new ItemStack(303, 1));
-		}
-		else if(ArmorList.contains("307")){
+		} else if (ArmorList.contains("307")) {
 			player.getInventory().setChestplate(new ItemStack(307, 1));
-		}
-		else if(ArmorList.contains("311")){
+		} else if (ArmorList.contains("311")) {
 			player.getInventory().setChestplate(new ItemStack(311, 1));
-		}
-		else if(ArmorList.contains("315")){
+		} else if (ArmorList.contains("315")) {
 			player.getInventory().setChestplate(new ItemStack(315, 1));
 		}
 		// Leggings
-		if(ArmorList.contains("300")){
+		if (ArmorList.contains("300")) {
 			player.getInventory().setLeggings(new ItemStack(300, 1));
-		}
-		else if(ArmorList.contains("304")){
+		} else if (ArmorList.contains("304")) {
 			player.getInventory().setLeggings(new ItemStack(304, 1));
-		}
-		else if(ArmorList.contains("308")){
+		} else if (ArmorList.contains("308")) {
 			player.getInventory().setLeggings(new ItemStack(308, 1));
-		}
-		else if(ArmorList.contains("312")){
+		} else if (ArmorList.contains("312")) {
 			player.getInventory().setLeggings(new ItemStack(312, 1));
-		}
-		else if(ArmorList.contains("316")){
+		} else if (ArmorList.contains("316")) {
 			player.getInventory().setLeggings(new ItemStack(316, 1));
 		}
 		// Boots
-		if(ArmorList.contains("301")){
+		if (ArmorList.contains("301")) {
 			player.getInventory().setBoots(new ItemStack(301, 1));
-		}
-		else if(ArmorList.contains("305")){
+		} else if (ArmorList.contains("305")) {
 			player.getInventory().setBoots(new ItemStack(305, 1));
-		}
-		else if(ArmorList.contains("309")){
+		} else if (ArmorList.contains("309")) {
 			player.getInventory().setBoots(new ItemStack(309, 1));
-		}
-		else if(ArmorList.contains("313")){
+		} else if (ArmorList.contains("313")) {
 			player.getInventory().setBoots(new ItemStack(313, 1));
-		}
-		else if(ArmorList.contains("317")){
+		} else if (ArmorList.contains("317")) {
 			player.getInventory().setBoots(new ItemStack(317, 1));
 		}
 	}
 
-
-	//Clean Up All Signs People Have Used For Classes
-	public void cleanSigns(){
+	// Clean Up All Signs People Have Used For Classes
+	public void cleanSigns() {
 		Set<String> set = BattleSigns.keySet();
 		Iterator<String> iter = set.iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			Object o = iter.next();
 			Sign sign = BattleSigns.get(o.toString());
 			sign.setLine(2, "");
@@ -671,18 +728,18 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 
-	//Clean Up Signs Specific Player Has Used For Classes
-	public void cleanSigns(String player){
+	// Clean Up Signs Specific Player Has Used For Classes
+	public void cleanSigns(String player) {
 		Set<String> set = BattleSigns.keySet();
 		Iterator<String> iter = set.iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			Object o = iter.next();
 			Sign sign = BattleSigns.get(o.toString());
-			if(sign.getLine(2) == player){
+			if (sign.getLine(2) == player) {
 				sign.setLine(2, "");
 				sign.update();
 			}
-			if(sign.getLine(3) == player){
+			if (sign.getLine(3) == player) {
 				sign.setLine(3, "");
 				sign.update();
 			}
@@ -703,15 +760,14 @@ public class BattleNight extends JavaPlugin {
 				}
 			}
 		}
-		if(members == membersReady && members > 0){
-			if(colour == "red"){
+		if (members == membersReady && members > 0) {
+			if (colour == "red") {
 				return true;
 			}
-			if(colour =="blue"){
+			if (colour == "blue") {
 				return true;
 			}
-		}
-		else{
+		} else {
 			return false;
 		}
 		return false;
@@ -729,23 +785,23 @@ public class BattleNight extends JavaPlugin {
 
 	public void killFeed(String msg) {
 		LinkedList<Player> told = new LinkedList<Player>();
-		
+
 		Set<String> inGameSet = BattleUsersTeam.keySet();
 		Iterator<String> inGameIter = inGameSet.iterator();
 		while (inGameIter.hasNext()) {
 			Object o = inGameIter.next();
 			Player z = getServer().getPlayer(o.toString());
-			
+
 			z.sendMessage(BNKTag + msg);
 			told.add(z);
 		}
-		
+
 		Set<String> spectatorSet = BattleSpectators.keySet();
 		Iterator<String> spectatorIter = spectatorSet.iterator();
 		while (spectatorIter.hasNext()) {
 			Object o = spectatorIter.next();
 			Player z = getServer().getPlayer(o.toString());
-			if(!told.contains(z)) {
+			if (!told.contains(z)) {
 				z.sendMessage(BNKTag + msg);
 				told.add(z);
 			}
@@ -779,11 +835,11 @@ public class BattleNight extends JavaPlugin {
 	public void tellPlayer(Player player, String msg) {
 		player.sendMessage(BNTag + msg);
 	}
-	
+
 	public void tellPlayer(Player player, Track track) {
 		player.sendMessage(BNTag + track.msg);
 	}
-	
+
 	public void tellTeam(String colour, Track track) {
 		Set<String> set = BattleUsersTeam.keySet();
 		Iterator<String> iter = set.iterator();
@@ -795,7 +851,7 @@ public class BattleNight extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	public void tellEveryone(Track track) {
 		try {
 			Set<String> set = BattleUsersTeam.keySet();
@@ -805,7 +861,8 @@ public class BattleNight extends JavaPlugin {
 				Player z = getServer().getPlayer(o.toString());
 				z.sendMessage(BNTag + track.msg);
 			}
-		} catch (NullPointerException e) {}
+		} catch (NullPointerException e) {
+		}
 	}
 
 	public void teleportAllToSpawn() {
@@ -839,7 +896,8 @@ public class BattleNight extends JavaPlugin {
 				armNullCounter++;
 			}
 		}
-		return (invNullCounter == invContents.length) && (armNullCounter == armContents.length);
+		return (invNullCounter == invContents.length)
+				&& (armNullCounter == armContents.length);
 	}
 
 	public void goToWaypoint(Player player, String place) {
@@ -852,12 +910,15 @@ public class BattleNight extends JavaPlugin {
 		ADMIN, MOD, USER
 	}
 
-	public boolean hasPerm(BattleNight.Perm perm, Player player){
-		if(perm.equals(Perm.ADMIN)){
-			if((configUsePermissions && player.hasPermission("battlenight.admin")) || (!configUsePermissions && player.isOp())){
+	public boolean hasPerm(BattleNight.Perm perm, Player player) {
+		if (perm.equals(Perm.ADMIN)) {
+			if ((configUsePermissions && player
+					.hasPermission("battlenight.admin"))
+					|| (!configUsePermissions && player.isOp())) {
 				return true;
-			}
-			else if((configUsePermissions && !player.hasPermission("battlenight.admin")) || (!configUsePermissions && !player.isOp())){
+			} else if ((configUsePermissions && !player
+					.hasPermission("battlenight.admin"))
+					|| (!configUsePermissions && !player.isOp())) {
 				tellPlayer(player, Track.NO_PERMISSION);
 				return false;
 			} else {
@@ -865,31 +926,34 @@ public class BattleNight extends JavaPlugin {
 				return false;
 			}
 		}
-		if(perm.equals(Perm.MOD)){
-			if((configUsePermissions && player.hasPermission("battlenight.moderator")) || (!configUsePermissions && player.isOp())){
+		if (perm.equals(Perm.MOD)) {
+			if ((configUsePermissions && player
+					.hasPermission("battlenight.moderator"))
+					|| (!configUsePermissions && player.isOp())) {
 				return true;
-			}
-			else if((configUsePermissions && !player.hasPermission("battlenight.moderator")) || (!configUsePermissions && !player.isOp())){
+			} else if ((configUsePermissions && !player
+					.hasPermission("battlenight.moderator"))
+					|| (!configUsePermissions && !player.isOp())) {
 				tellPlayer(player, Track.NO_PERMISSION);
 				return false;
 			} else {
 				tellPlayer(player, Track.CONFIG_UNSET);
 				return false;
 			}
-		}
-		else if(perm.equals(Perm.USER)){
-			if((configUsePermissions && player.hasPermission("battlenight.user")) || !configUsePermissions){
+		} else if (perm.equals(Perm.USER)) {
+			if ((configUsePermissions && player
+					.hasPermission("battlenight.user"))
+					|| !configUsePermissions) {
 				return true;
-			}
-			else if(configUsePermissions && !player.hasPermission("battlenight.user")){
+			} else if (configUsePermissions
+					&& !player.hasPermission("battlenight.user")) {
 				tellPlayer(player, Track.NO_PERMISSION);
 				return false;
 			} else {
 				tellPlayer(player, Track.CONFIG_UNSET);
 				return false;
 			}
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -904,18 +968,15 @@ public class BattleNight extends JavaPlugin {
 		if (part1.length == 1) {
 			if (part2.length == 1) {
 				return parseItemWithoutData(item, "1");
-			}
-			else if (part2.length == 2) {
+			} else if (part2.length == 2) {
 				String data = part2[1];
 				return parseItemWithData(item, data);
 			}
-		}
-		else if (part1.length == 2) {
+		} else if (part1.length == 2) {
 			String amount = part1[1];
 			if (part2.length == 1) {
 				return parseItemWithoutData(item, amount);
-			}
-			else if (part2.length == 2) {
+			} else if (part2.length == 2) {
 				String data = part2[1];
 				return parseItemWithData(item, data, amount);
 			}
@@ -926,124 +987,141 @@ public class BattleNight extends JavaPlugin {
 	private static ItemStack parseItemWithoutData(String item, String amount) {
 		Material m = Material.getMaterial(Integer.parseInt(item));
 		int a = Integer.parseInt(amount);
-		if(a > m.getMaxStackSize()) {
-			log.warning("[BattleNight] You attempted to set the item:" + m + " to have a greater stack size than possible.");
+		if (a > m.getMaxStackSize()) {
+			log.warning("[BattleNight] You attempted to set the item:" + m
+					+ " to have a greater stack size than possible.");
 			a = m.getMaxStackSize();
 		}
-		return new ItemStack(m,a);
+		return new ItemStack(m, a);
 	}
 
 	private static ItemStack parseItemWithData(String item, String data) {
 		int i = Integer.parseInt(item);
 		short d = Short.parseShort(data);
 
-		return new ItemStack(i,1,d);
+		return new ItemStack(i, 1, d);
 	}
 
-	private static ItemStack parseItemWithData(String item, String data, String amount) {
+	private static ItemStack parseItemWithData(String item, String data,
+			String amount) {
 		Material m = Material.getMaterial(Integer.parseInt(item));
 		byte d = Byte.parseByte(data);
 		int a = Integer.parseInt(amount);
-		if(a > m.getMaxStackSize()) {
-			log.warning("[BattleNight] You attempted to set the item:" + m + " to have a greater stack size than possible.");
+		if (a > m.getMaxStackSize()) {
+			log.warning("[BattleNight] You attempted to set the item:" + m
+					+ " to have a greater stack size than possible.");
 			a = m.getMaxStackSize();
 		}
-		return new ItemStack(m,a,d);
+		return new ItemStack(m, a, d);
 	}
-	
-	
-	
-	
+
 	public void addSpectator(Player player, String type) {
-		if(type.equals("death")) {
+		if (type.equals("death")) {
 			BattleSpectators.put(player.getName(), "death");
 			tellPlayer(player, Track.WELCOME_SPECTATOR_DEATH);
-		}
-		else {
+		} else {
 			if (isSetup() && battleInProgress) {
 				if (BattleUsersTeam.containsKey(player.getName())) {
-					removePlayer(player, "has left the Battle.", "You have left the Battle.", false);
+					removePlayer(player, "has left the Battle.",
+							"You have left the Battle.", false);
 				}
 				goToWaypoint(player, "spectator");
 				BattleSpectators.put(player.getName(), "command");
 				tellPlayer(player, Track.WELCOME_SPECTATOR);
 				return;
-			}
-			else if (!isSetup()) {
+			} else if (!isSetup()) {
 				tellPlayer(player, Track.WAYPOINTS_UNSET);
 				return;
-			}
-			else if (!battleInProgress) {
+			} else if (!battleInProgress) {
 				tellPlayer(player, Track.BATTLE_NOT_IN_PROGRESS);
 				return;
 			}
 		}
 	}
-	
+
 	public void addPlayer(Player player) {
-		if(preparePlayer(player)) {
+		if (preparePlayer(player)) {
 			if (blueTeam > redTeam) {
 				goToWaypoint(player, "redlounge");
 				BattleUsersTeam.put(player.getName(), "red");
-				tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
-				tellEveryoneExcept(player, player.getName() + " has joined team " + ChatColor.RED + "<Red>");
+				tellPlayer(player, "Welcome! You are on team " + ChatColor.RED
+						+ "<Red>");
+				tellEveryoneExcept(player, player.getName()
+						+ " has joined team " + ChatColor.RED + "<Red>");
 				redTeam += 1;
 				playersInLounge = true;
-				if(player.getName().length() > 16) {
-					String listname = ChatColor.GRAY + "[BN] " + ChatColor.RED + "[R] " + player.getDisplayName();
+				if (player.getName().length() > 16) {
+					String listname = ChatColor.GRAY + "[BN] " + ChatColor.RED
+							+ "[R] " + player.getDisplayName();
 					player.setPlayerListName(listname.substring(0, 16));
 				}
-			}
-			else {
+			} else {
 				goToWaypoint(player, "bluelounge");
 				BattleUsersTeam.put(player.getName(), "blue");
-				tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
-				tellEveryoneExcept(player, player.getName() + " has joined team " + ChatColor.BLUE + "<Blue>");
+				tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE
+						+ "<Blue>");
+				tellEveryoneExcept(player, player.getName()
+						+ " has joined team " + ChatColor.BLUE + "<Blue>");
 				blueTeam += 1;
 				playersInLounge = true;
-				if(player.getName().length() > 16) {
-					String listname = ChatColor.GRAY + "[BN] " + ChatColor.BLUE + "[B] " + player.getDisplayName();
+				if (player.getName().length() > 16) {
+					String listname = ChatColor.GRAY + "[BN] " + ChatColor.BLUE
+							+ "[B] " + player.getDisplayName();
 					player.setPlayerListName(listname.substring(0, 16));
 				}
 			}
-		}
-		else {
+		} else {
 			tellPlayer(player, Track.MUST_HAVE_EMPTY);
 		}
 	}
-	
-	public void removePlayer(Player player, String message1, String message2, boolean teleport) {
+
+	public void removePlayer(Player player, String message1, String message2,
+			boolean teleport) {
 		if (BattleUsersTeam.containsKey(player.getName())) {
 			if (BattleUsersTeam.get(player.getName()) == "red") {
 				redTeam = redTeam - 1;
-				if(message1 != null){
-					tellEveryoneExcept(player, ChatColor.RED + player.getName() + ChatColor.WHITE + " " + message1);
+				if (message1 != null) {
+					tellEveryoneExcept(player, ChatColor.RED + player.getName()
+							+ ChatColor.WHITE + " " + message1);
 				}
 			}
 			if (BattleUsersTeam.get(player.getName()) == "blue") {
 				blueTeam = blueTeam - 1;
-				if(message1 != null){
-					tellEveryoneExcept(player, ChatColor.BLUE + player.getName() + ChatColor.WHITE + " " + message1);
+				if (message1 != null) {
+					tellEveryoneExcept(player,
+							ChatColor.BLUE + player.getName() + ChatColor.WHITE
+									+ " " + message1);
 				}
 			}
-			if(message2 != null){
+			if (message2 != null) {
 				tellPlayer(player, message2);
 			}
-			if (((redTeam > 0) && (blueTeam == 0)) || ((redTeam == 0) && (blueTeam > 0))) {
-				if ((redTeam > 0) && (blueTeam == 0) && (BattleUsersTeam.get(player.getName()) == "blue")) {
+			if (((redTeam > 0) && (blueTeam == 0))
+					|| ((redTeam == 0) && (blueTeam > 0))) {
+				if ((redTeam > 0) && (blueTeam == 0)
+						&& (BattleUsersTeam.get(player.getName()) == "blue")) {
 					tellEveryone(Track.RED_WON);
 					BattleUsersTeam.remove(player.getName());
-					Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", BattleUsersTeam));
-				}
-				else if ((redTeam == 0) && (blueTeam > 0) && (BattleUsersTeam.get(player.getName()) == "red")) {
+					Bukkit.getServer()
+							.getPluginManager()
+							.callEvent(
+									new BattleEndEvent("red", "blue",
+											BattleUsersTeam));
+				} else if ((redTeam == 0) && (blueTeam > 0)
+						&& (BattleUsersTeam.get(player.getName()) == "red")) {
 					tellEveryone(Track.BLUE_WON);
 					BattleUsersTeam.remove(player.getName());
-					Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", BattleUsersTeam));
+					Bukkit.getServer()
+							.getPluginManager()
+							.callEvent(
+									new BattleEndEvent("blue", "red",
+											BattleUsersTeam));
 				}
 				player.getInventory().clear();
 				clearArmorSlots(player);
 				BattleUsersClass.remove(player.getName());
-				if (teleport) goToWaypoint(player, "exit");
+				if (teleport)
+					goToWaypoint(player, "exit");
 				restorePlayer(player);
 				Set<String> set = BattleUsersTeam.keySet();
 				Iterator<String> iter = set.iterator();
@@ -1065,8 +1143,7 @@ public class BattleNight extends JavaPlugin {
 				redTeam = 0;
 				blueTeam = 0;
 				BattleSigns.clear();
-			}
-			else if((redTeam == 0) && (blueTeam == 0)){
+			} else if ((redTeam == 0) && (blueTeam == 0)) {
 				Set<String> set = BattleUsersTeam.keySet();
 				Iterator<String> iter = set.iterator();
 				while (iter.hasNext()) {
@@ -1077,7 +1154,8 @@ public class BattleNight extends JavaPlugin {
 					goToWaypoint(z, "exit");
 					restorePlayer(z);
 				}
-				Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
+				Bukkit.getServer().getPluginManager()
+						.callEvent(new BattleEndEvent("draw", "draw", null));
 				cleanSigns();
 				battleInProgress = false;
 				redTeamIronClicked = false;
@@ -1087,8 +1165,7 @@ public class BattleNight extends JavaPlugin {
 				redTeam = 0;
 				blueTeam = 0;
 				BattleSigns.clear();
-			}
-			else {
+			} else {
 				cleanSigns(player.getName());
 				player.getInventory().clear();
 				clearArmorSlots(player);
@@ -1096,33 +1173,34 @@ public class BattleNight extends JavaPlugin {
 				BattleUsersClass.remove(player.getName());
 				restorePlayer(player);
 			}
-		}
-		else {
-			BattleNight.log.info("[BattleNight] Failed to remove player '" + player.getName() + "' from the Battle as they are not in it.");
+		} else {
+			BattleNight.log.info("[BattleNight] Failed to remove player '"
+					+ player.getName()
+					+ "' from the Battle as they are not in it.");
 		}
 	}
-	
+
 	public void removeSpectator(Player player) {
 		goToWaypoint(player, "exit");
 		BattleSpectators.remove(player.getName());
 		tellPlayer(player, Track.GOODBYE_SPECTATOR);
 	}
-	
-	//TODO Isolate winning players
+
+	// TODO Isolate winning players
 	public void removeAllPlayers() {
-		if(redTeam > blueTeam) {
+		if (redTeam > blueTeam) {
 			tellEveryone(Track.RED_WON);
-			Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", null));
-		}
-		else if(redTeam < blueTeam) {
+			Bukkit.getServer().getPluginManager()
+					.callEvent(new BattleEndEvent("red", "blue", null));
+		} else if (redTeam < blueTeam) {
 			tellEveryone(Track.BLUE_WON);
-			Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", null));
-		}
-		else if((redTeam == blueTeam) && ((redTeam > 0) || (blueTeam > 0))) {
+			Bukkit.getServer().getPluginManager()
+					.callEvent(new BattleEndEvent("blue", "red", null));
+		} else if ((redTeam == blueTeam) && ((redTeam > 0) || (blueTeam > 0))) {
 			tellEveryone(Track.DRAW);
-			Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
-		}
-		else {
+			Bukkit.getServer().getPluginManager()
+					.callEvent(new BattleEndEvent("draw", "draw", null));
+		} else {
 			return;
 		}
 		Set<String> set = BattleUsersTeam.keySet();
@@ -1145,7 +1223,7 @@ public class BattleNight extends JavaPlugin {
 		blueTeam = 0;
 		BattleSigns.clear();
 	}
-	
+
 	public void removeAllSpectators() {
 		Set<String> set = BattleSpectators.keySet();
 		Iterator<String> iter = set.iterator();
@@ -1156,111 +1234,126 @@ public class BattleNight extends JavaPlugin {
 		}
 		BattleSpectators.clear();
 	}
-	
+
 	public void endBattle() {
 		removeAllPlayers();
 		removeAllSpectators();
 	}
-	
-  public void clearArmorSlots(Player player) {
-	    player.getInventory().setHelmet(null);
-	    player.getInventory().setBoots(null);
-	    player.getInventory().setChestplate(null);
-	    player.getInventory().setLeggings(null);
-  }
-  
-  private boolean preparePlayer(Player p) {
-	  if(config.getString("InventoryType").equalsIgnoreCase("prompt") && !emptyInventory(p)) return false;
-	  
-	  String name = p.getName();
-	  
-	  if(!players.contains(name)) {
-		  players.set(name+".stats.games", 0);
-		  players.set(name+".stats.kills", 0);
-		  players.set(name+".stats.deaths", 0);
-	  }
-	  
-	  int Gamemode = 0;
-	  if (p.getGameMode().equals(GameMode.CREATIVE)) Gamemode = 1;
-	  
-	  players.set(name+".saves.exp", p.getExp());
-	  players.set(name+".saves.fireticks", p.getFireTicks());
-	  players.set(name+".saves.foodlevel", p.getFoodLevel());
-	  players.set(name+".saves.gamemode", Gamemode);
-	  players.set(name+".saves.health", p.getHealth());
-	  players.set(name+".saves.level", p.getLevel());
-	  players.set(name+".saves.listname", p.getPlayerListName());
-	  players.set(name+".saves.remainingair", p.getRemainingAir());
-	  players.set(name+".saves.saturation", p.getSaturation());
-	  players.set(name+".saves.totalexperience", p.getTotalExperience());
-	  
-	  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
-		  players.set(name+".saves.inventory.main", p.getInventory().getContents());
-		  players.set(name+".saves.inventory.armor", p.getInventory().getArmorContents());
-	  }
-	  
-	  saveYAML(ConfigFile.Players);
-	  
-	  // Reset Player
-	  p.setExp(0);
-	  p.setFireTicks(-20);
-	  if(config.getBoolean("StopHealthRegen")) p.setFoodLevel(16); else p.setFoodLevel(18);
-	  p.setGameMode(GameMode.SURVIVAL);
-	  p.setHealth(p.getMaxHealth());
-	  p.setLevel(0);
-	  p.setRemainingAir(300);
-	  p.setSaturation(5);
-	  p.setTotalExperience(0);
-	  removePotionEffects(p);
-	  p.getInventory().clear();
-	  clearArmorSlots(p);
-	  return true;
-  }
-  
-private void restorePlayer(Player p) {
-	  
-	  String name = p.getName();
-	  try {
-		  GameMode Gamemode = GameMode.SURVIVAL;
-		  if (players.getInt(name+".saves.gamemode", 0) == 1) Gamemode = GameMode.CREATIVE;
-		  
-		  p.setExp((Float) players.get(name+".saves.exp", 0));
-		  p.setFireTicks(players.getInt(name+".saves.fireticks", -20));
-		  p.setFoodLevel(players.getInt(name+".saves.foodlevel", 18));
-		  p.setGameMode(Gamemode);
-		  p.setHealth(players.getInt(name+".saves.health", p.getMaxHealth()));
-		  p.setLevel(players.getInt(name+".saves.level", 0));
-		  p.setPlayerListName(players.getString(name+".saves.listname", p.getDisplayName()));
-		  p.setRemainingAir(players.getInt(name+".saves.remainingair", 300));
-		  p.setSaturation(players.getInt(name+".saves.saturation", 5));
-		  p.setTotalExperience(players.getInt(name+".saves.totalexperience", 0));
-		  
-		  if(config.getString("InventoryType").equalsIgnoreCase("save")) {
-			  p.getInventory().setContents((ItemStack[]) players.get(name+".saves.inventory.main"));
-			  p.getInventory().setArmorContents((ItemStack[]) players.get(name+".saves.inventory.armor"));
-		  }
-	  }
-	  catch(NullPointerException e) {
-		  log.warning("[BattleNight] Failed to restore data for player: "+name+".");
-	  }
-  }
+
+	public void clearArmorSlots(Player player) {
+		player.getInventory().setHelmet(null);
+		player.getInventory().setBoots(null);
+		player.getInventory().setChestplate(null);
+		player.getInventory().setLeggings(null);
+	}
+
+	private boolean preparePlayer(Player p) {
+		if (config.getString("InventoryType").equalsIgnoreCase("prompt")
+				&& !emptyInventory(p))
+			return false;
+
+		String name = p.getName();
+
+		if (!players.contains(name)) {
+			players.set(name + ".stats.games", 0);
+			players.set(name + ".stats.kills", 0);
+			players.set(name + ".stats.deaths", 0);
+		}
+
+		int Gamemode = 0;
+		if (p.getGameMode().equals(GameMode.CREATIVE))
+			Gamemode = 1;
+
+		players.set(name + ".saves.exp", p.getExp());
+		players.set(name + ".saves.fireticks", p.getFireTicks());
+		players.set(name + ".saves.foodlevel", p.getFoodLevel());
+		players.set(name + ".saves.gamemode", Gamemode);
+		players.set(name + ".saves.health", p.getHealth());
+		players.set(name + ".saves.level", p.getLevel());
+		players.set(name + ".saves.listname", p.getPlayerListName());
+		players.set(name + ".saves.remainingair", p.getRemainingAir());
+		players.set(name + ".saves.saturation", p.getSaturation());
+		players.set(name + ".saves.totalexperience", p.getTotalExperience());
+
+		if (config.getString("InventoryType").equalsIgnoreCase("save")) {
+			players.set(name + ".saves.inventory.main", p.getInventory()
+					.getContents());
+			players.set(name + ".saves.inventory.armor", p.getInventory()
+					.getArmorContents());
+		}
+
+		saveYAML(ConfigFile.Players);
+
+		// Reset Player
+		p.setExp(0);
+		p.setFireTicks(-20);
+		if (config.getBoolean("StopHealthRegen"))
+			p.setFoodLevel(16);
+		else
+			p.setFoodLevel(18);
+		p.setGameMode(GameMode.SURVIVAL);
+		p.setHealth(p.getMaxHealth());
+		p.setLevel(0);
+		p.setRemainingAir(300);
+		p.setSaturation(5);
+		p.setTotalExperience(0);
+		removePotionEffects(p);
+		p.getInventory().clear();
+		clearArmorSlots(p);
+		return true;
+	}
+
+	private void restorePlayer(Player p) {
+
+		String name = p.getName();
+		try {
+			GameMode Gamemode = GameMode.SURVIVAL;
+			if (players.getInt(name + ".saves.gamemode", 0) == 1)
+				Gamemode = GameMode.CREATIVE;
+
+			p.setExp((Float) players.get(name + ".saves.exp", 0));
+			p.setFireTicks(players.getInt(name + ".saves.fireticks", -20));
+			p.setFoodLevel(players.getInt(name + ".saves.foodlevel", 18));
+			p.setGameMode(Gamemode);
+			p.setHealth(players.getInt(name + ".saves.health", p.getMaxHealth()));
+			p.setLevel(players.getInt(name + ".saves.level", 0));
+			p.setPlayerListName(players.getString(name + ".saves.listname",
+					p.getDisplayName()));
+			p.setRemainingAir(players.getInt(name + ".saves.remainingair", 300));
+			p.setSaturation(players.getInt(name + ".saves.saturation", 5));
+			p.setTotalExperience(players.getInt(
+					name + ".saves.totalexperience", 0));
+
+			if (config.getString("InventoryType").equalsIgnoreCase("save")) {
+				p.getInventory().setContents(
+						(ItemStack[]) players.get(name
+								+ ".saves.inventory.main"));
+				p.getInventory().setArmorContents(
+						(ItemStack[]) players.get(name
+								+ ".saves.inventory.armor"));
+			}
+		} catch (NullPointerException e) {
+			log.warning("[BattleNight] Failed to restore data for player: "
+					+ name + ".");
+		}
+	}
 
 	private void removePotionEffects(Player p) {
-		  p.removePotionEffect(PotionEffectType.BLINDNESS);
-		  p.removePotionEffect(PotionEffectType.CONFUSION);
-		  p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-		  p.removePotionEffect(PotionEffectType.FAST_DIGGING);
-		  p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-		  p.removePotionEffect(PotionEffectType.HARM);
-		  p.removePotionEffect(PotionEffectType.HEAL);
-		  p.removePotionEffect(PotionEffectType.HUNGER);
-		  p.removePotionEffect(PotionEffectType.JUMP);
-		  p.removePotionEffect(PotionEffectType.POISON);
-		  p.removePotionEffect(PotionEffectType.REGENERATION);
-		  p.removePotionEffect(PotionEffectType.SLOW);
-		  p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
-		  p.removePotionEffect(PotionEffectType.SPEED);
-		  p.removePotionEffect(PotionEffectType.WATER_BREATHING);
-		  p.removePotionEffect(PotionEffectType.WEAKNESS);
+		p.removePotionEffect(PotionEffectType.BLINDNESS);
+		p.removePotionEffect(PotionEffectType.CONFUSION);
+		p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+		p.removePotionEffect(PotionEffectType.FAST_DIGGING);
+		p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+		p.removePotionEffect(PotionEffectType.HARM);
+		p.removePotionEffect(PotionEffectType.HEAL);
+		p.removePotionEffect(PotionEffectType.HUNGER);
+		p.removePotionEffect(PotionEffectType.JUMP);
+		p.removePotionEffect(PotionEffectType.POISON);
+		p.removePotionEffect(PotionEffectType.REGENERATION);
+		p.removePotionEffect(PotionEffectType.SLOW);
+		p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+		p.removePotionEffect(PotionEffectType.SPEED);
+		p.removePotionEffect(PotionEffectType.WATER_BREATHING);
+		p.removePotionEffect(PotionEffectType.WEAKNESS);
 	}
 }
