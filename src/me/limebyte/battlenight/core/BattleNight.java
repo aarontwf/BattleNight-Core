@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import me.limebyte.battlenight.core.API.BattleEndEvent;
 import me.limebyte.battlenight.core.Hooks.Metrics;
 import me.limebyte.battlenight.core.Listeners.CheatListener;
+import me.limebyte.battlenight.core.Listeners.CommandBlocker;
 import me.limebyte.battlenight.core.Listeners.DamageListener;
 import me.limebyte.battlenight.core.Listeners.DeathListener;
 import me.limebyte.battlenight.core.Listeners.DisconnectListener;
@@ -53,7 +54,7 @@ public class BattleNight extends JavaPlugin {
 			+ ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY
 			+ "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version = "v1.1.3"; // TODO Update
+	public static final String Version = "v1.2"; // TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -73,11 +74,11 @@ public class BattleNight extends JavaPlugin {
 	private final DeathListener deathListener = new DeathListener(this);
 	private final DamageListener damageListener = new DamageListener(this);
 	private final DropListener dropListener = new DropListener(this);
-	private final DisconnectListener disconnectListener = new DisconnectListener(
-			this);
+	private final DisconnectListener disconnectListener = new DisconnectListener(this);
 	private final SignChanger blockListener = new SignChanger(this);
 	private final CheatListener cheatListener = new CheatListener(this);
-
+	private final CommandBlocker commandBlocker = new CommandBlocker(this);
+	
 	public boolean redTeamIronClicked = false;
 	public boolean blueTeamIronClicked = false;
 	public boolean battleInProgress = false;
@@ -160,6 +161,7 @@ public class BattleNight extends JavaPlugin {
 		pm.registerEvents(disconnectListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(cheatListener, this);
+		pm.registerEvents(commandBlocker, this);
 
 		// Metrics
 		try {
