@@ -13,7 +13,6 @@ public class DropListener implements Listener {
 
 	// Get Main Class
 	public static BattleNight plugin;
-
 	public DropListener(BattleNight instance) {
 		plugin = instance;
 	}
