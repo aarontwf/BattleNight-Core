@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.Listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -22,44 +23,43 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamage(EntityDamageEvent event) {
+	    if (!(event.getEntity() instanceof Player)) return;
+	    Player player = (Player) event.getEntity();
+	    
 		if (event instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-			if (!canBeDamaged(subEvent) || event.isCancelled())
-				event.setCancelled(true);
-			else
-				event.setCancelled(false);
+			
+			if (plugin.BattleSpectators.containsKey(player.getName())) event.setCancelled(true);
+			
+			if (!plugin.BattleUsersTeam.containsKey(player.getName())) return;
+			
+    		subEvent.setCancelled(!canBeDamaged(player, subEvent.getDamager()));
+    		
 		}
+		
 	}
 
-	private boolean canBeDamaged(EntityDamageByEntityEvent event) {
+	private boolean canBeDamaged(Player damaged, Entity eDamager) {
+		if (eDamager == damaged) return true;
 
-		if (!(event.getEntity() instanceof Player))
-			return true;
-
-		if (event.getDamager() == event.getEntity())
-			return true;
-
-		Player damaged = (Player) event.getEntity();
 		Player damager;
-
-		if (event.getDamager() instanceof Projectile) {
-			LivingEntity shooter = ((Projectile) event.getDamager())
-					.getShooter();
+		
+		if (eDamager instanceof Projectile) {
+			LivingEntity shooter = ((Projectile) eDamager).getShooter();
 			if (shooter instanceof Player)
-				damager = (Player) shooter;
+			    damager = (Player) shooter;
 			else
 				return true;
-		} else if (event.getDamager() instanceof Player) {
-			damager = (Player) event.getDamager();
 		} else {
-			return true;
+		    if (eDamager instanceof Player) {
+		        damager = (Player) eDamager;
+		    }
+		    else {
+		        return true;
+		    }
 		}
-
-		if (plugin.BattleSpectators.containsKey(damager.getName()))
-			return false;
-
-		if (plugin.BattleUsersTeam.containsKey(damager.getName())
-				&& plugin.BattleUsersTeam.containsKey(damaged.getName())) {
+		
+		if (plugin.BattleUsersTeam.containsKey(damager.getName())) {
 			if (plugin.playersInLounge)
 				return false;
 			if (areEnemies(damager, damaged)) {
@@ -74,8 +74,7 @@ public class DamageListener implements Listener {
 	}
 
 	private boolean areEnemies(Player player1, Player player2) {
-		if (plugin.BattleUsersTeam.get(player1.getName()) != plugin.BattleUsersTeam
-				.get(player2.getName())) {
+		if (plugin.BattleUsersTeam.get(player1.getName()) != plugin.BattleUsersTeam.get(player2.getName())) {
 			return true;
 		} else {
 			return false;
