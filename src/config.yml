@@ -1,4 +1,4 @@
-# BattleNight Version: 1.1.3
+# BattleNight Version: 1.2
 # Main Configuration File
 #
 # Set classes in classes.yml
@@ -23,5 +23,14 @@ StopHealthRegen: true
 Teleprtation:
     EnderPearls: true
     Portals: false
+    
+Commands:
+    Block: true
+    Whitelist: 
+        - list
+        - me
+        - toggledownfall
+        - stop
+        - reload
 
 Debug: false
