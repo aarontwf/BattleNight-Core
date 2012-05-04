@@ -28,9 +28,10 @@ public class CommandBlocker implements Listener {
         whitelist.add("bn");
         
         String[] cmdArg = event.getMessage().split(" ");
+        String cmdString = cmdArg[0].trim().substring(1).toLowerCase();
         
         try {
-            Command command = plugin.getServer().getPluginCommand(cmdArg[0].trim().replaceFirst("/", ""));
+            Command command = plugin.getServer().getPluginCommand(cmdString);
             
             // Check if the command is listed
             if (whitelist.contains(command.getLabel().toLowerCase())) return;
@@ -43,7 +44,7 @@ public class CommandBlocker implements Listener {
             }
         } catch (NullPointerException e) {
             // Check if the command is listed
-            if (whitelist.contains(cmdArg[0].trim().replaceFirst("/", "").toLowerCase())) return;
+            if (whitelist.contains(cmdString)) return;
         }
     
         // Its not listed so block it
