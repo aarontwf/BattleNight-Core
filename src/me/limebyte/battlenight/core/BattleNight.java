@@ -54,7 +54,7 @@ public class BattleNight extends JavaPlugin {
 			+ ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY
 			+ "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version = "v1.2"; // TODO Update
+	public static final String Version = "v1.2-dev"; // TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -311,9 +311,12 @@ public class BattleNight extends JavaPlugin {
 
 		// Player check
 		Player player = null;
-		if (sender instanceof Player) {
-			player = (Player) sender;
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("This command can only be run by a Player.");
+		    return true;
 		}
+		
+		player = (Player) sender;
 
 		if (commandLabel.equalsIgnoreCase("bn")) {
 			if (args.length < 1) {
