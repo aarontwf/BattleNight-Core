@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,7 @@ import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -45,6 +47,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class BattleNight extends JavaPlugin {
 
@@ -131,8 +134,7 @@ public class BattleNight extends JavaPlugin {
 		// Initialise Files and FileConfigurations
 		configFile = new File(getDataFolder(), "config.yml");
 		classesFile = new File(getDataFolder(), "classes.yml");
-		waypointsFile = new File(getDataFolder() + "/PluginData",
-				"waypoints.dat");
+		waypointsFile = new File(getDataFolder() + "/PluginData", "waypoints.dat");
 		playerFile = new File(getDataFolder() + "/PluginData", "players.dat");
 
 		// Use firstRun(); method
@@ -172,8 +174,6 @@ public class BattleNight extends JavaPlugin {
 		}
 
 		// Configuration
-		final FileConfiguration config = getConfig();
-
 		configUsePermissions = config.getBoolean("UsePermissions");
 		configFriendlyFire = config.getBoolean("FriendlyFire");
 		configStopHealthRegen = config.getBoolean("StopHealthRegen");
@@ -263,6 +263,29 @@ public class BattleNight extends JavaPlugin {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void reloadConfigFiles() throws FileNotFoundException, IOException, InvalidConfigurationException {
+        config.load(configFile);
+        classes.load(classesFile);
+        configUsePermissions = config.getBoolean("UsePermissions");
+        configFriendlyFire = config.getBoolean("FriendlyFire");
+        configStopHealthRegen = config.getBoolean("StopHealthRegen");
+        configInventoryType = config.getString("InventoryType").toLowerCase();
+        configReadyBlock = config.getInt("ReadyBlock");
+        configDebug = config.getBoolean("Debug");
+        classesDummyItem = classes.getInt("DummyItem");
+        for (String className : classes.getConfigurationSection("Classes")
+                .getKeys(false)) {
+            BattleClasses.put(className,
+                    classes.getString("Classes." + className + ".Items", null));
+        }
+        for (String className : classes.getConfigurationSection("Classes")
+                .getKeys(false)) {
+            BattleArmor.put(className,
+                    classes.getString("Classes." + className + ".Armor", null));
+        }
+        ClassList = classes.getConfigurationSection("Classes").getKeys(false);
 	}
 
 	// Waypoints Load Method
@@ -509,10 +532,22 @@ public class BattleNight extends JavaPlugin {
 					player.sendMessage(pdfFile.getWebsite());
 				}
 
-				else if (args[0].equalsIgnoreCase("test")) {
-					if (player.getName().equals("limebyte")) {
-						// Do something testy
-					}
+                else if (args[0].equalsIgnoreCase("test")) {
+                    if (player.getName().equals("limebyte")) {
+                        // I enjoy jumping extra high :)
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 4800, 1));
+                    }
+                }
+				
+				else if (args[0].equalsIgnoreCase("reload") && hasPerm(Perm.ADMIN, player)) {
+				    player.sendMessage(BNTag + "Reloading config...");
+				    try {
+                        reloadConfigFiles();
+                        player.sendMessage(BNTag + ChatColor.GREEN + "Reloaded successfully.");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        player.sendMessage(BNTag + ChatColor.RED + "Reloaded failed.");
+                    }
 				}
 
 				else {
