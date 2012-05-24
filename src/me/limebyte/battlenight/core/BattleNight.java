@@ -1055,11 +1055,6 @@ public class BattleNight extends JavaPlugin {
 						+ " has joined team " + ChatColor.RED + "<Red>");
 				redTeam += 1;
 				playersInLounge = true;
-				if (player.getName().length() > 16) {
-					String listname = ChatColor.GRAY + "[BN] " + ChatColor.RED
-							+ "[R] " + player.getDisplayName();
-					player.setPlayerListName(listname.substring(0, 16));
-				}
 			} else {
 				goToWaypoint(player, "bluelounge");
 				BattleUsersTeam.put(player.getName(), "blue");
@@ -1069,11 +1064,6 @@ public class BattleNight extends JavaPlugin {
 						+ " has joined team " + ChatColor.BLUE + "<Blue>");
 				blueTeam += 1;
 				playersInLounge = true;
-				if (player.getName().length() > 16) {
-					String listname = ChatColor.GRAY + "[BN] " + ChatColor.BLUE
-							+ "[B] " + player.getDisplayName();
-					player.setPlayerListName(listname.substring(0, 16));
-				}
 			}
 		} else {
 			tellPlayer(player, Track.MUST_HAVE_EMPTY);
@@ -1275,7 +1265,6 @@ public class BattleNight extends JavaPlugin {
 		players.set(name + ".saves.gamemode", Gamemode);
 		players.set(name + ".saves.health", p.getHealth());
 		players.set(name + ".saves.level", p.getLevel());
-		players.set(name + ".saves.listname", p.getPlayerListName());
 		players.set(name + ".saves.remainingair", p.getRemainingAir());
 		players.set(name + ".saves.saturation", p.getSaturation());
 		players.set(name + ".saves.totalexperience", p.getTotalExperience());
@@ -1322,8 +1311,6 @@ public class BattleNight extends JavaPlugin {
 			p.setGameMode(Gamemode);
 			p.setHealth(players.getInt(name + ".saves.health", p.getMaxHealth()));
 			p.setLevel(players.getInt(name + ".saves.level", 0));
-			p.setPlayerListName(players.getString(name + ".saves.listname",
-					p.getDisplayName()));
 			p.setRemainingAir(players.getInt(name + ".saves.remainingair", 300));
 			p.setSaturation(players.getInt(name + ".saves.saturation", 5));
 			p.setTotalExperience(players.getInt(
