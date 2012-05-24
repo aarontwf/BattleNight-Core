@@ -42,11 +42,13 @@ public class SignListener implements Listener {
 								sign.update();
 								player.getInventory().clear();
 								plugin.clearArmorSlots(player);
+								plugin.removePotionEffects(player);
 							} else if (sign.getLine(3) == player.getName()) {
 								sign.setLine(3, "");
 								sign.update();
 								player.getInventory().clear();
 								plugin.clearArmorSlots(player);
+								plugin.removePotionEffects(player);
 							} else {
 								player.sendMessage(ChatColor.GRAY
 										+ "[BattleNight] "

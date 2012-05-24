@@ -1330,7 +1330,7 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 
-	private void removePotionEffects(Player p) {
+	public void removePotionEffects(Player p) {
 		p.removePotionEffect(PotionEffectType.BLINDNESS);
 		p.removePotionEffect(PotionEffectType.CONFUSION);
 		p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
