@@ -44,7 +44,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionEffect;
 
 public class BattleNight extends JavaPlugin {
 
@@ -1114,6 +1114,7 @@ public class BattleNight extends JavaPlugin {
 				}
 				player.getInventory().clear();
 				clearArmorSlots(player);
+				removePotionEffects(player);
 				BattleUsersClass.remove(player.getName());
 				if (teleport)
 					goToWaypoint(player, "exit");
@@ -1125,6 +1126,7 @@ public class BattleNight extends JavaPlugin {
 					Player z = getServer().getPlayer(o.toString());
 					z.getInventory().clear();
 					clearArmorSlots(z);
+					removePotionEffects(z);
 					goToWaypoint(z, "exit");
 					restorePlayer(z);
 				}
@@ -1145,6 +1147,7 @@ public class BattleNight extends JavaPlugin {
 					Object o = iter.next();
 					Player z = getServer().getPlayer(o.toString());
 					clearArmorSlots(z);
+					removePotionEffects(z);
 					z.getInventory().clear();
 					goToWaypoint(z, "exit");
 					restorePlayer(z);
@@ -1164,6 +1167,7 @@ public class BattleNight extends JavaPlugin {
 				cleanSigns(player.getName());
 				player.getInventory().clear();
 				clearArmorSlots(player);
+				removePotionEffects(player);
 				BattleUsersTeam.remove(player.getName());
 				BattleUsersClass.remove(player.getName());
 				restorePlayer(player);
@@ -1205,6 +1209,7 @@ public class BattleNight extends JavaPlugin {
 			Player z = getServer().getPlayer(o.toString());
 			z.getInventory().clear();
 			clearArmorSlots(z);
+			removePotionEffects(z);
 			goToWaypoint(z, "exit");
 			restorePlayer(z);
 		}
@@ -1329,23 +1334,10 @@ public class BattleNight extends JavaPlugin {
 					+ name + ".");
 		}
 	}
-
+	
 	public void removePotionEffects(Player p) {
-		p.removePotionEffect(PotionEffectType.BLINDNESS);
-		p.removePotionEffect(PotionEffectType.CONFUSION);
-		p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-		p.removePotionEffect(PotionEffectType.FAST_DIGGING);
-		p.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-		p.removePotionEffect(PotionEffectType.HARM);
-		p.removePotionEffect(PotionEffectType.HEAL);
-		p.removePotionEffect(PotionEffectType.HUNGER);
-		p.removePotionEffect(PotionEffectType.JUMP);
-		p.removePotionEffect(PotionEffectType.POISON);
-		p.removePotionEffect(PotionEffectType.REGENERATION);
-		p.removePotionEffect(PotionEffectType.SLOW);
-		p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
-		p.removePotionEffect(PotionEffectType.SPEED);
-		p.removePotionEffect(PotionEffectType.WATER_BREATHING);
-		p.removePotionEffect(PotionEffectType.WEAKNESS);
-	}
+	    for(PotionEffect effect : p.getActivePotionEffects()) {
+	        p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
+	    }
+    }
 }
