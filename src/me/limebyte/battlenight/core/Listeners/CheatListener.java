@@ -63,15 +63,14 @@ public class CheatListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onProjectileLaunch(ProjectileLaunchEvent event) {
+	    if(!plugin.playersInLounge) return;
 		Projectile projectile = event.getEntity();
 		if (projectile.getShooter() instanceof Player) {
 			Player thrower = (Player) projectile.getShooter();
-			if (plugin.BattleUsersTeam.containsKey(thrower.getName())
-					&& plugin.playersInLounge) {
+			if (plugin.BattleUsersTeam.containsKey(thrower.getName())) {
 				event.setCancelled(true);
 				plugin.tellPlayer(thrower, Track.NO_CHEATING);
 			}
 		}
 	}
-
 }
