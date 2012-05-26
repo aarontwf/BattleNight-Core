@@ -43,6 +43,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -464,7 +465,7 @@ public class BattleNight extends JavaPlugin {
 				} else if (args[0].equalsIgnoreCase("leave")
 						&& hasPerm(Perm.USER, player)) {
 					if (BattleUsersTeam.containsKey(player.getName())) {
-						removePlayer(player, "has left the Battle.",
+						removePlayer(player, player.getName(), "has left the Battle.",
 								"You have left the Battle.", true);
 					} else if (BattleSpectators.containsKey(player.getName())) {
 						removeSpectator(player);
@@ -531,13 +532,6 @@ public class BattleNight extends JavaPlugin {
 									+ ".   For more information about Battlenight and the features included in this version, please visit: ");
 					player.sendMessage(pdfFile.getWebsite());
 				}
-
-                else if (args[0].equalsIgnoreCase("test")) {
-                    if (player.getName().equals("limebyte")) {
-                        // I enjoy jumping extra high :)
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 4800, 1));
-                    }
-                }
 				
 				else if (args[0].equalsIgnoreCase("reload") && hasPerm(Perm.ADMIN, player)) {
 				    player.sendMessage(BNTag + "Reloading config...");
@@ -561,7 +555,7 @@ public class BattleNight extends JavaPlugin {
 					if (badplayer.isOnline()) {
 						if (BattleUsersTeam.containsKey(badplayer.getName())) {
 							removePlayer(
-									badplayer,
+									badplayer, badplayer.getName(),
 									"has been kicked from the current Battle.",
 									"You have been kicked from the current Battle.",
 									true);
@@ -575,6 +569,14 @@ public class BattleNight extends JavaPlugin {
 										+ ". No kick.");
 					}
 				}
+				
+                else if (args[0].equalsIgnoreCase("test")) {
+                    if (player.getName().equals("limebyte")) {
+                        // I enjoy jumping extra high :)
+                        removePotionEffects(player);
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 4800, Integer.parseInt(args[1])));
+                    }
+                }
 			}
 			if (args.length > 2) {
 				tellPlayer(player, Track.INVALID_COMAND);
@@ -1062,7 +1064,7 @@ public class BattleNight extends JavaPlugin {
 		} else {
 			if (isSetup() && battleInProgress) {
 				if (BattleUsersTeam.containsKey(player.getName())) {
-					removePlayer(player, "has left the Battle.",
+					removePlayer(player, player.getName(), "has left the Battle.",
 							"You have left the Battle.", false);
 				}
 				goToWaypoint(player, "spectator");
@@ -1105,7 +1107,7 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 
-	public void removePlayer(Player player, String message1, String message2,
+	public void removePlayer(Player player, String name, String message1, String message2,
 			boolean teleport) {
 		if (BattleUsersTeam.containsKey(player.getName())) {
 			if (BattleUsersTeam.get(player.getName()) == "red") {
@@ -1147,23 +1149,25 @@ public class BattleNight extends JavaPlugin {
 									new BattleEndEvent("blue", "red",
 											BattleUsersTeam));
 				}
-				player.getInventory().clear();
-				clearArmorSlots(player);
-				removePotionEffects(player);
+				try{player.getInventory().clear();} catch (Exception e) {}
+				try {
+                    clearArmorSlots(player);
+                } catch (Exception e) {}
+				try{removePotionEffects(player);} catch (Exception e) {}
 				BattleUsersClass.remove(player.getName());
-				if (teleport)
-					goToWaypoint(player, "exit");
-				restorePlayer(player);
+				if (teleport) goToWaypoint(player, "exit");
+				restorePlayer(player, name
+				        );
 				Set<String> set = BattleUsersTeam.keySet();
 				Iterator<String> iter = set.iterator();
 				while (iter.hasNext()) {
 					Object o = iter.next();
 					Player z = getServer().getPlayer(o.toString());
-					z.getInventory().clear();
-					clearArmorSlots(z);
-					removePotionEffects(z);
-					goToWaypoint(z, "exit");
-					restorePlayer(z);
+					try{z.getInventory().clear();} catch (Exception e) {}
+					try {clearArmorSlots(z);} catch (Exception e) {}
+					try{removePotionEffects(z);} catch (Exception e) {}
+					if (teleport) goToWaypoint(z, "exit");
+					restorePlayer(z, z.getName());
 				}
 				removeAllSpectators();
 				cleanSigns();
@@ -1181,11 +1185,11 @@ public class BattleNight extends JavaPlugin {
 				while (iter.hasNext()) {
 					Object o = iter.next();
 					Player z = getServer().getPlayer(o.toString());
-					clearArmorSlots(z);
-					removePotionEffects(z);
-					z.getInventory().clear();
-					goToWaypoint(z, "exit");
-					restorePlayer(z);
+					try {clearArmorSlots(z);} catch (Exception e) {}
+					try{removePotionEffects(z);} catch (Exception e) {}
+					try{z.getInventory().clear();} catch (Exception e) {}
+					if (teleport) goToWaypoint(z, "exit");
+					restorePlayer(z, name);
 				}
 				Bukkit.getServer().getPluginManager()
 						.callEvent(new BattleEndEvent("draw", "draw", null));
@@ -1200,12 +1204,12 @@ public class BattleNight extends JavaPlugin {
 				BattleSigns.clear();
 			} else {
 				cleanSigns(player.getName());
-				player.getInventory().clear();
-				clearArmorSlots(player);
-				removePotionEffects(player);
+				try{player.getInventory().clear();} catch (Exception e) {}
+				try {clearArmorSlots(player);} catch (Exception e) {}
+				try{removePotionEffects(player);} catch (Exception e) {}
 				BattleUsersTeam.remove(player.getName());
 				BattleUsersClass.remove(player.getName());
-				restorePlayer(player);
+				restorePlayer(player, name);
 			}
 		} else {
 			BattleNight.log.info("[BattleNight] Failed to remove player '"
@@ -1246,7 +1250,7 @@ public class BattleNight extends JavaPlugin {
 			clearArmorSlots(z);
 			removePotionEffects(z);
 			goToWaypoint(z, "exit");
-			restorePlayer(z);
+			restorePlayer(z, z.getName());
 		}
 		cleanSigns();
 		battleInProgress = false;
@@ -1276,10 +1280,8 @@ public class BattleNight extends JavaPlugin {
 	}
 
 	public void clearArmorSlots(Player player) {
-		player.getInventory().setHelmet(null);
-		player.getInventory().setBoots(null);
-		player.getInventory().setChestplate(null);
-		player.getInventory().setLeggings(null);
+	    PlayerInventory inv = player.getInventory();
+		inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
 	}
 
 	private boolean preparePlayer(Player p) {
@@ -1337,9 +1339,7 @@ public class BattleNight extends JavaPlugin {
 		return true;
 	}
 
-	private void restorePlayer(Player p) {
-
-		String name = p.getName();
+	private void restorePlayer(Player p, String name) {
 		try {
 			GameMode Gamemode = GameMode.SURVIVAL;
 			if (players.getInt(name + ".saves.gamemode", 0) == 1)
