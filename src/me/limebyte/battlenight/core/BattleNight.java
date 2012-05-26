@@ -58,7 +58,7 @@ public class BattleNight extends JavaPlugin {
 			+ ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY
 			+ "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version = "v1.2-dev"; // TODO Update
+	public static final String Version = "v1.2"; // TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
