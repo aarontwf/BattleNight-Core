@@ -58,7 +58,7 @@ public class BattleNight extends JavaPlugin {
 			+ ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY
 			+ "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version = "v1.2"; // TODO Update
+	public static final String Version = "v1.2.1"; // TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -1128,36 +1128,23 @@ public class BattleNight extends JavaPlugin {
 			if (message2 != null) {
 				tellPlayer(player, message2);
 			}
-			if (((redTeam > 0) && (blueTeam == 0))
-					|| ((redTeam == 0) && (blueTeam > 0))) {
-				if ((redTeam > 0) && (blueTeam == 0)
-						&& (BattleUsersTeam.get(player.getName()) == "blue")) {
+			
+			// If red or blue won
+			if (((redTeam > 0) && (blueTeam == 0)) || ((redTeam == 0) && (blueTeam > 0))) {
+				if ((redTeam > 0) && (blueTeam == 0) && (BattleUsersTeam.get(player.getName()) == "blue")) {
 					tellEveryone(Track.RED_WON);
-					BattleUsersTeam.remove(player.getName());
-					Bukkit.getServer()
-							.getPluginManager()
-							.callEvent(
-									new BattleEndEvent("red", "blue",
-											BattleUsersTeam));
-				} else if ((redTeam == 0) && (blueTeam > 0)
-						&& (BattleUsersTeam.get(player.getName()) == "red")) {
+					Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", BattleUsersTeam));
+				} else if ((redTeam == 0) && (blueTeam > 0) && (BattleUsersTeam.get(player.getName()) == "red")) {
 					tellEveryone(Track.BLUE_WON);
-					BattleUsersTeam.remove(player.getName());
-					Bukkit.getServer()
-							.getPluginManager()
-							.callEvent(
-									new BattleEndEvent("blue", "red",
-											BattleUsersTeam));
+					Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", BattleUsersTeam));
 				}
 				try{player.getInventory().clear();} catch (Exception e) {}
-				try {
-                    clearArmorSlots(player);
-                } catch (Exception e) {}
+				try {clearArmorSlots(player);} catch (Exception e) {}
 				try{removePotionEffects(player);} catch (Exception e) {}
+				BattleUsersTeam.remove(player.getName());
 				BattleUsersClass.remove(player.getName());
 				if (teleport) goToWaypoint(player, "exit");
-				restorePlayer(player, name
-				        );
+				restorePlayer(player, name);
 				Set<String> set = BattleUsersTeam.keySet();
 				Iterator<String> iter = set.iterator();
 				while (iter.hasNext()) {
@@ -1166,7 +1153,7 @@ public class BattleNight extends JavaPlugin {
 					try{z.getInventory().clear();} catch (Exception e) {}
 					try {clearArmorSlots(z);} catch (Exception e) {}
 					try{removePotionEffects(z);} catch (Exception e) {}
-					if (teleport) goToWaypoint(z, "exit");
+					goToWaypoint(z, "exit");
 					restorePlayer(z, z.getName());
 				}
 				removeAllSpectators();
@@ -1179,6 +1166,7 @@ public class BattleNight extends JavaPlugin {
 				redTeam = 0;
 				blueTeam = 0;
 				BattleSigns.clear();
+			// There was only one player
 			} else if ((redTeam == 0) && (blueTeam == 0)) {
 				Set<String> set = BattleUsersTeam.keySet();
 				Iterator<String> iter = set.iterator();

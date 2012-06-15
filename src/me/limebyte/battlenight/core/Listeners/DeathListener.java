@@ -29,6 +29,7 @@ public class DeathListener implements Listener {
 			String name = player.getName();
 			if (plugin.BattleUsersTeam.containsKey(name)) {
 				event.getDrops().clear();
+                plugin.BattleUsersRespawn.put(name, "true");
 				((PlayerDeathEvent) event).setDeathMessage("");
 				if (!plugin.playersInLounge) {
 					try {
@@ -54,11 +55,9 @@ public class DeathListener implements Listener {
 
 						plugin.killFeed(killerName + ChatColor.GRAY
 								+ " killed " + playerName + ".");
-						plugin.BattleUsersRespawn.put(name, "true");
 					} catch (NullPointerException error) {
 						plugin.killFeed(ChatColor.RED + name + ChatColor.GRAY
 								+ " was killed.");
-						plugin.BattleUsersRespawn.put(name, "true");
 						if (plugin.configDebug) {
 							BattleNight.log
 									.info("[BattleNight] Could not find killer for player: "
