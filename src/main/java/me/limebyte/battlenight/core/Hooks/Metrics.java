@@ -234,7 +234,6 @@ public class Metrics {
 
 						private boolean firstPost = true;
 
-						@Override
 						public void run() {
 							try {
 								// This has to be synchronized or it can collide
