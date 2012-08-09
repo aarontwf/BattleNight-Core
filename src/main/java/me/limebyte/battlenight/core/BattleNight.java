@@ -1154,7 +1154,7 @@ public class BattleNight extends JavaPlugin {
 					try{z.getInventory().clear();} catch (Exception e) {}
 					try {clearArmorSlots(z);} catch (Exception e) {}
 					try{removePotionEffects(z);} catch (Exception e) {}
-					goToWaypoint(z, "exit");
+					if (teleport) goToWaypoint(z, "exit");
 					restorePlayer(z, z.getName());
 				}
 				removeAllSpectators();
