@@ -121,6 +121,7 @@ public class BattleNight extends JavaPlugin {
 			log.info("[BattleNight] Ending current Battle...");
 			endBattle();
 		}
+		this.cleanSigns();
 		PluginDescriptionFile pdfFile = getDescription();
 		log.info("[BattleNight] Version " + pdfFile.getVersion()
 				+ " has been disabled.");
