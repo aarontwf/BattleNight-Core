@@ -817,95 +817,74 @@ public class BattleNight extends JavaPlugin {
 	}
 
 	public void tellEveryone(String msg) {
-		Set<String> set = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			Player z = getServer().getPlayer(o.toString());
-			z.sendMessage(BNTag + msg);
+		for (String name : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + msg);
+		}
+	}
+	
+	public void tellEveryone(Track track) {
+		for (String name : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + track.msg);
 		}
 	}
 
 	public void killFeed(String msg) {
 		LinkedList<Player> told = new LinkedList<Player>();
 
-		Set<String> inGameSet = BattleUsersTeam.keySet();
-		Iterator<String> inGameIter = inGameSet.iterator();
-		while (inGameIter.hasNext()) {
-			Object o = inGameIter.next();
-			Player z = getServer().getPlayer(o.toString());
-
-			z.sendMessage(BNKTag + msg);
-			told.add(z);
-		}
-
-		Set<String> spectatorSet = BattleSpectators.keySet();
-		Iterator<String> spectatorIter = spectatorSet.iterator();
-		while (spectatorIter.hasNext()) {
-			Object o = spectatorIter.next();
-			Player z = getServer().getPlayer(o.toString());
-			if (!told.contains(z)) {
-				z.sendMessage(BNKTag + msg);
-				told.add(z);
+		for (String name : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(name) != null) {
+				Player currentPlayer = Bukkit.getPlayer(name);
+				currentPlayer.sendMessage(BNTag + msg);
+				told.add(currentPlayer);
 			}
 		}
+
+		for (String name : BattleSpectators.keySet()) {
+			if (Bukkit.getPlayer(name) != null) {
+				Player currentPlayer = Bukkit.getPlayer(name);
+				if (!told.contains(currentPlayer)) {
+					currentPlayer.sendMessage(BNTag + msg);
+					told.add(currentPlayer);
+				}
+			}
+		}
+		
 		told.clear();
 	}
 
 	public void tellEveryoneExcept(Player player, String msg) {
-		Set<String> set = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			Player z = getServer().getPlayer(o.toString());
-			if (player.getName() != z.getName())
-				z.sendMessage(BNTag + msg);
-		}
-	}
-
-	public void tellTeam(String color, String msg) {
-		Set<String> set = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			if (BattleUsersTeam.get(o.toString()) == color) {
-				Player z = getServer().getPlayer(o.toString());
-				z.sendMessage(BNTag + msg);
+		for (String name : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(name) != null) {
+				Player currentPlayer = Bukkit.getPlayer(name);
+				if (currentPlayer != player) currentPlayer.sendMessage(BNTag + msg);
 			}
 		}
 	}
 
+	public void tellTeam(String colour, String msg) {
+		for (String name : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(name) != null) {
+				Player currentPlayer = Bukkit.getPlayer(name);
+				if (BattleUsersTeam.get(name) == colour) currentPlayer.sendMessage(BNTag + msg);
+			}
+		}
+	}
+
+	public void tellTeam(String colour, Track track) {
+		for (String name : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(name) != null) {
+				Player currentPlayer = Bukkit.getPlayer(name);
+				if (BattleUsersTeam.get(name) == colour) currentPlayer.sendMessage(BNTag + track.msg);
+			}
+		}
+	}
+	
 	public void tellPlayer(Player player, String msg) {
 		player.sendMessage(BNTag + msg);
 	}
 
 	public void tellPlayer(Player player, Track track) {
 		player.sendMessage(BNTag + track.msg);
-	}
-
-	public void tellTeam(String colour, Track track) {
-		Set<String> set = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			if (BattleUsersTeam.get(o.toString()) == colour) {
-				Player z = getServer().getPlayer(o.toString());
-				z.sendMessage(BNTag + track.msg);
-			}
-		}
-	}
-
-	public void tellEveryone(Track track) {
-		try {
-			Set<String> set = BattleUsersTeam.keySet();
-			Iterator<String> iter = set.iterator();
-			while (iter.hasNext()) {
-				Object o = iter.next();
-				Player z = getServer().getPlayer(o.toString());
-				z.sendMessage(BNTag + track.msg);
-			}
-		} catch (NullPointerException e) {
-		}
 	}
 
 	public void teleportAllToSpawn() {
