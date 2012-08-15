@@ -2,10 +2,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<!-- Project information -->
-	<name>BattleNight-Core</name>
+	<name>BattleNight</name>
 	<groupId>me.limebyte</groupId>
 	<artifactId>battlenight.core</artifactId>
-	<version>2.0.0-Dev</version>
+	<version>1.2.3-Dev</version>
 	<url>http://dev.bukkit.org/server-mods/battlenight</url>
 	<inceptionYear>2011</inceptionYear>
 	<description>RPG Arena based PvP Battles.</description>

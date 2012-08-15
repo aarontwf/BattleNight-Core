@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -760,31 +759,24 @@ public class BattleNight extends JavaPlugin {
 
 	// Clean Up All Signs People Have Used For Classes
 	public void cleanSigns() {
-		Set<String> set = BattleSigns.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			Sign sign = BattleSigns.get(o.toString());
-			sign.setLine(2, "");
-			sign.setLine(3, "");
-			sign.update();
+		for (String name : BattleSigns.keySet()) {
+			if (BattleSigns.get(name) != null) {
+				Sign currentSign = BattleSigns.get(name);
+				currentSign.setLine(2, "");
+				currentSign.setLine(3, "");
+				currentSign.update();
+			}
 		}
 	}
 
 	// Clean Up Signs Specific Player Has Used For Classes
-	public void cleanSigns(String player) {
-		Set<String> set = BattleSigns.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			Sign sign = BattleSigns.get(o.toString());
-			if (sign.getLine(2) == player) {
-				sign.setLine(2, "");
-				sign.update();
-			}
-			if (sign.getLine(3) == player) {
-				sign.setLine(3, "");
-				sign.update();
+	public void cleanSigns(Player player) {
+		for (String name : BattleSigns.keySet()) {
+			if (BattleSigns.get(name) != null && player != null) {
+				Sign currentSign = BattleSigns.get(name);
+				if (currentSign.getLine(2) == player.getName()) currentSign.setLine(2, "");
+				if (currentSign.getLine(3) == player.getName()) currentSign.setLine(3, "");
+				currentSign.update();
 			}
 		}
 	}
@@ -792,17 +784,16 @@ public class BattleNight extends JavaPlugin {
 	public boolean teamReady(String colour) {
 		int members = 0;
 		int membersReady = 0;
-		Set<String> set = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			if (BattleUsersTeam.get(o.toString()) == colour) {
-				members++;
-				if (BattleUsersClass.containsKey(o.toString())) {
-					membersReady++;
+
+		for (String name : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(name) != null) {
+				if (BattleUsersTeam.get(name) == colour) {
+					members++;
+					if (BattleUsersClass.containsKey(name)) membersReady++;
 				}
 			}
 		}
+		
 		if (members == membersReady && members > 0) {
 			if (colour == "red") {
 				return true;
@@ -888,17 +879,15 @@ public class BattleNight extends JavaPlugin {
 	}
 
 	public void teleportAllToSpawn() {
-		Set<String> set = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			if (BattleUsersTeam.get(o.toString()) == "red") {
-				Player z = getServer().getPlayer(o.toString());
-				goToWaypoint(z, "redspawn");
-			}
-			if (BattleUsersTeam.get(o.toString()) == "blue") {
-				Player z = getServer().getPlayer(o.toString());
-				goToWaypoint(z, "bluespawn");
+		for (String name : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(name) != null) {
+				Player currentPlayer = Bukkit.getPlayer(name);
+				if (BattleUsersTeam.get(name) == "red") {
+					goToWaypoint(currentPlayer, "redspawn");
+				}
+				if (BattleUsersTeam.get(name) == "blue") {
+					goToWaypoint(currentPlayer, "bluespawn");
+				}
 			}
 		}
 	}
@@ -1125,17 +1114,18 @@ public class BattleNight extends JavaPlugin {
 				BattleUsersClass.remove(player.getName());
 				if (teleport) goToWaypoint(player, "exit");
 				restorePlayer(player, name);
-				Set<String> set = BattleUsersTeam.keySet();
-				Iterator<String> iter = set.iterator();
-				while (iter.hasNext()) {
-					Object o = iter.next();
-					Player z = getServer().getPlayer(o.toString());
-					try{z.getInventory().clear();} catch (Exception e) {}
-					try {clearArmorSlots(z);} catch (Exception e) {}
-					try{removePotionEffects(z);} catch (Exception e) {}
-					if (teleport) goToWaypoint(z, "exit");
-					restorePlayer(z, z.getName());
+				
+				for (String pName : BattleUsersTeam.keySet()) {
+					if (Bukkit.getPlayer(pName) != null) {
+						Player currentPlayer = Bukkit.getPlayer(pName);
+						currentPlayer.getInventory().clear();
+						clearArmorSlots(currentPlayer);
+						removePotionEffects(currentPlayer);
+						if (teleport) goToWaypoint(currentPlayer, "exit");
+						restorePlayer(currentPlayer, pName);
+					}
 				}
+				
 				removeAllSpectators();
 				cleanSigns();
 				battleInProgress = false;
@@ -1148,17 +1138,18 @@ public class BattleNight extends JavaPlugin {
 				BattleSigns.clear();
 			// There was only one player
 			} else if ((redTeam == 0) && (blueTeam == 0)) {
-				Set<String> set = BattleUsersTeam.keySet();
-				Iterator<String> iter = set.iterator();
-				while (iter.hasNext()) {
-					Object o = iter.next();
-					Player z = getServer().getPlayer(o.toString());
-					try {clearArmorSlots(z);} catch (Exception e) {}
-					try{removePotionEffects(z);} catch (Exception e) {}
-					try{z.getInventory().clear();} catch (Exception e) {}
-					if (teleport) goToWaypoint(z, "exit");
-					restorePlayer(z, name);
+				
+				for (String pName : BattleUsersTeam.keySet()) {
+					if (Bukkit.getPlayer(pName) != null) {
+						Player currentPlayer = Bukkit.getPlayer(pName);
+						currentPlayer.getInventory().clear();
+						clearArmorSlots(currentPlayer);
+						removePotionEffects(currentPlayer);
+						if (teleport) goToWaypoint(currentPlayer, "exit");
+						restorePlayer(currentPlayer, pName);
+					}
 				}
+				
 				Bukkit.getServer().getPluginManager()
 						.callEvent(new BattleEndEvent("draw", "draw", null));
 				cleanSigns();
@@ -1171,13 +1162,15 @@ public class BattleNight extends JavaPlugin {
 				blueTeam = 0;
 				BattleSigns.clear();
 			} else {
-				cleanSigns(player.getName());
-				try{player.getInventory().clear();} catch (Exception e) {}
-				try {clearArmorSlots(player);} catch (Exception e) {}
-				try{removePotionEffects(player);} catch (Exception e) {}
-				BattleUsersTeam.remove(player.getName());
-				BattleUsersClass.remove(player.getName());
-				restorePlayer(player, name);
+				if (player != null) {
+					cleanSigns(player);
+					player.getInventory().clear();
+					clearArmorSlots(player);
+					removePotionEffects(player);
+					BattleUsersTeam.remove(player.getName());
+					BattleUsersClass.remove(player.getName());
+					restorePlayer(player, name);
+				}
 			}
 		} else {
 			BattleNight.log.info("[BattleNight] Failed to remove player '"
@@ -1209,17 +1202,18 @@ public class BattleNight extends JavaPlugin {
 		} else {
 			return;
 		}
-		Set<String> set = BattleUsersTeam.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			Player z = getServer().getPlayer(o.toString());
-			z.getInventory().clear();
-			clearArmorSlots(z);
-			removePotionEffects(z);
-			goToWaypoint(z, "exit");
-			restorePlayer(z, z.getName());
+		
+		for (String pName : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(pName) != null) {
+				Player currentPlayer = Bukkit.getPlayer(pName);
+				currentPlayer.getInventory().clear();
+				clearArmorSlots(currentPlayer);
+				removePotionEffects(currentPlayer);
+				goToWaypoint(currentPlayer, "exit");
+				restorePlayer(currentPlayer, pName);
+			}
 		}
+		
 		cleanSigns();
 		battleInProgress = false;
 		redTeamIronClicked = false;
@@ -1232,13 +1226,13 @@ public class BattleNight extends JavaPlugin {
 	}
 
 	public void removeAllSpectators() {
-		Set<String> set = BattleSpectators.keySet();
-		Iterator<String> iter = set.iterator();
-		while (iter.hasNext()) {
-			Object o = iter.next();
-			Player z = getServer().getPlayer(o.toString());
-			goToWaypoint(z, "exit");
+		for (String pName : BattleSpectators.keySet()) {
+			if (Bukkit.getPlayer(pName) != null) {
+				Player currentPlayer = Bukkit.getPlayer(pName);
+				goToWaypoint(currentPlayer, "exit");
+			}
 		}
+		
 		BattleSpectators.clear();
 	}
 
