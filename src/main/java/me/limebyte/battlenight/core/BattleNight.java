@@ -57,7 +57,6 @@ public class BattleNight extends JavaPlugin {
 			+ ChatColor.WHITE;
 	public static final String BNKTag = ChatColor.GRAY
 			+ "[BattleNight KillFeed] " + ChatColor.WHITE;
-	public static final String Version = "v1.2.1"; // TODO Update
 	public Set<String> ClassList;
 
 	// HashMaps
@@ -1080,14 +1079,14 @@ public class BattleNight extends JavaPlugin {
 			boolean teleport) {
 		if (BattleUsersTeam.containsKey(player.getName())) {
 			if (BattleUsersTeam.get(player.getName()) == "red") {
-				redTeam = redTeam - 1;
+				redTeam--;
 				if (message1 != null) {
 					tellEveryoneExcept(player, ChatColor.RED + player.getName()
 							+ ChatColor.WHITE + " " + message1);
 				}
 			}
 			if (BattleUsersTeam.get(player.getName()) == "blue") {
-				blueTeam = blueTeam - 1;
+				blueTeam--;
 				if (message1 != null) {
 					tellEveryoneExcept(player,
 							ChatColor.BLUE + player.getName() + ChatColor.WHITE
@@ -1118,10 +1117,11 @@ public class BattleNight extends JavaPlugin {
 				for (String pName : BattleUsersTeam.keySet()) {
 					if (Bukkit.getPlayer(pName) != null) {
 						Player currentPlayer = Bukkit.getPlayer(pName);
+						if (currentPlayer == player) continue;
 						currentPlayer.getInventory().clear();
 						clearArmorSlots(currentPlayer);
 						removePotionEffects(currentPlayer);
-						if (teleport) goToWaypoint(currentPlayer, "exit");
+						goToWaypoint(currentPlayer, "exit");
 						restorePlayer(currentPlayer, pName);
 					}
 				}
@@ -1142,10 +1142,11 @@ public class BattleNight extends JavaPlugin {
 				for (String pName : BattleUsersTeam.keySet()) {
 					if (Bukkit.getPlayer(pName) != null) {
 						Player currentPlayer = Bukkit.getPlayer(pName);
+						if (currentPlayer == player) continue;
 						currentPlayer.getInventory().clear();
 						clearArmorSlots(currentPlayer);
 						removePotionEffects(currentPlayer);
-						if (teleport) goToWaypoint(currentPlayer, "exit");
+						goToWaypoint(currentPlayer, "exit");
 						restorePlayer(currentPlayer, pName);
 					}
 				}
@@ -1170,6 +1171,7 @@ public class BattleNight extends JavaPlugin {
 					BattleUsersTeam.remove(player.getName());
 					BattleUsersClass.remove(player.getName());
 					restorePlayer(player, name);
+					if (teleport) goToWaypoint(player, "exit");
 				}
 			}
 		} else {
