@@ -461,6 +461,7 @@ public class BattleNight extends JavaPlugin {
 				else if ((args[0].equalsIgnoreCase("watch"))
 						&& hasPerm(Perm.USER, player)) {
 					addSpectator(player, "command");
+					
 				} else if (args[0].equalsIgnoreCase("leave")
 						&& hasPerm(Perm.USER, player)) {
 					if (BattleUsersTeam.containsKey(player.getName())) {
