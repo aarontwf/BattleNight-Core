@@ -67,6 +67,8 @@ public class DeathListener implements Listener {
 				} else if (plugin.playersInLounge) {
 					plugin.BattleUsersRespawn.put(name, "true");
 				}
+				
+				plugin.removePlayer(player, null, "You have been removed from the Battle because you were killed.", false);
 			}
 		}
 	}

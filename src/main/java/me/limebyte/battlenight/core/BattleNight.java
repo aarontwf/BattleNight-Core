@@ -465,8 +465,11 @@ public class BattleNight extends JavaPlugin {
 				} else if (args[0].equalsIgnoreCase("leave")
 						&& hasPerm(Perm.USER, player)) {
 					if (BattleUsersTeam.containsKey(player.getName())) {
-						removePlayer(player, player.getName(), "has left the Battle.",
-								"You have left the Battle.", true);
+						removePlayer(
+								player,
+								"has left the Battle.",
+								"You have left the Battle.",
+								true);
 					} else if (BattleSpectators.containsKey(player.getName())) {
 						removeSpectator(player);
 					} else {
@@ -540,7 +543,7 @@ public class BattleNight extends JavaPlugin {
                         player.sendMessage(BNTag + ChatColor.GREEN + "Reloaded successfully.");
                     } catch (Exception e) {
                         e.printStackTrace();
-                        player.sendMessage(BNTag + ChatColor.RED + "Reloaded failed.");
+                        player.sendMessage(BNTag + ChatColor.RED + "Reload failed.");
                     }
 				}
 
@@ -555,7 +558,7 @@ public class BattleNight extends JavaPlugin {
 					if (badplayer.isOnline()) {
 						if (BattleUsersTeam.containsKey(badplayer.getName())) {
 							removePlayer(
-									badplayer, badplayer.getName(),
+									badplayer,
 									"has been kicked from the current Battle.",
 									"You have been kicked from the current Battle.",
 									true);
@@ -1033,7 +1036,7 @@ public class BattleNight extends JavaPlugin {
 		} else {
 			if (isSetup() && battleInProgress) {
 				if (BattleUsersTeam.containsKey(player.getName())) {
-					removePlayer(player, player.getName(), "has left the Battle.",
+					removePlayer(player, "has left the Battle.",
 							"You have left the Battle.", false);
 				}
 				goToWaypoint(player, "spectator");
@@ -1076,10 +1079,11 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 
-	public void removePlayer(Player player, String name, String message1, String message2,
-			boolean teleport) {
-		if (BattleUsersTeam.containsKey(player.getName())) {
-			if (BattleUsersTeam.get(player.getName()) == "red") {
+	public void removePlayer(Player player, String message1, String message2, boolean teleport) {
+		String name = player.getName();
+		
+		if (BattleUsersTeam.containsKey(name)) {
+			if (BattleUsersTeam.get(name) == "red") {
 				redTeam--;
 				if (message1 != null) {
 					tellEveryoneExcept(player, ChatColor.RED + player.getName()
@@ -1100,81 +1104,32 @@ public class BattleNight extends JavaPlugin {
 			
 			// If red or blue won
 			if (((redTeam > 0) && (blueTeam == 0)) || ((redTeam == 0) && (blueTeam > 0))) {
-				if ((redTeam > 0) && (blueTeam == 0) && (BattleUsersTeam.get(player.getName()) == "blue")) {
+				if ((redTeam > 0) && (blueTeam == 0) && (BattleUsersTeam.get(name) == "blue")) {
 					tellEveryone(Track.RED_WON);
 					Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", BattleUsersTeam));
-				} else if ((redTeam == 0) && (blueTeam > 0) && (BattleUsersTeam.get(player.getName()) == "red")) {
+				} else if ((redTeam == 0) && (blueTeam > 0) && (BattleUsersTeam.get(name) == "red")) {
 					tellEveryone(Track.BLUE_WON);
 					Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", BattleUsersTeam));
 				}
-				try{player.getInventory().clear();} catch (Exception e) {}
-				try {clearArmorSlots(player);} catch (Exception e) {}
-				try{removePotionEffects(player);} catch (Exception e) {}
-				BattleUsersTeam.remove(player.getName());
-				BattleUsersClass.remove(player.getName());
-				if (teleport) goToWaypoint(player, "exit");
-				restorePlayer(player, name);
+
+				resetPlayer(player, teleport);
+				resetBattle();
 				
-				for (String pName : BattleUsersTeam.keySet()) {
-					if (Bukkit.getPlayer(pName) != null) {
-						Player currentPlayer = Bukkit.getPlayer(pName);
-						if (currentPlayer == player) continue;
-						currentPlayer.getInventory().clear();
-						clearArmorSlots(currentPlayer);
-						removePotionEffects(currentPlayer);
-						goToWaypoint(currentPlayer, "exit");
-						restorePlayer(currentPlayer, pName);
-					}
-				}
-				
-				removeAllSpectators();
-				cleanSigns();
-				battleInProgress = false;
-				redTeamIronClicked = false;
-				blueTeamIronClicked = false;
-				BattleUsersTeam.clear();
-				BattleUsersClass.clear();
-				redTeam = 0;
-				blueTeam = 0;
-				BattleSigns.clear();
 			// There was only one player
 			} else if ((redTeam == 0) && (blueTeam == 0)) {
+				resetPlayer(player, teleport);			
+				resetBattle();
+				Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
 				
-				for (String pName : BattleUsersTeam.keySet()) {
-					if (Bukkit.getPlayer(pName) != null) {
-						Player currentPlayer = Bukkit.getPlayer(pName);
-						if (currentPlayer == player) continue;
-						currentPlayer.getInventory().clear();
-						clearArmorSlots(currentPlayer);
-						removePotionEffects(currentPlayer);
-						goToWaypoint(currentPlayer, "exit");
-						restorePlayer(currentPlayer, pName);
-					}
-				}
-				
-				Bukkit.getServer().getPluginManager()
-						.callEvent(new BattleEndEvent("draw", "draw", null));
-				cleanSigns();
-				battleInProgress = false;
-				redTeamIronClicked = false;
-				blueTeamIronClicked = false;
-				BattleUsersTeam.clear();
-				BattleUsersClass.clear();
-				redTeam = 0;
-				blueTeam = 0;
-				BattleSigns.clear();
+			// Battle is not over
 			} else {
 				if (player != null) {
-					cleanSigns(player);
-					player.getInventory().clear();
-					clearArmorSlots(player);
-					removePotionEffects(player);
-					BattleUsersTeam.remove(player.getName());
-					BattleUsersClass.remove(player.getName());
-					restorePlayer(player, name);
-					if (teleport) goToWaypoint(player, "exit");
+					resetPlayer(player, teleport);
 				}
 			}
+			
+			
+			
 		} else {
 			BattleNight.log.info("[BattleNight] Failed to remove player '"
 					+ player.getName()
@@ -1182,6 +1137,37 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 
+	private void resetBattle() {
+		for (String pName : BattleUsersTeam.keySet()) {
+			if (Bukkit.getPlayer(pName) != null) {
+				resetPlayer(Bukkit.getPlayer(pName), true);
+			}
+		}
+		
+		removeAllSpectators();
+		cleanSigns();
+		battleInProgress = false;
+		redTeamIronClicked = false;
+		blueTeamIronClicked = false;
+		BattleUsersTeam.clear();
+		BattleUsersClass.clear();
+		redTeam = 0;
+		blueTeam = 0;
+		BattleSigns.clear();
+	}
+	
+	private void resetPlayer(Player player, boolean teleport) {
+		player.getInventory().clear();
+		clearArmorSlots(player);
+		removePotionEffects(player);
+		restorePlayer(player);
+		if (teleport) goToWaypoint(player, "exit");
+		
+		BattleUsersTeam.remove(player.getName());
+		BattleUsersClass.remove(player.getName());
+		cleanSigns(player);
+	}
+	
 	public void removeSpectator(Player player) {
 		goToWaypoint(player, "exit");
 		BattleSpectators.remove(player.getName());
@@ -1213,7 +1199,7 @@ public class BattleNight extends JavaPlugin {
 				clearArmorSlots(currentPlayer);
 				removePotionEffects(currentPlayer);
 				goToWaypoint(currentPlayer, "exit");
-				restorePlayer(currentPlayer, pName);
+				restorePlayer(currentPlayer);
 			}
 		}
 		
@@ -1304,7 +1290,8 @@ public class BattleNight extends JavaPlugin {
 		return true;
 	}
 
-	private void restorePlayer(Player p, String name) {
+	private void restorePlayer(Player p) {
+		String name = p.getName();
 		try {
 			GameMode Gamemode = GameMode.SURVIVAL;
 			if (players.getInt(name + ".saves.gamemode", 0) == 1)
