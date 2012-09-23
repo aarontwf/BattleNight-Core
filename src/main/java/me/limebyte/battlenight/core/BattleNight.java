@@ -1142,8 +1142,9 @@ public class BattleNight extends JavaPlugin {
 	private void resetBattle() {
 		Iterator<Map.Entry<String,String>> iter = BattleUsersTeam.entrySet().iterator();
 		while (iter.hasNext()) {
-			if (Bukkit.getPlayer(iter.next().getKey()) != null) {
-				resetPlayer(iter);
+			Entry<String, String> currentEntry = iter.next();
+			if (Bukkit.getPlayer(currentEntry.getKey()) != null) {
+				resetPlayer(currentEntry, iter);
 			}
 		}
 		
@@ -1171,8 +1172,8 @@ public class BattleNight extends JavaPlugin {
 		cleanSigns(player);
 	}
 	
-	private void resetPlayer(Iterator<Map.Entry<String,String>> iter) {
-		Player player = Bukkit.getPlayer(iter.next().getKey());
+	private void resetPlayer(Entry<String, String> currentEntry, Iterator<Map.Entry<String,String>> iter) {
+		Player player = Bukkit.getPlayer(currentEntry.getKey());
 		player.getInventory().clear();
 		clearArmorSlots(player);
 		removePotionEffects(player);
