@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import me.limebyte.battlenight.core.API.BattleEndEvent;
 import me.limebyte.battlenight.core.Hooks.Metrics;
 import me.limebyte.battlenight.core.Listeners.CheatListener;
 import me.limebyte.battlenight.core.Listeners.CommandBlocker;
@@ -82,6 +80,7 @@ public class BattleNight extends JavaPlugin {
 	private final SignChanger blockListener = new SignChanger(this);
 	private final CheatListener cheatListener = new CheatListener(this);
 	private final CommandBlocker commandBlocker = new CommandBlocker(this);
+	public final Battle battle = new Battle(this);
 	
 	public boolean redTeamIronClicked = false;
 	public boolean blueTeamIronClicked = false;
@@ -119,7 +118,7 @@ public class BattleNight extends JavaPlugin {
 	public void onDisable() {
 		if (battleInProgress || playersInLounge) {
 			log.info("[BattleNight] Ending current Battle...");
-			endBattle();
+			battle.end();
 		}
 		this.cleanSigns();
 		PluginDescriptionFile pdfFile = getDescription();
@@ -450,7 +449,7 @@ public class BattleNight extends JavaPlugin {
 						&& hasPerm(Perm.USER, player)) {
 					if (isSetup() && !battleInProgress
 							&& !BattleUsersTeam.containsKey(player.getName())) {
-						addPlayer(player);
+						battle.addPlayer(player);
 					} else if (!isSetup()) {
 						tellPlayer(player, Track.WAYPOINTS_UNSET);
 					} else if (battleInProgress) {
@@ -467,11 +466,7 @@ public class BattleNight extends JavaPlugin {
 				} else if (args[0].equalsIgnoreCase("leave")
 						&& hasPerm(Perm.USER, player)) {
 					if (BattleUsersTeam.containsKey(player.getName())) {
-						removePlayer(
-								player,
-								"has left the Battle.",
-								"You have left the Battle.",
-								true);
+						battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
 					} else if (BattleSpectators.containsKey(player.getName())) {
 						removeSpectator(player);
 					} else {
@@ -487,7 +482,7 @@ public class BattleNight extends JavaPlugin {
 				else if ((args[0].equalsIgnoreCase("kickall") || args[0]
 						.equalsIgnoreCase("endgame"))
 						&& hasPerm(Perm.MOD, player)) {
-					endBattle();
+					battle.end();
 					tellPlayer(player, Track.BATTLE_ENDED);
 				}
 
@@ -559,11 +554,7 @@ public class BattleNight extends JavaPlugin {
 					Player badplayer = Bukkit.getPlayerExact(args[1]);
 					if (badplayer.isOnline()) {
 						if (BattleUsersTeam.containsKey(badplayer.getName())) {
-							removePlayer(
-									badplayer,
-									"has been kicked from the current Battle.",
-									"You have been kicked from the current Battle.",
-									true);
+							battle.removePlayer(badplayer, false, "has been kicked from the current Battle.", "You have been kicked from the current Battle.");
 						} else {
 							tellPlayer(player, "Player: " + badplayer.getName()
 									+ " is not in the current Battle.");
@@ -635,16 +626,16 @@ public class BattleNight extends JavaPlugin {
 		return new Location(world, x, y + 1, z, yaw, pitch);
 	}
 
-	private enum WPoint {
+	public enum WPoint {
 		RED_LOUNGE("redlounge"), RED_SPAWN("redspawn"), BLUE_LOUNGE(
 				"bluelounge"), BLUE_SPAWN("bluespawn"), SPECTATOR("spectator"), EXIT(
 				"exit");
 
-		private WPoint(String name) {
+		WPoint(String name) {
 			this.name = name;
 		}
 
-		private final String name;
+		public final String name;
 
 		@Override
 		public String toString() {
@@ -921,6 +912,12 @@ public class BattleNight extends JavaPlugin {
 		player.teleport(getCoords(place));
 		BattleTelePass.remove(player.getName());
 	}
+	
+	public void goToWaypoint(Player player, WPoint waypoint) {
+		BattleTelePass.put(player.getName(), "yes");
+		player.teleport(getCoords(waypoint.toString()));
+		BattleTelePass.remove(player.getName());
+	}
 
 	public enum Perm {
 		ADMIN, MOD, USER
@@ -1038,10 +1035,9 @@ public class BattleNight extends JavaPlugin {
 		} else {
 			if (isSetup() && battleInProgress) {
 				if (BattleUsersTeam.containsKey(player.getName())) {
-					removePlayer(player, "has left the Battle.",
-							"You have left the Battle.", false);
+					battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
 				}
-				goToWaypoint(player, "spectator");
+				goToWaypoint(player, WPoint.SPECTATOR);
 				BattleSpectators.put(player.getName(), "command");
 				tellPlayer(player, Track.WELCOME_SPECTATOR);
 				return;
@@ -1054,136 +1050,6 @@ public class BattleNight extends JavaPlugin {
 			}
 		}
 	}
-
-	public void addPlayer(Player player) {
-		if (preparePlayer(player)) {
-			if (blueTeam > redTeam) {
-				goToWaypoint(player, "redlounge");
-				BattleUsersTeam.put(player.getName(), "red");
-				tellPlayer(player, "Welcome! You are on team " + ChatColor.RED
-						+ "<Red>");
-				tellEveryoneExcept(player, player.getName()
-						+ " has joined team " + ChatColor.RED + "<Red>");
-				redTeam += 1;
-				playersInLounge = true;
-			} else {
-				goToWaypoint(player, "bluelounge");
-				BattleUsersTeam.put(player.getName(), "blue");
-				tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE
-						+ "<Blue>");
-				tellEveryoneExcept(player, player.getName()
-						+ " has joined team " + ChatColor.BLUE + "<Blue>");
-				blueTeam += 1;
-				playersInLounge = true;
-			}
-		} else {
-			tellPlayer(player, Track.MUST_HAVE_EMPTY);
-		}
-	}
-
-	public void removePlayer(Player player, String message1, String message2, boolean teleport) {
-		String name = player.getName();
-		
-		if (BattleUsersTeam.containsKey(name)) {
-			if (BattleUsersTeam.get(name) == "red") {
-				redTeam--;
-				if (message1 != null) {
-					tellEveryoneExcept(player, ChatColor.RED + player.getName()
-							+ ChatColor.WHITE + " " + message1);
-				}
-			}
-			if (BattleUsersTeam.get(player.getName()) == "blue") {
-				blueTeam--;
-				if (message1 != null) {
-					tellEveryoneExcept(player,
-							ChatColor.BLUE + player.getName() + ChatColor.WHITE
-									+ " " + message1);
-				}
-			}
-			if (message2 != null) {
-				tellPlayer(player, message2);
-			}
-			
-			// If red or blue won
-			if (((redTeam > 0) && (blueTeam == 0)) || ((redTeam == 0) && (blueTeam > 0))) {
-				if ((redTeam > 0) && (blueTeam == 0) && (BattleUsersTeam.get(name) == "blue")) {
-					tellEveryone(Track.RED_WON);
-					Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", BattleUsersTeam));
-				} else if ((redTeam == 0) && (blueTeam > 0) && (BattleUsersTeam.get(name) == "red")) {
-					tellEveryone(Track.BLUE_WON);
-					Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", BattleUsersTeam));
-				}
-
-				resetPlayer(player, teleport);
-				resetBattle();
-				
-			// There was only one player
-			} else if ((redTeam == 0) && (blueTeam == 0)) {
-				resetPlayer(player, teleport);			
-				resetBattle();
-				Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
-				
-			// Battle is not over
-			} else {
-				if (player != null) {
-					resetPlayer(player, teleport);
-				}
-			}
-			
-			
-			
-		} else {
-			BattleNight.log.info("[BattleNight] Failed to remove player '"
-					+ player.getName()
-					+ "' from the Battle as they are not in it.");
-		}
-	}
-
-	private void resetBattle() {
-		Iterator<Map.Entry<String,String>> iter = BattleUsersTeam.entrySet().iterator();
-		while (iter.hasNext()) {
-			Entry<String, String> currentEntry = iter.next();
-			if (Bukkit.getPlayer(currentEntry.getKey()) != null) {
-				resetPlayer(currentEntry, iter);
-			}
-		}
-		
-		removeAllSpectators();
-		cleanSigns();
-		battleInProgress = false;
-		redTeamIronClicked = false;
-		blueTeamIronClicked = false;
-		BattleUsersTeam.clear();
-		BattleUsersClass.clear();
-		redTeam = 0;
-		blueTeam = 0;
-		BattleSigns.clear();
-	}
-	
-	private void resetPlayer(Player player, boolean teleport) {
-		player.getInventory().clear();
-		clearArmorSlots(player);
-		removePotionEffects(player);
-		restorePlayer(player);
-		if (teleport) goToWaypoint(player, "exit");
-		
-		BattleUsersTeam.remove(player.getName());
-		BattleUsersClass.remove(player.getName());
-		cleanSigns(player);
-	}
-	
-	private void resetPlayer(Entry<String, String> currentEntry, Iterator<Map.Entry<String,String>> iter) {
-		Player player = Bukkit.getPlayer(currentEntry.getKey());
-		player.getInventory().clear();
-		clearArmorSlots(player);
-		removePotionEffects(player);
-		restorePlayer(player);
-		goToWaypoint(player, "exit");
-		
-		iter.remove();
-		BattleUsersClass.remove(player.getName());
-		cleanSigns(player);
-	}
 	
 	public void removeSpectator(Player player) {
 		goToWaypoint(player, "exit");
@@ -1191,7 +1057,7 @@ public class BattleNight extends JavaPlugin {
 		tellPlayer(player, Track.GOODBYE_SPECTATOR);
 	}
 
-	// TODO Isolate winning players
+	/*/ TODO Isolate winning players
 	public void removeAllPlayers() {
 		if (redTeam > blueTeam) {
 			tellEveryone(Track.RED_WON);
@@ -1215,8 +1081,8 @@ public class BattleNight extends JavaPlugin {
 				currentPlayer.getInventory().clear();
 				clearArmorSlots(currentPlayer);
 				removePotionEffects(currentPlayer);
-				goToWaypoint(currentPlayer, "exit");
 				restorePlayer(currentPlayer);
+				goToWaypoint(currentPlayer, "exit");
 			}
 		}
 		
@@ -1229,7 +1095,7 @@ public class BattleNight extends JavaPlugin {
 		redTeam = 0;
 		blueTeam = 0;
 		BattleSigns.clear();
-	}
+	}*/
 
 	public void removeAllSpectators() {
 		for (String pName : BattleSpectators.keySet()) {
@@ -1242,17 +1108,12 @@ public class BattleNight extends JavaPlugin {
 		BattleSpectators.clear();
 	}
 
-	public void endBattle() {
-		removeAllPlayers();
-		removeAllSpectators();
-	}
-
 	public void clearArmorSlots(Player player) {
 	    PlayerInventory inv = player.getInventory();
 		inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
 	}
 
-	private boolean preparePlayer(Player p) {
+	public boolean preparePlayer(Player p) {
 		if (config.getString("InventoryType").equalsIgnoreCase("prompt")
 				&& !emptyInventory(p))
 			return false;
@@ -1307,7 +1168,7 @@ public class BattleNight extends JavaPlugin {
 		return true;
 	}
 
-	private void restorePlayer(Player p) {
+	public void restorePlayer(Player p) {
 		String name = p.getName();
 		try {
 			GameMode Gamemode = GameMode.SURVIVAL;

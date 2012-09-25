@@ -22,14 +22,15 @@ public class RespawnListener implements Listener {
 		Player player = event.getPlayer();
 		String name = player.getName();
 		if (plugin.BattleUsersRespawn.containsKey(name)) {
-			// If the Battle is still going on, take them to the spectator area
-			// to watch
+			// If the Battle is still going on, take them to the spectator area to watch
 			if (plugin.battleInProgress) {
 				event.setRespawnLocation(plugin.getCoords("spectator"));
+				plugin.battle.resetPlayer(player, false, true);
 				plugin.addSpectator(player, "death");
-				// Else, take them to the exit area
+			// Else, take them to the exit area
 			} else {
 				event.setRespawnLocation(plugin.getCoords("exit"));
+				plugin.battle.resetPlayer(player, false, false);
 			}
 			plugin.BattleUsersRespawn.remove(name);
 		}

@@ -29,7 +29,6 @@ public class DeathListener implements Listener {
 			String name = player.getName();
 			if (plugin.BattleUsersTeam.containsKey(name)) {
 				event.getDrops().clear();
-                plugin.BattleUsersRespawn.put(name, "true");
 				((PlayerDeathEvent) event).setDeathMessage("");
 				
 				if (!plugin.playersInLounge) {
@@ -67,7 +66,8 @@ public class DeathListener implements Listener {
 					}
 				}
 				
-				plugin.removePlayer(player, null, "You have been removed from the Battle because you were killed.", false);
+				plugin.BattleUsersRespawn.put(name, "true");
+				plugin.battle.removePlayer(player, true, null, "You were killed!");
 			}
 		}
 	}
