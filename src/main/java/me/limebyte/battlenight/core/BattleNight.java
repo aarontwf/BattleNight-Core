@@ -1059,46 +1059,6 @@ public class BattleNight extends JavaPlugin {
 		tellPlayer(player, Track.GOODBYE_SPECTATOR);
 	}
 
-	/*/ TODO Isolate winning players
-	public void removeAllPlayers() {
-		if (redTeam > blueTeam) {
-			tellEveryone(Track.RED_WON);
-			Bukkit.getServer().getPluginManager()
-					.callEvent(new BattleEndEvent("red", "blue", null));
-		} else if (redTeam < blueTeam) {
-			tellEveryone(Track.BLUE_WON);
-			Bukkit.getServer().getPluginManager()
-					.callEvent(new BattleEndEvent("blue", "red", null));
-		} else if ((redTeam == blueTeam) && ((redTeam > 0) || (blueTeam > 0))) {
-			tellEveryone(Track.DRAW);
-			Bukkit.getServer().getPluginManager()
-					.callEvent(new BattleEndEvent("draw", "draw", null));
-		} else {
-			return;
-		}
-		
-		for (String pName : BattleUsersTeam.keySet()) {
-			if (Bukkit.getPlayer(pName) != null) {
-				Player currentPlayer = Bukkit.getPlayer(pName);
-				currentPlayer.getInventory().clear();
-				clearArmorSlots(currentPlayer);
-				removePotionEffects(currentPlayer);
-				restorePlayer(currentPlayer);
-				goToWaypoint(currentPlayer, "exit");
-			}
-		}
-		
-		cleanSigns();
-		battleInProgress = false;
-		redTeamIronClicked = false;
-		blueTeamIronClicked = false;
-		BattleUsersTeam.clear();
-		BattleUsersClass.clear();
-		redTeam = 0;
-		blueTeam = 0;
-		BattleSigns.clear();
-	}*/
-
 	public void removeAllSpectators() {
 		for (String pName : BattleSpectators.keySet()) {
 			if (Bukkit.getPlayer(pName) != null) {
