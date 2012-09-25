@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 public class Battle {
 
 	BattleNight plugin;
-	int redTeam;
-	int blueTeam;
+	int redTeam = 0;
+	int blueTeam = 0;
 	
 	public Battle(BattleNight plugin) {
 		this.plugin = plugin;
@@ -27,13 +27,13 @@ public class Battle {
 				plugin.BattleUsersTeam.put(name, "red");
 				plugin.tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
 				plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.RED + "<Red>");
-				redTeam ++;
+				redTeam++;
 			} else {
 				plugin.goToWaypoint(player, WPoint.BLUE_LOUNGE);
 				plugin.BattleUsersTeam.put(name, "blue");
 				plugin.tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
 				plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.BLUE + "<Blue>");
-				blueTeam ++;
+				blueTeam++;
 			}
 			
 			plugin.playersInLounge = true;
