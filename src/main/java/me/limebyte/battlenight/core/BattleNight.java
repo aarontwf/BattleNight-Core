@@ -621,7 +621,7 @@ public class BattleNight extends JavaPlugin {
 		}
 		World world = Bukkit.getServer().getWorld(
 				waypoints.getString("coords." + place + ".world"));
-		return new Location(world, x, y + 1, z, yaw, pitch);
+		return new Location(world, x, y, z, yaw, pitch);
 	}
 
 	public enum WPoint {
