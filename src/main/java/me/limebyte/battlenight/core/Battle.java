@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 public class Battle {
 
 	BattleNight plugin;
+	int redTeam;
+	int blueTeam;
 	
 	public Battle(BattleNight plugin) {
 		this.plugin = plugin;
@@ -20,18 +22,18 @@ public class Battle {
 		if (plugin.preparePlayer(player)) {
 			String name = player.getName();
 			
-			if (plugin.blueTeam > plugin.redTeam) {
+			if (blueTeam > redTeam) {
 				plugin.goToWaypoint(player, WPoint.RED_LOUNGE);
 				plugin.BattleUsersTeam.put(name, "red");
 				plugin.tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
 				plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.RED + "<Red>");
-				plugin.redTeam ++;
+				redTeam ++;
 			} else {
 				plugin.goToWaypoint(player, WPoint.BLUE_LOUNGE);
 				plugin.BattleUsersTeam.put(name, "blue");
 				plugin.tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
 				plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.BLUE + "<Blue>");
-				plugin.blueTeam ++;
+				blueTeam ++;
 			}
 			
 			plugin.playersInLounge = true;
@@ -48,11 +50,11 @@ public class Battle {
 			boolean sendMsg1 = msg1 != null;
 			
 			if (team == "red") {
-				plugin.redTeam--;
+				redTeam--;
 				if (sendMsg1) plugin.tellEveryoneExcept(player, ChatColor.RED + name	+ ChatColor.WHITE + " " + msg1);
 			}
 			if (team == "blue") {
-				plugin.blueTeam--;
+				blueTeam--;
 				if (sendMsg1) plugin.tellEveryoneExcept(player,	ChatColor.BLUE + name + ChatColor.WHITE	+ " " + msg1);
 			}
 			
@@ -61,16 +63,16 @@ public class Battle {
 			}
 			
 			// If red or blue won
-			if (plugin.redTeam == 0 || plugin.blueTeam == 0) {
+			if (redTeam == 0 || blueTeam == 0) {
 				
 				// If the battle started
 				if (!plugin.playersInLounge) {
 					// If red won
-					if (plugin.redTeam > 0) {
+					if (redTeam > 0) {
 						plugin.tellEveryone(Track.RED_WON);
 						Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", plugin.BattleUsersTeam));
 					// If blue won
-					} else if (plugin.blueTeam > 0) {
+					} else if (blueTeam > 0) {
 						plugin.tellEveryone(Track.BLUE_WON);
 						Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", plugin.BattleUsersTeam));
 					// If neither team won
@@ -121,15 +123,15 @@ public class Battle {
 		plugin.blueTeamIronClicked = false;
 		plugin.BattleUsersTeam.clear();
 		plugin.BattleUsersClass.clear();
-		plugin.redTeam = 0;
-		plugin.blueTeam = 0;
+		redTeam = 0;
+		blueTeam = 0;
 	}
 	
 	public void end() {
-		if (plugin.blueTeam > plugin.redTeam) {
+		if (blueTeam > redTeam) {
 			plugin.tellEveryone(Track.BLUE_WON);
 			Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", plugin.BattleUsersTeam));
-		} else if (plugin.redTeam > plugin.blueTeam) {
+		} else if (redTeam > blueTeam) {
 			plugin.tellEveryone(Track.RED_WON);
 			Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", plugin.BattleUsersTeam));
 		} else {

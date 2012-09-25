@@ -70,6 +70,7 @@ public class BattleNight extends JavaPlugin {
 	public final Map<String, String> BattleSpectators = new HashMap<String, String>();
 
 	// Other Classes
+	public final Battle battle = new Battle(this);
 	private final SignListener signListener = new SignListener(this);
 	private final ReadyListener readyListener = new ReadyListener(this);
 	private final RespawnListener respawnListener = new RespawnListener(this);
@@ -80,7 +81,6 @@ public class BattleNight extends JavaPlugin {
 	private final SignChanger blockListener = new SignChanger(this);
 	private final CheatListener cheatListener = new CheatListener(this);
 	private final CommandBlocker commandBlocker = new CommandBlocker(this);
-	public final Battle battle = new Battle(this);
 	
 	public boolean redTeamIronClicked = false;
 	public boolean blueTeamIronClicked = false;
@@ -107,9 +107,6 @@ public class BattleNight extends JavaPlugin {
 	FileConfiguration classes;
 	FileConfiguration waypoints;
 	FileConfiguration players;
-
-	public int redTeam = 0;
-	public int blueTeam = 0;
 
 	// ////////////////////
 	// Plug-in Disable //
