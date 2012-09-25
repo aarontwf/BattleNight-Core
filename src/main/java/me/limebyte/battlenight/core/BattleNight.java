@@ -30,6 +30,7 @@ import me.limebyte.battlenight.core.Other.Tracks.Track;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -876,10 +877,10 @@ public class BattleNight extends JavaPlugin {
 			if (Bukkit.getPlayer(name) != null) {
 				Player currentPlayer = Bukkit.getPlayer(name);
 				if (BattleUsersTeam.get(name) == "red") {
-					goToWaypoint(currentPlayer, "redspawn");
+					goToWaypoint(currentPlayer, WPoint.RED_SPAWN);
 				}
 				if (BattleUsersTeam.get(name) == "blue") {
-					goToWaypoint(currentPlayer, "bluespawn");
+					goToWaypoint(currentPlayer, WPoint.BLUE_SPAWN);
 				}
 			}
 		}
@@ -903,16 +904,20 @@ public class BattleNight extends JavaPlugin {
 		return (invNullCounter == invContents.length)
 				&& (armNullCounter == armContents.length);
 	}
-
-	public void goToWaypoint(Player player, String place) {
-		BattleTelePass.put(player.getName(), "yes");
-		player.teleport(getCoords(place));
-		BattleTelePass.remove(player.getName());
-	}
 	
 	public void goToWaypoint(Player player, WPoint waypoint) {
+		Location destination = getCoords(waypoint.name);
+		Chunk chunk = destination.getChunk();
+		
+		if (!chunk.isLoaded()) {
+			chunk.load();
+			while (!chunk.isLoaded()) {
+				// Wait until loaded
+			}
+		}
+		
 		BattleTelePass.put(player.getName(), "yes");
-		player.teleport(getCoords(waypoint.toString()));
+		player.teleport(destination);
 		BattleTelePass.remove(player.getName());
 	}
 
@@ -1049,7 +1054,7 @@ public class BattleNight extends JavaPlugin {
 	}
 	
 	public void removeSpectator(Player player) {
-		goToWaypoint(player, "exit");
+		goToWaypoint(player, WPoint.EXIT);
 		BattleSpectators.remove(player.getName());
 		tellPlayer(player, Track.GOODBYE_SPECTATOR);
 	}
@@ -1098,7 +1103,7 @@ public class BattleNight extends JavaPlugin {
 		for (String pName : BattleSpectators.keySet()) {
 			if (Bukkit.getPlayer(pName) != null) {
 				Player currentPlayer = Bukkit.getPlayer(pName);
-				goToWaypoint(currentPlayer, "exit");
+				goToWaypoint(currentPlayer, WPoint.EXIT);
 			}
 		}
 		
