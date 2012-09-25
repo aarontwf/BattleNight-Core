@@ -2,8 +2,6 @@ package me.limebyte.battlenight.core.API;
 
 import java.util.Map;
 
-import me.limebyte.battlenight.core.BattleNight;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -14,13 +12,6 @@ import org.bukkit.event.HandlerList;
  */
 
 public class BattleEndEvent extends Event {
-
-	// Get Main Class
-	public static BattleNight plugin;
-
-	public BattleEndEvent(BattleNight instance) {
-		plugin = instance;
-	}
 
 	private static final HandlerList handlers = new HandlerList();
 	private String winningTeam;
