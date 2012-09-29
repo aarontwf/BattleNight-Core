@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -700,7 +701,7 @@ public class BattleNight extends JavaPlugin {
 				player.getInventory().remove(classesDummyItem);
 			}
 		}
-		// Set Armor
+		// Set Armour
 		// Helmets
 		if (ArmorList.contains("298")) {
 			player.getInventory().setHelmet(new ItemStack(298, 1));
@@ -886,7 +887,7 @@ public class BattleNight extends JavaPlugin {
 		}
 	}
 
-	public boolean emptyInventory(Player player) {
+	public boolean hasEmptyInventory(Player player) {
 		ItemStack[] invContents = player.getInventory().getContents();
 		ItemStack[] armContents = player.getInventory().getArmorContents();
 		int invNullCounter = 0;
@@ -1070,99 +1071,146 @@ public class BattleNight extends JavaPlugin {
 		BattleSpectators.clear();
 	}
 
-	public void clearArmorSlots(Player player) {
-	    PlayerInventory inv = player.getInventory();
-		inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
-	}
+
 
 	public boolean preparePlayer(Player p) {
-		if (config.getString("InventoryType").equalsIgnoreCase("prompt")
-				&& !emptyInventory(p))
-			return false;
+		if (config.getString("InventoryType").equalsIgnoreCase("prompt") && !hasEmptyInventory(p))	return false;
 
 		String name = p.getName();
-
-		if (!players.contains(name)) {
-			players.set(name + ".stats.games", 0);
-			players.set(name + ".stats.kills", 0);
-			players.set(name + ".stats.deaths", 0);
-		}
-
-		int Gamemode = 0;
-		if (p.getGameMode().equals(GameMode.CREATIVE))
-			Gamemode = 1;
-
-		players.set(name + ".saves.exp", p.getExp());
-		players.set(name + ".saves.fireticks", p.getFireTicks());
-		players.set(name + ".saves.foodlevel", p.getFoodLevel());
-		players.set(name + ".saves.gamemode", Gamemode);
-		players.set(name + ".saves.health", p.getHealth());
-		players.set(name + ".saves.level", p.getLevel());
-		players.set(name + ".saves.remainingair", p.getRemainingAir());
-		players.set(name + ".saves.saturation", p.getSaturation());
-		players.set(name + ".saves.totalexperience", p.getTotalExperience());
-
+		
+		// Inventory
 		if (config.getString("InventoryType").equalsIgnoreCase("save")) {
-			players.set(name + ".saves.inventory.main", p.getInventory()
-					.getContents());
-			players.set(name + ".saves.inventory.armor", p.getInventory()
-					.getArmorContents());
+			config.set(name + ".data.inv.main", Arrays.asList(p.getInventory().getContents()));
+			config.set(name + ".data.inv.armor", Arrays.asList(p.getInventory().getArmorContents()));
 		}
+
+		// Health
+    	config.set(name + ".data.health", p.getHealth());
+    	
+    	// Hunger
+    	config.set(name + ".data.hunger.foodlevel", p.getFoodLevel());
+    	config.set(name + ".data.hunger.saturation", Float.toString(p.getSaturation()));
+    	config.set(name + ".data.hunger.exhaustion", Float.toString(p.getExhaustion()));
+    	
+    	// Experience
+    	config.set(name + ".data.exp.level", p.getLevel());
+    	config.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
+    	
+    	// GameMode
+    	config.set(name + ".data.gamemode", p.getGameMode().getValue());
+		
+    	// Flying
+    	config.set(name + ".data.flight.allowed", p.getAllowFlight());
+    	config.set(name + ".data.flight.flying", p.isFlying());
+    	
+    	// Sleep
+    	config.set(name + ".data.sleepignored", p.isSleepingIgnored());
+    	
+    	// Information
+    	config.set(name + ".data.info.displayname", p.getDisplayName());
+    	config.set(name + ".data.info.listname", p.getPlayerListName());
+    	
+    	// Statistics
+    	config.set(name + ".data.stats.tickslived", p.getTicksLived());
+    	config.set(name + ".data.stats.nodamageticks", p.getNoDamageTicks());
+    	
+    	// State
+    	config.set(name + ".data.state.remainingair", p.getRemainingAir());
+    	config.set(name + ".data.state.falldistance", Float.toString(p.getFallDistance()));
+    	config.set(name + ".data.state.fireticks", p.getFireTicks());
 
 		saveYAML(ConfigFile.Players);
 
 		// Reset Player
-		p.setExp(0);
-		p.setFireTicks(-20);
-		if (config.getBoolean("StopHealthRegen"))
-			p.setFoodLevel(16);
-		else
-			p.setFoodLevel(18);
-		p.setGameMode(GameMode.SURVIVAL);
-		p.setHealth(p.getMaxHealth());
-		p.setLevel(0);
-		p.setRemainingAir(300);
-		p.setSaturation(5);
-		p.setTotalExperience(0);
-		removePotionEffects(p);
-		p.getInventory().clear();
-		clearArmorSlots(p);
+		reset(p, false);
 		return true;
 	}
 
 	public void restorePlayer(Player p) {
 		String name = p.getName();
+		reset(p, true);
+		
 		try {
-			GameMode Gamemode = GameMode.SURVIVAL;
-			if (players.getInt(name + ".saves.gamemode", 0) == 1)
-				Gamemode = GameMode.CREATIVE;
-
-			p.setExp((Float) players.get(name + ".saves.exp", 0));
-			p.setFireTicks(players.getInt(name + ".saves.fireticks", -20));
-			p.setFoodLevel(players.getInt(name + ".saves.foodlevel", 18));
-			p.setGameMode(Gamemode);
-			p.setHealth(players.getInt(name + ".saves.health", p.getMaxHealth()));
-			p.setLevel(players.getInt(name + ".saves.level", 0));
-			p.setRemainingAir(players.getInt(name + ".saves.remainingair", 300));
-			p.setSaturation(players.getInt(name + ".saves.saturation", 5));
-			p.setTotalExperience(players.getInt(
-					name + ".saves.totalexperience", 0));
-
+			// Inventory
 			if (config.getString("InventoryType").equalsIgnoreCase("save")) {
-				p.getInventory().setContents(
-						(ItemStack[]) players.get(name
-								+ ".saves.inventory.main"));
-				p.getInventory().setArmorContents(
-						(ItemStack[]) players.get(name
-								+ ".saves.inventory.armor"));
+				p.getInventory().setContents(config.getList(name + ".data.inv.main").toArray(new ItemStack[0]));
+		    	p.getInventory().setArmorContents(config.getList(name + ".data.inv.armor").toArray(new ItemStack[0]));
 			}
+			
+			// Health
+	    	p.setHealth(config.getInt(name + ".data.health"));
+	    	
+	    	// Hunger
+	    	p.setFoodLevel(config.getInt(name + ".data.hunger.foodlevel"));
+	    	p.setSaturation(Float.parseFloat(config.getString(name + ".data.hunger.saturation")));
+	    	p.setExhaustion(Float.parseFloat(config.getString(name + ".data.hunger.exhaustion")));
+	    	
+	    	// Experience
+	    	p.setLevel(config.getInt(name + ".data.exp.level"));
+	    	p.setExp(Float.parseFloat(config.getString(name + ".data.exp.ammount")));
+	    	
+	    	// GameMode
+	    	p.setGameMode(GameMode.getByValue(config.getInt(name + ".data.gamemode")));
+	    	
+	    	// Flying
+	    	p.setAllowFlight(config.getBoolean(name + ".data.flight.allowed"));
+	    	p.setFlying(config.getBoolean(name + ".data.flight.flying"));
+	    	
+	    	// Sleep
+	    	p.setSleepingIgnored(config.getBoolean(name + ".data.sleepignored"));
+	    	
+	    	// Information
+	    	p.setDisplayName(config.getString(name + ".data.info.displayname"));
+	    	p.setPlayerListName(config.getString(name + ".data.info.listname"));
+	    	
+	    	// Statistics
+	    	p.setTicksLived(config.getInt(name + ".data.stats.tickslived"));
+	    	p.setNoDamageTicks(config.getInt(name + ".data.stats.nodamageticks"));
+	    	
 		} catch (NullPointerException e) {
-			log.warning("[BattleNight] Failed to restore data for player: "
-					+ name + ".");
+			log.warning("[BattleNight] Failed to restore data for player: '"	+ name + "'.");
 		}
 	}
 	
-	public void removePotionEffects(Player p) {
+	public void reset(Player p, boolean light) {
+		String name = p.getName();
+		
+		PlayerInventory inv = p.getInventory();
+		inv.clear();
+		inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
+		
+		removePotionEffects(p);
+		
+		if (!light) {
+	    	p.setHealth(p.getMaxHealth());
+	    	p.setFoodLevel(16);
+	    	p.setSaturation(1000);
+	    	p.setExhaustion(0);
+	    	p.setLevel(0);
+	    	p.setExp(0);
+	    	p.setGameMode(GameMode.SURVIVAL);
+	    	p.setAllowFlight(false);
+	    	p.setFlying(false);
+	    	p.setSleepingIgnored(true);
+	    	
+	    	String pListName = "�7[BN] " + name;
+	    	ChatColor teamColour = ChatColor.WHITE;
+	    	if (BattleUsersTeam.containsKey(name)) {
+	    		teamColour = BattleUsersTeam.get(name) == "red" ? ChatColor.RED : ChatColor.BLUE; 
+	    	}
+	    	
+	 	    p.setPlayerListName(pListName.length() < 16 ? pListName : pListName.substring(0, 16));
+	    	p.setDisplayName(ChatColor.GRAY + "[BN] " + teamColour + p.getName() + ChatColor.RESET);
+	    	
+	    	p.setTicksLived(1);
+	    	p.setNoDamageTicks(0);
+	    	p.setRemainingAir(300);
+	    	p.setFallDistance(0.0f);
+	    	p.setFireTicks(-20);
+		}
+    }
+	
+	private void removePotionEffects(Player p) {
 	    for(PotionEffect effect : p.getActivePotionEffects()) {
 	        p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
 	    }

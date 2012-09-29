@@ -102,8 +102,6 @@ public class Battle {
 	
 	public void resetPlayer(Player player, boolean teleport, boolean removeHash) {
 		player.getInventory().clear();
-		plugin.clearArmorSlots(player);
-		plugin.removePotionEffects(player);
 		plugin.restorePlayer(player);
 		if (teleport) plugin.goToWaypoint(player, WPoint.EXIT);
 		plugin.cleanSigns(player);
