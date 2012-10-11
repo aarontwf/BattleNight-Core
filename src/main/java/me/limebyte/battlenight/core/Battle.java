@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core;
 
+import java.util.Set;
+
 import me.limebyte.battlenight.core.BattleNight.WPoint;
 import me.limebyte.battlenight.core.API.BattleEndEvent;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
@@ -119,7 +121,7 @@ public class Battle {
     }
 
     private void resetBattle() {
-        final String[] toRefresh = (String[]) plugin.BattleUsersTeam.keySet().toArray();
+        final Set<String> toRefresh = plugin.BattleUsersTeam.keySet();
 
         plugin.removeAllSpectators();
         plugin.cleanSigns();
