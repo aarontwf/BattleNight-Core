@@ -17,12 +17,14 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import me.limebyte.battlenight.core.Hooks.Metrics;
+import me.limebyte.battlenight.core.Hooks.Nameplates;
 import me.limebyte.battlenight.core.Listeners.CheatListener;
 import me.limebyte.battlenight.core.Listeners.CommandBlocker;
 import me.limebyte.battlenight.core.Listeners.DamageListener;
 import me.limebyte.battlenight.core.Listeners.DeathListener;
 import me.limebyte.battlenight.core.Listeners.DisconnectListener;
 import me.limebyte.battlenight.core.Listeners.DropListener;
+import me.limebyte.battlenight.core.Listeners.NameplateListener;
 import me.limebyte.battlenight.core.Listeners.ReadyListener;
 import me.limebyte.battlenight.core.Listeners.RespawnListener;
 import me.limebyte.battlenight.core.Listeners.SignChanger;
@@ -50,6 +52,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.kitteh.tag.TagAPI;
 
 public class BattleNight extends JavaPlugin {
 
@@ -193,24 +196,30 @@ public class BattleNight extends JavaPlugin {
             log.info("[BattleNight] Armor: " + BattleArmor);
         }
 
-        // Event Registration
         final PluginManager pm = getServer().getPluginManager();
-        final PluginDescriptionFile pdfFile = getDescription();
-        pm.registerEvents(signListener, this);
-        pm.registerEvents(readyListener, this);
-        pm.registerEvents(respawnListener, this);
-        pm.registerEvents(deathListener, this);
-        pm.registerEvents(dropListener, this);
-        pm.registerEvents(damageListener, this);
-        pm.registerEvents(disconnectListener, this);
-        pm.registerEvents(blockListener, this);
-        pm.registerEvents(cheatListener, this);
-        pm.registerEvents(commandBlocker, this);
 
-        // Enable Message
-        log.info("[BattleNight] Version " + pdfFile.getVersion()
-                + " enabled successfully.");
-        log.info("[BattleNight] Made by LimeByte.");
+        if (Nameplates.init(this)) {
+            // Event Registration
+            final PluginDescriptionFile pdfFile = getDescription();
+            pm.registerEvents(new NameplateListener(this), this);
+            pm.registerEvents(signListener, this);
+            pm.registerEvents(readyListener, this);
+            pm.registerEvents(respawnListener, this);
+            pm.registerEvents(deathListener, this);
+            pm.registerEvents(dropListener, this);
+            pm.registerEvents(damageListener, this);
+            pm.registerEvents(disconnectListener, this);
+            pm.registerEvents(blockListener, this);
+            pm.registerEvents(cheatListener, this);
+            pm.registerEvents(commandBlocker, this);
+
+            // Enable Message
+            log.info("[BattleNight] Version " + pdfFile.getVersion()
+                    + " enabled successfully.");
+            log.info("[BattleNight] Made by LimeByte.");
+        } else {
+            pm.disablePlugin(this);
+        }
     }
 
     // Fill Configuration Files with Defaults
@@ -238,7 +247,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     // YAML Copy Method
-    public void copy(InputStream in, File file) {
+    public static void copy(InputStream in, File file) {
         try {
             final OutputStream out = new FileOutputStream(file);
             final byte[] buf = new byte[1024];
@@ -790,11 +799,9 @@ public class BattleNight extends JavaPlugin {
         }
 
         if (members == membersReady && members > 0) {
-            if (team.equals(Team.RED) || team.equals(Team.BLUE)) {
-                return true;
-            }
+            if (team.equals(Team.RED) || team.equals(Team.BLUE)) { return true; }
         }
-        
+
         return false;
     }
 
@@ -1167,8 +1174,6 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void reset(Player p, boolean light) {
-        final String name = p.getName();
-
         final PlayerInventory inv = p.getInventory();
         inv.clear();
         inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
@@ -1187,14 +1192,7 @@ public class BattleNight extends JavaPlugin {
             p.setFlying(false);
             p.setSleepingIgnored(true);
 
-            final String pListName = "�7[BN] " + name;
-            ChatColor teamColour = ChatColor.WHITE;
-            if (BattleUsersTeam.containsKey(name)) {
-                teamColour = BattleUsersTeam.get(name).equals(Team.RED) ? ChatColor.RED : ChatColor.BLUE;
-            }
-
-            p.setPlayerListName(pListName.length() < 16 ? pListName : pListName.substring(0, 16));
-            p.setDisplayName(ChatColor.GRAY + "[BN] " + teamColour + p.getName() + ChatColor.RESET);
+            setNames(p);
 
             p.setTicksLived(1);
             p.setNoDamageTicks(0);
@@ -1202,6 +1200,22 @@ public class BattleNight extends JavaPlugin {
             p.setFallDistance(0.0f);
             p.setFireTicks(-20);
         }
+    }
+
+    public void setNames(Player player) {
+        final String name = player.getName();
+
+        final String pListName = ChatColor.GRAY + "[BN] " + name;
+        ChatColor teamColour = ChatColor.WHITE;
+        if (BattleUsersTeam.containsKey(name)) {
+            teamColour = BattleUsersTeam.get(name).equals(Team.RED) ? ChatColor.RED : ChatColor.BLUE;
+        }
+
+        player.setPlayerListName(pListName.length() < 16 ? pListName : pListName.substring(0, 16));
+        player.setDisplayName(ChatColor.GRAY + "[BN] " + teamColour + name + ChatColor.RESET);
+        try {
+            TagAPI.refreshPlayer(player);
+        } catch (Exception e) {}
     }
 
     private void removePotionEffects(Player p) {

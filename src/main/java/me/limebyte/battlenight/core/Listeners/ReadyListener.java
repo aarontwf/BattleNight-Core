@@ -26,7 +26,7 @@ public class ReadyListener implements Listener {
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             final Block block = event.getClickedBlock();
             final Player player = event.getPlayer();
-            String name = player.getName();
+            final String name = player.getName();
             if ((block.getTypeId() == plugin.configReadyBlock)
                     && (plugin.BattleUsersTeam.containsKey(name) && (plugin.playersInLounge))
                     && (plugin.teamReady(plugin.BattleUsersTeam.get(player
@@ -36,7 +36,7 @@ public class ReadyListener implements Listener {
                 if (team.equals(Team.RED)) {
                     plugin.redTeamIronClicked = true;
                     plugin.tellEveryone(ChatColor.RED + "Red " + ChatColor.WHITE + "team is ready!");
-                    
+
                     if ((plugin.teamReady(Team.BLUE)) && (plugin.blueTeamIronClicked)) {
                         plugin.playersInLounge = false;
                         plugin.teleportAllToSpawn();
@@ -46,7 +46,7 @@ public class ReadyListener implements Listener {
                 } else if (team.equals(Team.BLUE)) {
                     plugin.blueTeamIronClicked = true;
                     plugin.tellEveryone(ChatColor.BLUE + "Blue " + ChatColor.WHITE + "team is ready!");
-                    
+
                     if ((plugin.teamReady(Team.RED)) && (plugin.redTeamIronClicked)) {
                         plugin.playersInLounge = false;
                         plugin.teleportAllToSpawn();

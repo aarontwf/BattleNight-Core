@@ -9,6 +9,7 @@ load: POSTWORLD
 website: ${project.url}
 dev-url: http://dev.bukkit.org/server-mods/battlenight/
 database: false
+softdepend: [TagAPI]
 
 commands:
   bn:

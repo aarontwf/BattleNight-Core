@@ -72,13 +72,11 @@ public class DeathListener implements Listener {
     }
 
     private boolean isInTeam(Player player, Team team) {
-        String name = player.getName();
+        final String name = player.getName();
         if (plugin.BattleUsersTeam.containsKey(name)) {
-            if ((plugin.BattleUsersTeam.get(name).equals(team))) {
-                return true;
-            }
+            if ((plugin.BattleUsersTeam.get(name).equals(team))) { return true; }
         }
-        
+
         return false;
     }
 }

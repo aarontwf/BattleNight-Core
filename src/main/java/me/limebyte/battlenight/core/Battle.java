@@ -7,6 +7,7 @@ import me.limebyte.battlenight.core.Other.Tracks.Track;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.kitteh.tag.TagAPI;
 
 public class Battle {
 
@@ -36,6 +37,7 @@ public class Battle {
                 blueTeam++;
             }
 
+            plugin.setNames(player);
             plugin.playersInLounge = true;
         } else {
             plugin.tellPlayer(player, Track.MUST_HAVE_EMPTY);
@@ -109,10 +111,16 @@ public class Battle {
         if (removeHash) {
             plugin.BattleUsersTeam.remove(player.getName());
             plugin.BattleUsersClass.remove(player.getName());
+            try {
+                TagAPI.refreshPlayer(player);
+            } catch (final Exception e) {
+            }
         }
     }
 
     private void resetBattle() {
+        final String[] toRefresh = (String[]) plugin.BattleUsersTeam.keySet().toArray();
+
         plugin.removeAllSpectators();
         plugin.cleanSigns();
         plugin.BattleSigns.clear();
@@ -123,6 +131,15 @@ public class Battle {
         plugin.BattleUsersClass.clear();
         redTeam = 0;
         blueTeam = 0;
+
+        for (final String name : toRefresh) {
+            if (Bukkit.getPlayer(name) != null) {
+                try {
+                    TagAPI.refreshPlayer(Bukkit.getPlayer(name));
+                } catch (final Exception e) {
+                }
+            }
+        }
     }
 
     public void end() {
