@@ -11,19 +11,19 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 
 public class DropListener implements Listener {
 
-	// Get Main Class
-	public static BattleNight plugin;
-	public DropListener(BattleNight instance) {
-		plugin = instance;
-	}
+    // Get Main Class
+    public static BattleNight plugin;
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerDropItem(PlayerDropItemEvent event) {
-		Player player = event.getPlayer();
-		if (plugin.BattleUsersTeam.containsKey(player.getName())) {
-			player.sendMessage(ChatColor.GRAY + "[BattleNight] "
-					+ ChatColor.WHITE + "Not so fast! No Cheating!");
-			event.setCancelled(true);
-		}
-	}
+    public DropListener(BattleNight instance) {
+        plugin = instance;
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        final Player player = event.getPlayer();
+        if (plugin.BattleUsersTeam.containsKey(player.getName())) {
+            player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Not so fast! No Cheating!");
+            event.setCancelled(true);
+        }
+    }
 }

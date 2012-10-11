@@ -14,43 +14,44 @@ public class CommandBlocker implements Listener {
 
     // Get Main Class
     public static BattleNight plugin;
+
     public CommandBlocker(BattleNight instance) {
         plugin = instance;
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled()) return;
         if (!plugin.BattleUsersTeam.containsKey(event.getPlayer().getName())) return;
         if (!plugin.config.getBoolean("Commands.Block")) return;
-        
-        List<String> whitelist = plugin.config.getStringList("Commands.Whitelist");
+
+        final List<String> whitelist = plugin.config.getStringList("Commands.Whitelist");
         whitelist.add("bn");
-        
-        String[] cmdArg = event.getMessage().split(" ");
-        String cmdString = cmdArg[0].trim().substring(1).toLowerCase();
-        
+
+        final String[] cmdArg = event.getMessage().split(" ");
+        final String cmdString = cmdArg[0].trim().substring(1).toLowerCase();
+
         try {
-            Command command = plugin.getServer().getPluginCommand(cmdString);
-            
+            final Command command = plugin.getServer().getPluginCommand(cmdString);
+
             // Check if the command is listed
             if (whitelist.contains(command.getLabel().toLowerCase())) return;
-                
+
             // Check if there are any aliases listed
             if (!command.getAliases().isEmpty()) {
-                for (String alias : command.getAliases()) {
+                for (final String alias : command.getAliases()) {
                     if (whitelist.contains(alias.toLowerCase())) return;
                 }
             }
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             // Check if the command is listed
             if (whitelist.contains(cmdString)) return;
         }
-    
+
         // Its not listed so block it
         event.setCancelled(true);
         plugin.tellPlayer(event.getPlayer(), "You are not permitted to perform this command while in a Battle.");
         return;
     }
-    
+
 }

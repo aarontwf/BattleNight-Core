@@ -10,24 +10,24 @@ import org.bukkit.event.HandlerList;
 
 public class BattleStartEvent extends Event {
 
-	private static final HandlerList handlers = new HandlerList();
-	private Player[] battlenightPlayers;
+    private static final HandlerList handlers = new HandlerList();
+    private final Player[] battlenightPlayers;
 
-	public BattleStartEvent(Player[] players) {
-		battlenightPlayers = players;
-	}
+    public BattleStartEvent(Player[] players) {
+        battlenightPlayers = players;
+    }
 
-	public Player[] getPlayers() {
-		return battlenightPlayers;
-	}
+    public Player[] getPlayers() {
+        return battlenightPlayers;
+    }
 
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
 }
