@@ -14,14 +14,14 @@ public class Nameplates {
     public static boolean init(BattleNight plugin) {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         if (pm.getPlugin("TagAPI") == null) {
-            BattleNight.log.info(BattleNight.BNTag + "TagAPI not found.  Installing...");
+            BattleNight.log.info("TagAPI not found.  Installing...");
             try {
                 install(plugin, pm);
             } catch (Exception e) {
-                BattleNight.log.info(BattleNight.BNTag + "Failed to install TagAPI.  Disabling...");
+                BattleNight.log.info("Failed to install TagAPI.  Disabling...");
                 return false;
             } finally {
-                BattleNight.log.info(BattleNight.BNTag + "TagAPI installed successfully.");
+                BattleNight.log.info("TagAPI installed successfully.");
             }
         }
         return true;

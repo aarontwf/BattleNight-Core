@@ -117,12 +117,12 @@ public class BattleNight extends JavaPlugin {
     @Override
     public void onDisable() {
         if (battleInProgress || playersInLounge) {
-            log.info("[BattleNight] Ending current Battle...");
+            log.info("Ending current Battle...");
             battle.end();
         }
         this.cleanSigns();
         final PluginDescriptionFile pdfFile = getDescription();
-        log.info("[BattleNight] Version " + pdfFile.getVersion() + " has been disabled.");
+        log.info("Version " + pdfFile.getVersion() + " has been disabled.");
     }
 
     // ///////////////////
@@ -186,14 +186,14 @@ public class BattleNight extends JavaPlugin {
         // Debug
         if (configDebug) {
             if (configUsePermissions) {
-                log.info("[BattleNight] Permissions Enabled.");
+                log.info("Permissions Enabled.");
             } else if (!configUsePermissions) {
-                log.info("[BattleNight] Permissions Disabled, using Op.");
+                log.info("Permissions Disabled, using Op.");
             } else {
-                log.warning("[BattleNight] Permissions not setup in config!");
+                log.warning("Permissions not setup in config!");
             }
-            log.info("[BattleNight] Classes: " + BattleClasses);
-            log.info("[BattleNight] Armor: " + BattleArmor);
+            log.info("Classes: " + BattleClasses);
+            log.info("Armor: " + BattleArmor);
         }
 
         final PluginManager pm = getServer().getPluginManager();
@@ -214,9 +214,8 @@ public class BattleNight extends JavaPlugin {
             pm.registerEvents(commandBlocker, this);
 
             // Enable Message
-            log.info("[BattleNight] Version " + pdfFile.getVersion()
-                    + " enabled successfully.");
-            log.info("[BattleNight] Made by LimeByte.");
+            log.info("Version " + pdfFile.getVersion() + " enabled successfully.");
+            log.info("Made by LimeByte.");
         } else {
             pm.disablePlugin(this);
         }
@@ -1007,8 +1006,7 @@ public class BattleNight extends JavaPlugin {
         final Material m = Material.getMaterial(Integer.parseInt(item));
         int a = Integer.parseInt(amount);
         if (a > m.getMaxStackSize()) {
-            log.warning("[BattleNight] You attempted to set the item:" + m
-                    + " to have a greater stack size than possible.");
+            log.warning("You attempted to set the item:" + m + " to have a greater stack size than possible.");
             a = m.getMaxStackSize();
         }
         return new ItemStack(m, a);
@@ -1027,8 +1025,7 @@ public class BattleNight extends JavaPlugin {
         final byte d = Byte.parseByte(data);
         int a = Integer.parseInt(amount);
         if (a > m.getMaxStackSize()) {
-            log.warning("[BattleNight] You attempted to set the item:" + m
-                    + " to have a greater stack size than possible.");
+            log.warning("You attempted to set the item:" + m + " to have a greater stack size than possible.");
             a = m.getMaxStackSize();
         }
         return new ItemStack(m, a, d);
@@ -1169,7 +1166,7 @@ public class BattleNight extends JavaPlugin {
             p.setNoDamageTicks(config.getInt(name + ".data.stats.nodamageticks"));
 
         } catch (final NullPointerException e) {
-            log.warning("[BattleNight] Failed to restore data for player: '" + name + "'.");
+            log.warning("Failed to restore data for player: '" + name + "'.");
         }
     }
 
@@ -1215,7 +1212,8 @@ public class BattleNight extends JavaPlugin {
         player.setDisplayName(ChatColor.GRAY + "[BN] " + teamColour + name + ChatColor.RESET);
         try {
             TagAPI.refreshPlayer(player);
-        } catch (Exception e) {}
+        } catch (final Exception e) {
+        }
     }
 
     private void removePotionEffects(Player p) {

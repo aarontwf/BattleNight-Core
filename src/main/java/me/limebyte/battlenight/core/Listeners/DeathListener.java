@@ -55,12 +55,9 @@ public class DeathListener implements Listener {
                         plugin.killFeed(killerName + ChatColor.GRAY
                                 + " killed " + playerName + ".");
                     } catch (final NullPointerException error) {
-                        plugin.killFeed(ChatColor.RED + name + ChatColor.GRAY
-                                + " was killed.");
+                        plugin.killFeed(ChatColor.RED + name + ChatColor.GRAY + " was killed.");
                         if (plugin.configDebug) {
-                            BattleNight.log
-                                    .info("[BattleNight] Could not find killer for player: "
-                                            + name);
+                            BattleNight.log.warning("Could not find killer for player: " + name);
                         }
                     }
                 }

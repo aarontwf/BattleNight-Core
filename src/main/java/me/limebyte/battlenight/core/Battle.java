@@ -98,7 +98,7 @@ public class Battle {
 
             if (!death) resetPlayer(player, true, true);
         } else {
-            BattleNight.log.info("[BattleNight] Failed to remove player '" + name + "' from the Battle as they are not in it.");
+            BattleNight.log.warning("Failed to remove player '" + name + "' from the Battle as they are not in it.");
         }
     }
 
