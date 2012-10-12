@@ -47,14 +47,14 @@ public class WaypointCommand extends BNCommand {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Usage: " + getConsoleUsage());
                         return false;
                     }
-                } else if (args.length == 3 && sender instanceof Player) {
+                } else if (args.length == 4 && sender instanceof Player) {
                     Player player = (Player) sender;
                     Location loc = parseArgsToLocation(args, player.getWorld());
                     BattleNight.setCoords(waypoint, loc);
                     BattleNight.tellPlayer(player, ChatColor.GREEN + waypoint.getDisplayName() + " Waypoint set to: " +
                             loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + " in this world.");
                     return true;
-                } else if (args.length == 4) {
+                } else if (args.length == 5) {
                     if (Bukkit.getWorld(args[4]) != null) {
                         Location loc = parseArgsToLocation(args, Bukkit.getWorld(args[4]));
                         BattleNight.setCoords(waypoint, loc);
