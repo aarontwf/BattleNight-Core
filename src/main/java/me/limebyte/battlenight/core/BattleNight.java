@@ -574,7 +574,7 @@ public class BattleNight extends JavaPlugin {
                     PluginDescriptionFile pdfFile = getDescription();
                     String[] msgs = {
                             BNTag + "This server is currently using Battlenight Version " + pdfFile.getVersion() + ".",
-                            "For more information about Battlenight and the features included in this version, please visit: ",
+                            ChatColor.WHITE + "For more information about Battlenight and the features included in this version, please visit: ",
                             ChatColor.DARK_AQUA + pdfFile.getWebsite()
                     };
                     sender.sendMessage(msgs);
