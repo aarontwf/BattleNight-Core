@@ -30,6 +30,8 @@ import me.limebyte.battlenight.core.Listeners.RespawnListener;
 import me.limebyte.battlenight.core.Listeners.SignChanger;
 import me.limebyte.battlenight.core.Listeners.SignListener;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
+import me.limebyte.battlenight.core.Other.Waypoint;
+import me.limebyte.battlenight.core.commands.WaypointCommand;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,7 +53,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.kitteh.tag.TagAPI;
 
 public class BattleNight extends JavaPlugin {
@@ -102,14 +103,14 @@ public class BattleNight extends JavaPlugin {
     public int classesDummyItem = 6;
 
     // Declare Files and FileConfigurations
-    File configFile;
-    File classesFile;
-    File waypointsFile;
-    File playerFile;
-    public FileConfiguration config;
-    FileConfiguration classes;
-    FileConfiguration waypoints;
-    FileConfiguration players;
+    static File configFile;
+    static File classesFile;
+    static File waypointsFile;
+    static File playerFile;
+    public static FileConfiguration config;
+    static FileConfiguration classes;
+    static FileConfiguration waypoints;
+    static FileConfiguration players;
 
     // ////////////////////
     // Plug-in Disable //
@@ -297,7 +298,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     // Waypoints Load Method
-    public void loadWaypoints() {
+    public static void loadWaypoints() {
         try {
             waypoints.load(waypointsFile);
         } catch (final Exception e) {
@@ -317,7 +318,7 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    public void saveYAML(ConfigFile file) {
+    public static void saveYAML(ConfigFile file) {
         try {
             if (file.equals(ConfigFile.Main))
                 config.save(configFile);
@@ -337,125 +338,121 @@ public class BattleNight extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command,
-            String commandLabel, String[] args) {
-
-        // Player check
-        Player player = null;
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be run by a Player.");
-            return true;
-        }
-
-        player = (Player) sender;
+    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 
         if (commandLabel.equalsIgnoreCase("bn")) {
             if (args.length < 1) {
-                tellPlayer(player, "Type '/bn help' to show the help menu");
-            }
-            if (args.length == 1) {
-
+                sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Incorrect usage.  Type '/bn help' to show the help menu.");
+                return true;
+            } else if (args[0].equalsIgnoreCase("set")) {
+                WaypointCommand cmd = new WaypointCommand(sender, args);
+                cmd.perform();
+            } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("help")) {
-                    if (hasPerm(Perm.ADMIN, player)) {
-                        player.sendMessage(ChatColor.DARK_GRAY + " ---------- "
+                    if (hasPerm(Perm.ADMIN, sender)) {
+                        sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
                                 + ChatColor.WHITE + "BattleNight Help Menu"
                                 + ChatColor.DARK_GRAY + " ---------- ");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn help - Shows general help.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn waypoints - Shows set/unset waypoints.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn version - Shows the version of BattleNight in use.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn join - Join the Battle.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn leave - Leave the Battle.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn watch - Watch the Battle.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn kick [player] - Kick a player from the Battle.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn kickall - Kick all players in the Battle.");
-                        player.sendMessage(ChatColor.DARK_GRAY
+                        sender.sendMessage(ChatColor.DARK_GRAY
                                 + " --------------------------------------- ");
-                    } else if (hasPerm(Perm.USER, player)) {
-                        player.sendMessage(ChatColor.DARK_GRAY + " ---------- "
+                    } else if (hasPerm(Perm.USER, sender)) {
+                        sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
                                 + ChatColor.WHITE + "BattleNight Help Menu"
                                 + ChatColor.DARK_GRAY + " ---------- ");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn help - Shows general help.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn version - Shows the version of BattleNight in use.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn join - Join the Battle.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn leave - Leave the Battle.");
-                        player.sendMessage(ChatColor.WHITE
+                        sender.sendMessage(ChatColor.WHITE
                                 + " /bn watch - Watch the Battle");
-                        player.sendMessage(ChatColor.DARK_GRAY
+                        sender.sendMessage(ChatColor.DARK_GRAY
                                 + " --------------------------------------- ");
                     } else {
-                        tellPlayer(player, Track.NO_PERMISSION);
+                        sender.sendMessage(BattleNight.BNTag + Track.NO_PERMISSION.msg);
                     }
                 }
 
-                else if (args[0].equalsIgnoreCase("waypoints")
-                        && hasPerm(Perm.ADMIN, player)) {
-                    player.sendMessage(ChatColor.DARK_GRAY + " ---------- "
+                else if (args[0].equalsIgnoreCase("waypoints") && hasPerm(Perm.ADMIN, sender)) {
+                    sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
                             + ChatColor.WHITE + "BattleNight Waypoints"
                             + ChatColor.DARK_GRAY + " ---------- ");
-                    player.sendMessage(ChatColor.WHITE + " Setup points: "
+                    sender.sendMessage(ChatColor.WHITE + " Setup points: "
                             + numSetupPoints() + "/6");
-                    if (pointSet(WPoint.RED_LOUNGE)) {
-                        player.sendMessage(ChatColor.GREEN + " Red Lounge"
+                    if (pointSet(Waypoint.RED_LOUNGE)) {
+                        sender.sendMessage(ChatColor.GREEN + " Red Lounge"
                                 + ChatColor.WHITE + " (/bn redlounge)");
                     } else {
-                        player.sendMessage(ChatColor.RED + " Red Lounge"
+                        sender.sendMessage(ChatColor.RED + " Red Lounge"
                                 + ChatColor.WHITE + " (/bn redlounge)");
                     }
-                    if (pointSet(WPoint.BLUE_LOUNGE)) {
-                        player.sendMessage(ChatColor.GREEN + " Blue Lounge"
+                    if (pointSet(Waypoint.BLUE_LOUNGE)) {
+                        sender.sendMessage(ChatColor.GREEN + " Blue Lounge"
                                 + ChatColor.WHITE + " (/bn bluelounge)");
                     } else {
-                        player.sendMessage(ChatColor.RED + " Blue Lounge"
+                        sender.sendMessage(ChatColor.RED + " Blue Lounge"
                                 + ChatColor.WHITE + " (/bn bluelounge)");
                     }
-                    if (pointSet(WPoint.RED_SPAWN)) {
-                        player.sendMessage(ChatColor.GREEN + " Red Spawn"
+                    if (pointSet(Waypoint.RED_SPAWN)) {
+                        sender.sendMessage(ChatColor.GREEN + " Red Spawn"
                                 + ChatColor.WHITE + " (/bn redspawn)");
                     } else {
-                        player.sendMessage(ChatColor.RED + " Red Spawn"
+                        sender.sendMessage(ChatColor.RED + " Red Spawn"
                                 + ChatColor.WHITE + " (/bn redspawn)");
                     }
-                    if (pointSet(WPoint.BLUE_SPAWN)) {
-                        player.sendMessage(ChatColor.GREEN + " Blue Spawn"
+                    if (pointSet(Waypoint.BLUE_SPAWN)) {
+                        sender.sendMessage(ChatColor.GREEN + " Blue Spawn"
                                 + ChatColor.WHITE + " (/bn bluespawn)");
                     } else {
-                        player.sendMessage(ChatColor.RED + " Blue Spawn"
+                        sender.sendMessage(ChatColor.RED + " Blue Spawn"
                                 + ChatColor.WHITE + " (/bn bluespawn)");
                     }
-                    if (pointSet(WPoint.SPECTATOR)) {
-                        player.sendMessage(ChatColor.GREEN + " Spectator"
+                    if (pointSet(Waypoint.SPECTATOR)) {
+                        sender.sendMessage(ChatColor.GREEN + " Spectator"
                                 + ChatColor.WHITE + " (/bn spectator)");
                     } else {
-                        player.sendMessage(ChatColor.RED + " Spectator"
+                        sender.sendMessage(ChatColor.RED + " Spectator"
                                 + ChatColor.WHITE + " (/bn spectator)");
                     }
-                    if (pointSet(WPoint.EXIT)) {
-                        player.sendMessage(ChatColor.GREEN + " Exit"
+                    if (pointSet(Waypoint.EXIT)) {
+                        sender.sendMessage(ChatColor.GREEN + " Exit"
                                 + ChatColor.WHITE + " (/bn exit)");
                     } else {
-                        player.sendMessage(ChatColor.RED + " Exit"
+                        sender.sendMessage(ChatColor.RED + " Exit"
                                 + ChatColor.WHITE + " (/bn exit)");
                     }
-                    player.sendMessage(ChatColor.DARK_GRAY
+                    sender.sendMessage(ChatColor.DARK_GRAY
                             + " --------------------------------------- ");
                 }
 
-                else if (args[0].equalsIgnoreCase("join")
-                        && hasPerm(Perm.USER, player)) {
-                    if (isSetup() && !battleInProgress
-                            && !BattleUsersTeam.containsKey(player.getName())) {
+                else if (args[0].equalsIgnoreCase("join") && hasPerm(Perm.USER, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
+                    if (isSetup() && !battleInProgress && !BattleUsersTeam.containsKey(player.getName())) {
                         battle.addPlayer(player);
                     } else if (!isSetup()) {
                         tellPlayer(player, Track.WAYPOINTS_UNSET);
@@ -466,123 +463,154 @@ public class BattleNight extends JavaPlugin {
                     }
                 }
 
-                else if ((args[0].equalsIgnoreCase("watch"))
-                        && hasPerm(Perm.USER, player)) {
+                else if ((args[0].equalsIgnoreCase("watch")) && hasPerm(Perm.USER, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
                     addSpectator(player, "command");
-
-                } else if (args[0].equalsIgnoreCase("leave")
-                        && hasPerm(Perm.USER, player)) {
+                } else if (args[0].equalsIgnoreCase("leave") && hasPerm(Perm.USER, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
                     if (BattleUsersTeam.containsKey(player.getName())) {
                         battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
                     } else if (BattleSpectators.containsKey(player.getName())) {
                         removeSpectator(player);
                     } else {
-                        tellPlayer(player, Track.NOT_IN_TEAM);
+                        tellPlayer(player, Track.NOT_IN_TEAM.msg);
                     }
                 }
 
-                else if (args[0].equalsIgnoreCase("kick")
-                        && hasPerm(Perm.MOD, player)) {
-                    tellPlayer(player, Track.SPECIFY_PLAYER);
+                else if (args[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, sender)) {
+                    sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.SPECIFY_PLAYER.msg);
                 }
 
-                else if ((args[0].equalsIgnoreCase("kickall") || args[0]
-                        .equalsIgnoreCase("endgame"))
-                        && hasPerm(Perm.MOD, player)) {
+                else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(Perm.MOD, sender)) {
                     battle.end();
-                    tellPlayer(player, Track.BATTLE_ENDED);
+                    sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.BATTLE_ENDED.msg);
                 }
 
-                else if (args[0].equalsIgnoreCase("redlounge")
-                        && hasPerm(Perm.ADMIN, player)) {
+                else if (args[0].equalsIgnoreCase("redlounge") && hasPerm(Perm.ADMIN, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
                     setCoords(player, "redlounge");
                     tellPlayer(player, Track.RED_LOUNGE_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("redspawn")
-                        && hasPerm(Perm.ADMIN, player)) {
+                else if (args[0].equalsIgnoreCase("redspawn") && hasPerm(Perm.ADMIN, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
                     setCoords(player, "redspawn");
                     tellPlayer(player, Track.RED_SPAWN_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("bluelounge")
-                        && hasPerm(Perm.ADMIN, player)) {
+                else if (args[0].equalsIgnoreCase("bluelounge") && hasPerm(Perm.ADMIN, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
                     setCoords(player, "bluelounge");
                     tellPlayer(player, Track.BLUE_LOUNGE_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("bluespawn")
-                        && hasPerm(Perm.ADMIN, player)) {
+                else if (args[0].equalsIgnoreCase("bluespawn") && hasPerm(Perm.ADMIN, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
                     setCoords(player, "bluespawn");
                     tellPlayer(player, Track.BLUE_SPAWN_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("spectator")
-                        && hasPerm(Perm.ADMIN, player)) {
+                else if (args[0].equalsIgnoreCase("spectator") && hasPerm(Perm.ADMIN, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
                     setCoords(player, "spectator");
                     tellPlayer(player, Track.SPECTATOR_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("exit")
-                        && hasPerm(Perm.ADMIN, player)) {
+                else if (args[0].equalsIgnoreCase("exit") && hasPerm(Perm.ADMIN, sender)) {
+                    // Player check
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(BNTag + ChatColor.RED + "This command can only be run by a Player.");
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    
                     setCoords(player, "exit");
                     tellPlayer(player, Track.EXIT_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("version")
-                        && hasPerm(Perm.USER, player)) {
-                    final PluginDescriptionFile pdfFile = getDescription();
-                    tellPlayer(
-                            player,
-                            "This server is currently using Battlenight Version "
-                                    + pdfFile.getVersion()
-                                    + ".   For more information about Battlenight and the features included in this version, please visit: ");
-                    player.sendMessage(pdfFile.getWebsite());
+                else if (args[0].equalsIgnoreCase("version")) {
+                    PluginDescriptionFile pdfFile = getDescription();
+                    String[] msgs = {
+                            BNTag + "This server is currently using Battlenight Version " + pdfFile.getVersion() + ".",
+                            "For more information about Battlenight and the features included in this version, please visit: ",
+                            ChatColor.DARK_AQUA + pdfFile.getWebsite()
+                    };
+                    sender.sendMessage(msgs);
                 }
 
-                else if (args[0].equalsIgnoreCase("reload") && hasPerm(Perm.ADMIN, player)) {
-                    player.sendMessage(BNTag + "Reloading config...");
+                else if (args[0].equalsIgnoreCase("reload") && hasPerm(Perm.ADMIN, sender)) {
+                    sender.sendMessage(BNTag + "Reloading config...");
                     try {
                         reloadConfigFiles();
-                        player.sendMessage(BNTag + ChatColor.GREEN + "Reloaded successfully.");
+                        sender.sendMessage(BNTag + ChatColor.GREEN + "Reloaded successfully.");
                     } catch (final Exception e) {
                         e.printStackTrace();
-                        player.sendMessage(BNTag + ChatColor.RED + "Reload failed.");
+                        sender.sendMessage(BNTag + ChatColor.RED + "Reload failed.");
                     }
                 }
 
                 else {
-                    tellPlayer(player, Track.INVALID_COMAND);
+                    sender.sendMessage(BNTag + ChatColor.RED + Track.INVALID_COMAND.msg);
                 }
             }
             if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("kick")
-                        && hasPerm(Perm.MOD, player)) {
-                    final Player badplayer = Bukkit.getPlayerExact(args[1]);
+                if (args[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, sender)) {
+                    Player badplayer = Bukkit.getPlayerExact(args[1]);
                     if (badplayer.isOnline()) {
                         if (BattleUsersTeam.containsKey(badplayer.getName())) {
                             battle.removePlayer(badplayer, false, "has been kicked from the current Battle.", "You have been kicked from the current Battle.");
                         } else {
-                            tellPlayer(player, "Player: " + badplayer.getName()
-                                    + " is not in the current Battle.");
+                            sender.sendMessage(BNTag + ChatColor.RED + "Player: " + badplayer.getName() + " is not in the current Battle.");
                         }
                     } else {
-                        tellPlayer(player,
-                                "Can't find user " + badplayer.getName()
-                                        + ". No kick.");
-                    }
-                }
-
-                else if (args[0].equalsIgnoreCase("test")) {
-                    if (player.getName().equals("limebyte")) {
-                        // I enjoy jumping extra high :)
-                        removePotionEffects(player);
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 4800, Integer.parseInt(args[1])));
+                        sender.sendMessage(BNTag + ChatColor.RED + "Can't find user " + badplayer.getName() + ". No kick.");
                     }
                 }
             }
             if (args.length > 2) {
-                tellPlayer(player, Track.INVALID_COMAND);
+                sender.sendMessage(BNTag + ChatColor.RED + Track.INVALID_COMAND.msg);
             }
             return true;
         }
@@ -592,6 +620,19 @@ public class BattleNight extends JavaPlugin {
     // Set Coords and put in waypoints.data
     public void setCoords(Player player, String place) {
         final Location location = player.getLocation();
+        loadWaypoints();
+        waypoints.set("coords." + place + ".world", location.getWorld().getName());
+        waypoints.set("coords." + place + ".x", location.getX());
+        waypoints.set("coords." + place + ".y", location.getY());
+        waypoints.set("coords." + place + ".z", location.getZ());
+        waypoints.set("coords." + place + ".yaw", location.getYaw());
+        waypoints.set("coords." + place + ".pitch", location.getPitch());
+        saveYAML(ConfigFile.Waypoints);
+    }
+
+    // Set Coords and put in waypoints.data
+    public static void setCoords(Waypoint waypoint, Location location) {
+        String place = waypoint.getName();
         loadWaypoints();
         waypoints.set("coords." + place + ".world", location.getWorld().getName());
         waypoints.set("coords." + place + ".x", location.getX());
@@ -633,30 +674,13 @@ public class BattleNight extends JavaPlugin {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
-    public enum WPoint {
-        RED_LOUNGE("redlounge"), RED_SPAWN("redspawn"), BLUE_LOUNGE(
-                "bluelounge"), BLUE_SPAWN("bluespawn"), SPECTATOR("spectator"), EXIT(
-                "exit");
-
-        WPoint(String name) {
-            this.name = name;
-        }
-
-        public final String name;
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
-    public boolean pointSet(WPoint waypoint) {
+    public boolean pointSet(Waypoint waypoint) {
         loadWaypoints();
         try {
             final Set<String> set = waypoints.getConfigurationSection("coords")
                     .getKeys(false);
             final List<String> setpoints = new ArrayList<String>(set);
-            if (setpoints.contains(waypoint.name)) {
+            if (setpoints.contains(waypoint.getName())) {
                 return true;
             } else {
                 return false;
@@ -867,7 +891,7 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    public void tellPlayer(Player player, String msg) {
+    public static void tellPlayer(Player player, String msg) {
         player.sendMessage(BNTag + msg);
     }
 
@@ -880,10 +904,10 @@ public class BattleNight extends JavaPlugin {
             if (Bukkit.getPlayer(name) != null) {
                 final Player currentPlayer = Bukkit.getPlayer(name);
                 if (BattleUsersTeam.get(name).equals(Team.RED)) {
-                    goToWaypoint(currentPlayer, WPoint.RED_SPAWN);
+                    goToWaypoint(currentPlayer, Waypoint.RED_SPAWN);
                 }
                 if (BattleUsersTeam.get(name).equals(Team.BLUE)) {
-                    goToWaypoint(currentPlayer, WPoint.BLUE_SPAWN);
+                    goToWaypoint(currentPlayer, Waypoint.BLUE_SPAWN);
                 }
             }
         }
@@ -908,8 +932,8 @@ public class BattleNight extends JavaPlugin {
                 && (armNullCounter == armContents.length);
     }
 
-    public void goToWaypoint(Player player, WPoint waypoint) {
-        final Location destination = getCoords(waypoint.name);
+    public void goToWaypoint(Player player, Waypoint waypoint) {
+        final Location destination = getCoords(waypoint.getName());
         final Chunk chunk = destination.getChunk();
 
         if (!chunk.isLoaded()) {
@@ -928,7 +952,13 @@ public class BattleNight extends JavaPlugin {
         ADMIN, MOD, USER
     }
 
-    public boolean hasPerm(BattleNight.Perm perm, Player player) {
+    public boolean hasPerm(BattleNight.Perm perm, CommandSender sender) {
+        // Player check
+        if (!(sender instanceof Player)) {
+            return true;
+        }
+        Player player = (Player) sender;
+        
         if (perm.equals(Perm.ADMIN)) {
             if ((configUsePermissions && player
                     .hasPermission("battlenight.admin"))
@@ -1040,7 +1070,7 @@ public class BattleNight extends JavaPlugin {
                 if (BattleUsersTeam.containsKey(player.getName())) {
                     battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
                 }
-                goToWaypoint(player, WPoint.SPECTATOR);
+                goToWaypoint(player, Waypoint.SPECTATOR);
                 BattleSpectators.put(player.getName(), "command");
                 tellPlayer(player, Track.WELCOME_SPECTATOR);
                 return;
@@ -1055,7 +1085,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void removeSpectator(Player player) {
-        goToWaypoint(player, WPoint.EXIT);
+        goToWaypoint(player, Waypoint.EXIT);
         BattleSpectators.remove(player.getName());
         tellPlayer(player, Track.GOODBYE_SPECTATOR);
     }
@@ -1064,7 +1094,7 @@ public class BattleNight extends JavaPlugin {
         for (final String pName : BattleSpectators.keySet()) {
             if (Bukkit.getPlayer(pName) != null) {
                 final Player currentPlayer = Bukkit.getPlayer(pName);
-                goToWaypoint(currentPlayer, WPoint.EXIT);
+                goToWaypoint(currentPlayer, Waypoint.EXIT);
             }
         }
 

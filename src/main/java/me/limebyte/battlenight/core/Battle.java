@@ -2,9 +2,9 @@ package me.limebyte.battlenight.core;
 
 import java.util.Set;
 
-import me.limebyte.battlenight.core.BattleNight.WPoint;
 import me.limebyte.battlenight.core.API.BattleEndEvent;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
+import me.limebyte.battlenight.core.Other.Waypoint;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,13 +26,13 @@ public class Battle {
             final String name = player.getName();
 
             if (blueTeam > redTeam) {
-                plugin.goToWaypoint(player, WPoint.RED_LOUNGE);
+                plugin.goToWaypoint(player, Waypoint.RED_LOUNGE);
                 plugin.BattleUsersTeam.put(name, Team.RED);
                 plugin.tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
                 plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.RED + "<Red>");
                 redTeam++;
             } else {
-                plugin.goToWaypoint(player, WPoint.BLUE_LOUNGE);
+                plugin.goToWaypoint(player, Waypoint.BLUE_LOUNGE);
                 plugin.BattleUsersTeam.put(name, Team.BLUE);
                 plugin.tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
                 plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.BLUE + "<Blue>");
@@ -107,7 +107,7 @@ public class Battle {
     public void resetPlayer(Player player, boolean teleport, boolean removeHash) {
         player.getInventory().clear();
         plugin.restorePlayer(player);
-        if (teleport) plugin.goToWaypoint(player, WPoint.EXIT);
+        if (teleport) plugin.goToWaypoint(player, Waypoint.EXIT);
         plugin.cleanSigns(player);
 
         if (removeHash) {
