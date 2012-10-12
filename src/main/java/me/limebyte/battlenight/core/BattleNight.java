@@ -347,6 +347,7 @@ public class BattleNight extends JavaPlugin {
             } else if (args[0].equalsIgnoreCase("set")) {
                 WaypointCommand cmd = new WaypointCommand(sender, args);
                 cmd.perform();
+                return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("help")) {
                     if (hasPerm(Perm.ADMIN, sender)) {
