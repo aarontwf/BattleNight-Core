@@ -101,7 +101,7 @@ public class WaypointCommand extends BNCommand {
         int y = getInteger(args[2], 0, 256);
         int z = getInteger(args[3], -30000000, 30000000);
 
-        return new Location(world, x, y, z);
+        return new Location(world, x + 0.5, y, z + 0.5);
     }
 
     private int getInteger(String value, int min, int max) {
