@@ -121,4 +121,9 @@ public class WaypointCommand extends BNCommand {
         return i;
     }
 
+    @Override
+    public String getDiscription() {
+        return "/bn set - Set a waypoint.";
+    }
+
 }
