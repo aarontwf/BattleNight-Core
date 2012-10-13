@@ -2,13 +2,13 @@ package me.limebyte.battlenight.core.Hooks;
 
 import java.io.File;
 
+import me.limebyte.battlenight.core.BattleNight;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.UnknownDependencyException;
-
-import me.limebyte.battlenight.core.BattleNight;
 
 public class Nameplates {
     public static boolean init(BattleNight plugin) {
@@ -26,13 +26,13 @@ public class Nameplates {
         }
         return true;
     }
-    
+
     private static void install(BattleNight plugin, PluginManager pm) throws UnknownDependencyException, InvalidPluginException, InvalidDescriptionException {
         File tagAPI = new File(plugin.getDataFolder().getParent(), "TagAPI.jar");
         BattleNight.copy(plugin.getResource("TagAPI.jar"), tagAPI);
         load(tagAPI);
     }
-    
+
     private static void load(File file) throws UnknownDependencyException, InvalidPluginException, InvalidDescriptionException {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.loadPlugin(file);

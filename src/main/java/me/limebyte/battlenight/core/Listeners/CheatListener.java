@@ -36,7 +36,7 @@ public class CheatListener implements Listener {
                     break;
                 case ENDER_PEARL:
                     ;
-                    if (!plugin.config
+                    if (!BattleNight.config
                             .getBoolean("Teleportation.EnderPearls", true)) {
                         event.setCancelled(true);
                         plugin.tellPlayer(player, Track.NO_TP);
@@ -44,7 +44,7 @@ public class CheatListener implements Listener {
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
-                    if (!plugin.config.getBoolean("Teleportation.Portals", false)) {
+                    if (!BattleNight.config.getBoolean("Teleportation.Portals", false)) {
                         event.setCancelled(true);
                         plugin.tellPlayer(player, Track.NO_TP);
                     }

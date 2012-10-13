@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 public class NameplateListener implements Listener {
+
     // Get Main Class
     public static BattleNight plugin;
 
@@ -19,11 +20,13 @@ public class NameplateListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onNameplate(PlayerReceiveNameTagEvent event) {
-        final String tagged = event.getNamedPlayer().getName();
+        String tagged = event.getNamedPlayer().getName();
 
         if (plugin.BattleUsersTeam.containsKey(tagged)) {
-            final ChatColor teamColour = plugin.BattleUsersTeam.get(tagged).equals(Team.RED) ? ChatColor.RED : ChatColor.BLUE;
+            ChatColor teamColour = plugin.BattleUsersTeam.get(tagged).equals(Team.RED) ? ChatColor.RED : ChatColor.BLUE;
             event.setTag(teamColour + tagged);
+        } else if (plugin.BattleSpectators.containsKey(tagged)) {
+            event.setTag(ChatColor.GRAY + tagged);
         } else if (!event.isModified()) {
             event.setTag(tagged);
         }

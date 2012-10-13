@@ -74,17 +74,17 @@ public class BattleNight extends JavaPlugin {
     public final Map<String, String> BattleSpectators = new HashMap<String, String>();
 
     // Other Classes
-    public final Battle battle = new Battle(this);
-    private final SignListener signListener = new SignListener(this);
-    private final ReadyListener readyListener = new ReadyListener(this);
-    private final RespawnListener respawnListener = new RespawnListener(this);
-    private final DeathListener deathListener = new DeathListener(this);
-    private final DamageListener damageListener = new DamageListener(this);
-    private final DropListener dropListener = new DropListener(this);
-    private final DisconnectListener disconnectListener = new DisconnectListener(this);
-    private final SignChanger blockListener = new SignChanger(this);
-    private final CheatListener cheatListener = new CheatListener(this);
-    private final CommandBlocker commandBlocker = new CommandBlocker(this);
+    public Battle battle = new Battle(this);
+    private SignListener signListener = new SignListener(this);
+    private ReadyListener readyListener = new ReadyListener(this);
+    private RespawnListener respawnListener = new RespawnListener(this);
+    private DeathListener deathListener = new DeathListener(this);
+    private DamageListener damageListener = new DamageListener(this);
+    private DropListener dropListener = new DropListener(this);
+    private DisconnectListener disconnectListener = new DisconnectListener(this);
+    private SignChanger blockListener = new SignChanger(this);
+    private CheatListener cheatListener = new CheatListener(this);
+    private CommandBlocker commandBlocker = new CommandBlocker(this);
 
     public boolean redTeamIronClicked = false;
     public boolean blueTeamIronClicked = false;
@@ -122,7 +122,7 @@ public class BattleNight extends JavaPlugin {
             battle.end();
         }
         this.cleanSigns();
-        final PluginDescriptionFile pdfFile = getDescription();
+        PluginDescriptionFile pdfFile = getDescription();
         log.info("Version " + pdfFile.getVersion() + " has been disabled.");
     }
 
@@ -144,7 +144,7 @@ public class BattleNight extends JavaPlugin {
         // Use firstRun(); method
         try {
             firstRun();
-        } catch (final Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -157,9 +157,9 @@ public class BattleNight extends JavaPlugin {
 
         // Metrics
         try {
-            final Metrics metrics = new Metrics(this);
+            Metrics metrics = new Metrics(this);
             metrics.start();
-        } catch (final IOException e) {
+        } catch (IOException e) {
             // Failed to submit the stats :-(
         }
 
@@ -172,15 +172,11 @@ public class BattleNight extends JavaPlugin {
         configDebug = config.getBoolean("Debug");
 
         classesDummyItem = classes.getInt("DummyItem");
-        for (final String className : classes.getConfigurationSection("Classes")
-                .getKeys(false)) {
-            BattleClasses.put(className,
-                    classes.getString("Classes." + className + ".Items", null));
+        for (String className : classes.getConfigurationSection("Classes").getKeys(false)) {
+            BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
         }
-        for (final String className : classes.getConfigurationSection("Classes")
-                .getKeys(false)) {
-            BattleArmor.put(className,
-                    classes.getString("Classes." + className + ".Armor", null));
+        for (String className : classes.getConfigurationSection("Classes").getKeys(false)) {
+            BattleArmor.put(className, classes.getString("Classes." + className + ".Armor", null));
         }
         ClassList = classes.getConfigurationSection("Classes").getKeys(false);
 
@@ -197,11 +193,11 @@ public class BattleNight extends JavaPlugin {
             log.info("Armor: " + BattleArmor);
         }
 
-        final PluginManager pm = getServer().getPluginManager();
+        PluginManager pm = getServer().getPluginManager();
 
         if (Nameplates.init(this)) {
             // Event Registration
-            final PluginDescriptionFile pdfFile = getDescription();
+            PluginDescriptionFile pdfFile = getDescription();
             pm.registerEvents(new NameplateListener(this), this);
             pm.registerEvents(signListener, this);
             pm.registerEvents(readyListener, this);
@@ -249,15 +245,15 @@ public class BattleNight extends JavaPlugin {
     // YAML Copy Method
     public static void copy(InputStream in, File file) {
         try {
-            final OutputStream out = new FileOutputStream(file);
-            final byte[] buf = new byte[1024];
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) != -1) {
                 out.write(buf, 0, len);
             }
             out.close();
             in.close();
-        } catch (final Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -269,7 +265,7 @@ public class BattleNight extends JavaPlugin {
             classes.load(classesFile);
             waypoints.load(waypointsFile);
             players.load(playerFile);
-        } catch (final Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -284,15 +280,11 @@ public class BattleNight extends JavaPlugin {
         configReadyBlock = config.getInt("ReadyBlock");
         configDebug = config.getBoolean("Debug");
         classesDummyItem = classes.getInt("DummyItem");
-        for (final String className : classes.getConfigurationSection("Classes")
-                .getKeys(false)) {
-            BattleClasses.put(className,
-                    classes.getString("Classes." + className + ".Items", null));
+        for (String className : classes.getConfigurationSection("Classes").getKeys(false)) {
+            BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
         }
-        for (final String className : classes.getConfigurationSection("Classes")
-                .getKeys(false)) {
-            BattleArmor.put(className,
-                    classes.getString("Classes." + className + ".Armor", null));
+        for (String className : classes.getConfigurationSection("Classes").getKeys(false)) {
+            BattleArmor.put(className, classes.getString("Classes." + className + ".Armor", null));
         }
         ClassList = classes.getConfigurationSection("Classes").getKeys(false);
     }
@@ -301,7 +293,7 @@ public class BattleNight extends JavaPlugin {
     public static void loadWaypoints() {
         try {
             waypoints.load(waypointsFile);
-        } catch (final Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -313,7 +305,7 @@ public class BattleNight extends JavaPlugin {
             classes.save(classesFile);
             waypoints.save(waypointsFile);
             players.save(playerFile);
-        } catch (final IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -328,7 +320,7 @@ public class BattleNight extends JavaPlugin {
                 waypoints.save(waypointsFile);
             if (file.equals(ConfigFile.Players))
                 players.save(playerFile);
-        } catch (final IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -452,7 +444,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     if (isSetup() && !battleInProgress && !BattleUsersTeam.containsKey(player.getName())) {
                         battle.addPlayer(player);
                     } else if (!isSetup()) {
@@ -471,7 +463,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     addSpectator(player, "command");
                 } else if (args[0].equalsIgnoreCase("leave") && hasPerm(Perm.USER, sender)) {
                     // Player check
@@ -480,7 +472,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     if (BattleUsersTeam.containsKey(player.getName())) {
                         battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
                     } else if (BattleSpectators.containsKey(player.getName())) {
@@ -506,7 +498,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     setCoords(player, "redlounge");
                     tellPlayer(player, Track.RED_LOUNGE_SET);
                 }
@@ -518,7 +510,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     setCoords(player, "redspawn");
                     tellPlayer(player, Track.RED_SPAWN_SET);
                 }
@@ -530,7 +522,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     setCoords(player, "bluelounge");
                     tellPlayer(player, Track.BLUE_LOUNGE_SET);
                 }
@@ -542,7 +534,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     setCoords(player, "bluespawn");
                     tellPlayer(player, Track.BLUE_SPAWN_SET);
                 }
@@ -554,7 +546,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     setCoords(player, "spectator");
                     tellPlayer(player, Track.SPECTATOR_SET);
                 }
@@ -566,7 +558,7 @@ public class BattleNight extends JavaPlugin {
                         return true;
                     }
                     Player player = (Player) sender;
-                    
+
                     setCoords(player, "exit");
                     tellPlayer(player, Track.EXIT_SET);
                 }
@@ -586,7 +578,7 @@ public class BattleNight extends JavaPlugin {
                     try {
                         reloadConfigFiles();
                         sender.sendMessage(BNTag + ChatColor.GREEN + "Reloaded successfully.");
-                    } catch (final Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         sender.sendMessage(BNTag + ChatColor.RED + "Reload failed.");
                     }
@@ -620,7 +612,7 @@ public class BattleNight extends JavaPlugin {
 
     // Set Coords and put in waypoints.data
     public void setCoords(Player player, String place) {
-        final Location location = player.getLocation();
+        Location location = player.getLocation();
         loadWaypoints();
         waypoints.set("coords." + place + ".world", location.getWorld().getName());
         waypoints.set("coords." + place + ".x", location.getX());
@@ -647,30 +639,30 @@ public class BattleNight extends JavaPlugin {
     // Get Coords from waypoints.data
     public Location getCoords(String place) {
         loadWaypoints();
-        final Double x = waypoints.getDouble("coords." + place + ".x", 0);
-        final Double y = waypoints.getDouble("coords." + place + ".y", 0);
-        final Double z = waypoints.getDouble("coords." + place + ".z", 0);
-        final String yawToParse = waypoints.getString("coords." + place + ".yaw");
+        Double x = waypoints.getDouble("coords." + place + ".x", 0);
+        Double y = waypoints.getDouble("coords." + place + ".y", 0);
+        Double z = waypoints.getDouble("coords." + place + ".z", 0);
+        String yawToParse = waypoints.getString("coords." + place + ".yaw");
         float yaw = 0;
         if (yawToParse != null) {
             try {
                 yaw = Float.parseFloat(yawToParse);
-            } catch (final NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
                 // log it, do whatever you want, it's not a float. Maybe give it
                 // a default value
             }
         }
-        final String pitchToParse = waypoints.getString("coords." + place + ".pitch");
+        String pitchToParse = waypoints.getString("coords." + place + ".pitch");
         float pitch = 0;
         if (pitchToParse != null) {
             try {
                 pitch = Float.parseFloat(pitchToParse);
-            } catch (final NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {
                 // log it, do whatever you want, it's not a float. Maybe give it
                 // a default value
             }
         }
-        final World world = Bukkit.getServer().getWorld(
+        World world = Bukkit.getServer().getWorld(
                 waypoints.getString("coords." + place + ".world"));
         return new Location(world, x, y, z, yaw, pitch);
     }
@@ -678,15 +670,15 @@ public class BattleNight extends JavaPlugin {
     public boolean pointSet(Waypoint waypoint) {
         loadWaypoints();
         try {
-            final Set<String> set = waypoints.getConfigurationSection("coords")
+            Set<String> set = waypoints.getConfigurationSection("coords")
                     .getKeys(false);
-            final List<String> setpoints = new ArrayList<String>(set);
+            List<String> setpoints = new ArrayList<String>(set);
             if (setpoints.contains(waypoint.getName())) {
                 return true;
             } else {
                 return false;
             }
-        } catch (final NullPointerException e) {
+        } catch (NullPointerException e) {
             return false;
         }
     }
@@ -697,9 +689,9 @@ public class BattleNight extends JavaPlugin {
         if (!waypoints.isSet("coords")) {
             return false;
         } else {
-            final Set<String> set = waypoints.getConfigurationSection("coords")
+            Set<String> set = waypoints.getConfigurationSection("coords")
                     .getKeys(false);
-            final List<String> list = new ArrayList<String>(set);
+            List<String> list = new ArrayList<String>(set);
             if (list.size() == 6) {
                 return true;
             } else {
@@ -713,22 +705,21 @@ public class BattleNight extends JavaPlugin {
         if (!waypoints.isSet("coords")) {
             return 0;
         } else {
-            final Set<String> set = waypoints.getConfigurationSection("coords")
-                    .getKeys(false);
-            final List<String> list = new ArrayList<String>(set);
+            Set<String> set = waypoints.getConfigurationSection("coords").getKeys(false);
+            List<String> list = new ArrayList<String>(set);
             return list.size();
         }
     }
 
     // Give Player Class Items
     public void giveItems(Player player) {
-        final String playerClass = BattleUsersClass.get(player.getName());
-        final String rawItems = BattleClasses.get(playerClass);
-        final String ArmorList = BattleArmor.get(playerClass);
+        String playerClass = BattleUsersClass.get(player.getName());
+        String rawItems = BattleClasses.get(playerClass);
+        String ArmorList = BattleArmor.get(playerClass);
         String[] items;
         items = rawItems.split(",");
         for (int i = 0; i < items.length; i++) {
-            final String item = items[i];
+            String item = items[i];
             player.getInventory().setItem(i, parseItem(item));
             if (player.getInventory().contains(classesDummyItem)) {
                 player.getInventory().remove(classesDummyItem);
@@ -787,9 +778,9 @@ public class BattleNight extends JavaPlugin {
 
     // Clean Up All Signs People Have Used For Classes
     public void cleanSigns() {
-        for (final Entry<String, Sign> entry : BattleSigns.entrySet()) {
+        for (Entry<String, Sign> entry : BattleSigns.entrySet()) {
             if (entry.getValue() != null) {
-                final Sign currentSign = entry.getValue();
+                Sign currentSign = entry.getValue();
                 currentSign.setLine(2, "");
                 currentSign.setLine(3, "");
                 currentSign.update();
@@ -799,9 +790,9 @@ public class BattleNight extends JavaPlugin {
 
     // Clean Up Signs Specific Player Has Used For Classes
     public void cleanSigns(Player player) {
-        for (final Entry<String, Sign> entry : BattleSigns.entrySet()) {
+        for (Entry<String, Sign> entry : BattleSigns.entrySet()) {
             if (entry.getValue() != null && player != null) {
-                final Sign currentSign = entry.getValue();
+                Sign currentSign = entry.getValue();
                 if (currentSign.getLine(2) == player.getName()) currentSign.setLine(2, "");
                 if (currentSign.getLine(3) == player.getName()) currentSign.setLine(3, "");
                 currentSign.update();
@@ -813,7 +804,7 @@ public class BattleNight extends JavaPlugin {
         int members = 0;
         int membersReady = 0;
 
-        for (final Entry<String, Team> entry : BattleUsersTeam.entrySet()) {
+        for (Entry<String, Team> entry : BattleUsersTeam.entrySet()) {
             if (Bukkit.getPlayer(entry.getKey()) != null) {
                 if (entry.getValue().equals(team)) {
                     members++;
@@ -830,31 +821,31 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void tellEveryone(String msg) {
-        for (final String name : BattleUsersTeam.keySet()) {
+        for (String name : BattleUsersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + msg);
         }
     }
 
     public void tellEveryone(Track track) {
-        for (final String name : BattleUsersTeam.keySet()) {
+        for (String name : BattleUsersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + track.msg);
         }
     }
 
     public void killFeed(String msg) {
-        final LinkedList<Player> told = new LinkedList<Player>();
+        LinkedList<Player> told = new LinkedList<Player>();
 
-        for (final String name : BattleUsersTeam.keySet()) {
+        for (String name : BattleUsersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) {
-                final Player currentPlayer = Bukkit.getPlayer(name);
+                Player currentPlayer = Bukkit.getPlayer(name);
                 currentPlayer.sendMessage(BNTag + msg);
                 told.add(currentPlayer);
             }
         }
 
-        for (final String name : BattleSpectators.keySet()) {
+        for (String name : BattleSpectators.keySet()) {
             if (Bukkit.getPlayer(name) != null) {
-                final Player currentPlayer = Bukkit.getPlayer(name);
+                Player currentPlayer = Bukkit.getPlayer(name);
                 if (!told.contains(currentPlayer)) {
                     currentPlayer.sendMessage(BNTag + msg);
                     told.add(currentPlayer);
@@ -866,27 +857,27 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void tellEveryoneExcept(Player player, String msg) {
-        for (final String name : BattleUsersTeam.keySet()) {
+        for (String name : BattleUsersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) {
-                final Player currentPlayer = Bukkit.getPlayer(name);
+                Player currentPlayer = Bukkit.getPlayer(name);
                 if (currentPlayer != player) currentPlayer.sendMessage(BNTag + msg);
             }
         }
     }
 
     public void tellTeam(Team team, String msg) {
-        for (final String name : BattleUsersTeam.keySet()) {
+        for (String name : BattleUsersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) {
-                final Player currentPlayer = Bukkit.getPlayer(name);
+                Player currentPlayer = Bukkit.getPlayer(name);
                 if (BattleUsersTeam.get(name).equals(team)) currentPlayer.sendMessage(BNTag + msg);
             }
         }
     }
 
     public void tellTeam(Team team, Track track) {
-        for (final String name : BattleUsersTeam.keySet()) {
+        for (String name : BattleUsersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) {
-                final Player currentPlayer = Bukkit.getPlayer(name);
+                Player currentPlayer = Bukkit.getPlayer(name);
                 if (BattleUsersTeam.get(name).equals(team)) currentPlayer.sendMessage(BNTag + track.msg);
             }
         }
@@ -901,9 +892,9 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void teleportAllToSpawn() {
-        for (final String name : BattleUsersTeam.keySet()) {
+        for (String name : BattleUsersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) {
-                final Player currentPlayer = Bukkit.getPlayer(name);
+                Player currentPlayer = Bukkit.getPlayer(name);
                 if (BattleUsersTeam.get(name).equals(Team.RED)) {
                     goToWaypoint(currentPlayer, Waypoint.RED_SPAWN);
                 }
@@ -915,8 +906,8 @@ public class BattleNight extends JavaPlugin {
     }
 
     public boolean hasEmptyInventory(Player player) {
-        final ItemStack[] invContents = player.getInventory().getContents();
-        final ItemStack[] armContents = player.getInventory().getArmorContents();
+        ItemStack[] invContents = player.getInventory().getContents();
+        ItemStack[] armContents = player.getInventory().getArmorContents();
         int invNullCounter = 0;
         int armNullCounter = 0;
         for (int i = 0; i < invContents.length; i++) {
@@ -934,8 +925,8 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void goToWaypoint(Player player, Waypoint waypoint) {
-        final Location destination = getCoords(waypoint.getName());
-        final Chunk chunk = destination.getChunk();
+        Location destination = getCoords(waypoint.getName());
+        Chunk chunk = destination.getChunk();
 
         if (!chunk.isLoaded()) {
             chunk.load();
@@ -955,11 +946,9 @@ public class BattleNight extends JavaPlugin {
 
     public boolean hasPerm(BattleNight.Perm perm, CommandSender sender) {
         // Player check
-        if (!(sender instanceof Player)) {
-            return true;
-        }
+        if (!(sender instanceof Player)) { return true; }
         Player player = (Player) sender;
-        
+
         if (perm.equals(Perm.ADMIN)) {
             if ((configUsePermissions && player
                     .hasPermission("battlenight.admin"))
@@ -1011,22 +1000,22 @@ public class BattleNight extends JavaPlugin {
         if (rawItem == null || rawItem.equals(""))
             return null;
 
-        final String[] part1 = rawItem.split("x");
-        final String[] part2 = part1[0].split(":");
-        final String item = part2[0];
+        String[] part1 = rawItem.split("x");
+        String[] part2 = part1[0].split(":");
+        String item = part2[0];
         if (part1.length == 1) {
             if (part2.length == 1) {
                 return parseItemWithoutData(item, "1");
             } else if (part2.length == 2) {
-                final String data = part2[1];
+                String data = part2[1];
                 return parseItemWithData(item, data);
             }
         } else if (part1.length == 2) {
-            final String amount = part1[1];
+            String amount = part1[1];
             if (part2.length == 1) {
                 return parseItemWithoutData(item, amount);
             } else if (part2.length == 2) {
-                final String data = part2[1];
+                String data = part2[1];
                 return parseItemWithData(item, data, amount);
             }
         }
@@ -1034,7 +1023,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     private static ItemStack parseItemWithoutData(String item, String amount) {
-        final Material m = Material.getMaterial(Integer.parseInt(item));
+        Material m = Material.getMaterial(Integer.parseInt(item));
         int a = Integer.parseInt(amount);
         if (a > m.getMaxStackSize()) {
             log.warning("You attempted to set the item:" + m + " to have a greater stack size than possible.");
@@ -1044,16 +1033,16 @@ public class BattleNight extends JavaPlugin {
     }
 
     private static ItemStack parseItemWithData(String item, String data) {
-        final int i = Integer.parseInt(item);
-        final short d = Short.parseShort(data);
+        int i = Integer.parseInt(item);
+        short d = Short.parseShort(data);
 
         return new ItemStack(i, 1, d);
     }
 
     private static ItemStack parseItemWithData(String item, String data,
             String amount) {
-        final Material m = Material.getMaterial(Integer.parseInt(item));
-        final byte d = Byte.parseByte(data);
+        Material m = Material.getMaterial(Integer.parseInt(item));
+        byte d = Byte.parseByte(data);
         int a = Integer.parseInt(amount);
         if (a > m.getMaxStackSize()) {
             log.warning("You attempted to set the item:" + m + " to have a greater stack size than possible.");
@@ -1092,9 +1081,9 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void removeAllSpectators() {
-        for (final String pName : BattleSpectators.keySet()) {
+        for (String pName : BattleSpectators.keySet()) {
             if (Bukkit.getPlayer(pName) != null) {
-                final Player currentPlayer = Bukkit.getPlayer(pName);
+                Player currentPlayer = Bukkit.getPlayer(pName);
                 goToWaypoint(currentPlayer, Waypoint.EXIT);
             }
         }
@@ -1105,7 +1094,7 @@ public class BattleNight extends JavaPlugin {
     public boolean preparePlayer(Player p) {
         if (config.getString("InventoryType").equalsIgnoreCase("prompt") && !hasEmptyInventory(p)) return false;
 
-        final String name = p.getName();
+        String name = p.getName();
 
         // Inventory
         if (config.getString("InventoryType").equalsIgnoreCase("save")) {
@@ -1156,7 +1145,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void restorePlayer(Player p) {
-        final String name = p.getName();
+        String name = p.getName();
         reset(p, true);
 
         try {
@@ -1196,13 +1185,13 @@ public class BattleNight extends JavaPlugin {
             p.setTicksLived(config.getInt(name + ".data.stats.tickslived"));
             p.setNoDamageTicks(config.getInt(name + ".data.stats.nodamageticks"));
 
-        } catch (final NullPointerException e) {
+        } catch (NullPointerException e) {
             log.warning("Failed to restore data for player: '" + name + "'.");
         }
     }
 
     public void reset(Player p, boolean light) {
-        final PlayerInventory inv = p.getInventory();
+        PlayerInventory inv = p.getInventory();
         inv.clear();
         inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
 
@@ -1231,9 +1220,9 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void setNames(Player player) {
-        final String name = player.getName();
+        String name = player.getName();
 
-        final String pListName = ChatColor.GRAY + "[BN] " + name;
+        String pListName = ChatColor.GRAY + "[BN] " + name;
         ChatColor teamColour = ChatColor.WHITE;
         if (BattleUsersTeam.containsKey(name)) {
             teamColour = BattleUsersTeam.get(name).equals(Team.RED) ? ChatColor.RED : ChatColor.BLUE;
@@ -1243,12 +1232,12 @@ public class BattleNight extends JavaPlugin {
         player.setDisplayName(ChatColor.GRAY + "[BN] " + teamColour + name + ChatColor.RESET);
         try {
             TagAPI.refreshPlayer(player);
-        } catch (final Exception e) {
+        } catch (Exception e) {
         }
     }
 
     private void removePotionEffects(Player p) {
-        for (final PotionEffect effect : p.getActivePotionEffects()) {
+        for (PotionEffect effect : p.getActivePotionEffects()) {
             p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
         }
     }

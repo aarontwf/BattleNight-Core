@@ -23,9 +23,9 @@ public class CommandBlocker implements Listener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled()) return;
         if (!plugin.BattleUsersTeam.containsKey(event.getPlayer().getName())) return;
-        if (!plugin.config.getBoolean("Commands.Block")) return;
+        if (!BattleNight.config.getBoolean("Commands.Block")) return;
 
-        final List<String> whitelist = plugin.config.getStringList("Commands.Whitelist");
+        final List<String> whitelist = BattleNight.config.getStringList("Commands.Whitelist");
         whitelist.add("bn");
 
         final String[] cmdArg = event.getMessage().split(" ");
@@ -50,7 +50,7 @@ public class CommandBlocker implements Listener {
 
         // Its not listed so block it
         event.setCancelled(true);
-        plugin.tellPlayer(event.getPlayer(), "You are not permitted to perform this command while in a Battle.");
+        BattleNight.tellPlayer(event.getPlayer(), "You are not permitted to perform this command while in a Battle.");
         return;
     }
 
