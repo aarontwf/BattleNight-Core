@@ -162,13 +162,8 @@ public class BattleNight extends JavaPlugin {
         configDebug = config.getBoolean("Debug");
 
         classesDummyItem = classes.getInt("DummyItem");
-        for (String className : classes.getConfigurationSection("Classes").getKeys(false)) {
-            BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
-        }
-        for (String className : classes.getConfigurationSection("Classes").getKeys(false)) {
-            BattleArmor.put(className, classes.getString("Classes." + className + ".Armor", null));
-        }
-        ClassList = classes.getConfigurationSection("Classes").getKeys(false);
+        
+        reloadClasses();
 
         // Debug
         if (configDebug) {
@@ -270,13 +265,7 @@ public class BattleNight extends JavaPlugin {
         configReadyBlock = config.getInt("ReadyBlock");
         configDebug = config.getBoolean("Debug");
         classesDummyItem = classes.getInt("DummyItem");
-        for (String className : classes.getConfigurationSection("Classes").getKeys(false)) {
-            BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
-        }
-        for (String className : classes.getConfigurationSection("Classes").getKeys(false)) {
-            BattleArmor.put(className, classes.getString("Classes." + className + ".Armor", null));
-        }
-        ClassList = classes.getConfigurationSection("Classes").getKeys(false);
+        reloadClasses();
     }
 
     // Waypoints Load Method
@@ -1229,6 +1218,14 @@ public class BattleNight extends JavaPlugin {
     private void removePotionEffects(Player p) {
         for (PotionEffect effect : p.getActivePotionEffects()) {
             p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
+        }
+    }
+    
+    private void reloadClasses() {
+        ClassList = classes.getConfigurationSection("Classes").getKeys(false);
+        for (String className : ClassList) {
+            BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
+            BattleArmor.put(className, classes.getString("Classes." + className + ".Armor", null));
         }
     }
 }
