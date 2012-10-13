@@ -75,16 +75,6 @@ public class BattleNight extends JavaPlugin {
 
     // Other Classes
     public Battle battle = new Battle(this);
-    private SignListener signListener = new SignListener(this);
-    private ReadyListener readyListener = new ReadyListener(this);
-    private RespawnListener respawnListener = new RespawnListener(this);
-    private DeathListener deathListener = new DeathListener(this);
-    private DamageListener damageListener = new DamageListener(this);
-    private DropListener dropListener = new DropListener(this);
-    private DisconnectListener disconnectListener = new DisconnectListener(this);
-    private SignChanger blockListener = new SignChanger(this);
-    private CheatListener cheatListener = new CheatListener(this);
-    private CommandBlocker commandBlocker = new CommandBlocker(this);
 
     public boolean redTeamIronClicked = false;
     public boolean blueTeamIronClicked = false;
@@ -198,17 +188,17 @@ public class BattleNight extends JavaPlugin {
         if (Nameplates.init(this)) {
             // Event Registration
             PluginDescriptionFile pdfFile = getDescription();
+            pm.registerEvents(new CheatListener(this), this);
+            pm.registerEvents(new CommandBlocker(this), this);
+            pm.registerEvents(new DamageListener(this), this);
+            pm.registerEvents(new DeathListener(this), this);
+            pm.registerEvents(new DisconnectListener(this), this);
+            pm.registerEvents(new DropListener(this), this);
             pm.registerEvents(new NameplateListener(this), this);
-            pm.registerEvents(signListener, this);
-            pm.registerEvents(readyListener, this);
-            pm.registerEvents(respawnListener, this);
-            pm.registerEvents(deathListener, this);
-            pm.registerEvents(dropListener, this);
-            pm.registerEvents(damageListener, this);
-            pm.registerEvents(disconnectListener, this);
-            pm.registerEvents(blockListener, this);
-            pm.registerEvents(cheatListener, this);
-            pm.registerEvents(commandBlocker, this);
+            pm.registerEvents(new ReadyListener(this), this);
+            pm.registerEvents(new RespawnListener(this), this);
+            pm.registerEvents(new SignChanger(this), this);
+            pm.registerEvents(new SignListener(this), this);
 
             // Enable Message
             log.info("Version " + pdfFile.getVersion() + " enabled successfully.");
