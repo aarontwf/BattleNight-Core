@@ -14,7 +14,6 @@ public abstract class BNCommand {
     public BNCommand(CommandSender sender, String[] args) {
         this.sender = sender;
         this.args = Arrays.copyOfRange(args, 1, args.length);
-        CommandManager.register(this);
     }
 
     public boolean perform() {
@@ -34,8 +33,6 @@ public abstract class BNCommand {
 
     public abstract CommandPermission getPermission();
 
-    public abstract String getDiscription();
-    
     public abstract String getUsage();
 
     public abstract String getConsoleUsage();

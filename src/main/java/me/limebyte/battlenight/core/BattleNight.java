@@ -31,8 +31,6 @@ import me.limebyte.battlenight.core.Listeners.SignChanger;
 import me.limebyte.battlenight.core.Listeners.SignListener;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 import me.limebyte.battlenight.core.Other.Waypoint;
-import me.limebyte.battlenight.core.chat.HelpPage;
-import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.commands.WaypointCommand;
 
 import org.bukkit.Bukkit;
@@ -84,7 +82,7 @@ public class BattleNight extends JavaPlugin {
     public boolean playersInLounge = false;
 
     // config.yml Values
-    public static boolean configUsePermissions = false;
+    public boolean configUsePermissions = false;
     public boolean configFriendlyFire = false;
     public boolean configStopHealthRegen = true;
     public String configInventoryType = "prompt";
@@ -323,18 +321,50 @@ public class BattleNight extends JavaPlugin {
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("help")) {
-                    if (hasPerm(CommandPermission.ADMIN, sender) ||
-                        hasPerm(CommandPermission.MODERATOR, sender) ||
-                        hasPerm(CommandPermission.USER, sender)) {
-                        
-                        HelpPage helpMenu = new HelpPage(sender);
-                        sender.sendMessage(helpMenu.getPage());
+                    if (hasPerm(Perm.ADMIN, sender)) {
+                        sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
+                                + ChatColor.WHITE + "BattleNight Help Menu"
+                                + ChatColor.DARK_GRAY + " ---------- ");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn help - Shows general help.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn waypoints - Shows set/unset waypoints.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn version - Shows the version of BattleNight in use.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn join - Join the Battle.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn leave - Leave the Battle.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn watch - Watch the Battle.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn kick [player] - Kick a player from the Battle.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn kickall - Kick all players in the Battle.");
+                        sender.sendMessage(ChatColor.DARK_GRAY
+                                + " --------------------------------------- ");
+                    } else if (hasPerm(Perm.USER, sender)) {
+                        sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
+                                + ChatColor.WHITE + "BattleNight Help Menu"
+                                + ChatColor.DARK_GRAY + " ---------- ");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn help - Shows general help.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn version - Shows the version of BattleNight in use.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn join - Join the Battle.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn leave - Leave the Battle.");
+                        sender.sendMessage(ChatColor.WHITE
+                                + " /bn watch - Watch the Battle");
+                        sender.sendMessage(ChatColor.DARK_GRAY
+                                + " --------------------------------------- ");
                     } else {
                         sender.sendMessage(BattleNight.BNTag + Track.NO_PERMISSION.msg);
                     }
                 }
 
-                else if (args[0].equalsIgnoreCase("waypoints") && hasPerm(CommandPermission.ADMIN, sender)) {
+                else if (args[0].equalsIgnoreCase("waypoints") && hasPerm(Perm.ADMIN, sender)) {
                     sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
                             + ChatColor.WHITE + "BattleNight Waypoints"
                             + ChatColor.DARK_GRAY + " ---------- ");
@@ -386,7 +416,7 @@ public class BattleNight extends JavaPlugin {
                             + " --------------------------------------- ");
                 }
 
-                else if (args[0].equalsIgnoreCase("join") && hasPerm(CommandPermission.USER, sender)) {
+                else if (args[0].equalsIgnoreCase("join") && hasPerm(Perm.USER, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -405,7 +435,7 @@ public class BattleNight extends JavaPlugin {
                     }
                 }
 
-                else if ((args[0].equalsIgnoreCase("watch")) && hasPerm(CommandPermission.USER, sender)) {
+                else if ((args[0].equalsIgnoreCase("watch")) && hasPerm(Perm.USER, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -414,7 +444,7 @@ public class BattleNight extends JavaPlugin {
                     Player player = (Player) sender;
 
                     addSpectator(player, "command");
-                } else if (args[0].equalsIgnoreCase("leave") && hasPerm(CommandPermission.USER, sender)) {
+                } else if (args[0].equalsIgnoreCase("leave") && hasPerm(Perm.USER, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -431,16 +461,16 @@ public class BattleNight extends JavaPlugin {
                     }
                 }
 
-                else if (args[0].equalsIgnoreCase("kick") && hasPerm(CommandPermission.MODERATOR, sender)) {
+                else if (args[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, sender)) {
                     sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.SPECIFY_PLAYER.msg);
                 }
 
-                else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(CommandPermission.MODERATOR, sender)) {
+                else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(Perm.MOD, sender)) {
                     battle.end();
                     sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.BATTLE_ENDED.msg);
                 }
 
-                else if (args[0].equalsIgnoreCase("redlounge") && hasPerm(CommandPermission.ADMIN, sender)) {
+                else if (args[0].equalsIgnoreCase("redlounge") && hasPerm(Perm.ADMIN, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -452,7 +482,7 @@ public class BattleNight extends JavaPlugin {
                     tellPlayer(player, Track.RED_LOUNGE_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("redspawn") && hasPerm(CommandPermission.ADMIN, sender)) {
+                else if (args[0].equalsIgnoreCase("redspawn") && hasPerm(Perm.ADMIN, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -464,7 +494,7 @@ public class BattleNight extends JavaPlugin {
                     tellPlayer(player, Track.RED_SPAWN_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("bluelounge") && hasPerm(CommandPermission.ADMIN, sender)) {
+                else if (args[0].equalsIgnoreCase("bluelounge") && hasPerm(Perm.ADMIN, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -476,7 +506,7 @@ public class BattleNight extends JavaPlugin {
                     tellPlayer(player, Track.BLUE_LOUNGE_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("bluespawn") && hasPerm(CommandPermission.ADMIN, sender)) {
+                else if (args[0].equalsIgnoreCase("bluespawn") && hasPerm(Perm.ADMIN, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -488,7 +518,7 @@ public class BattleNight extends JavaPlugin {
                     tellPlayer(player, Track.BLUE_SPAWN_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("spectator") && hasPerm(CommandPermission.ADMIN, sender)) {
+                else if (args[0].equalsIgnoreCase("spectator") && hasPerm(Perm.ADMIN, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -500,7 +530,7 @@ public class BattleNight extends JavaPlugin {
                     tellPlayer(player, Track.SPECTATOR_SET);
                 }
 
-                else if (args[0].equalsIgnoreCase("exit") && hasPerm(CommandPermission.ADMIN, sender)) {
+                else if (args[0].equalsIgnoreCase("exit") && hasPerm(Perm.ADMIN, sender)) {
                     // Player check
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(BNTag + ChatColor.RED + "This command can only be run by a Player.");
@@ -522,7 +552,7 @@ public class BattleNight extends JavaPlugin {
                     sender.sendMessage(msgs);
                 }
 
-                else if (args[0].equalsIgnoreCase("reload") && hasPerm(CommandPermission.ADMIN, sender)) {
+                else if (args[0].equalsIgnoreCase("reload") && hasPerm(Perm.ADMIN, sender)) {
                     sender.sendMessage(BNTag + "Reloading config...");
                     try {
                         reloadConfigFiles();
@@ -538,7 +568,7 @@ public class BattleNight extends JavaPlugin {
                 }
             }
             if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("kick") && hasPerm(CommandPermission.MODERATOR, sender)) {
+                if (args[0].equalsIgnoreCase("kick") && hasPerm(Perm.MOD, sender)) {
                     Player badplayer = Bukkit.getPlayerExact(args[1]);
                     if (badplayer.isOnline()) {
                         if (BattleUsersTeam.containsKey(badplayer.getName())) {
@@ -836,7 +866,7 @@ public class BattleNight extends JavaPlugin {
         player.sendMessage(BNTag + msg);
     }
 
-    public static void tellPlayer(Player player, Track track) {
+    public void tellPlayer(Player player, Track track) {
         player.sendMessage(BNTag + track.msg);
     }
 
@@ -889,15 +919,23 @@ public class BattleNight extends JavaPlugin {
         BattleTelePass.remove(player.getName());
     }
 
-    public static boolean hasPerm(CommandPermission perm, CommandSender sender) {
+    public enum Perm {
+        ADMIN, MOD, USER
+    }
+
+    public boolean hasPerm(BattleNight.Perm perm, CommandSender sender) {
         // Player check
         if (!(sender instanceof Player)) { return true; }
         Player player = (Player) sender;
 
-        if (perm.equals(CommandPermission.ADMIN)) {
-            if ((configUsePermissions && player.hasPermission(CommandPermission.ADMIN.getBukkitPerm())) || (!configUsePermissions && player.isOp())) {
+        if (perm.equals(Perm.ADMIN)) {
+            if ((configUsePermissions && player
+                    .hasPermission("battlenight.admin"))
+                    || (!configUsePermissions && player.isOp())) {
                 return true;
-            } else if ((configUsePermissions && !player.hasPermission(CommandPermission.ADMIN.getBukkitPerm())) || (!configUsePermissions && !player.isOp())) {
+            } else if ((configUsePermissions && !player
+                    .hasPermission("battlenight.admin"))
+                    || (!configUsePermissions && !player.isOp())) {
                 tellPlayer(player, Track.NO_PERMISSION);
                 return false;
             } else {
@@ -905,20 +943,27 @@ public class BattleNight extends JavaPlugin {
                 return false;
             }
         }
-        if (perm.equals(CommandPermission.MODERATOR)) {
-            if ((configUsePermissions && player.hasPermission(CommandPermission.MODERATOR.getBukkitPerm())) || (!configUsePermissions && player.isOp())) {
+        if (perm.equals(Perm.MOD)) {
+            if ((configUsePermissions && player
+                    .hasPermission("battlenight.moderator"))
+                    || (!configUsePermissions && player.isOp())) {
                 return true;
-            } else if ((configUsePermissions && !player.hasPermission(CommandPermission.MODERATOR.getBukkitPerm())) || (!configUsePermissions && !player.isOp())) {
+            } else if ((configUsePermissions && !player
+                    .hasPermission("battlenight.moderator"))
+                    || (!configUsePermissions && !player.isOp())) {
                 tellPlayer(player, Track.NO_PERMISSION);
                 return false;
             } else {
                 tellPlayer(player, Track.CONFIG_UNSET);
                 return false;
             }
-        } else if (perm.equals(CommandPermission.USER)) {
-            if ((configUsePermissions && player.hasPermission(CommandPermission.USER.getBukkitPerm())) || !configUsePermissions) {
+        } else if (perm.equals(Perm.USER)) {
+            if ((configUsePermissions && player
+                    .hasPermission("battlenight.user"))
+                    || !configUsePermissions) {
                 return true;
-            } else if (configUsePermissions && !player.hasPermission(CommandPermission.USER.getBukkitPerm())) {
+            } else if (configUsePermissions
+                    && !player.hasPermission("battlenight.user")) {
                 tellPlayer(player, Track.NO_PERMISSION);
                 return false;
             } else {
