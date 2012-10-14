@@ -46,7 +46,8 @@ public class Page {
     private String getFooter() {
         StringBuilder dashes = new StringBuilder();
         dashes.append(ChatColor.DARK_GRAY);
-        for (int i = 0; i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
+        int i = 0;
+        while (i < 53) { // 53 until ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH is fixed.
             dashes.append("-");
         }
 
