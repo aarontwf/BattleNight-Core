@@ -16,7 +16,7 @@ public class VersionCommand extends BattleNightCommand {
     public boolean onPerformed() {
         Page versionPage = new Page("BattleNight", "This server is running BattleNight version " + BattleNight.getVersion() + ".  " +
                 "For more information about Battlenight and this version, please visit:\n" +
-                ChatColor.GRAY + BattleNight.getWebsite());
+                ChatColor.BLUE + ChatColor.UNDERLINE + BattleNight.getWebsite());
         getSender().sendMessage(versionPage.getPage());
         return true;
     }
