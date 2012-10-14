@@ -48,10 +48,20 @@ public class Page {
             dashes += "-";
         }
 
-        // Add the remaining dash if the dashCount was an odd number
-        String end = (dashCount % 2 == 0) ? "" : "-";
+        String extras = "";
 
-        return dashes + formattedTitle + dashes + end;
+        // Add extra space to make the header the proper width
+        while (spaceRemaining < spaceAvailable) {
+            extras += " ";
+            spaceRemaining -= getStringWidth(" ");
+        }
+
+        // Add the remaining dash if the dashCount was an odd number
+        if (dashCount % 2 != 0) {
+            extras += "-";
+        }
+
+        return dashes + formattedTitle + extras + dashes;
     }
 
     private String getFooter() {
@@ -115,9 +125,8 @@ public class Page {
     }
 
     private static List<String> processText(String text) {
-        List<String> result = new ArrayList<String>();
-
         if (text.contains("\n")) {
+            List<String> result = new ArrayList<String>();
             String[] lines = text.split("\n");
             for (String line : lines) {
                 result.addAll(wrapText(line));
@@ -142,27 +151,61 @@ public class Page {
         String[] words = text.split(" ");
         String currentLine = "";
 
-        for (int i = 0; i < words.length; i++) {
-            int wordSpace = getStringWidth(words[i]);
+        for (String word : words) {
+            int wordSpace = getStringWidth(word);
 
+            // Word can't fit
             if (wordSpace > spaceRemaining) {
-                lines.add(currentLine);
-                spaceRemaining = spaceAvailable;
-                currentLine = "";
+                // Line is blank
+                if (wordSpace > spaceAvailable) {
+                    // Add each character
+                    for (char c : word.toCharArray()) {
+                        int charSpace = getStringWidth(String.valueOf(c));
+                        if (charSpace > spaceRemaining) {
+                            lines.add(currentLine);
+                            currentLine = "";
+                            spaceRemaining = spaceAvailable;
+                        }
+                        currentLine += c;
+                        spaceRemaining -= charSpace;
+                    }
+
+                    // Prepare for the next word
+                    if (spaceSpace > spaceRemaining) {
+                        lines.add(currentLine);
+                        currentLine = "";
+                        spaceRemaining = spaceAvailable;
+                    } else {
+                        currentLine += " ";
+                        spaceRemaining -= spaceSpace;
+                    }
+
+                    continue;
+                } else {
+                    // Create a new line
+                    lines.add(currentLine);
+                    currentLine = "";
+                    spaceRemaining = spaceAvailable;
+                }
             }
 
-            currentLine += words[i];
+            // Add the word
+            currentLine += word;
             spaceRemaining -= wordSpace;
 
+            // Prepare for the next word
             if (spaceSpace > spaceRemaining) {
                 lines.add(currentLine);
-                spaceRemaining = spaceAvailable;
                 currentLine = "";
+                spaceRemaining = spaceAvailable;
             } else {
                 currentLine += " ";
                 spaceRemaining -= spaceSpace;
             }
         }
+
+        // Add the last line if it's not blank
+        lines.add(currentLine);
 
         return lines;
     }
