@@ -10,7 +10,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class WaypointCommand extends BNCommand {
+public class WaypointCommand extends BattleNightCommand {
 
     public WaypointCommand(CommandSender sender, String[] args) {
         super(sender, args);

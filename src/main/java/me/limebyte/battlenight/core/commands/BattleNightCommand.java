@@ -7,12 +7,12 @@ import me.limebyte.battlenight.core.Other.Tracks.Track;
 
 import org.bukkit.command.CommandSender;
 
-public abstract class BNCommand {
+public abstract class BattleNightCommand {
 
     private CommandSender sender;
     private String[] args;
 
-    public BNCommand(CommandSender sender, String[] args) {
+    public BattleNightCommand(CommandSender sender, String[] args) {
         this.sender = sender;
         this.args = Arrays.copyOfRange(args, 1, args.length);
     }

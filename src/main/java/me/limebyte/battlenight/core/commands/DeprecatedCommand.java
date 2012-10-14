@@ -5,7 +5,7 @@ import me.limebyte.battlenight.core.BattleNight;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class DeprecatedCommand extends BNCommand {
+public class DeprecatedCommand extends BattleNightCommand {
 
     String newCommand;
 

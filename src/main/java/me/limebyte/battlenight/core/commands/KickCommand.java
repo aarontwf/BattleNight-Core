@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class KickCommand extends BNCommand {
+public class KickCommand extends BattleNightCommand {
 
     public KickCommand(CommandSender sender, String[] args) {
         super(sender, args);

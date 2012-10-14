@@ -34,6 +34,7 @@ import me.limebyte.battlenight.core.Other.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.commands.DeprecatedCommand;
 import me.limebyte.battlenight.core.commands.KickCommand;
+import me.limebyte.battlenight.core.commands.VersionCommand;
 import me.limebyte.battlenight.core.commands.WaypointCommand;
 
 import org.bukkit.Bukkit;
@@ -330,6 +331,10 @@ public class BattleNight extends JavaPlugin {
                 WaypointCommand cmd = new WaypointCommand(sender, args);
                 cmd.perform();
                 return true;
+            } else if (args[0].equalsIgnoreCase("version")) {
+                VersionCommand cmd = new VersionCommand(sender, args);
+                cmd.perform();
+                return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("help")) {
                     if (hasPerm(CommandPermission.ADMIN, sender)) {
@@ -485,16 +490,6 @@ public class BattleNight extends JavaPlugin {
                         || args[0].equalsIgnoreCase("exit")) {
                     DeprecatedCommand cmd = new DeprecatedCommand(sender, args, "/bn set");
                     cmd.perform();
-                }
-
-                else if (args[0].equalsIgnoreCase("version")) {
-                    PluginDescriptionFile pdfFile = getDescription();
-                    String[] msgs = {
-                            BNTag + "This server is currently using Battlenight Version " + pdfFile.getVersion() + ".",
-                            ChatColor.WHITE + "For more information about Battlenight and the features included in this version, please visit: ",
-                            ChatColor.DARK_AQUA + pdfFile.getWebsite()
-                    };
-                    sender.sendMessage(msgs);
                 }
 
                 else if (args[0].equalsIgnoreCase("reload") && hasPerm(CommandPermission.ADMIN, sender)) {
@@ -1153,5 +1148,13 @@ public class BattleNight extends JavaPlugin {
 
     public static Battle getBattle() {
         return battle;
+    }
+
+    public static String getVersion() {
+        return instance.getDescription().getVersion();
+    }
+
+    public static String getWebsite() {
+        return instance.getDescription().getWebsite();
     }
 }
