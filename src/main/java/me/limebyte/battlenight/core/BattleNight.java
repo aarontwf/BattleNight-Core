@@ -35,7 +35,7 @@ import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.commands.DeprecatedCommand;
 import me.limebyte.battlenight.core.commands.KickCommand;
 import me.limebyte.battlenight.core.commands.VersionCommand;
-import me.limebyte.battlenight.core.commands.WaypointCommand;
+import me.limebyte.battlenight.core.commands.SetCommand;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -328,7 +328,7 @@ public class BattleNight extends JavaPlugin {
                 cmd.perform();
                 return true;
             } else if (args[0].equalsIgnoreCase("set")) {
-                WaypointCommand cmd = new WaypointCommand(sender, args);
+                SetCommand cmd = new SetCommand(sender, args);
                 cmd.perform();
                 return true;
             } else if (args[0].equalsIgnoreCase("version")) {
