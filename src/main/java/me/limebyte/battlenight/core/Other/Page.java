@@ -23,7 +23,7 @@ public class Page {
     }
 
     private String getHeader() {
-        String formattedTitle = " " + ChatColor.WHITE + title + " ";
+        String formattedTitle = " " + title + " ";
         int dashCount = 0;
 
         // Calculate total number of dashes
@@ -40,23 +40,14 @@ public class Page {
             dashes.append("-");
         }
 
-        return dashes.toString() + formattedTitle + dashes.toString();
+        return dashes.toString() + ChatColor.WHITE + formattedTitle + dashes.toString();
     }
 
     private String getFooter() {
         StringBuilder dashes = new StringBuilder();
         dashes.append(ChatColor.DARK_GRAY);
-
-        if (header != null) {
-            // Create dashes String
-            for (int i = 0; i < header.length(); i++) {
-                dashes.append("-");
-            }
-        } else {
-            // Create dashes String
-            for (int i = 0; i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
-                dashes.append("-");
-            }
+        for (int i = 0; i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
+            dashes.append("-");
         }
 
         return dashes.toString();
