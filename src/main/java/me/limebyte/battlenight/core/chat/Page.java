@@ -151,7 +151,7 @@ public class Page {
         List<String> lines = new ArrayList<String>();
 
         if (getStringWidth(text) <= getWidth()) {
-            lines.add(text);
+            lines.add(ChatColor.WHITE + text);
             return lines;
         }
 
@@ -172,7 +172,7 @@ public class Page {
                     for (char c : word.toCharArray()) {
                         int charSpace = getStringWidth(String.valueOf(c));
                         if (charSpace > spaceRemaining) {
-                            lines.add(currentLine);
+                            lines.add(ChatColor.WHITE + currentLine);
                             currentLine = "";
                             spaceRemaining = spaceAvailable;
                         }
@@ -182,7 +182,7 @@ public class Page {
 
                     // Prepare for the next word
                     if (spaceSpace > spaceRemaining) {
-                        lines.add(currentLine);
+                        lines.add(ChatColor.WHITE + currentLine);
                         currentLine = "";
                         spaceRemaining = spaceAvailable;
                     } else {
@@ -193,7 +193,7 @@ public class Page {
                     continue;
                 } else {
                     // Create a new line
-                    lines.add(currentLine);
+                    lines.add(ChatColor.WHITE + currentLine);
                     currentLine = "";
                     spaceRemaining = spaceAvailable;
                 }
@@ -205,7 +205,7 @@ public class Page {
 
             // Prepare for the next word
             if (spaceSpace > spaceRemaining) {
-                lines.add(currentLine);
+                lines.add(ChatColor.WHITE + currentLine);
                 currentLine = "";
                 spaceRemaining = spaceAvailable;
             } else {
@@ -216,7 +216,7 @@ public class Page {
 
         // Add the last line if it's not blank
         if (!currentLine.isEmpty()) {
-            lines.add(currentLine);
+            lines.add(ChatColor.WHITE + currentLine);
         }
 
         return lines;
