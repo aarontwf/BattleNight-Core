@@ -34,8 +34,9 @@ import me.limebyte.battlenight.core.Other.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.commands.DeprecatedCommand;
 import me.limebyte.battlenight.core.commands.KickCommand;
-import me.limebyte.battlenight.core.commands.VersionCommand;
 import me.limebyte.battlenight.core.commands.SetCommand;
+import me.limebyte.battlenight.core.commands.VersionCommand;
+import me.limebyte.battlenight.core.commands.WaypointsCommand;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -335,6 +336,10 @@ public class BattleNight extends JavaPlugin {
                 VersionCommand cmd = new VersionCommand(sender, args);
                 cmd.perform();
                 return true;
+            } else if (args[0].equalsIgnoreCase("waypoints")) {
+                WaypointsCommand cmd = new WaypointsCommand(sender, args);
+                cmd.perform();
+                return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("help")) {
                     if (hasPerm(CommandPermission.ADMIN, sender)) {
@@ -378,58 +383,6 @@ public class BattleNight extends JavaPlugin {
                     } else {
                         sender.sendMessage(BattleNight.BNTag + Track.NO_PERMISSION.msg);
                     }
-                }
-
-                else if (args[0].equalsIgnoreCase("waypoints") && hasPerm(CommandPermission.ADMIN, sender)) {
-                    sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
-                            + ChatColor.WHITE + "BattleNight Waypoints"
-                            + ChatColor.DARK_GRAY + " ---------- ");
-                    sender.sendMessage(ChatColor.WHITE + " Setup points: "
-                            + numSetupPoints() + "/6");
-                    if (pointSet(Waypoint.RED_LOUNGE)) {
-                        sender.sendMessage(ChatColor.GREEN + " Red Lounge"
-                                + ChatColor.WHITE + " (/bn redlounge)");
-                    } else {
-                        sender.sendMessage(ChatColor.RED + " Red Lounge"
-                                + ChatColor.WHITE + " (/bn redlounge)");
-                    }
-                    if (pointSet(Waypoint.BLUE_LOUNGE)) {
-                        sender.sendMessage(ChatColor.GREEN + " Blue Lounge"
-                                + ChatColor.WHITE + " (/bn bluelounge)");
-                    } else {
-                        sender.sendMessage(ChatColor.RED + " Blue Lounge"
-                                + ChatColor.WHITE + " (/bn bluelounge)");
-                    }
-                    if (pointSet(Waypoint.RED_SPAWN)) {
-                        sender.sendMessage(ChatColor.GREEN + " Red Spawn"
-                                + ChatColor.WHITE + " (/bn redspawn)");
-                    } else {
-                        sender.sendMessage(ChatColor.RED + " Red Spawn"
-                                + ChatColor.WHITE + " (/bn redspawn)");
-                    }
-                    if (pointSet(Waypoint.BLUE_SPAWN)) {
-                        sender.sendMessage(ChatColor.GREEN + " Blue Spawn"
-                                + ChatColor.WHITE + " (/bn bluespawn)");
-                    } else {
-                        sender.sendMessage(ChatColor.RED + " Blue Spawn"
-                                + ChatColor.WHITE + " (/bn bluespawn)");
-                    }
-                    if (pointSet(Waypoint.SPECTATOR)) {
-                        sender.sendMessage(ChatColor.GREEN + " Spectator"
-                                + ChatColor.WHITE + " (/bn spectator)");
-                    } else {
-                        sender.sendMessage(ChatColor.RED + " Spectator"
-                                + ChatColor.WHITE + " (/bn spectator)");
-                    }
-                    if (pointSet(Waypoint.EXIT)) {
-                        sender.sendMessage(ChatColor.GREEN + " Exit"
-                                + ChatColor.WHITE + " (/bn exit)");
-                    } else {
-                        sender.sendMessage(ChatColor.RED + " Exit"
-                                + ChatColor.WHITE + " (/bn exit)");
-                    }
-                    sender.sendMessage(ChatColor.DARK_GRAY
-                            + " --------------------------------------- ");
                 }
 
                 else if (args[0].equalsIgnoreCase("join") && hasPerm(CommandPermission.USER, sender)) {
@@ -569,7 +522,7 @@ public class BattleNight extends JavaPlugin {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
-    public boolean pointSet(Waypoint waypoint) {
+    public static boolean pointSet(Waypoint waypoint) {
         loadWaypoints();
         try {
             Set<String> set = waypoints.getConfigurationSection("coords")
@@ -602,7 +555,7 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    public int numSetupPoints() {
+    public static int numSetupPoints() {
         loadWaypoints();
         if (!waypoints.isSet("coords")) {
             return 0;
