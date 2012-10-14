@@ -11,7 +11,7 @@ public class ListPage extends StandardPage {
         for (String item : list) {
             text += item + "\n";
         }
-        this.text = text.substring(0, text.length() - 2);
+        this.text = text.substring(0, text.length() - 1);
     }
 
 }
