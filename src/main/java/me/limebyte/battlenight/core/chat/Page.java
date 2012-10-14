@@ -64,7 +64,7 @@ public class Page {
 
         // Add the remaining dash if the dashCount was an odd number
         if (dashCount % 2 != 0) {
-            extras += "-";
+            extras += ChatColor.DARK_GRAY + "-";
         }
 
         return dashes + formattedTitle + extras + dashes;
