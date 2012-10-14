@@ -53,7 +53,7 @@ public class Page {
         // Add extra space to make the header the proper width
         int spaceSpace = getStringWidth(" ");
         while (true) {
-            if (spaceRemaining <= 0) {
+            if (spaceRemaining - spaceSpace < 0) {
                 break;
             }
 
