@@ -3,6 +3,8 @@ package me.limebyte.battlenight.core.Other;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.limebyte.battlenight.core.BattleNight;
+
 import org.bukkit.ChatColor;
 
 public class Page {
@@ -111,7 +113,7 @@ public class Page {
     }
 
     public static int getWidth() {
-        return 477;
+        return BattleNight.config.getInt("chat-width", 320);
     }
 
     private static List<String> processText(String text) {
