@@ -1,15 +1,14 @@
-package me.limebyte.battlenight.core.Other;
+package me.limebyte.battlenight.core.chat;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.ChatColor;
 
 public class Page {
 
     String title, text, header, footer;
+    private int pageWidth = 320;
 
     public Page(String title, String text) {
         this.title = title;
@@ -127,11 +126,15 @@ public class Page {
         return length;
     }
 
-    public static int getWidth() {
-        return BattleNight.config.getInt("chat-width", 320);
+    public int getWidth() {
+        return pageWidth;
     }
 
-    private static List<String> processText(String text) {
+    public void setWidth(int width) {
+        pageWidth = width;
+    }
+
+    private List<String> processText(String text) {
         if (text.contains("\n")) {
             List<String> result = new ArrayList<String>();
             String[] lines = text.split("\n");
@@ -144,7 +147,7 @@ public class Page {
         }
     }
 
-    private static List<String> wrapText(String text) {
+    private List<String> wrapText(String text) {
         List<String> lines = new ArrayList<String>();
 
         if (getStringWidth(text) <= getWidth()) {

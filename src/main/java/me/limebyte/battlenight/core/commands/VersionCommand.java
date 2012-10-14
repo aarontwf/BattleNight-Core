@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Other.Page;
+import me.limebyte.battlenight.core.chat.StandardPage;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -14,9 +14,12 @@ public class VersionCommand extends BattleNightCommand {
 
     @Override
     public boolean onPerformed() {
-        Page versionPage = new Page("BattleNight Version", "This server is running BattleNight version " + BattleNight.getVersion() + ".  " +
-                "For more information about Battlenight and this version, please visit:\n" +
-                ChatColor.BLUE + ChatColor.UNDERLINE + BattleNight.getWebsite());
+        StandardPage versionPage = new StandardPage(
+                "BattleNight Version Info",
+                "This server is running BattleNight version " + BattleNight.getVersion() + ".  " +
+                        "For more information about Battlenight and this version, please visit:\n" +
+                        ChatColor.BLUE + ChatColor.UNDERLINE + BattleNight.getWebsite());
+
         getSender().sendMessage(versionPage.getPage());
         return true;
     }
