@@ -19,7 +19,7 @@ public class Page {
     public String[] getPage() {
         List<String> page = new ArrayList<String>();
         page.add(header);
-        page.addAll(wrapText(text));
+        page.addAll(processText(text));
         page.add(footer);
         return page.toArray(new String[page.size()]);
     }
@@ -34,7 +34,7 @@ public class Page {
         int spaceRemaining = spaceAvailable;
 
         while (true) {
-            if (spaceRemaining + dashSpace > spaceAvailable) {
+            if (dashSpace > spaceRemaining) {
                 break;
             }
 
@@ -61,7 +61,7 @@ public class Page {
         int spaceRemaining = spaceAvailable;
 
         while (true) {
-            if (spaceRemaining + dashSpace > spaceAvailable) {
+            if (dashSpace > spaceRemaining) {
                 break;
             }
 
@@ -114,6 +114,20 @@ public class Page {
         return 477;
     }
 
+    private static List<String> processText(String text) {
+        List<String> result = new ArrayList<String>();
+
+        if (text.contains("\n")) {
+            String[] lines = text.split("\n");
+            for (String line : lines) {
+                result.addAll(wrapText(line));
+            }
+            return result;
+        } else {
+            return wrapText(text);
+        }
+    }
+
     private static List<String> wrapText(String text) {
         List<String> lines = new ArrayList<String>();
 
@@ -122,38 +136,34 @@ public class Page {
             return lines;
         }
 
-        if (text.contains("\n")) {
-            String[] parts = text.split("\n");
-            for (String line : parts) {
-                lines.addAll(wrapText(line));
-            }
-        }
-
         int spaceSpace = getStringWidth(" ");
         int spaceAvailable = getWidth();
         int spaceRemaining = spaceAvailable;
         String[] words = text.split(" ");
-        String result = "";
+        String currentLine = "";
 
         for (int i = 0; i < words.length; i++) {
             int wordSpace = getStringWidth(words[i]);
 
             if (wordSpace > spaceRemaining) {
-                lines.add(result);
-                result = "";
+                lines.add(currentLine);
                 spaceRemaining = spaceAvailable;
+                currentLine = "";
             }
-            result += words[i];
+
+            currentLine += words[i];
             spaceRemaining -= wordSpace;
+
             if (spaceSpace > spaceRemaining) {
-                lines.add(result);
-                result = "";
+                lines.add(currentLine);
                 spaceRemaining = spaceAvailable;
+                currentLine = "";
             } else {
-                result += " ";
+                currentLine += " ";
                 spaceRemaining -= spaceSpace;
             }
         }
+
         return lines;
     }
 }
