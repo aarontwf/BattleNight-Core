@@ -51,9 +51,14 @@ public class Page {
         String extras = "";
 
         // Add extra space to make the header the proper width
-        while (spaceRemaining < spaceAvailable) {
+        int spaceSpace = getStringWidth(" ");
+        while (true) {
+            if (spaceRemaining <= 0) {
+                break;
+            }
+
             extras += " ";
-            spaceRemaining -= getStringWidth(" ");
+            spaceRemaining -= spaceSpace;
         }
 
         // Add the remaining dash if the dashCount was an odd number
@@ -205,7 +210,9 @@ public class Page {
         }
 
         // Add the last line if it's not blank
-        lines.add(currentLine);
+        if (!currentLine.isEmpty()) {
+            lines.add(currentLine);
+        }
 
         return lines;
     }
