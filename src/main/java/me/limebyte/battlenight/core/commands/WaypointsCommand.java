@@ -32,11 +32,6 @@ public class WaypointsCommand extends BattleNightCommand {
     }
 
     @Override
-    public CommandPermission getPermission() {
-        return CommandPermission.ADMIN;
-    }
-
-    @Override
     public String getUsage() {
         return "/bn waypoints";
     }
@@ -48,6 +43,11 @@ public class WaypointsCommand extends BattleNightCommand {
 
     private static ChatColor getWaypointColour(Waypoint waypoint) {
         return BattleNight.pointSet(waypoint) ? ChatColor.GREEN : ChatColor.RED;
+    }
+
+    @Override
+    public CommandMap getCommandMap() {
+        return CommandMap.WAYPOINTS;
     }
 
 }

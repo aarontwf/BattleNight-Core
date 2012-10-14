@@ -82,11 +82,6 @@ public class SetCommand extends BattleNightCommand {
     }
 
     @Override
-    public CommandPermission getPermission() {
-        return CommandPermission.ADMIN;
-    }
-
-    @Override
     public String getUsage() {
         return "/bn set <waypoint> [x] [y] [z]\n/bn set <waypoint> [x] [y] [z] [world]";
     }
@@ -102,6 +97,11 @@ public class SetCommand extends BattleNightCommand {
         int z = getInteger(args[3], -30000000, 30000000);
 
         return new Location(world, x + 0.5, y, z + 0.5);
+    }
+
+    @Override
+    public CommandMap getCommandMap() {
+        return CommandMap.SET;
     }
 
 }

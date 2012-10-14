@@ -32,19 +32,20 @@ public abstract class BattleNightCommand {
         return args;
     }
 
-    public abstract CommandPermission getPermission();
+    public abstract CommandMap getCommandMap();
 
     public abstract String getUsage();
 
     public abstract String getConsoleUsage();
 
     private boolean hasPermission() {
-        if (getPermission() == null) { return true; }
+        if (getCommandMap().getPermission() == null) { return true; }
+        CommandPermission perm = getCommandMap().getPermission();
 
-        if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) { return true; }
+        if ((perm.getBukkitPerm() == null) || (perm.getBukkitPerm().length() == 0)) { return true; }
 
         if (BattleNight.config.getBoolean("UsePermissions")) {
-            String permission = getPermission().getBukkitPerm();
+            String permission = perm.getBukkitPerm();
 
             if (sender.hasPermission(permission)) {
                 return true;
@@ -53,7 +54,7 @@ public abstract class BattleNightCommand {
                 return false;
             }
         } else {
-            if (getPermission().isOpPerm()) {
+            if (perm.isOpPerm()) {
                 if (sender.isOp()) {
                     return true;
                 } else {
