@@ -2,18 +2,23 @@ package me.limebyte.battlenight.core.commands;
 
 public enum CommandPermission {
 
-    USER("battlenight.user"),
-    MODERATOR("battlenight.moderator"),
-    ADMIN("battlenight.admin");
+    USER("battlenight.user", false),
+    MODERATOR("battlenight.moderator", true),
+    ADMIN("battlenight.admin", true);
 
     private String permission;
+    private boolean op;
 
-    CommandPermission(String permission) {
+    CommandPermission(String permission, boolean op) {
         this.permission = permission;
+        this.op = op;
     }
 
     public String getBukkitPerm() {
         return permission;
     }
 
+    public boolean isOpPerm() {
+        return op;
+    }
 }

@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
+import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 
 import org.bukkit.command.CommandSender;
@@ -42,13 +43,26 @@ public abstract class BNCommand {
 
         if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) { return true; }
 
-        String permission = getPermission().getBukkitPerm();
+        if (BattleNight.config.getBoolean("UsePermissions")) {
+            String permission = getPermission().getBukkitPerm();
 
-        if (sender.hasPermission(permission)) {
-            return true;
+            if (sender.hasPermission(permission)) {
+                return true;
+            } else {
+                getSender().sendMessage(Track.NO_PERMISSION.msg);
+                return false;
+            }
         } else {
-            getSender().sendMessage(Track.NO_PERMISSION.msg);
-            return false;
+            if (getPermission().isOpPerm()) {
+                if (sender.isOp()) {
+                    return true;
+                } else {
+                    getSender().sendMessage(Track.NO_PERMISSION.msg);
+                    return false;
+                }
+            } else {
+                return true;
+            }
         }
     }
 
