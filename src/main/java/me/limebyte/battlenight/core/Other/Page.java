@@ -34,24 +34,21 @@ public class Page {
         }
 
         // Create dashes String for a single side
-        StringBuilder dashes = new StringBuilder();
-        dashes.append(ChatColor.DARK_GRAY);
+        String dashes = ChatColor.DARK_GRAY + "";
         for (i = 0; i < dashCount / 2; i++) {
-            dashes.append("-");
+            dashes += "-";
         }
 
         return dashes.toString() + ChatColor.WHITE + formattedTitle + dashes.toString();
     }
 
     private String getFooter() {
-        StringBuilder dashes = new StringBuilder();
-        dashes.append(ChatColor.DARK_GRAY);
-        int i = 0;
-        while (i < 53) { // 53 until ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH is fixed.
-            dashes.append("-");
+        String dashes = ChatColor.DARK_GRAY + "";
+        for (int i = 0; i < 53; i++) { // 53 until ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH is fixed.
+            dashes += "-";
         }
 
-        return dashes.toString();
+        return dashes;
     }
 
 }
