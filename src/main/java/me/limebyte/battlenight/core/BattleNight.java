@@ -33,6 +33,7 @@ import me.limebyte.battlenight.core.Other.Tracks.Track;
 import me.limebyte.battlenight.core.Other.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.commands.DeprecatedCommand;
+import me.limebyte.battlenight.core.commands.KickCommand;
 import me.limebyte.battlenight.core.commands.WaypointCommand;
 
 import org.bukkit.Bukkit;
@@ -60,6 +61,7 @@ import org.kitteh.tag.TagAPI;
 public class BattleNight extends JavaPlugin {
 
     // Variables
+    public static BattleNight instance;
     public static Logger log;
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
     public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
@@ -76,7 +78,7 @@ public class BattleNight extends JavaPlugin {
     public final Map<String, String> BattleSpectators = new HashMap<String, String>();
 
     // Other Classes
-    public Battle battle = new Battle(this);
+    public static Battle battle;
 
     public boolean redTeamIronClicked = false;
     public boolean blueTeamIronClicked = false;
@@ -125,7 +127,10 @@ public class BattleNight extends JavaPlugin {
     public void onEnable() {
 
         // Set instances
+        instance = this;
         log = getLogger();
+
+        battle = new Battle();
 
         // Initialise Files and FileConfigurations
         configFile = new File(getDataFolder(), "config.yml");
@@ -315,7 +320,11 @@ public class BattleNight extends JavaPlugin {
 
         if (commandLabel.equalsIgnoreCase("bn")) {
             if (args.length < 1) {
-                sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Incorrect usage.  Type '/bn help' to show the help menu.");
+                sender.sendMessage(BNTag + ChatColor.RED + "Incorrect usage.  Type '/bn help' to show the help menu.");
+                return true;
+            } else if (args[0].equalsIgnoreCase("kick")) {
+                KickCommand cmd = new KickCommand(sender, args);
+                cmd.perform();
                 return true;
             } else if (args[0].equalsIgnoreCase("set")) {
                 WaypointCommand cmd = new WaypointCommand(sender, args);
@@ -463,10 +472,6 @@ public class BattleNight extends JavaPlugin {
                     }
                 }
 
-                else if (args[0].equalsIgnoreCase("kick") && hasPerm(CommandPermission.MODERATOR, sender)) {
-                    sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.SPECIFY_PLAYER.msg);
-                }
-
                 else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(CommandPermission.MODERATOR, sender)) {
                     battle.end();
                     sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.BATTLE_ENDED.msg);
@@ -506,23 +511,6 @@ public class BattleNight extends JavaPlugin {
                 else {
                     sender.sendMessage(BNTag + ChatColor.RED + Track.INVALID_COMAND.msg);
                 }
-            }
-            if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("kick") && hasPerm(CommandPermission.MODERATOR, sender)) {
-                    Player badplayer = Bukkit.getPlayerExact(args[1]);
-                    if (badplayer.isOnline()) {
-                        if (BattleUsersTeam.containsKey(badplayer.getName())) {
-                            battle.removePlayer(badplayer, false, "has been kicked from the current Battle.", "You have been kicked from the current Battle.");
-                        } else {
-                            sender.sendMessage(BNTag + ChatColor.RED + "Player: " + badplayer.getName() + " is not in the current Battle.");
-                        }
-                    } else {
-                        sender.sendMessage(BNTag + ChatColor.RED + "Can't find user " + badplayer.getName() + ". No kick.");
-                    }
-                }
-            }
-            if (args.length > 2) {
-                sender.sendMessage(BNTag + ChatColor.RED + Track.INVALID_COMAND.msg);
             }
             return true;
         }
@@ -1161,5 +1149,9 @@ public class BattleNight extends JavaPlugin {
             BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
             BattleArmor.put(className, classes.getString("Classes." + className + ".Armor", null));
         }
+    }
+
+    public static Battle getBattle() {
+        return battle;
     }
 }

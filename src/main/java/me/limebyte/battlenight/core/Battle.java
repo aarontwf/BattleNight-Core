@@ -17,8 +17,8 @@ public class Battle {
     int redTeam = 0;
     int blueTeam = 0;
 
-    public Battle(BattleNight plugin) {
-        this.plugin = plugin;
+    public Battle() {
+        this.plugin = BattleNight.instance;
     }
 
     public void addPlayer(Player player) {

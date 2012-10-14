@@ -104,21 +104,4 @@ public class WaypointCommand extends BNCommand {
         return new Location(world, x + 0.5, y, z + 0.5);
     }
 
-    private int getInteger(String value, int min, int max) {
-        int i = min;
-
-        try {
-            i = Integer.valueOf(value);
-        } catch (final NumberFormatException ex) {
-        }
-
-        if (i < min) {
-            i = min;
-        } else if (i > max) {
-            i = max;
-        }
-
-        return i;
-    }
-
 }
