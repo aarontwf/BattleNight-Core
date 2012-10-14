@@ -88,12 +88,12 @@ public class WaypointCommand extends BNCommand {
 
     @Override
     public String getUsage() {
-        return "/bn set [waypoint] <x> <y> <z>\n/bn set [waypoint] <x> <y> <z> <world>";
+        return "/bn set <waypoint> [x] [y] [z]\n/bn set <waypoint> [x] [y] [z] [world]";
     }
 
     @Override
     public String getConsoleUsage() {
-        return "/bn set [waypoint] [x] [y] [z] [world]";
+        return "/bn set <waypoint> <x> <y> <z> <world>";
     }
 
     private Location parseArgsToLocation(String[] args, World world) {
