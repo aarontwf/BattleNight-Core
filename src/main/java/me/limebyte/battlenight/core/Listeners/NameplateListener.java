@@ -22,10 +22,10 @@ public class NameplateListener implements Listener {
     public void onNameplate(PlayerReceiveNameTagEvent event) {
         String tagged = event.getNamedPlayer().getName();
 
-        if (plugin.BattleUsersTeam.containsKey(tagged)) {
-            ChatColor teamColour = plugin.BattleUsersTeam.get(tagged).equals(Team.RED) ? ChatColor.RED : ChatColor.BLUE;
+        if (BattleNight.BattleUsersTeam.containsKey(tagged)) {
+            ChatColor teamColour = BattleNight.BattleUsersTeam.get(tagged).equals(Team.RED) ? ChatColor.RED : ChatColor.BLUE;
             event.setTag(teamColour + tagged);
-        } else if (plugin.BattleSpectators.containsKey(tagged)) {
+        } else if (BattleNight.BattleSpectators.containsKey(tagged)) {
             event.setTag(ChatColor.GRAY + tagged);
         } else if (!event.isModified()) {
             event.setTag(tagged);

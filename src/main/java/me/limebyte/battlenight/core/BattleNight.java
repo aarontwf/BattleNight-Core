@@ -33,9 +33,12 @@ import me.limebyte.battlenight.core.Other.Tracks.Track;
 import me.limebyte.battlenight.core.Other.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.commands.DeprecatedCommand;
+import me.limebyte.battlenight.core.commands.JoinCommand;
 import me.limebyte.battlenight.core.commands.KickCommand;
+import me.limebyte.battlenight.core.commands.LeaveCommand;
 import me.limebyte.battlenight.core.commands.SetCommand;
 import me.limebyte.battlenight.core.commands.VersionCommand;
+import me.limebyte.battlenight.core.commands.WatchCommand;
 import me.limebyte.battlenight.core.commands.WaypointsCommand;
 
 import org.bukkit.Bukkit;
@@ -70,21 +73,21 @@ public class BattleNight extends JavaPlugin {
     public Set<String> ClassList;
 
     // HashMaps
-    public final Map<String, Team> BattleUsersTeam = new HashMap<String, Team>();
+    public final static Map<String, Team> BattleUsersTeam = new HashMap<String, Team>();
     public final Map<String, String> BattleUsersClass = new HashMap<String, String>();
     public final Map<String, String> BattleClasses = new HashMap<String, String>();
     public final Map<String, String> BattleArmor = new HashMap<String, String>();
     public final Map<String, Sign> BattleSigns = new HashMap<String, Sign>();
     public final Map<String, String> BattleUsersRespawn = new HashMap<String, String>();
-    public final Map<String, String> BattleTelePass = new HashMap<String, String>();
-    public final Map<String, String> BattleSpectators = new HashMap<String, String>();
+    public final static Map<String, String> BattleTelePass = new HashMap<String, String>();
+    public final static Map<String, String> BattleSpectators = new HashMap<String, String>();
 
     // Other Classes
     public static Battle battle;
 
     public boolean redTeamIronClicked = false;
     public boolean blueTeamIronClicked = false;
-    public boolean battleInProgress = false;
+    public static boolean battleInProgress = false;
     public boolean playersInLounge = false;
 
     // config.yml Values
@@ -324,8 +327,16 @@ public class BattleNight extends JavaPlugin {
             if (args.length < 1) {
                 sender.sendMessage(BNTag + ChatColor.RED + "Incorrect usage.  Type '/bn help' to show the help menu.");
                 return true;
+            } else if (args[0].equalsIgnoreCase("join")) {
+                JoinCommand cmd = new JoinCommand(sender, args);
+                cmd.perform();
+                return true;
             } else if (args[0].equalsIgnoreCase("kick")) {
                 KickCommand cmd = new KickCommand(sender, args);
+                cmd.perform();
+                return true;
+            } else if (args[0].equalsIgnoreCase("leave")) {
+                LeaveCommand cmd = new LeaveCommand(sender, args);
                 cmd.perform();
                 return true;
             } else if (args[0].equalsIgnoreCase("set")) {
@@ -334,6 +345,10 @@ public class BattleNight extends JavaPlugin {
                 return true;
             } else if (args[0].equalsIgnoreCase("version")) {
                 VersionCommand cmd = new VersionCommand(sender, args);
+                cmd.perform();
+                return true;
+            } else if (args[0].equalsIgnoreCase("watch")) {
+                WatchCommand cmd = new WatchCommand(sender, args);
                 cmd.perform();
                 return true;
             } else if (args[0].equalsIgnoreCase("waypoints")) {
@@ -382,51 +397,6 @@ public class BattleNight extends JavaPlugin {
                                 + " --------------------------------------- ");
                     } else {
                         sender.sendMessage(BattleNight.BNTag + Track.NO_PERMISSION.msg);
-                    }
-                }
-
-                else if (args[0].equalsIgnoreCase("join") && hasPerm(CommandPermission.USER, sender)) {
-                    // Player check
-                    if (!(sender instanceof Player)) {
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
-                        return true;
-                    }
-                    Player player = (Player) sender;
-
-                    if (isSetup() && !battleInProgress && !BattleUsersTeam.containsKey(player.getName())) {
-                        battle.addPlayer(player);
-                    } else if (!isSetup()) {
-                        tellPlayer(player, Track.WAYPOINTS_UNSET);
-                    } else if (battleInProgress) {
-                        tellPlayer(player, Track.BATTLE_IN_PROGRESS);
-                    } else if (BattleUsersTeam.containsKey(player.getName())) {
-                        tellPlayer(player, Track.ALREADY_IN_TEAM);
-                    }
-                }
-
-                else if ((args[0].equalsIgnoreCase("watch")) && hasPerm(CommandPermission.USER, sender)) {
-                    // Player check
-                    if (!(sender instanceof Player)) {
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
-                        return true;
-                    }
-                    Player player = (Player) sender;
-
-                    addSpectator(player, "command");
-                } else if (args[0].equalsIgnoreCase("leave") && hasPerm(CommandPermission.USER, sender)) {
-                    // Player check
-                    if (!(sender instanceof Player)) {
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be run by a Player.");
-                        return true;
-                    }
-                    Player player = (Player) sender;
-
-                    if (BattleUsersTeam.containsKey(player.getName())) {
-                        battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
-                    } else if (BattleSpectators.containsKey(player.getName())) {
-                        removeSpectator(player);
-                    } else {
-                        tellPlayer(player, Track.NOT_IN_TEAM.msg);
                     }
                 }
 
@@ -492,7 +462,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     // Get Coords from waypoints.data
-    public Location getCoords(String place) {
+    public static Location getCoords(String place) {
         loadWaypoints();
         Double x = waypoints.getDouble("coords." + place + ".x", 0);
         Double y = waypoints.getDouble("coords." + place + ".y", 0);
@@ -539,7 +509,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     // Check if all Waypoints have been set.
-    public Boolean isSetup() {
+    public static Boolean isSetup() {
         loadWaypoints();
         if (!waypoints.isSet("coords")) {
             return false;
@@ -742,7 +712,7 @@ public class BattleNight extends JavaPlugin {
         player.sendMessage(BNTag + msg);
     }
 
-    public void tellPlayer(Player player, Track track) {
+    public static void tellPlayer(Player player, Track track) {
         player.sendMessage(BNTag + track.msg);
     }
 
@@ -779,7 +749,7 @@ public class BattleNight extends JavaPlugin {
                 && (armNullCounter == armContents.length);
     }
 
-    public void goToWaypoint(Player player, Waypoint waypoint) {
+    public static void goToWaypoint(Player player, Waypoint waypoint) {
         Location destination = getCoords(waypoint.getName());
         Chunk chunk = destination.getChunk();
 
@@ -900,30 +870,15 @@ public class BattleNight extends JavaPlugin {
         return new ItemStack(m, a, d);
     }
 
-    public void addSpectator(Player player, String type) {
-        if (type.equals("death")) {
-            BattleSpectators.put(player.getName(), "death");
-            tellPlayer(player, Track.WELCOME_SPECTATOR_DEATH);
-        } else {
-            if (isSetup() && battleInProgress) {
-                if (BattleUsersTeam.containsKey(player.getName())) {
-                    battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
-                }
-                goToWaypoint(player, Waypoint.SPECTATOR);
-                BattleSpectators.put(player.getName(), "command");
-                tellPlayer(player, Track.WELCOME_SPECTATOR);
-                return;
-            } else if (!isSetup()) {
-                tellPlayer(player, Track.WAYPOINTS_UNSET);
-                return;
-            } else if (!battleInProgress) {
-                tellPlayer(player, Track.BATTLE_NOT_IN_PROGRESS);
-                return;
-            }
+    public static void addSpectator(Player player, String type) {
+        if (!type.equals("death")) {
+            goToWaypoint(player, Waypoint.SPECTATOR);
         }
+        BattleSpectators.put(player.getName(), type);
+        tellPlayer(player, Track.WELCOME_SPECTATOR);
     }
 
-    public void removeSpectator(Player player) {
+    public static void removeSpectator(Player player) {
         goToWaypoint(player, Waypoint.EXIT);
         BattleSpectators.remove(player.getName());
         tellPlayer(player, Track.GOODBYE_SPECTATOR);

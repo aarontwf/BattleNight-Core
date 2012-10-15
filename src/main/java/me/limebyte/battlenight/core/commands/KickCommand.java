@@ -27,7 +27,7 @@ public class KickCommand extends BattleNightCommand {
         Player player = Bukkit.getPlayerExact(args[0]);
 
         if (player != null) {
-            if (BattleNight.instance.BattleUsersTeam.containsKey(player.getName())) {
+            if (BattleNight.BattleUsersTeam.containsKey(player.getName())) {
                 String reason = null;
 
                 if (args.length > 1) {

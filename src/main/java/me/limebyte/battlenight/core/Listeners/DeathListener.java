@@ -28,7 +28,7 @@ public class DeathListener implements Listener {
         if (e instanceof Player) {
             final Player player = (Player) e;
             final String name = player.getName();
-            if (plugin.BattleUsersTeam.containsKey(name)) {
+            if (BattleNight.BattleUsersTeam.containsKey(name)) {
                 event.getDrops().clear();
                 ((PlayerDeathEvent) event).setDeathMessage("");
 
@@ -63,15 +63,15 @@ public class DeathListener implements Listener {
                 }
 
                 plugin.BattleUsersRespawn.put(name, "true");
-                plugin.battle.removePlayer(player, true, null, "You were killed!");
+                BattleNight.battle.removePlayer(player, true, null, "You were killed!");
             }
         }
     }
 
     private boolean isInTeam(Player player, Team team) {
         final String name = player.getName();
-        if (plugin.BattleUsersTeam.containsKey(name)) {
-            if ((plugin.BattleUsersTeam.get(name).equals(team))) { return true; }
+        if (BattleNight.BattleUsersTeam.containsKey(name)) {
+            if ((BattleNight.BattleUsersTeam.get(name).equals(team))) { return true; }
         }
 
         return false;

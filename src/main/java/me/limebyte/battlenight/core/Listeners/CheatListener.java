@@ -27,26 +27,26 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         final Player player = event.getPlayer();
-        if (plugin.BattleUsersTeam.containsKey(player.getName()) && !plugin.BattleTelePass.containsKey(player.getName())) {
+        if (BattleNight.BattleUsersTeam.containsKey(player.getName()) && !BattleNight.BattleTelePass.containsKey(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
                 case PLUGIN:
                     event.setCancelled(true);
-                    plugin.tellPlayer(player, Track.NO_TP);
+                    BattleNight.tellPlayer(player, Track.NO_TP);
                     break;
                 case ENDER_PEARL:
                     ;
                     if (!BattleNight.config
                             .getBoolean("Teleportation.EnderPearls", true)) {
                         event.setCancelled(true);
-                        plugin.tellPlayer(player, Track.NO_TP);
+                        BattleNight.tellPlayer(player, Track.NO_TP);
                     }
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
                     if (!BattleNight.config.getBoolean("Teleportation.Portals", false)) {
                         event.setCancelled(true);
-                        plugin.tellPlayer(player, Track.NO_TP);
+                        BattleNight.tellPlayer(player, Track.NO_TP);
                     }
                     break;
                 default:
@@ -66,9 +66,9 @@ public class CheatListener implements Listener {
         final Projectile projectile = event.getEntity();
         if (projectile.getShooter() instanceof Player) {
             final Player thrower = (Player) projectile.getShooter();
-            if (plugin.BattleUsersTeam.containsKey(thrower.getName())) {
+            if (BattleNight.BattleUsersTeam.containsKey(thrower.getName())) {
                 event.setCancelled(true);
-                plugin.tellPlayer(thrower, Track.NO_CHEATING);
+                BattleNight.tellPlayer(thrower, Track.NO_CHEATING);
             }
         }
     }

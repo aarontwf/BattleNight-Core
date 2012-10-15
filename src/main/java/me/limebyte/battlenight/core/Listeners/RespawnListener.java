@@ -24,14 +24,14 @@ public class RespawnListener implements Listener {
         if (plugin.BattleUsersRespawn.containsKey(name)) {
             // If the Battle is still going on, take them to the spectator area
             // to watch
-            if (plugin.battleInProgress) {
-                event.setRespawnLocation(plugin.getCoords("spectator"));
-                plugin.battle.resetPlayer(player, false, true);
-                plugin.addSpectator(player, "death");
+            if (BattleNight.battleInProgress) {
+                event.setRespawnLocation(BattleNight.getCoords("spectator"));
+                BattleNight.battle.resetPlayer(player, false, true);
+                BattleNight.addSpectator(player, "death");
                 // Else, take them to the exit area
             } else {
-                event.setRespawnLocation(plugin.getCoords("exit"));
-                plugin.battle.resetPlayer(player, false, false);
+                event.setRespawnLocation(BattleNight.getCoords("exit"));
+                BattleNight.battle.resetPlayer(player, false, false);
             }
             plugin.BattleUsersRespawn.remove(name);
         }

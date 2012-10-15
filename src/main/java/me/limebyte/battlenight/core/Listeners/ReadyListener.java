@@ -28,10 +28,10 @@ public class ReadyListener implements Listener {
             final Player player = event.getPlayer();
             final String name = player.getName();
             if ((block.getTypeId() == plugin.configReadyBlock)
-                    && (plugin.BattleUsersTeam.containsKey(name) && (plugin.playersInLounge))
-                    && (plugin.teamReady(plugin.BattleUsersTeam.get(player
+                    && (BattleNight.BattleUsersTeam.containsKey(name) && (plugin.playersInLounge))
+                    && (plugin.teamReady(BattleNight.BattleUsersTeam.get(player
                             .getName())))) {
-                final Team team = plugin.BattleUsersTeam.get(name);
+                final Team team = BattleNight.BattleUsersTeam.get(name);
 
                 if (team.equals(Team.RED)) {
                     plugin.redTeamIronClicked = true;
@@ -40,7 +40,7 @@ public class ReadyListener implements Listener {
                     if ((plugin.teamReady(Team.BLUE)) && (plugin.blueTeamIronClicked)) {
                         plugin.playersInLounge = false;
                         plugin.teleportAllToSpawn();
-                        plugin.battleInProgress = true;
+                        BattleNight.battleInProgress = true;
                         plugin.tellEveryone("Let the Battle begin!");
                     }
                 } else if (team.equals(Team.BLUE)) {
@@ -50,11 +50,11 @@ public class ReadyListener implements Listener {
                     if ((plugin.teamReady(Team.RED)) && (plugin.redTeamIronClicked)) {
                         plugin.playersInLounge = false;
                         plugin.teleportAllToSpawn();
-                        plugin.battleInProgress = true;
+                        BattleNight.battleInProgress = true;
                         plugin.tellEveryone("Let the Battle begin!");
                     }
                 }
-            } else if ((block.getTypeId() == plugin.configReadyBlock) && (plugin.BattleUsersTeam.containsKey(name) && (plugin.playersInLounge))) {
+            } else if ((block.getTypeId() == plugin.configReadyBlock) && (BattleNight.BattleUsersTeam.containsKey(name) && (plugin.playersInLounge))) {
                 player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
             }
         }

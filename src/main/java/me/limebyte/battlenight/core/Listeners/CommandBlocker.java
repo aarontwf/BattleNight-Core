@@ -22,7 +22,7 @@ public class CommandBlocker implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled()) return;
-        if (!plugin.BattleUsersTeam.containsKey(event.getPlayer().getName())) return;
+        if (!BattleNight.BattleUsersTeam.containsKey(event.getPlayer().getName())) return;
         if (!BattleNight.config.getBoolean("Commands.Block")) return;
 
         final List<String> whitelist = BattleNight.config.getStringList("Commands.Whitelist");
