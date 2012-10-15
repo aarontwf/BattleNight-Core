@@ -40,12 +40,10 @@ public class DamageListener implements Listener {
     }
 
     private boolean canBeDamaged(Player damaged, Entity eDamager) {
-        if (eDamager == damaged) return true;
-
         Player damager;
 
         if (eDamager instanceof Projectile) {
-            final LivingEntity shooter = ((Projectile) eDamager).getShooter();
+            LivingEntity shooter = ((Projectile) eDamager).getShooter();
             if (shooter instanceof Player)
                 damager = (Player) shooter;
             else return true;
@@ -61,7 +59,7 @@ public class DamageListener implements Listener {
         if (BattleNight.BattleUsersTeam.containsKey(damager.getName())) {
             if (plugin.playersInLounge)
                 return false;
-            if (areEnemies(damager, damaged)) {
+            if (areEnemies(damager, damaged) || damager == damaged) {
                 return true;
             } else {
                 return plugin.configFriendlyFire;
