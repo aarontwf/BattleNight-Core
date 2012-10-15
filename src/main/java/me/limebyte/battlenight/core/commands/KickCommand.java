@@ -53,6 +53,11 @@ public class KickCommand extends BattleNightCommand {
     }
 
     @Override
+    public CommandPermission getPermission() {
+        return CommandPermission.MODERATOR;
+    }
+
+    @Override
     public String getUsage() {
         return "/bn kick <player> [reason]";
     }
@@ -60,11 +65,6 @@ public class KickCommand extends BattleNightCommand {
     @Override
     public String getConsoleUsage() {
         return "/bn kick <player> [reason]";
-    }
-
-    @Override
-    public CommandMap getCommandMap() {
-        return CommandMap.KICK;
     }
 
 }

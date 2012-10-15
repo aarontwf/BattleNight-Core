@@ -21,6 +21,11 @@ public class DeprecatedCommand extends BattleNightCommand {
     }
 
     @Override
+    public CommandPermission getPermission() {
+        return CommandPermission.USER;
+    }
+
+    @Override
     public String getUsage() {
         return "/bn [command]";
     }
@@ -28,11 +33,6 @@ public class DeprecatedCommand extends BattleNightCommand {
     @Override
     public String getConsoleUsage() {
         return "/bn [command]";
-    }
-
-    @Override
-    public CommandMap getCommandMap() {
-        return CommandMap.DEPRECATED;
     }
 
 }

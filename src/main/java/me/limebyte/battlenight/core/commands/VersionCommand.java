@@ -25,6 +25,11 @@ public class VersionCommand extends BattleNightCommand {
     }
 
     @Override
+    public CommandPermission getPermission() {
+        return null;
+    }
+
+    @Override
     public String getUsage() {
         return "/bn version";
     }
@@ -32,11 +37,6 @@ public class VersionCommand extends BattleNightCommand {
     @Override
     public String getConsoleUsage() {
         return "/bn version";
-    }
-
-    @Override
-    public CommandMap getCommandMap() {
-        return CommandMap.VERSION;
     }
 
 }
