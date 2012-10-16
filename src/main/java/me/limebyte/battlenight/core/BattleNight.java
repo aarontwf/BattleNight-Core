@@ -36,6 +36,7 @@ import me.limebyte.battlenight.core.commands.DeprecatedCommand;
 import me.limebyte.battlenight.core.commands.JoinCommand;
 import me.limebyte.battlenight.core.commands.KickCommand;
 import me.limebyte.battlenight.core.commands.LeaveCommand;
+import me.limebyte.battlenight.core.commands.ReloadCommand;
 import me.limebyte.battlenight.core.commands.SetCommand;
 import me.limebyte.battlenight.core.commands.VersionCommand;
 import me.limebyte.battlenight.core.commands.WatchCommand;
@@ -70,13 +71,13 @@ public class BattleNight extends JavaPlugin {
     public static Logger log;
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
     public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
-    public Set<String> ClassList;
+    public static Set<String> ClassList;
 
     // HashMaps
     public final static Map<String, Team> BattleUsersTeam = new HashMap<String, Team>();
     public final Map<String, String> BattleUsersClass = new HashMap<String, String>();
-    public final Map<String, String> BattleClasses = new HashMap<String, String>();
-    public final Map<String, String> BattleArmor = new HashMap<String, String>();
+    public final static Map<String, String> BattleClasses = new HashMap<String, String>();
+    public final static Map<String, String> BattleArmor = new HashMap<String, String>();
     public final Map<String, Sign> BattleSigns = new HashMap<String, Sign>();
     public final Map<String, String> BattleUsersRespawn = new HashMap<String, String>();
     public final static Map<String, String> BattleTelePass = new HashMap<String, String>();
@@ -91,15 +92,15 @@ public class BattleNight extends JavaPlugin {
     public boolean playersInLounge = false;
 
     // config.yml Values
-    public boolean configUsePermissions = false;
-    public boolean configFriendlyFire = false;
-    public boolean configStopHealthRegen = true;
-    public String configInventoryType = "prompt";
-    public int configReadyBlock = 42;
-    public boolean configDebug = false;
+    public static boolean configUsePermissions = false;
+    public static boolean configFriendlyFire = false;
+    public static boolean configStopHealthRegen = true;
+    public static String configInventoryType = "prompt";
+    public static int configReadyBlock = 42;
+    public static boolean configDebug = false;
 
     // classes.yml Values
-    public int classesDummyItem = 6;
+    public static int classesDummyItem = 6;
 
     // Declare Files and FileConfigurations
     static File configFile;
@@ -267,7 +268,7 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    public void reloadConfigFiles() throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public static void reloadConfigFiles() throws FileNotFoundException, IOException, InvalidConfigurationException {
         config.load(configFile);
         classes.load(classesFile);
         configUsePermissions = config.getBoolean("UsePermissions");
@@ -339,6 +340,10 @@ public class BattleNight extends JavaPlugin {
                 LeaveCommand cmd = new LeaveCommand(sender, args);
                 cmd.perform();
                 return true;
+            } else if (args[0].equalsIgnoreCase("leave")) {
+                ReloadCommand cmd = new ReloadCommand(sender, args);
+                cmd.perform();
+                return true;
             } else if (args[0].equalsIgnoreCase("set")) {
                 SetCommand cmd = new SetCommand(sender, args);
                 cmd.perform();
@@ -356,7 +361,7 @@ public class BattleNight extends JavaPlugin {
                 cmd.perform();
                 return true;
             } else if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("help")) {
+                if (args[0].equalsIgnoreCase("help")) { // TODO Upgrade
                     if (hasPerm(CommandPermission.ADMIN, sender)) {
                         sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
                                 + ChatColor.WHITE + "BattleNight Help Menu"
@@ -400,7 +405,7 @@ public class BattleNight extends JavaPlugin {
                     }
                 }
 
-                else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(CommandPermission.MODERATOR, sender)) {
+                else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(CommandPermission.MODERATOR, sender)) { // TODO Upgrade
                     battle.end();
                     sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.BATTLE_ENDED.msg);
                 }
@@ -413,17 +418,6 @@ public class BattleNight extends JavaPlugin {
                         || args[0].equalsIgnoreCase("exit")) {
                     DeprecatedCommand cmd = new DeprecatedCommand(sender, args, "/bn set");
                     cmd.perform();
-                }
-
-                else if (args[0].equalsIgnoreCase("reload") && hasPerm(CommandPermission.ADMIN, sender)) {
-                    sender.sendMessage(BNTag + "Reloading config...");
-                    try {
-                        reloadConfigFiles();
-                        sender.sendMessage(BNTag + ChatColor.GREEN + "Reloaded successfully.");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        sender.sendMessage(BNTag + ChatColor.RED + "Reload failed.");
-                    }
                 }
 
                 else {
@@ -1046,7 +1040,7 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    private void reloadClasses() {
+    private static void reloadClasses() {
         ClassList = classes.getConfigurationSection("Classes").getKeys(false);
         for (String className : ClassList) {
             BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
