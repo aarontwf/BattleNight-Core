@@ -34,7 +34,7 @@ public class CommandMap {
 
     public static boolean dispatch(CommandSender sender, String[] args) {
         for (BattleNightCommand command : commands) {
-            if (command.matches(args[0]) || command.aliasMatches(args[0])) {
+            if (command.labelMatches(args[0]) || command.aliasMatches(args[0])) {
                 command.perform(sender, args);
                 return true;
             }

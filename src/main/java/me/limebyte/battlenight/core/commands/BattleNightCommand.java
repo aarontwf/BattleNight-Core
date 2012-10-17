@@ -33,6 +33,10 @@ public abstract class BattleNightCommand {
         return input.equalsIgnoreCase(getName());
     }
 
+    public boolean labelMatches(String input) {
+        return input.equalsIgnoreCase(getLabel());
+    }
+
     public boolean aliasMatches(String input) {
         return aliases.contains(input.toLowerCase());
     }
