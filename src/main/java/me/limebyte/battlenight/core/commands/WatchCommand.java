@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
+import java.util.Arrays;
+
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 
@@ -9,14 +11,18 @@ import org.bukkit.entity.Player;
 
 public class WatchCommand extends BattleNightCommand {
 
-    public WatchCommand(CommandSender sender, String[] args) {
-        super(sender, args);
+    protected WatchCommand() {
+        super("Watch");
+
+        this.setLabel("watch");
+        this.setDescription("Used to watch a Battle.");
+        this.setUsage("/bn watch");
+        this.setPermission(CommandPermission.USER);
+        this.setAliases(Arrays.asList("w", "spectate", "view"));
     }
 
     @Override
-    public boolean onPerformed() {
-        CommandSender sender = getSender();
-
+    protected boolean onPerformed(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
@@ -45,21 +51,6 @@ public class WatchCommand extends BattleNightCommand {
             sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");
             return false;
         }
-    }
-
-    @Override
-    public CommandPermission getPermission() {
-        return CommandPermission.USER;
-    }
-
-    @Override
-    public String getUsage() {
-        return "/bn watch";
-    }
-
-    @Override
-    public String getConsoleUsage() {
-        return null;
     }
 
 }

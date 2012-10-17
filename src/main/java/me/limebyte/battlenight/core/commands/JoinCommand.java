@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
+import java.util.Arrays;
+
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 
@@ -9,14 +11,18 @@ import org.bukkit.entity.Player;
 
 public class JoinCommand extends BattleNightCommand {
 
-    public JoinCommand(CommandSender sender, String[] args) {
-        super(sender, args);
+    protected JoinCommand() {
+        super("Join");
+
+        this.setLabel("join");
+        this.setDescription("Used to join a Battle.");
+        this.setUsage("/bn join");
+        this.setPermission(CommandPermission.USER);
+        this.setAliases(Arrays.asList("j", "play"));
     }
 
     @Override
-    public boolean onPerformed() {
-        CommandSender sender = getSender();
-
+    protected boolean onPerformed(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
@@ -41,21 +47,6 @@ public class JoinCommand extends BattleNightCommand {
             sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");
             return false;
         }
-    }
-
-    @Override
-    public CommandPermission getPermission() {
-        return CommandPermission.USER;
-    }
-
-    @Override
-    public String getUsage() {
-        return "/bn join";
-    }
-
-    @Override
-    public String getConsoleUsage() {
-        return null;
     }
 
 }

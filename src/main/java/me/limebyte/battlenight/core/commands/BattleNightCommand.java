@@ -1,44 +1,122 @@
 package me.limebyte.battlenight.core.commands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 
 import org.bukkit.command.CommandSender;
 
+/**
+ * Represents a BattleNight sub-command, which executes various tasks upon user
+ * input
+ */
 public abstract class BattleNightCommand {
+    private final String name;
+    private String label;
+    private List<String> aliases;
+    protected String description = "";
+    protected String usageMessage;
+    private CommandPermission permission;
 
-    private CommandSender sender;
-    private String[] args;
-
-    public BattleNightCommand(CommandSender sender, String[] args) {
-        this.sender = sender;
-        this.args = Arrays.copyOfRange(args, 1, args.length);
+    protected BattleNightCommand(String name) {
+        this.name = name;
+        this.label = name.toLowerCase();
+        this.aliases = new ArrayList<String>();
+        this.description = "";
+        this.usageMessage = "/bn " + label;
     }
 
-    public boolean perform() {
-        if (!hasPermission()) return true;
-        return onPerformed();
+    public boolean matches(String input) {
+        return input.equalsIgnoreCase(getName());
     }
 
-    public abstract boolean onPerformed();
-
-    public CommandSender getSender() {
-        return sender;
+    public boolean aliasMatches(String input) {
+        return aliases.contains(input.toLowerCase());
     }
 
-    public String[] getArgs() {
-        return args;
+    /**
+     * Executes the command, returning its success
+     * 
+     * @param sender
+     *            Source object which is executing this command
+     * @param commandLabel
+     *            The alias of the command used
+     * @param args
+     *            All arguments passed to the command, split via ' '
+     * @return true if the command was successful, otherwise false
+     */
+    public boolean perform(CommandSender sender, String[] args) {
+        if (!testPermission(sender)) return false;
+        return onPerformed(sender, Arrays.copyOfRange(args, 1, args.length));
     }
 
-    public abstract CommandPermission getPermission();
+    protected abstract boolean onPerformed(CommandSender sender, String[] args);
 
-    public abstract String getUsage();
+    /**
+     * Returns the name of this command
+     * 
+     * @return Name of this command
+     */
+    public String getName() {
+        return name;
+    }
 
-    public abstract String getConsoleUsage();
+    /**
+     * Returns the current label for this command
+     * 
+     * @return Label of this command or null if not registered
+     */
+    public String getLabel() {
+        return label;
+    }
 
-    private boolean hasPermission() {
+    /**
+     * Sets the label of this command If the command is currently registered the
+     * label change will only take effect after its been re-registered e.g.
+     * after a /bn reload
+     * 
+     * @param name
+     *            The command's name
+     * @return returns true if the name change happened instantly or false if it
+     *         was scheduled for re-registration
+     */
+    public boolean setLabel(String name) {
+        this.label = name;
+        return true;
+    }
+
+    /**
+     * Gets the permission required by users to be able to perform this command
+     * 
+     * @return Permission name, or null if none
+     */
+    public CommandPermission getPermission() {
+        return permission;
+    }
+
+    /**
+     * Sets the permission required by users to be able to perform this command
+     * 
+     * @param permission
+     *            Permission name or null
+     */
+    public void setPermission(CommandPermission permission) {
+        this.permission = permission;
+    }
+
+    /**
+     * Tests the given {@link CommandSender} to see if they can perform this
+     * command. If they do not have permission, they will be informed that they
+     * cannot do this.
+     * 
+     * @param target
+     *            User to test
+     * @return true if they can use it, otherwise false
+     */
+    protected boolean testPermission(CommandSender sender) {
         if (getPermission() == null) { return true; }
 
         if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) { return true; }
@@ -49,7 +127,7 @@ public abstract class BattleNightCommand {
             if (sender.hasPermission(permission)) {
                 return true;
             } else {
-                getSender().sendMessage(Track.NO_PERMISSION.msg);
+                sender.sendMessage(Track.NO_PERMISSION.msg);
                 return false;
             }
         } else {
@@ -57,7 +135,7 @@ public abstract class BattleNightCommand {
                 if (sender.isOp()) {
                     return true;
                 } else {
-                    getSender().sendMessage(Track.NO_PERMISSION.msg);
+                    sender.sendMessage(Track.NO_PERMISSION.msg);
                     return false;
                 }
             } else {
@@ -66,7 +144,97 @@ public abstract class BattleNightCommand {
         }
     }
 
-    public String createString(String[] args, int start) {
+    /**
+     * Returns a list of active aliases of this command
+     * 
+     * @return List of aliases
+     */
+    public List<String> getAliases() {
+        return aliases;
+    }
+
+    /**
+     * Gets a brief description of this command
+     * 
+     * @return Description of this command
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Gets an example usage of this command
+     * 
+     * @return One or more example usages
+     */
+    public String getUsage() {
+        return usageMessage;
+    }
+
+    /**
+     * Sets the list of aliases to request on registration for this command
+     * 
+     * @param aliases
+     *            Aliases to register to this command
+     * @return This command object, for linking
+     */
+    public BattleNightCommand setAliases(List<String> aliases) {
+        List<String> newAliases = new ArrayList<String>();
+
+        for (String alias : aliases) {
+            newAliases.add(alias.toLowerCase());
+        }
+
+        this.aliases = newAliases;
+        return this;
+    }
+
+    /**
+     * Sets a brief description of this command
+     * 
+     * @param description
+     *            New command description
+     * @return This command object, for linking
+     */
+    public BattleNightCommand setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Sets the example usage of this command
+     * 
+     * @param usage
+     *            New example usage
+     * @return This command object, for linking
+     */
+    public BattleNightCommand setUsage(String usage) {
+        this.usageMessage = usage;
+        return this;
+    }
+
+    protected int getInteger(String value, int min) {
+        return getInteger(value, min, Integer.MAX_VALUE);
+    }
+
+    protected int getInteger(String value, int min, int max) {
+        int i = min;
+
+        try {
+            i = Integer.valueOf(value);
+        } catch (NumberFormatException ex) {
+        }
+
+        if (i < min) {
+            i = min;
+        } else if (i > max) {
+            i = max;
+        }
+
+        return i;
+    }
+
+    protected String createString(String[] args, int start) {
         StringBuilder string = new StringBuilder();
 
         for (int x = start; x < args.length; x++) {
@@ -77,23 +245,6 @@ public abstract class BattleNightCommand {
         }
 
         return string.toString();
-    }
-
-    public int getInteger(String value, int min, int max) {
-        int i = min;
-
-        try {
-            i = Integer.valueOf(value);
-        } catch (final NumberFormatException ex) {
-        }
-
-        if (i < min) {
-            i = min;
-        } else if (i > max) {
-            i = max;
-        }
-
-        return i;
     }
 
 }

@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
+import java.util.Arrays;
+
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 
@@ -9,14 +11,18 @@ import org.bukkit.entity.Player;
 
 public class LeaveCommand extends BattleNightCommand {
 
-    public LeaveCommand(CommandSender sender, String[] args) {
-        super(sender, args);
+    protected LeaveCommand() {
+        super("Leave");
+
+        this.setLabel("leave");
+        this.setDescription("Used to leave a Battle.");
+        this.setUsage("/bn leave");
+        this.setPermission(CommandPermission.USER);
+        this.setAliases(Arrays.asList("l", "quit"));
     }
 
     @Override
-    public boolean onPerformed() {
-        CommandSender sender = getSender();
-
+    protected boolean onPerformed(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
@@ -34,21 +40,6 @@ public class LeaveCommand extends BattleNightCommand {
             sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");
             return false;
         }
-    }
-
-    @Override
-    public CommandPermission getPermission() {
-        return CommandPermission.USER;
-    }
-
-    @Override
-    public String getUsage() {
-        return "/bn leave";
-    }
-
-    @Override
-    public String getConsoleUsage() {
-        return null;
     }
 
 }

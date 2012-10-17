@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
+import java.util.Arrays;
+
 import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.Bukkit;
@@ -9,15 +11,18 @@ import org.bukkit.entity.Player;
 
 public class KickCommand extends BattleNightCommand {
 
-    public KickCommand(CommandSender sender, String[] args) {
-        super(sender, args);
+    protected KickCommand() {
+        super("Kick");
+
+        this.setLabel("kick");
+        this.setDescription("Removes the specified player from the Battle.");
+        this.setUsage("/bn kick <player> [reason]");
+        this.setPermission(CommandPermission.MODERATOR);
+        this.setAliases(Arrays.asList("remove", "rm"));
     }
 
     @Override
-    public boolean onPerformed() {
-        CommandSender sender = getSender();
-        String[] args = getArgs();
-
+    protected boolean onPerformed(CommandSender sender, String[] args) {
         if (args.length < 1) {
             sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Please specify a Player.");
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
@@ -50,21 +55,6 @@ public class KickCommand extends BattleNightCommand {
             sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Can't find player \"" + args[0] + "\".  No kick.");
             return false;
         }
-    }
-
-    @Override
-    public CommandPermission getPermission() {
-        return CommandPermission.MODERATOR;
-    }
-
-    @Override
-    public String getUsage() {
-        return "/bn kick <player> [reason]";
-    }
-
-    @Override
-    public String getConsoleUsage() {
-        return "/bn kick <player> [reason]";
     }
 
 }

@@ -31,16 +31,8 @@ import me.limebyte.battlenight.core.Listeners.SignChanger;
 import me.limebyte.battlenight.core.Listeners.SignListener;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 import me.limebyte.battlenight.core.Other.Waypoint;
+import me.limebyte.battlenight.core.commands.CommandMap;
 import me.limebyte.battlenight.core.commands.CommandPermission;
-import me.limebyte.battlenight.core.commands.DeprecatedCommand;
-import me.limebyte.battlenight.core.commands.JoinCommand;
-import me.limebyte.battlenight.core.commands.KickCommand;
-import me.limebyte.battlenight.core.commands.LeaveCommand;
-import me.limebyte.battlenight.core.commands.ReloadCommand;
-import me.limebyte.battlenight.core.commands.SetCommand;
-import me.limebyte.battlenight.core.commands.VersionCommand;
-import me.limebyte.battlenight.core.commands.WatchCommand;
-import me.limebyte.battlenight.core.commands.WaypointsCommand;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -323,108 +315,13 @@ public class BattleNight extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-
         if (commandLabel.equalsIgnoreCase("bn")) {
             if (args.length < 1) {
-                sender.sendMessage(BNTag + ChatColor.RED + "Incorrect usage.  Type '/bn help' to show the help menu.");
+                sender.sendMessage(BNTag + ChatColor.RED + "Incorrect usage.  Type \"" + CommandMap.getCommand("Help").getUsage() + "\" to show the help menu.");
                 return true;
-            } else if (args[0].equalsIgnoreCase("join")) {
-                JoinCommand cmd = new JoinCommand(sender, args);
-                cmd.perform();
-                return true;
-            } else if (args[0].equalsIgnoreCase("kick")) {
-                KickCommand cmd = new KickCommand(sender, args);
-                cmd.perform();
-                return true;
-            } else if (args[0].equalsIgnoreCase("leave")) {
-                LeaveCommand cmd = new LeaveCommand(sender, args);
-                cmd.perform();
-                return true;
-            } else if (args[0].equalsIgnoreCase("leave")) {
-                ReloadCommand cmd = new ReloadCommand(sender, args);
-                cmd.perform();
-                return true;
-            } else if (args[0].equalsIgnoreCase("set")) {
-                SetCommand cmd = new SetCommand(sender, args);
-                cmd.perform();
-                return true;
-            } else if (args[0].equalsIgnoreCase("version")) {
-                VersionCommand cmd = new VersionCommand(sender, args);
-                cmd.perform();
-                return true;
-            } else if (args[0].equalsIgnoreCase("watch")) {
-                WatchCommand cmd = new WatchCommand(sender, args);
-                cmd.perform();
-                return true;
-            } else if (args[0].equalsIgnoreCase("waypoints")) {
-                WaypointsCommand cmd = new WaypointsCommand(sender, args);
-                cmd.perform();
-                return true;
-            } else if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("help")) { // TODO Upgrade
-                    if (hasPerm(CommandPermission.ADMIN, sender)) {
-                        sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
-                                + ChatColor.WHITE + "BattleNight Help Menu"
-                                + ChatColor.DARK_GRAY + " ---------- ");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn help - Shows general help.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn waypoints - Shows set/unset waypoints.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn version - Shows the version of BattleNight in use.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn join - Join the Battle.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn leave - Leave the Battle.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn watch - Watch the Battle.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn kick [player] - Kick a player from the Battle.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn kickall - Kick all players in the Battle.");
-                        sender.sendMessage(ChatColor.DARK_GRAY
-                                + " --------------------------------------- ");
-                    } else if (hasPerm(CommandPermission.USER, sender)) {
-                        sender.sendMessage(ChatColor.DARK_GRAY + " ---------- "
-                                + ChatColor.WHITE + "BattleNight Help Menu"
-                                + ChatColor.DARK_GRAY + " ---------- ");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn help - Shows general help.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn version - Shows the version of BattleNight in use.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn join - Join the Battle.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn leave - Leave the Battle.");
-                        sender.sendMessage(ChatColor.WHITE
-                                + " /bn watch - Watch the Battle");
-                        sender.sendMessage(ChatColor.DARK_GRAY
-                                + " --------------------------------------- ");
-                    } else {
-                        sender.sendMessage(BattleNight.BNTag + Track.NO_PERMISSION.msg);
-                    }
-                }
-
-                else if ((args[0].equalsIgnoreCase("kickall") || args[0].equalsIgnoreCase("endgame")) && hasPerm(CommandPermission.MODERATOR, sender)) { // TODO Upgrade
-                    battle.end();
-                    sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.BATTLE_ENDED.msg);
-                }
-
-                else if (args[0].equalsIgnoreCase("redlounge")
-                        || args[0].equalsIgnoreCase("redspawn")
-                        || args[0].equalsIgnoreCase("bluelounge")
-                        || args[0].equalsIgnoreCase("bluespawn")
-                        || args[0].equalsIgnoreCase("spectator")
-                        || args[0].equalsIgnoreCase("exit")) {
-                    DeprecatedCommand cmd = new DeprecatedCommand(sender, args, "/bn set");
-                    cmd.perform();
-                }
-
-                else {
-                    sender.sendMessage(BNTag + ChatColor.RED + Track.INVALID_COMAND.msg);
-                }
+            } else {
+                return CommandMap.dispatch(sender, args);
             }
-            return true;
         }
         return false;
     }

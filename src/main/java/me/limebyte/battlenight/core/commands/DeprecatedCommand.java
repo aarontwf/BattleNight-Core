@@ -7,32 +7,29 @@ import org.bukkit.command.CommandSender;
 
 public class DeprecatedCommand extends BattleNightCommand {
 
-    String newCommand;
+    String newLabel;
 
-    public DeprecatedCommand(CommandSender sender, String[] args, String newCommand) {
-        super(sender, args);
-        this.newCommand = newCommand;
+    protected DeprecatedCommand(String label, String newLabel) {
+        super("Deprecated");
+
+        this.setLabel(label);
+        this.setDescription("Deprecated Command.");
+
+        this.setNewLabel(newLabel);
     }
 
     @Override
-    public boolean onPerformed() {
-        getSender().sendMessage(BattleNight.BNTag + ChatColor.RED + "This command is deprecated, please use \"" + newCommand + "\" instead.");
+    protected boolean onPerformed(CommandSender sender, String[] args) {
+        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command is deprecated, please use \"/bn " + newLabel + "\" instead.");
         return true;
     }
 
-    @Override
-    public CommandPermission getPermission() {
-        return CommandPermission.USER;
+    public String getNewLabel() {
+        return newLabel;
     }
 
-    @Override
-    public String getUsage() {
-        return "/bn [command]";
-    }
-
-    @Override
-    public String getConsoleUsage() {
-        return "/bn [command]";
+    public void setNewLabel(String newLabel) {
+        this.newLabel = newLabel;
     }
 
 }

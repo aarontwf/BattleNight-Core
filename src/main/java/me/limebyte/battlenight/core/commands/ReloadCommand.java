@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
+import java.util.Arrays;
+
 import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.ChatColor;
@@ -7,17 +9,22 @@ import org.bukkit.command.CommandSender;
 
 public class ReloadCommand extends BattleNightCommand {
 
-    public ReloadCommand(CommandSender sender, String[] args) {
-        super(sender, args);
+    protected ReloadCommand() {
+        super("Reload");
+
+        this.setLabel("reload");
+        this.setDescription("Reloads BattleNight.");
+        this.setUsage("/bn reload");
+        this.setPermission(CommandPermission.ADMIN);
+        this.setAliases(Arrays.asList("rl", "refresh", "restart"));
     }
 
     @Override
-    public boolean onPerformed() {
-        CommandSender sender = getSender();
-
-        sender.sendMessage(BattleNight.BNTag + "Reloading config...");
+    protected boolean onPerformed(CommandSender sender, String[] args) {
+        sender.sendMessage(BattleNight.BNTag + "Reloading BattleNight...");
 
         try {
+            BattleNight.getBattle().end();
             BattleNight.reloadConfigFiles();
             sender.sendMessage(BattleNight.BNTag + ChatColor.GREEN + "Reloaded successfully.");
             return true;
@@ -26,21 +33,6 @@ public class ReloadCommand extends BattleNightCommand {
             BattleNight.log.severe(e.getMessage());
             return false;
         }
-    }
-
-    @Override
-    public CommandPermission getPermission() {
-        return CommandPermission.ADMIN;
-    }
-
-    @Override
-    public String getUsage() {
-        return "/bn reload";
-    }
-
-    @Override
-    public String getConsoleUsage() {
-        return "/bn reload";
     }
 
 }
