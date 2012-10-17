@@ -14,7 +14,7 @@ public class EndCommand extends BattleNightCommand {
         super("End");
 
         this.setLabel("end");
-        this.setDescription("Used to end a Battle.");
+        this.setDescription("Ends the Battle.");
         this.setUsage("/bn end");
         this.setPermission(CommandPermission.MODERATOR);
         this.setAliases(Arrays.asList("stop", "kickall"));
