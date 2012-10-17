@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.limebyte.battlenight.core.chat.ListPage;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class HelpCommand extends BattleNightCommand {
@@ -26,7 +27,7 @@ public class HelpCommand extends BattleNightCommand {
 
         for (BattleNightCommand cmd : commands) {
             if (cmd.testPermission(sender) && !(cmd instanceof DeprecatedCommand)) {
-                lines.add(cmd.getUsage() + " - " + cmd.getDescription());
+                lines.add(ChatColor.GRAY + cmd.getUsage() + ChatColor.DARK_GRAY + " - " + ChatColor.WHITE + cmd.getDescription());
             }
         }
 
