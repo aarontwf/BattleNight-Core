@@ -28,7 +28,7 @@ public class DeathListener implements Listener {
         if (e instanceof Player) {
             final Player player = (Player) e;
             final String name = player.getName();
-            if (BattleNight.BattleUsersTeam.containsKey(name)) {
+            if (BattleNight.getBattle().usersTeam.containsKey(name)) {
                 event.getDrops().clear();
                 ((PlayerDeathEvent) event).setDeathMessage("");
 
@@ -70,8 +70,8 @@ public class DeathListener implements Listener {
 
     private boolean isInTeam(Player player, Team team) {
         final String name = player.getName();
-        if (BattleNight.BattleUsersTeam.containsKey(name)) {
-            if ((BattleNight.BattleUsersTeam.get(name).equals(team))) { return true; }
+        if (BattleNight.getBattle().usersTeam.containsKey(name)) {
+            if ((BattleNight.getBattle().usersTeam.get(name).equals(team))) { return true; }
         }
 
         return false;

@@ -26,10 +26,10 @@ public class LeaveCommand extends BattleNightCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            if (BattleNight.BattleUsersTeam.containsKey(player.getName())) {
+            if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
                 BattleNight.getBattle().removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
                 return true;
-            } else if (BattleNight.BattleSpectators.containsKey(player.getName())) {
+            } else if (BattleNight.getBattle().spectators.contains(player.getName())) {
                 BattleNight.removeSpectator(player);
                 return true;
             } else {

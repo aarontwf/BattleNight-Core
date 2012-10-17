@@ -36,12 +36,12 @@ public class WatchCommand extends BattleNightCommand {
                 return false;
             }
 
-            if (BattleNight.BattleSpectators.containsKey(player.getName())) {
+            if (BattleNight.getBattle().spectators.contains(player.getName())) {
                 BattleNight.tellPlayer(player, "You are already watching the Battle!");
                 return false;
             }
 
-            if (BattleNight.BattleUsersTeam.containsKey(player.getName())) {
+            if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
                 BattleNight.getBattle().removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
             }
 

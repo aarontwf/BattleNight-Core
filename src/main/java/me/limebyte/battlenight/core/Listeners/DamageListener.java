@@ -29,9 +29,9 @@ public class DamageListener implements Listener {
         if (event instanceof EntityDamageByEntityEvent) {
             final EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
 
-            if (BattleNight.BattleSpectators.containsKey(player.getName())) event.setCancelled(true);
+            if (BattleNight.getBattle().spectators.contains(player.getName())) event.setCancelled(true);
 
-            if (!BattleNight.BattleUsersTeam.containsKey(player.getName())) return;
+            if (!BattleNight.getBattle().usersTeam.containsKey(player.getName())) return;
 
             subEvent.setCancelled(!canBeDamaged(player, subEvent.getDamager()));
 
@@ -56,7 +56,7 @@ public class DamageListener implements Listener {
             }
         }
 
-        if (BattleNight.BattleUsersTeam.containsKey(damager.getName())) {
+        if (BattleNight.getBattle().usersTeam.containsKey(damager.getName())) {
             if (plugin.playersInLounge)
                 return false;
             if (areEnemies(damager, damaged) || damager == damaged) {
@@ -70,7 +70,7 @@ public class DamageListener implements Listener {
     }
 
     private boolean areEnemies(Player player1, Player player2) {
-        if (BattleNight.BattleUsersTeam.get(player1.getName()) != BattleNight.BattleUsersTeam.get(player2.getName())) {
+        if (BattleNight.getBattle().usersTeam.get(player1.getName()) != BattleNight.getBattle().usersTeam.get(player2.getName())) {
             return true;
         } else {
             return false;

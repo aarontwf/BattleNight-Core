@@ -27,7 +27,7 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         final Player player = event.getPlayer();
-        if (BattleNight.BattleUsersTeam.containsKey(player.getName()) && !BattleNight.BattleTelePass.containsKey(player.getName())) {
+        if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && !BattleNight.BattleTelePass.containsKey(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
                 case PLUGIN:
@@ -66,7 +66,7 @@ public class CheatListener implements Listener {
         final Projectile projectile = event.getEntity();
         if (projectile.getShooter() instanceof Player) {
             final Player thrower = (Player) projectile.getShooter();
-            if (BattleNight.BattleUsersTeam.containsKey(thrower.getName())) {
+            if (BattleNight.getBattle().usersTeam.containsKey(thrower.getName())) {
                 event.setCancelled(true);
                 BattleNight.tellPlayer(thrower, Track.NO_CHEATING);
             }

@@ -1,5 +1,8 @@
 package me.limebyte.battlenight.core;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import me.limebyte.battlenight.core.API.BattleEndEvent;
@@ -17,6 +20,10 @@ public class Battle {
     int redTeam = 0;
     int blueTeam = 0;
 
+    public final Map<String, Team> usersTeam = new HashMap<String, Team>();
+    public final Map<String, String> usersClass = new HashMap<String, String>();
+    public final Set<String> spectators = new HashSet<String>();
+
     public Battle() {
         this.plugin = BattleNight.instance;
     }
@@ -27,13 +34,13 @@ public class Battle {
 
             if (blueTeam > redTeam) {
                 BattleNight.goToWaypoint(player, Waypoint.RED_LOUNGE);
-                BattleNight.BattleUsersTeam.put(name, Team.RED);
+                usersTeam.put(name, Team.RED);
                 BattleNight.tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
                 plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.RED + "<Red>");
                 redTeam++;
             } else {
                 BattleNight.goToWaypoint(player, Waypoint.BLUE_LOUNGE);
-                BattleNight.BattleUsersTeam.put(name, Team.BLUE);
+                usersTeam.put(name, Team.BLUE);
                 BattleNight.tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
                 plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.BLUE + "<Blue>");
                 blueTeam++;
@@ -49,8 +56,8 @@ public class Battle {
     public void removePlayer(Player player, boolean death, String msg1, String msg2) {
         final String name = player.getName();
 
-        if (BattleNight.BattleUsersTeam.containsKey(name)) {
-            final Team team = BattleNight.BattleUsersTeam.get(name);
+        if (usersTeam.containsKey(name)) {
+            final Team team = usersTeam.get(name);
             final boolean sendMsg1 = msg1 != null;
 
             if (team.equals(Team.RED)) {
@@ -74,11 +81,11 @@ public class Battle {
                     // If red won
                     if (redTeam > 0) {
                         plugin.tellEveryone(Track.RED_WON);
-                        Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", BattleNight.BattleUsersTeam));
+                        Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
                         // If blue won
                     } else if (blueTeam > 0) {
                         plugin.tellEveryone(Track.BLUE_WON);
-                        Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", BattleNight.BattleUsersTeam));
+                        Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
                         // If neither team won
                     } else {
                         plugin.tellEveryone(Track.DRAW);
@@ -86,7 +93,7 @@ public class Battle {
                     }
                 }
 
-                for (String currentName : BattleNight.BattleUsersTeam.keySet()) {
+                for (String currentName : usersTeam.keySet()) {
                     if (Bukkit.getPlayer(currentName) != null) {
                         Player currentPlayer = Bukkit.getPlayer(currentName);
                         if (!(death && currentPlayer == player)) {
@@ -111,8 +118,8 @@ public class Battle {
         plugin.cleanSigns(player);
 
         if (removeHash) {
-            BattleNight.BattleUsersTeam.remove(player.getName());
-            plugin.BattleUsersClass.remove(player.getName());
+            usersTeam.remove(player.getName());
+            usersClass.remove(player.getName());
             try {
                 TagAPI.refreshPlayer(player);
             } catch (final Exception e) {
@@ -121,7 +128,7 @@ public class Battle {
     }
 
     private void resetBattle() {
-        Set<String> toRefresh = BattleNight.BattleUsersTeam.keySet();
+        Set<String> toRefresh = usersTeam.keySet();
 
         plugin.removeAllSpectators();
         plugin.cleanSigns();
@@ -129,8 +136,8 @@ public class Battle {
         BattleNight.battleInProgress = false;
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
-        BattleNight.BattleUsersTeam.clear();
-        plugin.BattleUsersClass.clear();
+        usersTeam.clear();
+        usersClass.clear();
         redTeam = 0;
         blueTeam = 0;
 
@@ -147,16 +154,16 @@ public class Battle {
     public void end() {
         if (blueTeam > redTeam) {
             plugin.tellEveryone(Track.BLUE_WON);
-            Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", BattleNight.BattleUsersTeam));
+            Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
         } else if (redTeam > blueTeam) {
             plugin.tellEveryone(Track.RED_WON);
-            Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", BattleNight.BattleUsersTeam));
+            Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
         } else {
             plugin.tellEveryone(Track.DRAW);
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
         }
 
-        for (String currentName : BattleNight.BattleUsersTeam.keySet()) {
+        for (String currentName : usersTeam.keySet()) {
             if (Bukkit.getPlayer(currentName) != null) {
                 Player currentPlayer = Bukkit.getPlayer(currentName);
                 resetPlayer(currentPlayer, true, false);

@@ -21,9 +21,9 @@ public class DisconnectListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
-        if (BattleNight.BattleUsersTeam.containsKey(player.getName())) {
+        if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
             BattleNight.battle.removePlayer(player, false, "has been removed from the Battle as they disconnected from the server.", null);
-        } else if (BattleNight.BattleSpectators.containsKey(player.getName())) {
+        } else if (BattleNight.getBattle().spectators.contains(player.getName())) {
             BattleNight.removeSpectator(player);
         }
     }
@@ -31,9 +31,9 @@ public class DisconnectListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerKick(PlayerKickEvent event) {
         final Player player = event.getPlayer();
-        if (BattleNight.BattleUsersTeam.containsKey(player.getName())) {
+        if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
             BattleNight.battle.removePlayer(player, false, "has been removed from the Battle as they were kicked from the server.", null);
-        } else if (BattleNight.BattleSpectators.containsKey(player.getName())) {
+        } else if (BattleNight.getBattle().spectators.contains(player.getName())) {
             BattleNight.removeSpectator(player);
         }
     }

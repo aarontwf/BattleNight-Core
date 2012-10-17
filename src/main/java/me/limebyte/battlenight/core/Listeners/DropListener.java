@@ -21,7 +21,7 @@ public class DropListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         final Player player = event.getPlayer();
-        if (BattleNight.BattleUsersTeam.containsKey(player.getName())) {
+        if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
             player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Not so fast! No Cheating!");
             event.setCancelled(true);
         }

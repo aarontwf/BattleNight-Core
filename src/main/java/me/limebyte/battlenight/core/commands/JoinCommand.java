@@ -36,7 +36,7 @@ public class JoinCommand extends BattleNightCommand {
                 return false;
             }
 
-            if (BattleNight.BattleUsersTeam.containsKey(player.getName())) {
+            if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
                 BattleNight.tellPlayer(player, Track.ALREADY_IN_TEAM);
                 return false;
             }

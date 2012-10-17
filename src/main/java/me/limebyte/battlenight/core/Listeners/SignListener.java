@@ -29,11 +29,11 @@ public class SignListener implements Listener {
             Player player = event.getPlayer();
             if ((block.getState() instanceof Sign)) {
                 Sign sign = (Sign) block.getState();
-                if ((BattleNight.BattleClasses.containsKey(sign.getLine(0))) && (BattleNight.BattleUsersTeam.containsKey(player.getName()))) {
+                if ((BattleNight.BattleClasses.containsKey(sign.getLine(0))) && (BattleNight.getBattle().usersTeam.containsKey(player.getName()))) {
                     plugin.BattleSigns.put(player.getName(), sign);
-                    if (plugin.BattleUsersClass.containsKey(player.getName())) {
-                        if (plugin.BattleUsersClass.get(player.getName()) == sign.getLine(0)) {
-                            plugin.BattleUsersClass.remove(player.getName());
+                    if (BattleNight.getBattle().usersClass.containsKey(player.getName())) {
+                        if (BattleNight.getBattle().usersClass.get(player.getName()) == sign.getLine(0)) {
+                            BattleNight.getBattle().usersClass.remove(player.getName());
                             if (sign.getLine(2) == player.getName()) {
                                 sign.setLine(2, "");
                                 sign.update();
@@ -51,13 +51,13 @@ public class SignListener implements Listener {
                             BattleNight.tellPlayer(player, "You must first remove yourself from the other class!");
                         }
                     } else if (sign.getLine(2).trim().equals("")) {
-                        plugin.BattleUsersClass.put(player.getName(), sign.getLine(0));
+                        BattleNight.getBattle().usersClass.put(player.getName(), sign.getLine(0));
                         sign.setLine(2, player.getName());
                         sign.update();
                         plugin.giveItems(player);
                         SmokeEffect.play(player);
                     } else if (sign.getLine(3).trim().equals("")) {
-                        plugin.BattleUsersClass.put(player.getName(), sign.getLine(0));
+                        BattleNight.getBattle().usersClass.put(player.getName(), sign.getLine(0));
                         sign.setLine(3, player.getName());
                         sign.update();
                         plugin.giveItems(player);
