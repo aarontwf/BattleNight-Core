@@ -32,7 +32,7 @@ public abstract class BattleNightCommand {
     public boolean matches(String input) {
         return input.equalsIgnoreCase(getName());
     }
-
+    
     public boolean labelMatches(String input) {
         return input.equalsIgnoreCase(getLabel());
     }
