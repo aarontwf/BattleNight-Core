@@ -15,7 +15,7 @@ public class JoinCommand extends BattleNightCommand {
         super("Join");
 
         this.setLabel("join");
-        this.setDescription("Join the Battle.");
+        this.setDescription("Used to join a Battle.");
         this.setUsage("/bn join");
         this.setPermission(CommandPermission.USER);
         this.setAliases(Arrays.asList("j", "play"));
