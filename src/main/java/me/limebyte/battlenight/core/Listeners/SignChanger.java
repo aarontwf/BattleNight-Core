@@ -20,11 +20,11 @@ public class SignChanger implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent e) {
         final Player player = e.getPlayer();
-        if ((plugin.ClassList.contains(e.getLine(0))) && (!e.getLine(1).isEmpty()) && (!e.getLine(2).isEmpty())
+        if ((BattleNight.ClassList.contains(e.getLine(0))) && (!e.getLine(1).isEmpty()) && (!e.getLine(2).isEmpty())
                 && (!e.getLine(3).isEmpty())) {
             player.sendMessage(BattleNight.BNTag + "Error creating sign for "
                     + e.getLine(0) + "!  Leave last 3 lines blank.");
-        } else if ((plugin.ClassList.contains(e.getLine(0)))
+        } else if ((BattleNight.ClassList.contains(e.getLine(0)))
                 && (e.getLine(1).isEmpty()) && (e.getLine(2).isEmpty())
                 && (e.getLine(3).isEmpty())) {
             e.setLine(1, "--------");

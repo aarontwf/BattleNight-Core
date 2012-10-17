@@ -38,12 +38,12 @@ public class SignListener implements Listener {
                                 sign.setLine(2, "");
                                 sign.update();
                                 plugin.reset(player, true);
-                                new SmokeEffect(player);
+                                SmokeEffect.play(player);
                             } else if (sign.getLine(3) == player.getName()) {
                                 sign.setLine(3, "");
                                 sign.update();
                                 plugin.reset(player, true);
-                                new SmokeEffect(player);
+                                SmokeEffect.play(player);
                             } else {
                                 BattleNight.tellPlayer(player, "Please tell developer about this bug (SignListener).");
                             }
@@ -55,13 +55,13 @@ public class SignListener implements Listener {
                         sign.setLine(2, player.getName());
                         sign.update();
                         plugin.giveItems(player);
-                        new SmokeEffect(player);
+                        SmokeEffect.play(player);
                     } else if (sign.getLine(3).trim().equals("")) {
                         plugin.BattleUsersClass.put(player.getName(), sign.getLine(0));
                         sign.setLine(3, player.getName());
                         sign.update();
                         plugin.giveItems(player);
-                        new SmokeEffect(player);
+                        SmokeEffect.play(player);
                     } else {
                         BattleNight.tellPlayer(player, "There are too many of this class, pick another class.");
                     }

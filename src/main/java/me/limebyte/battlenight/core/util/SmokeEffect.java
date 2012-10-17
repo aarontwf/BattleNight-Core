@@ -9,11 +9,7 @@ import org.bukkit.entity.Player;
 
 public class SmokeEffect {
 
-    public SmokeEffect(Player player) {
-        play(player);
-    }
-
-    private void play(final Player player) {
+    public static void play(final Player player) {
         int taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BattleNight.instance, new Runnable() {
 
             public void run() {
@@ -25,7 +21,7 @@ public class SmokeEffect {
         Bukkit.getServer().getScheduler().cancelTask(taskID);
     }
 
-    private void smoke(Location location, Direction direction) {
+    private static void smoke(Location location, Direction direction) {
         location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
     }
 

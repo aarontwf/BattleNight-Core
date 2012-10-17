@@ -27,7 +27,7 @@ public class ReadyListener implements Listener {
             final Block block = event.getClickedBlock();
             final Player player = event.getPlayer();
             final String name = player.getName();
-            if ((block.getTypeId() == plugin.configReadyBlock)
+            if ((block.getTypeId() == BattleNight.configReadyBlock)
                     && (BattleNight.BattleUsersTeam.containsKey(name) && (plugin.playersInLounge))
                     && (plugin.teamReady(BattleNight.BattleUsersTeam.get(player
                             .getName())))) {
@@ -54,7 +54,7 @@ public class ReadyListener implements Listener {
                         plugin.tellEveryone("Let the Battle begin!");
                     }
                 }
-            } else if ((block.getTypeId() == plugin.configReadyBlock) && (BattleNight.BattleUsersTeam.containsKey(name) && (plugin.playersInLounge))) {
+            } else if ((block.getTypeId() == BattleNight.configReadyBlock) && (BattleNight.BattleUsersTeam.containsKey(name) && (plugin.playersInLounge))) {
                 player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
             }
         }

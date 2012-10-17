@@ -62,7 +62,7 @@ public class DamageListener implements Listener {
             if (areEnemies(damager, damaged) || damager == damaged) {
                 return true;
             } else {
-                return plugin.configFriendlyFire;
+                return BattleNight.configFriendlyFire;
             }
         }
 
