@@ -15,7 +15,7 @@ public class LeaveCommand extends BattleNightCommand {
         super("Leave");
 
         this.setLabel("leave");
-        this.setDescription("Used to leave a Battle.");
+        this.setDescription("Leave the Battle.");
         this.setUsage("/bn leave");
         this.setPermission(CommandPermission.USER);
         this.setAliases(Arrays.asList("l", "quit"));
