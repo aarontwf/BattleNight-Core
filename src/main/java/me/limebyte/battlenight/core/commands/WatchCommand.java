@@ -15,7 +15,7 @@ public class WatchCommand extends BattleNightCommand {
         super("Watch");
 
         this.setLabel("watch");
-        this.setDescription("Used to watch a Battle.");
+        this.setDescription("Watch the Battle.");
         this.setUsage("/bn watch");
         this.setPermission(CommandPermission.USER);
         this.setAliases(Arrays.asList("w", "spectate", "view"));
