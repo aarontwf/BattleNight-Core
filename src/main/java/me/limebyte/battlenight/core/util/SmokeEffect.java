@@ -16,7 +16,7 @@ public class SmokeEffect {
                 smoke(player.getLocation(), Direction.MIDDLE);
             }
 
-        }, 0, 60L);
+        }, 1L, 60L);
 
         Bukkit.getServer().getScheduler().cancelTask(taskID);
     }
