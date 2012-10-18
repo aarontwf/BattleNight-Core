@@ -13,7 +13,7 @@ public class SmokeEffect {
     }
 
     private static void smokeSpiral(Player player) {
-        for (int i = 0; i < SPIRAL_SMOKE_COUNT; i++) {
+        for (double i = 0; i < SPIRAL_SMOKE_COUNT; i++) {
             double deg = i / SPIRAL_SMOKE_COUNT * 360;
             double diffX = Math.rint(10 * (Math.sin(deg))) / 10;
             double diffZ = Math.rint(10 * (Math.cos(deg))) / 10;
