@@ -21,7 +21,7 @@ public class ParticleEffect {
 
             // Thicken up the smoke
             for (int j = 0; j < 4; j++) {
-                playFlamesEffect(loc, Direction.UP);
+                playFlamesEffect(loc);
             }
         }
     }
@@ -31,8 +31,8 @@ public class ParticleEffect {
         location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
     }
 
-    private static void playFlamesEffect(Location location, Direction direction) {
-        location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES, direction.getValue());
+    private static void playFlamesEffect(Location location) {
+        location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES, 1);
     }
 
     private enum Direction {
