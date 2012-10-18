@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 public class SmokeEffect {
 
-    private final static int SPIRAL_SMOKE_COUNT = 8;
+    private final static int SPIRAL_SMOKE_COUNT = 16;
 
     public static void play(final Player player) {
         smokeSpiral(player);
@@ -19,9 +19,9 @@ public class SmokeEffect {
             double diffZ = Math.rint(10 * (Math.cos(deg))) / 10;
 
             Location loc = player.getLocation();
-            loc.setX(loc.getX() + diffX);
+            loc.setX(loc.getBlockX() + 0.5 + diffX * 1.5);
             loc.setY(loc.getY() + i / SPIRAL_SMOKE_COUNT);
-            loc.setZ(loc.getZ() + diffZ);
+            loc.setZ(loc.getBlockZ() + 0.5 + diffZ * 1.5);
 
             playSmokeEffect(loc, Direction.UP);
         }
