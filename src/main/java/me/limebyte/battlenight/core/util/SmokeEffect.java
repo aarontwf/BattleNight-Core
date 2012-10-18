@@ -6,15 +6,24 @@ import org.bukkit.entity.Player;
 
 public class SmokeEffect {
 
+    private final static int SPIRAL_SMOKE_COUNT = 8;
+
     public static void play(final Player player) {
-        smoke(player.getLocation(), Direction.MIDDLE);
+        smokeSpiral(player);
     }
 
-    private static void smoke(Location location, Direction direction) {
+    private static void smokeSpiral(Player player) {
+        for (int i = 0; i < SPIRAL_SMOKE_COUNT; i++) {
+            double deg = i / SPIRAL_SMOKE_COUNT * 360;
+            double diffX = Math.rint(10 * (Math.sin(deg))) / 10;
+            double diffZ = Math.rint(10 * (Math.cos(deg))) / 10;
 
-        for (int i = 0; i < 8; i++) {
-            location.setY(location.getY() + 0.1);
-            location.getWorld().playEffect(location, Effect.SMOKE, i);
+            Location loc = player.getLocation();
+            loc.setX(loc.getX() + diffX);
+            loc.setY(loc.getY() + i / SPIRAL_SMOKE_COUNT);
+            loc.setZ(loc.getZ() + diffZ);
+
+            loc.getWorld().playEffect(loc, Effect.SMOKE, Direction.UP);
         }
     }
 
@@ -23,7 +32,7 @@ public class SmokeEffect {
         SOUTH(1),
         SOUTH_WEST(2),
         EAST(3),
-        MIDDLE(4),
+        UP(4),
         WEST(5),
         NORTH_EAST(6),
         NORTH(7),
@@ -35,6 +44,7 @@ public class SmokeEffect {
             this.value = value;
         }
 
+        @SuppressWarnings("unused")
         public int getValue() {
             return value;
         }
