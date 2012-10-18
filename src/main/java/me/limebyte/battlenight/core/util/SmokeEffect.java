@@ -11,7 +11,11 @@ public class SmokeEffect {
     }
 
     private static void smoke(Location location, Direction direction) {
-        location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
+
+        for (int i = 0; i < 8; i++) {
+            location.setY(location.getY() + 0.1);
+            location.getWorld().playEffect(location, Effect.SMOKE, i);
+        }
     }
 
     private enum Direction {
