@@ -4,15 +4,11 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class SmokeEffect {
+public class ParticleEffect {
 
     private final static int SPIRAL_SMOKE_COUNT = 16;
 
-    public static void play(final Player player) {
-        smokeSpiral(player);
-    }
-
-    private static void smokeSpiral(Player player) {
+    public static void spiral(Player player) {
         for (double i = 0; i < SPIRAL_SMOKE_COUNT; i++) {
             double deg = i / SPIRAL_SMOKE_COUNT * 360;
             double diffX = Math.rint(10 * (Math.sin(deg))) / 10;
@@ -25,13 +21,18 @@ public class SmokeEffect {
 
             // Thicken up the smoke
             for (int j = 0; j < 4; j++) {
-                playSmokeEffect(loc, Direction.UP);
+                playFlamesEffect(loc, Direction.UP);
             }
         }
     }
 
+    @SuppressWarnings("unused")
     private static void playSmokeEffect(Location location, Direction direction) {
         location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
+    }
+
+    private static void playFlamesEffect(Location location, Direction direction) {
+        location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES, direction.getValue());
     }
 
     private enum Direction {
