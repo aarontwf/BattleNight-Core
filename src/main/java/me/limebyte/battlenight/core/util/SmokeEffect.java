@@ -19,11 +19,14 @@ public class SmokeEffect {
             double diffZ = Math.rint(10 * (Math.cos(deg))) / 10;
 
             Location loc = player.getLocation();
-            loc.setX(loc.getBlockX() + 0.5 + diffX * 1.5);
-            loc.setY(loc.getY() + i / SPIRAL_SMOKE_COUNT);
-            loc.setZ(loc.getBlockZ() + 0.5 + diffZ * 1.5);
+            loc.setX(loc.getBlockX() + 0.5 + diffX);
+            loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_SMOKE_COUNT) * 2);
+            loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
-            playSmokeEffect(loc, Direction.UP);
+            // Thicken up the smoke
+            for (int j = 0; j < 4; j++) {
+                playSmokeEffect(loc, Direction.UP);
+            }
         }
     }
 
