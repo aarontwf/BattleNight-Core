@@ -1,8 +1,5 @@
 package me.limebyte.battlenight.core.util;
 
-import me.limebyte.battlenight.core.BattleNight;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,15 +7,7 @@ import org.bukkit.entity.Player;
 public class SmokeEffect {
 
     public static void play(final Player player) {
-        int taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BattleNight.instance, new Runnable() {
-
-            public void run() {
-                smoke(player.getLocation(), Direction.MIDDLE);
-            }
-
-        }, 1L, 60L);
-
-        Bukkit.getServer().getScheduler().cancelTask(taskID);
+        smoke(player.getLocation(), Direction.MIDDLE);
     }
 
     private static void smoke(Location location, Direction direction) {
