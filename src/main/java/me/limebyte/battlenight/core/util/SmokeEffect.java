@@ -23,8 +23,12 @@ public class SmokeEffect {
             loc.setY(loc.getY() + i / SPIRAL_SMOKE_COUNT);
             loc.setZ(loc.getZ() + diffZ);
 
-            loc.getWorld().playEffect(loc, Effect.SMOKE, Direction.UP);
+            playSmokeEffect(loc, Direction.UP);
         }
+    }
+
+    private static void playSmokeEffect(Location location, Direction direction) {
+        location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
     }
 
     private enum Direction {
@@ -44,7 +48,6 @@ public class SmokeEffect {
             this.value = value;
         }
 
-        @SuppressWarnings("unused")
         public int getValue() {
             return value;
         }
