@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.Listeners;
+package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.ParticleEffect;

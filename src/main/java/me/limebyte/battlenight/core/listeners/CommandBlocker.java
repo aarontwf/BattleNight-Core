@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.Listeners;
+package me.limebyte.battlenight.core.listeners;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package me.limebyte.battlenight.core.Listeners;
+package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Other.Tracks.Track;
+import me.limebyte.battlenight.core.other.Tracks.Track;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;

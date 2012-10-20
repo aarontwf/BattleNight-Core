@@ -26,7 +26,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package me.limebyte.battlenight.core.Hooks; // BattleNight
+package me.limebyte.battlenight.core.hooks; // BattleNight
 
 import java.io.BufferedReader;
 import java.io.File;

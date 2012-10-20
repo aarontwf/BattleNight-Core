@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Other.Tracks.Track;
+import me.limebyte.battlenight.core.other.Tracks.Track;
 
 import org.bukkit.command.CommandSender;
 

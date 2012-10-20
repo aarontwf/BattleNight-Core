@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.Hooks;
+package me.limebyte.battlenight.core.hooks;
 
 import java.io.File;
 

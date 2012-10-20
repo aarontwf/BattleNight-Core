@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.API.BattleEndEvent;
-import me.limebyte.battlenight.core.Other.Tracks.Track;
+import me.limebyte.battlenight.core.api.BattleEndEvent;
+import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.Messaging;
 
 import org.bukkit.Bukkit;

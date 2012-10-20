@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.API;
+package me.limebyte.battlenight.core.api;
 
 import java.util.Map;
 

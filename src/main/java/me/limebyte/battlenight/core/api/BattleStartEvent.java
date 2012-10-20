@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.API;
+package me.limebyte.battlenight.core.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
