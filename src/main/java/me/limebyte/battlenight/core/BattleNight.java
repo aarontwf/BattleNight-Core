@@ -569,10 +569,10 @@ public class BattleNight extends JavaPlugin {
         told.clear();
     }
 
-    public void tellEveryoneExcept(Player player, String msg) {
+    public static void tellEveryoneExcept(Player player, String msg) {
         for (String name : getBattle().usersTeam.keySet()) {
-            if (Bukkit.getPlayer(name) != null) {
-                Player currentPlayer = Bukkit.getPlayer(name);
+            if (Bukkit.getPlayerExact(name) != null) {
+                Player currentPlayer = Bukkit.getPlayerExact(name);
                 if (currentPlayer != player) currentPlayer.sendMessage(BNTag + msg);
             }
         }

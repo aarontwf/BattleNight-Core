@@ -36,13 +36,13 @@ public class Battle {
                 BattleNight.goToWaypoint(player, Waypoint.RED_LOUNGE);
                 usersTeam.put(name, Team.RED);
                 BattleNight.tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
-                plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.RED + "<Red>");
+                BattleNight.tellEveryoneExcept(player, name + " has joined team " + ChatColor.RED + "<Red>");
                 redTeam++;
             } else {
                 BattleNight.goToWaypoint(player, Waypoint.BLUE_LOUNGE);
                 usersTeam.put(name, Team.BLUE);
                 BattleNight.tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
-                plugin.tellEveryoneExcept(player, name + " has joined team " + ChatColor.BLUE + "<Blue>");
+                BattleNight.tellEveryoneExcept(player, name + " has joined team " + ChatColor.BLUE + "<Blue>");
                 blueTeam++;
             }
 
@@ -62,11 +62,11 @@ public class Battle {
 
             if (team.equals(Team.RED)) {
                 redTeam--;
-                if (sendMsg1) plugin.tellEveryoneExcept(player, ChatColor.RED + name + ChatColor.WHITE + " " + msg1);
+                if (sendMsg1) BattleNight.tellEveryoneExcept(player, ChatColor.RED + name + ChatColor.WHITE + " " + msg1);
             }
             if (team.equals(Team.BLUE)) {
                 blueTeam--;
-                if (sendMsg1) plugin.tellEveryoneExcept(player, ChatColor.BLUE + name + ChatColor.WHITE + " " + msg1);
+                if (sendMsg1) BattleNight.tellEveryoneExcept(player, ChatColor.BLUE + name + ChatColor.WHITE + " " + msg1);
             }
 
             if (msg2 != null) {
