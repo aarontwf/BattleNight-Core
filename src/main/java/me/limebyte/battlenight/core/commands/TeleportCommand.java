@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
-import me.limebyte.battlenight.core.Other.Waypoint;
+import me.limebyte.battlenight.core.battle.Waypoint;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

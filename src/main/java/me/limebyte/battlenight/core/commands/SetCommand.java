@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Other.Waypoint;
+import me.limebyte.battlenight.core.battle.Waypoint;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.Listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Team;
+import me.limebyte.battlenight.core.battle.Team;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;

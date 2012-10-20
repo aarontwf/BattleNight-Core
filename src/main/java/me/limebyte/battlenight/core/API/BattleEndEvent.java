@@ -2,7 +2,7 @@ package me.limebyte.battlenight.core.API;
 
 import java.util.Map;
 
-import me.limebyte.battlenight.core.Team;
+import me.limebyte.battlenight.core.battle.Team;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

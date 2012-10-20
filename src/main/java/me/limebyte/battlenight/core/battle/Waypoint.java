@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.Other;
+package me.limebyte.battlenight.core.battle;
 
 public enum Waypoint {
     RED_LOUNGE("redlounge", "Red Lounge"),

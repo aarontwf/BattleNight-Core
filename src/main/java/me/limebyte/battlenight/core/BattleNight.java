@@ -30,7 +30,9 @@ import me.limebyte.battlenight.core.Listeners.RespawnListener;
 import me.limebyte.battlenight.core.Listeners.SignChanger;
 import me.limebyte.battlenight.core.Listeners.SignListener;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
-import me.limebyte.battlenight.core.Other.Waypoint;
+import me.limebyte.battlenight.core.battle.Battle;
+import me.limebyte.battlenight.core.battle.Team;
+import me.limebyte.battlenight.core.battle.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandMap;
 import me.limebyte.battlenight.core.commands.CommandPermission;
 
