@@ -33,7 +33,7 @@ public class AnnounceCommand extends BattleNightCommand {
             return false;
         }
 
-        BattleNight.tellEveryone(args[0]);
+        BattleNight.tellEveryone(ChatColor.translateAlternateColorCodes('&', args[0]));
         return true;
     }
 
