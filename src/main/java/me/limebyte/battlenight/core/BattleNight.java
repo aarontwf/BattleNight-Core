@@ -71,7 +71,6 @@ public class BattleNight extends JavaPlugin {
     public final static Map<String, String> BattleClasses = new HashMap<String, String>();
     public final static Map<String, String> BattleArmor = new HashMap<String, String>();
     public final Map<String, Sign> BattleSigns = new HashMap<String, Sign>();
-    public final Map<String, String> BattleUsersRespawn = new HashMap<String, String>();
     public final static Map<String, String> BattleTelePass = new HashMap<String, String>();
 
     // Other Classes
@@ -195,7 +194,7 @@ public class BattleNight extends JavaPlugin {
             pm.registerEvents(new DropListener(this), this);
             pm.registerEvents(new NameplateListener(this), this);
             pm.registerEvents(new ReadyListener(this), this);
-            pm.registerEvents(new RespawnListener(this), this);
+            pm.registerEvents(new RespawnListener(), this);
             pm.registerEvents(new SignChanger(this), this);
             pm.registerEvents(new SignListener(this), this);
 

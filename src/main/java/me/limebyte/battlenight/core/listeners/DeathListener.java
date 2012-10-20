@@ -62,7 +62,7 @@ public class DeathListener implements Listener {
                     }
                 }
 
-                plugin.BattleUsersRespawn.put(name, "true");
+                RespawnListener.toProcess.add(name);
                 BattleNight.battle.removePlayer(player, true, null, "You were killed!");
             }
         }
