@@ -35,23 +35,23 @@ public class ReadyListener implements Listener {
 
                 if (team.equals(Team.RED)) {
                     plugin.redTeamIronClicked = true;
-                    plugin.tellEveryone(ChatColor.RED + "Red " + ChatColor.WHITE + "team is ready!");
+                    BattleNight.tellEveryone(ChatColor.RED + "Red " + ChatColor.WHITE + "team is ready!");
 
                     if ((plugin.teamReady(Team.BLUE)) && (plugin.blueTeamIronClicked)) {
                         plugin.playersInLounge = false;
                         plugin.teleportAllToSpawn();
                         BattleNight.battleInProgress = true;
-                        plugin.tellEveryone("Let the Battle begin!");
+                        BattleNight.tellEveryone("Let the Battle begin!");
                     }
                 } else if (team.equals(Team.BLUE)) {
                     plugin.blueTeamIronClicked = true;
-                    plugin.tellEveryone(ChatColor.BLUE + "Blue " + ChatColor.WHITE + "team is ready!");
+                    BattleNight.tellEveryone(ChatColor.BLUE + "Blue " + ChatColor.WHITE + "team is ready!");
 
                     if ((plugin.teamReady(Team.RED)) && (plugin.redTeamIronClicked)) {
                         plugin.playersInLounge = false;
                         plugin.teleportAllToSpawn();
                         BattleNight.battleInProgress = true;
-                        plugin.tellEveryone("Let the Battle begin!");
+                        BattleNight.tellEveryone("Let the Battle begin!");
                     }
                 }
             } else if ((block.getTypeId() == BattleNight.configReadyBlock) && (BattleNight.getBattle().usersTeam.containsKey(name) && (plugin.playersInLounge))) {
