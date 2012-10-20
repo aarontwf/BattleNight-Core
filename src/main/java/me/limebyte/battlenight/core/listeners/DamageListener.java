@@ -57,7 +57,7 @@ public class DamageListener implements Listener {
         }
 
         if (BattleNight.getBattle().usersTeam.containsKey(damager.getName())) {
-            if (plugin.playersInLounge)
+            if (BattleNight.playersInLounge)
                 return false;
             if (areEnemies(damager, damaged) || damager == damaged) {
                 return true;

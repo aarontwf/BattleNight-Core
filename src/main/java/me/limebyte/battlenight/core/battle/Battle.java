@@ -49,7 +49,7 @@ public class Battle {
             Messaging.tellEveryoneExcept(player, name + " has joined team" + team.getColour() + team.getName() + ChatColor.WHITE + ".");
 
             plugin.setNames(player);
-            plugin.playersInLounge = true;
+            BattleNight.playersInLounge = true;
         } else {
             Messaging.tell(player, Track.MUST_HAVE_EMPTY.msg);
         }
@@ -78,7 +78,7 @@ public class Battle {
             if (redTeam == 0 || blueTeam == 0) {
 
                 // If the battle started
-                if (!plugin.playersInLounge) {
+                if (!BattleNight.playersInLounge) {
                     // If red won
                     if (redTeam > 0) {
                         Messaging.tellEveryone(Track.RED_WON.msg);

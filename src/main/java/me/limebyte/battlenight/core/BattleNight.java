@@ -79,7 +79,7 @@ public class BattleNight extends JavaPlugin {
     public boolean redTeamIronClicked = false;
     public boolean blueTeamIronClicked = false;
     public static boolean battleInProgress = false;
-    public boolean playersInLounge = false;
+    public static boolean playersInLounge = false;
 
     // config.yml Values
     public static boolean configUsePermissions = false;

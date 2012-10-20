@@ -32,7 +32,7 @@ public class DeathListener implements Listener {
                 event.getDrops().clear();
                 ((PlayerDeathEvent) event).setDeathMessage("");
 
-                if (!plugin.playersInLounge) {
+                if (!BattleNight.playersInLounge) {
                     try {
                         final Player killer = player.getKiller();
                         String playerName;
