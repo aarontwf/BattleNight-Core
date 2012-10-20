@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.chat;
+package me.limebyte.battlenight.core.util.chat;
 
 import java.util.List;
 

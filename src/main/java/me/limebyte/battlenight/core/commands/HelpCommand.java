@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.limebyte.battlenight.core.chat.ListPage;
+import me.limebyte.battlenight.core.util.chat.ListPage;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
