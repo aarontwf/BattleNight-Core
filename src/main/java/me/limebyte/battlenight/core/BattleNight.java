@@ -533,7 +533,7 @@ public class BattleNight extends JavaPlugin {
         return false;
     }
 
-    public void tellEveryone(String msg) {
+    public static void tellEveryone(String msg) {
         for (String name : getBattle().usersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + msg);
         }

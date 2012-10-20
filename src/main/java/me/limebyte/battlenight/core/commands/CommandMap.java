@@ -13,6 +13,7 @@ public class CommandMap {
     private static final List<BattleNightCommand> commands = new ArrayList<BattleNightCommand>();
 
     static {
+        commands.add(new AnnounceCommand());
         commands.add(new EndCommand());
         commands.add(new HelpCommand());
         commands.add(new JoinCommand());
