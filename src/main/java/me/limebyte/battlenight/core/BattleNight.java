@@ -651,6 +651,7 @@ public class BattleNight extends JavaPlugin {
         BattleTelePass.put(player.getName(), "yes");
         player.teleport(destination);
         BattleTelePass.remove(player.getName());
+        TagAPI.refreshPlayer(player);
     }
 
     public boolean hasPerm(CommandPermission perm, CommandSender sender) {
