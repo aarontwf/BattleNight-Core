@@ -6,8 +6,7 @@ public class Tracks {
     public enum Track {
         RED_WON(ChatColor.RED + "Red Team won the Battle!"), BLUE_WON(
                 ChatColor.BLUE + "Blue Team won the Battle!"), DRAW(
-                ChatColor.DARK_PURPLE + "Draw!"), BATTLE_ENDED(
-                "The current Battle has ended."),
+                ChatColor.DARK_PURPLE + "Draw!"),
 
         BATTLE_IN_PROGRESS("A game is already in progress."), BATTLE_NOT_IN_PROGRESS(
                 "A Battle is not currently in progress."), MUST_HAVE_EMPTY(

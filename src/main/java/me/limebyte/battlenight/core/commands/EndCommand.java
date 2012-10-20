@@ -3,9 +3,9 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Other.Tracks.Track;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class EndCommand extends BattleNightCommand {
@@ -23,7 +23,7 @@ public class EndCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         BattleNight.getBattle().end();
-        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.BATTLE_ENDED.msg);
+        Messaging.tell(sender, Message.BATTLE_ENDED);
         return true;
     }
 

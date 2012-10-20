@@ -8,6 +8,7 @@ import java.util.Set;
 import me.limebyte.battlenight.core.API.BattleEndEvent;
 import me.limebyte.battlenight.core.Other.Tracks.Track;
 import me.limebyte.battlenight.core.Other.Waypoint;
+import me.limebyte.battlenight.core.util.Messaging;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,25 +32,26 @@ public class Battle {
     public void addPlayer(Player player) {
         if (plugin.preparePlayer(player)) {
             String name = player.getName();
+            Team team;
 
             if (blueTeam > redTeam) {
-                BattleNight.goToWaypoint(player, Waypoint.RED_LOUNGE);
-                usersTeam.put(name, Team.RED);
-                BattleNight.tellPlayer(player, "Welcome! You are on team " + ChatColor.RED + "<Red>");
-                BattleNight.tellEveryoneExcept(player, name + " has joined team " + ChatColor.RED + "<Red>");
+                team = Team.RED;
                 redTeam++;
+                BattleNight.goToWaypoint(player, Waypoint.RED_LOUNGE);
             } else {
-                BattleNight.goToWaypoint(player, Waypoint.BLUE_LOUNGE);
-                usersTeam.put(name, Team.BLUE);
-                BattleNight.tellPlayer(player, "Welcome! You are on team " + ChatColor.BLUE + "<Blue>");
-                BattleNight.tellEveryoneExcept(player, name + " has joined team " + ChatColor.BLUE + "<Blue>");
+                team = Team.BLUE;
                 blueTeam++;
+                BattleNight.goToWaypoint(player, Waypoint.BLUE_LOUNGE);
             }
+
+            usersTeam.put(name, team);
+            Messaging.tell(player, "Welcome! You are on team " + team.getColour() + team.getName() + ChatColor.WHITE + ".");
+            Messaging.tellEveryoneExcept(player, name + " has joined team" + team.getColour() + team.getName() + ChatColor.WHITE + ".");
 
             plugin.setNames(player);
             plugin.playersInLounge = true;
         } else {
-            BattleNight.tellPlayer(player, Track.MUST_HAVE_EMPTY);
+            Messaging.tell(player, Track.MUST_HAVE_EMPTY.msg);
         }
     }
 
@@ -62,15 +64,14 @@ public class Battle {
 
             if (team.equals(Team.RED)) {
                 redTeam--;
-                if (sendMsg1) BattleNight.tellEveryoneExcept(player, ChatColor.RED + name + ChatColor.WHITE + " " + msg1);
-            }
-            if (team.equals(Team.BLUE)) {
+            } else if (team.equals(Team.BLUE)) {
                 blueTeam--;
-                if (sendMsg1) BattleNight.tellEveryoneExcept(player, ChatColor.BLUE + name + ChatColor.WHITE + " " + msg1);
             }
 
+            if (sendMsg1) Messaging.tellEveryoneExcept(player, team.getColour() + name + ChatColor.WHITE + " " + msg1);
+
             if (msg2 != null) {
-                BattleNight.tellPlayer(player, msg2);
+                Messaging.tell(player, msg2);
             }
 
             // If red or blue won
@@ -80,15 +81,15 @@ public class Battle {
                 if (!plugin.playersInLounge) {
                     // If red won
                     if (redTeam > 0) {
-                        plugin.tellEveryone(Track.RED_WON);
+                        Messaging.tellEveryone(Track.RED_WON.msg);
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
                         // If blue won
                     } else if (blueTeam > 0) {
-                        plugin.tellEveryone(Track.BLUE_WON);
+                        Messaging.tellEveryone(Track.BLUE_WON.msg);
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
                         // If neither team won
                     } else {
-                        plugin.tellEveryone(Track.DRAW);
+                        Messaging.tellEveryone(Track.DRAW.msg);
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
                     }
                 }
@@ -153,13 +154,13 @@ public class Battle {
 
     public void end() {
         if (blueTeam > redTeam) {
-            plugin.tellEveryone(Track.BLUE_WON);
+            Messaging.tellEveryone(Track.BLUE_WON.msg);
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
         } else if (redTeam > blueTeam) {
-            plugin.tellEveryone(Track.RED_WON);
+            Messaging.tellEveryone(Track.RED_WON.msg);
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
         } else {
-            plugin.tellEveryone(Track.DRAW);
+            Messaging.tellEveryone(Track.DRAW.msg);
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
         }
 
