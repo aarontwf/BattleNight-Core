@@ -19,20 +19,13 @@ public class ParticleEffect {
             loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_SMOKE_COUNT) * 2);
             loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
-            // Thicken up the smoke
-            for (int j = 0; j < 4; j++) {
-                playFlamesEffect(loc);
-            }
+            playSmokeEffect(loc, Direction.UP);
+            playSmokeEffect(loc, Direction.UP);
         }
     }
 
-    @SuppressWarnings("unused")
     private static void playSmokeEffect(Location location, Direction direction) {
         location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
-    }
-
-    private static void playFlamesEffect(Location location) {
-        location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES, 1);
     }
 
     private enum Direction {
