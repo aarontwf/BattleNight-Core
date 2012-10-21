@@ -31,7 +31,7 @@ public class JoinCommand extends BattleNightCommand {
                 return false;
             }
 
-            if (BattleNight.battleInProgress) {
+            if (BattleNight.getBattle().isInProgress()) {
                 BattleNight.tellPlayer(player, Track.BATTLE_IN_PROGRESS);
                 return false;
             }

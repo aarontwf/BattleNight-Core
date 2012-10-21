@@ -24,7 +24,7 @@ public class ReloadCommand extends BattleNightCommand {
         sender.sendMessage(BattleNight.BNTag + "Reloading BattleNight...");
 
         try {
-            BattleNight.getBattle().end();
+            BattleNight.getBattle().stop();
             BattleNight.reloadConfigFiles();
             sender.sendMessage(BattleNight.BNTag + ChatColor.GREEN + "Reloaded successfully.");
             return true;

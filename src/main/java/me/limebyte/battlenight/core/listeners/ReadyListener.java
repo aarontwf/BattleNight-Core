@@ -39,9 +39,7 @@ public class ReadyListener implements Listener {
 
                     if ((plugin.teamReady(Team.BLUE)) && (plugin.blueTeamIronClicked)) {
                         BattleNight.playersInLounge = false;
-                        plugin.teleportAllToSpawn();
-                        BattleNight.battleInProgress = true;
-                        BattleNight.tellEveryone("Let the Battle begin!");
+                        BattleNight.getBattle().start();
                     }
                 } else if (team.equals(Team.BLUE)) {
                     plugin.blueTeamIronClicked = true;
@@ -49,9 +47,7 @@ public class ReadyListener implements Listener {
 
                     if ((plugin.teamReady(Team.RED)) && (plugin.redTeamIronClicked)) {
                         BattleNight.playersInLounge = false;
-                        plugin.teleportAllToSpawn();
-                        BattleNight.battleInProgress = true;
-                        BattleNight.tellEveryone("Let the Battle begin!");
+                        BattleNight.getBattle().start();
                     }
                 }
             } else if ((block.getTypeId() == BattleNight.configReadyBlock) && (BattleNight.getBattle().usersTeam.containsKey(name) && (BattleNight.playersInLounge))) {

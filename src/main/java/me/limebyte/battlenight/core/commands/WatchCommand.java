@@ -31,7 +31,7 @@ public class WatchCommand extends BattleNightCommand {
                 return false;
             }
 
-            if (!BattleNight.battleInProgress) {
+            if (!BattleNight.getBattle().isInProgress()) {
                 BattleNight.tellPlayer(player, Track.BATTLE_NOT_IN_PROGRESS);
                 return false;
             }

@@ -22,7 +22,7 @@ public class RespawnListener implements Listener {
         if (toProcess.contains(name)) {
             // If the Battle is still going on, take them to the spectator area
             // to watch
-            if (BattleNight.battleInProgress) {
+            if (BattleNight.getBattle().isInProgress()) {
                 event.setRespawnLocation(BattleNight.getCoords("spectator"));
                 BattleNight.getBattle().resetPlayer(player, false, true);
                 BattleNight.addSpectator(player, "death");

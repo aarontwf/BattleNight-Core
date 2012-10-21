@@ -22,7 +22,7 @@ public class AnnounceCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        if (!BattleNight.battleInProgress && !BattleNight.playersInLounge) {
+        if (!BattleNight.getBattle().isInProgress() && !BattleNight.playersInLounge) {
             sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.BATTLE_NOT_IN_PROGRESS.msg);
             return false;
         }

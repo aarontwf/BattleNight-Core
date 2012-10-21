@@ -9,6 +9,7 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.api.BattleEndEvent;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,9 +18,10 @@ import org.kitteh.tag.TagAPI;
 
 public class Battle {
 
-    BattleNight plugin;
-    int redTeam = 0;
-    int blueTeam = 0;
+    private BattleNight plugin;
+    private int redTeam = 0;
+    private int blueTeam = 0;
+    private boolean inProgress = false;
 
     public final Map<String, Team> usersTeam = new HashMap<String, Team>();
     public final Map<String, String> usersClass = new HashMap<String, String>();
@@ -81,15 +83,15 @@ public class Battle {
                 if (!BattleNight.playersInLounge) {
                     // If red won
                     if (redTeam > 0) {
-                        Messaging.tellEveryone(Track.RED_WON.msg);
+                        Messaging.tellEveryone(Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
                         // If blue won
                     } else if (blueTeam > 0) {
-                        Messaging.tellEveryone(Track.BLUE_WON.msg);
+                        Messaging.tellEveryone(Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
                         // If neither team won
                     } else {
-                        Messaging.tellEveryone(Track.DRAW.msg);
+                        Messaging.tellEveryone(Message.DRAW);
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
                     }
                 }
@@ -134,7 +136,7 @@ public class Battle {
         plugin.removeAllSpectators();
         plugin.cleanSigns();
         plugin.BattleSigns.clear();
-        BattleNight.battleInProgress = false;
+        inProgress = false;
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
         usersTeam.clear();
@@ -152,15 +154,15 @@ public class Battle {
         }
     }
 
-    public void end() {
+    public void stop() {
         if (blueTeam > redTeam) {
-            Messaging.tellEveryone(Track.BLUE_WON.msg);
+            Messaging.tellEveryone(Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
         } else if (redTeam > blueTeam) {
-            Messaging.tellEveryone(Track.RED_WON.msg);
+            Messaging.tellEveryone(Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
         } else {
-            Messaging.tellEveryone(Track.DRAW.msg);
+            Messaging.tellEveryone(Message.DRAW);
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
         }
 
@@ -174,5 +176,15 @@ public class Battle {
         resetBattle();
 
         plugin.removeAllSpectators();
+    }
+
+    public boolean isInProgress() {
+        return inProgress;
+    }
+
+    public void start() {
+        inProgress = true;
+        Messaging.tellEveryone(Message.BATTLE_STARTED);
+        plugin.teleportAllToSpawn();
     }
 }

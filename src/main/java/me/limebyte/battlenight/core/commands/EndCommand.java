@@ -22,7 +22,7 @@ public class EndCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        BattleNight.getBattle().end();
+        BattleNight.getBattle().stop();
         Messaging.tell(sender, Message.BATTLE_ENDED);
         return true;
     }

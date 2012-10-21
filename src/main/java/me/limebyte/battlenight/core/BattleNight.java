@@ -78,7 +78,6 @@ public class BattleNight extends JavaPlugin {
 
     public boolean redTeamIronClicked = false;
     public boolean blueTeamIronClicked = false;
-    public static boolean battleInProgress = false;
     public static boolean playersInLounge = false;
 
     // config.yml Values
@@ -107,9 +106,9 @@ public class BattleNight extends JavaPlugin {
     // ////////////////////
     @Override
     public void onDisable() {
-        if (battleInProgress || playersInLounge) {
+        if (getBattle().isInProgress() || playersInLounge) {
             log.info("Ending current Battle...");
-            battle.end();
+            battle.stop();
         }
         this.cleanSigns();
         PluginDescriptionFile pdfFile = getDescription();
