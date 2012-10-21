@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -546,7 +545,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     public void killFeed(String msg) {
-        LinkedList<Player> told = new LinkedList<Player>();
+        List<Player> told = new ArrayList<Player>();
 
         for (String name : getBattle().usersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) {
