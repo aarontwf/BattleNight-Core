@@ -48,7 +48,7 @@ public class Battle {
 
             usersTeam.put(name, team);
             Messaging.tell(player, "Welcome! You are on team " + team.getColour() + team.getName() + ChatColor.WHITE + ".");
-            Messaging.tellEveryoneExcept(player, name + " has joined team" + team.getColour() + team.getName() + ChatColor.WHITE + ".");
+            Messaging.tellEveryoneExcept(player, name + " has joined team " + team.getColour() + team.getName() + ChatColor.WHITE + ".");
 
             plugin.setNames(player);
             BattleNight.playersInLounge = true;
