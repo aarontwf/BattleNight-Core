@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.Configuration;
 
 import org.bukkit.command.CommandSender;
 
@@ -32,7 +32,7 @@ public abstract class BattleNightCommand {
     public boolean matches(String input) {
         return input.equalsIgnoreCase(getName());
     }
-    
+
     public boolean labelMatches(String input) {
         return input.equalsIgnoreCase(getLabel());
     }
@@ -125,7 +125,7 @@ public abstract class BattleNightCommand {
 
         if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) { return true; }
 
-        if (BattleNight.config.getBoolean("UsePermissions")) {
+        if (Configuration.config.getBoolean("UsePermissions", false)) {
             String permission = getPermission().getBukkitPerm();
 
             if (sender.hasPermission(permission)) {

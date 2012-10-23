@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Team;
+import me.limebyte.battlenight.core.util.Configuration;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -27,7 +28,7 @@ public class ReadyListener implements Listener {
             final Block block = event.getClickedBlock();
             final Player player = event.getPlayer();
             final String name = player.getName();
-            if ((block.getTypeId() == BattleNight.configReadyBlock)
+            if ((block.getTypeId() == Configuration.config.getInt("ReadyBlock", 42))
                     && (BattleNight.getBattle().usersTeam.containsKey(name) && (BattleNight.playersInLounge))
                     && (plugin.teamReady(BattleNight.getBattle().usersTeam.get(player
                             .getName())))) {
@@ -50,7 +51,7 @@ public class ReadyListener implements Listener {
                         BattleNight.getBattle().start();
                     }
                 }
-            } else if ((block.getTypeId() == BattleNight.configReadyBlock) && (BattleNight.getBattle().usersTeam.containsKey(name) && (BattleNight.playersInLounge))) {
+            } else if ((block.getTypeId() == Configuration.config.getInt("ReadyBlock", 42)) && (BattleNight.getBattle().usersTeam.containsKey(name) && (BattleNight.playersInLounge))) {
                 player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
             }
         }

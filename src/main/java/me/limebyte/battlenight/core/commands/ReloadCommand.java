@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.Configuration;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ public class ReloadCommand extends BattleNightCommand {
 
         try {
             BattleNight.getBattle().stop();
-            BattleNight.reloadConfigFiles();
+            Configuration.reloadYamls();
             sender.sendMessage(BattleNight.BNTag + ChatColor.GREEN + "Reloaded successfully.");
             return true;
         } catch (Exception e) {

@@ -1,11 +1,6 @@
 package me.limebyte.battlenight.core;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,6 +29,8 @@ import me.limebyte.battlenight.core.listeners.RespawnListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.Configuration;
+import me.limebyte.battlenight.core.util.Configuration.ConfigFile;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,9 +42,6 @@ import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -79,41 +73,6 @@ public class BattleNight extends JavaPlugin {
     public boolean blueTeamIronClicked = false;
     public static boolean playersInLounge = false;
 
-    // config.yml Values
-    public static boolean configUsePermissions = false;
-    public static boolean configFriendlyFire = false;
-    public static boolean configStopHealthRegen = true;
-    public static String configInventoryType = "prompt";
-    public static int configReadyBlock = 42;
-    public static boolean configDebug = false;
-
-    // classes.yml Values
-    public static int classesDummyItem = 6;
-
-    // Declare Files and FileConfigurations
-    static File configFile;
-    static File classesFile;
-    static File waypointsFile;
-    static File playerFile;
-    public static FileConfiguration config;
-    static FileConfiguration classes;
-    static FileConfiguration waypoints;
-    static FileConfiguration players;
-
-    // ////////////////////
-    // Plug-in Disable //
-    // ////////////////////
-    @Override
-    public void onDisable() {
-        if (getBattle().isInProgress() || playersInLounge) {
-            log.info("Ending current Battle...");
-            battle.stop();
-        }
-        this.cleanSigns();
-        PluginDescriptionFile pdfFile = getDescription();
-        log.info("Version " + pdfFile.getVersion() + " has been disabled.");
-    }
-
     // ///////////////////
     // Plug-in Enable //
     // ////////////////////
@@ -126,25 +85,7 @@ public class BattleNight extends JavaPlugin {
 
         battle = new Battle();
 
-        // Initialise Files and FileConfigurations
-        configFile = new File(getDataFolder(), "config.yml");
-        classesFile = new File(getDataFolder(), "classes.yml");
-        waypointsFile = new File(getDataFolder() + "/PluginData", "waypoints.dat");
-        playerFile = new File(getDataFolder() + "/PluginData", "players.dat");
-
-        // Use firstRun(); method
-        try {
-            firstRun();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Declare and Load the FileConfigurations
-        config = new YamlConfiguration();
-        classes = new YamlConfiguration();
-        waypoints = new YamlConfiguration();
-        players = new YamlConfiguration();
-        loadYamls();
+        Configuration.init();
 
         // Metrics
         try {
@@ -154,26 +95,12 @@ public class BattleNight extends JavaPlugin {
             // Failed to submit the stats :-(
         }
 
-        // Configuration
-        configUsePermissions = config.getBoolean("UsePermissions");
-        configFriendlyFire = config.getBoolean("FriendlyFire");
-        configStopHealthRegen = config.getBoolean("StopHealthRegen");
-        configInventoryType = config.getString("InventoryType").toLowerCase();
-        configReadyBlock = config.getInt("ReadyBlock");
-        configDebug = config.getBoolean("Debug");
-
-        classesDummyItem = classes.getInt("DummyItem");
-
-        reloadClasses();
-
         // Debug
-        if (configDebug) {
-            if (configUsePermissions) {
+        if (Configuration.config.getBoolean("Debug", false)) {
+            if (Configuration.config.getBoolean("UsePermissions", false)) {
                 log.info("Permissions Enabled.");
-            } else if (!configUsePermissions) {
-                log.info("Permissions Disabled, using Op.");
             } else {
-                log.warning("Permissions not setup in config!");
+                log.info("Permissions Disabled, using Op.");
             }
             log.info("Classes: " + BattleClasses);
             log.info("Armor: " + BattleArmor);
@@ -204,109 +131,18 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    // Fill Configuration Files with Defaults
-    private void firstRun() throws Exception {
-        if (!configFile.exists()) { // Checks If The YAML File Does Not Exist
-            configFile.getParentFile().mkdirs(); // Creates the
-                                                 // /Plugins/BattleNight/
-                                                 // Directory If Not Found
-            copy(getResource("config.yml"), configFile); // Copies the YAML From
-                                                         // Your Jar to the
-                                                         // Folder
+    // ////////////////////
+    // Plug-in Disable //
+    // ////////////////////
+    @Override
+    public void onDisable() {
+        if (getBattle().isInProgress() || playersInLounge) {
+            log.info("Ending current Battle...");
+            battle.stop();
         }
-        if (!classesFile.exists()) {
-            classesFile.getParentFile().mkdirs();
-            copy(getResource("classes.yml"), classesFile);
-        }
-        if (!waypointsFile.exists()) {
-            waypointsFile.getParentFile().mkdirs();
-            copy(getResource("waypoints.dat"), waypointsFile);
-        }
-        if (!playerFile.exists()) {
-            playerFile.getParentFile().mkdirs();
-            copy(getResource("players.dat"), playerFile);
-        }
-    }
-
-    // YAML Copy Method
-    public static void copy(InputStream in, File file) {
-        try {
-            OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) != -1) {
-                out.write(buf, 0, len);
-            }
-            out.close();
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // YAML Load Method
-    public void loadYamls() {
-        try {
-            config.load(configFile);
-            classes.load(classesFile);
-            waypoints.load(waypointsFile);
-            players.load(playerFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void reloadConfigFiles() throws FileNotFoundException, IOException, InvalidConfigurationException {
-        config.load(configFile);
-        classes.load(classesFile);
-        configUsePermissions = config.getBoolean("UsePermissions");
-        configFriendlyFire = config.getBoolean("FriendlyFire");
-        configStopHealthRegen = config.getBoolean("StopHealthRegen");
-        configInventoryType = config.getString("InventoryType").toLowerCase();
-        configReadyBlock = config.getInt("ReadyBlock");
-        configDebug = config.getBoolean("Debug");
-        classesDummyItem = classes.getInt("DummyItem");
-        reloadClasses();
-    }
-
-    // Waypoints Load Method
-    public static void loadWaypoints() {
-        try {
-            waypoints.load(waypointsFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // YAML Save Method
-    public void saveYamls() {
-        try {
-            config.save(configFile);
-            classes.save(classesFile);
-            waypoints.save(waypointsFile);
-            players.save(playerFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void saveYAML(ConfigFile file) {
-        try {
-            if (file.equals(ConfigFile.Main))
-                config.save(configFile);
-            if (file.equals(ConfigFile.Classes))
-                classes.save(classesFile);
-            if (file.equals(ConfigFile.Waypoints))
-                waypoints.save(waypointsFile);
-            if (file.equals(ConfigFile.Players))
-                players.save(playerFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public enum ConfigFile {
-        Main, Classes, Waypoints, Players
+        this.cleanSigns();
+        PluginDescriptionFile pdfFile = getDescription();
+        log.info("Version " + pdfFile.getVersion() + " has been disabled.");
     }
 
     @Override
@@ -325,36 +161,36 @@ public class BattleNight extends JavaPlugin {
     // Set Coords and put in waypoints.data
     public void setCoords(Player player, String place) {
         Location location = player.getLocation();
-        loadWaypoints();
-        waypoints.set("coords." + place + ".world", location.getWorld().getName());
-        waypoints.set("coords." + place + ".x", location.getX());
-        waypoints.set("coords." + place + ".y", location.getY());
-        waypoints.set("coords." + place + ".z", location.getZ());
-        waypoints.set("coords." + place + ".yaw", location.getYaw());
-        waypoints.set("coords." + place + ".pitch", location.getPitch());
-        saveYAML(ConfigFile.Waypoints);
+        Configuration.loadWaypoints();
+        Configuration.waypoints.set("coords." + place + ".world", location.getWorld().getName());
+        Configuration.waypoints.set("coords." + place + ".x", location.getX());
+        Configuration.waypoints.set("coords." + place + ".y", location.getY());
+        Configuration.waypoints.set("coords." + place + ".z", location.getZ());
+        Configuration.waypoints.set("coords." + place + ".yaw", location.getYaw());
+        Configuration.waypoints.set("coords." + place + ".pitch", location.getPitch());
+        Configuration.saveYAML(ConfigFile.Waypoints);
     }
 
     // Set Coords and put in waypoints.data
     public static void setCoords(Waypoint waypoint, Location location) {
         String place = waypoint.getName();
-        loadWaypoints();
-        waypoints.set("coords." + place + ".world", location.getWorld().getName());
-        waypoints.set("coords." + place + ".x", location.getX());
-        waypoints.set("coords." + place + ".y", location.getY());
-        waypoints.set("coords." + place + ".z", location.getZ());
-        waypoints.set("coords." + place + ".yaw", location.getYaw());
-        waypoints.set("coords." + place + ".pitch", location.getPitch());
-        saveYAML(ConfigFile.Waypoints);
+        Configuration.loadWaypoints();
+        Configuration.waypoints.set("coords." + place + ".world", location.getWorld().getName());
+        Configuration.waypoints.set("coords." + place + ".x", location.getX());
+        Configuration.waypoints.set("coords." + place + ".y", location.getY());
+        Configuration.waypoints.set("coords." + place + ".z", location.getZ());
+        Configuration.waypoints.set("coords." + place + ".yaw", location.getYaw());
+        Configuration.waypoints.set("coords." + place + ".pitch", location.getPitch());
+        Configuration.saveYAML(ConfigFile.Waypoints);
     }
 
     // Get Coords from waypoints.data
     public static Location getCoords(String place) {
-        loadWaypoints();
-        Double x = waypoints.getDouble("coords." + place + ".x", 0);
-        Double y = waypoints.getDouble("coords." + place + ".y", 0);
-        Double z = waypoints.getDouble("coords." + place + ".z", 0);
-        String yawToParse = waypoints.getString("coords." + place + ".yaw");
+        Configuration.loadWaypoints();
+        Double x = Configuration.waypoints.getDouble("coords." + place + ".x", 0);
+        Double y = Configuration.waypoints.getDouble("coords." + place + ".y", 0);
+        Double z = Configuration.waypoints.getDouble("coords." + place + ".z", 0);
+        String yawToParse = Configuration.waypoints.getString("coords." + place + ".yaw");
         float yaw = 0;
         if (yawToParse != null) {
             try {
@@ -364,7 +200,7 @@ public class BattleNight extends JavaPlugin {
                 // a default value
             }
         }
-        String pitchToParse = waypoints.getString("coords." + place + ".pitch");
+        String pitchToParse = Configuration.waypoints.getString("coords." + place + ".pitch");
         float pitch = 0;
         if (pitchToParse != null) {
             try {
@@ -374,15 +210,14 @@ public class BattleNight extends JavaPlugin {
                 // a default value
             }
         }
-        World world = Bukkit.getServer().getWorld(
-                waypoints.getString("coords." + place + ".world"));
+        World world = Bukkit.getServer().getWorld(Configuration.waypoints.getString("coords." + place + ".world"));
         return new Location(world, x, y, z, yaw, pitch);
     }
 
     public static boolean pointSet(Waypoint waypoint) {
-        loadWaypoints();
+        Configuration.loadWaypoints();
         try {
-            Set<String> set = waypoints.getConfigurationSection("coords")
+            Set<String> set = Configuration.waypoints.getConfigurationSection("coords")
                     .getKeys(false);
             List<String> setpoints = new ArrayList<String>(set);
             if (setpoints.contains(waypoint.getName())) {
@@ -397,11 +232,11 @@ public class BattleNight extends JavaPlugin {
 
     // Check if all Waypoints have been set.
     public static Boolean isSetup() {
-        loadWaypoints();
-        if (!waypoints.isSet("coords")) {
+        Configuration.loadWaypoints();
+        if (!Configuration.waypoints.isSet("coords")) {
             return false;
         } else {
-            Set<String> set = waypoints.getConfigurationSection("coords")
+            Set<String> set = Configuration.waypoints.getConfigurationSection("coords")
                     .getKeys(false);
             List<String> list = new ArrayList<String>(set);
             if (list.size() == 6) {
@@ -413,11 +248,11 @@ public class BattleNight extends JavaPlugin {
     }
 
     public static int numSetupPoints() {
-        loadWaypoints();
-        if (!waypoints.isSet("coords")) {
+        Configuration.loadWaypoints();
+        if (!Configuration.waypoints.isSet("coords")) {
             return 0;
         } else {
-            Set<String> set = waypoints.getConfigurationSection("coords").getKeys(false);
+            Set<String> set = Configuration.waypoints.getConfigurationSection("coords").getKeys(false);
             List<String> list = new ArrayList<String>(set);
             return list.size();
         }
@@ -433,8 +268,8 @@ public class BattleNight extends JavaPlugin {
         for (int i = 0; i < items.length; i++) {
             String item = items[i];
             player.getInventory().setItem(i, parseItem(item));
-            if (player.getInventory().contains(classesDummyItem)) {
-                player.getInventory().remove(classesDummyItem);
+            if (player.getInventory().contains(Configuration.classes.getInt("DummyItem", 6))) {
+                player.getInventory().remove(Configuration.classes.getInt("DummyItem", 6));
             }
         }
         // Set Armour
@@ -659,11 +494,11 @@ public class BattleNight extends JavaPlugin {
         Player player = (Player) sender;
 
         if (perm.equals(CommandPermission.ADMIN)) {
-            if ((configUsePermissions && player.hasPermission("battlenight.admin")) || (!configUsePermissions && player.isOp())) {
+            if ((Configuration.config.getBoolean("UsePermissions", false) && player.hasPermission("battlenight.admin")) || (!Configuration.config.getBoolean("UsePermissions", false) && player.isOp())) {
                 return true;
-            } else if ((configUsePermissions && !player
+            } else if ((Configuration.config.getBoolean("UsePermissions", false) && !player
                     .hasPermission("battlenight.admin"))
-                    || (!configUsePermissions && !player.isOp())) {
+                    || (!Configuration.config.getBoolean("UsePermissions", false) && !player.isOp())) {
                 tellPlayer(player, Track.NO_PERMISSION);
                 return false;
             } else {
@@ -672,13 +507,13 @@ public class BattleNight extends JavaPlugin {
             }
         }
         if (perm.equals(CommandPermission.MODERATOR)) {
-            if ((configUsePermissions && player
+            if ((Configuration.config.getBoolean("UsePermissions", false) && player
                     .hasPermission("battlenight.moderator"))
-                    || (!configUsePermissions && player.isOp())) {
+                    || (!Configuration.config.getBoolean("UsePermissions", false) && player.isOp())) {
                 return true;
-            } else if ((configUsePermissions && !player
+            } else if ((Configuration.config.getBoolean("UsePermissions", false) && !player
                     .hasPermission("battlenight.moderator"))
-                    || (!configUsePermissions && !player.isOp())) {
+                    || (!Configuration.config.getBoolean("UsePermissions", false) && !player.isOp())) {
                 tellPlayer(player, Track.NO_PERMISSION);
                 return false;
             } else {
@@ -686,11 +521,11 @@ public class BattleNight extends JavaPlugin {
                 return false;
             }
         } else if (perm.equals(CommandPermission.USER)) {
-            if ((configUsePermissions && player
+            if ((Configuration.config.getBoolean("UsePermissions", false) && player
                     .hasPermission("battlenight.user"))
-                    || !configUsePermissions) {
+                    || !Configuration.config.getBoolean("UsePermissions", false)) {
                 return true;
-            } else if (configUsePermissions
+            } else if (Configuration.config.getBoolean("UsePermissions", false)
                     && !player.hasPermission("battlenight.user")) {
                 tellPlayer(player, Track.NO_PERMISSION);
                 return false;
@@ -784,52 +619,52 @@ public class BattleNight extends JavaPlugin {
     }
 
     public boolean preparePlayer(Player p) {
-        if (config.getString("InventoryType").equalsIgnoreCase("prompt") && !hasEmptyInventory(p)) return false;
+        if (Configuration.config.getString("InventoryType", "save").equalsIgnoreCase("prompt") && !hasEmptyInventory(p)) return false;
 
         String name = p.getName();
 
         // Inventory
-        if (config.getString("InventoryType").equalsIgnoreCase("save")) {
-            config.set(name + ".data.inv.main", Arrays.asList(p.getInventory().getContents()));
-            config.set(name + ".data.inv.armor", Arrays.asList(p.getInventory().getArmorContents()));
+        if (Configuration.config.getString("InventoryType", "save").equalsIgnoreCase("save")) {
+            Configuration.config.set(name + ".data.inv.main", Arrays.asList(p.getInventory().getContents()));
+            Configuration.config.set(name + ".data.inv.armor", Arrays.asList(p.getInventory().getArmorContents()));
         }
 
         // Health
-        config.set(name + ".data.health", p.getHealth());
+        Configuration.config.set(name + ".data.health", p.getHealth());
 
         // Hunger
-        config.set(name + ".data.hunger.foodlevel", p.getFoodLevel());
-        config.set(name + ".data.hunger.saturation", Float.toString(p.getSaturation()));
-        config.set(name + ".data.hunger.exhaustion", Float.toString(p.getExhaustion()));
+        Configuration.config.set(name + ".data.hunger.foodlevel", p.getFoodLevel());
+        Configuration.config.set(name + ".data.hunger.saturation", Float.toString(p.getSaturation()));
+        Configuration.config.set(name + ".data.hunger.exhaustion", Float.toString(p.getExhaustion()));
 
         // Experience
-        config.set(name + ".data.exp.level", p.getLevel());
-        config.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
+        Configuration.config.set(name + ".data.exp.level", p.getLevel());
+        Configuration.config.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
 
         // GameMode
-        config.set(name + ".data.gamemode", p.getGameMode().getValue());
+        Configuration.config.set(name + ".data.gamemode", p.getGameMode().getValue());
 
         // Flying
-        config.set(name + ".data.flight.allowed", p.getAllowFlight());
-        config.set(name + ".data.flight.flying", p.isFlying());
+        Configuration.config.set(name + ".data.flight.allowed", p.getAllowFlight());
+        Configuration.config.set(name + ".data.flight.flying", p.isFlying());
 
         // Sleep
-        config.set(name + ".data.sleepignored", p.isSleepingIgnored());
+        Configuration.config.set(name + ".data.sleepignored", p.isSleepingIgnored());
 
         // Information
-        config.set(name + ".data.info.displayname", p.getDisplayName());
-        config.set(name + ".data.info.listname", p.getPlayerListName());
+        Configuration.config.set(name + ".data.info.displayname", p.getDisplayName());
+        Configuration.config.set(name + ".data.info.listname", p.getPlayerListName());
 
         // Statistics
-        config.set(name + ".data.stats.tickslived", p.getTicksLived());
-        config.set(name + ".data.stats.nodamageticks", p.getNoDamageTicks());
+        Configuration.config.set(name + ".data.stats.tickslived", p.getTicksLived());
+        Configuration.config.set(name + ".data.stats.nodamageticks", p.getNoDamageTicks());
 
         // State
-        config.set(name + ".data.state.remainingair", p.getRemainingAir());
-        config.set(name + ".data.state.falldistance", Float.toString(p.getFallDistance()));
-        config.set(name + ".data.state.fireticks", p.getFireTicks());
+        Configuration.config.set(name + ".data.state.remainingair", p.getRemainingAir());
+        Configuration.config.set(name + ".data.state.falldistance", Float.toString(p.getFallDistance()));
+        Configuration.config.set(name + ".data.state.fireticks", p.getFireTicks());
 
-        saveYAML(ConfigFile.Players);
+        Configuration.saveYAML(ConfigFile.Players);
 
         // Reset Player
         reset(p, false);
@@ -842,40 +677,40 @@ public class BattleNight extends JavaPlugin {
 
         try {
             // Inventory
-            if (config.getString("InventoryType").equalsIgnoreCase("save")) {
-                p.getInventory().setContents(config.getList(name + ".data.inv.main").toArray(new ItemStack[0]));
-                p.getInventory().setArmorContents(config.getList(name + ".data.inv.armor").toArray(new ItemStack[0]));
+            if (Configuration.config.getString("InventoryType", "save").equalsIgnoreCase("save")) {
+                p.getInventory().setContents(Configuration.config.getList(name + ".data.inv.main").toArray(new ItemStack[0]));
+                p.getInventory().setArmorContents(Configuration.config.getList(name + ".data.inv.armor").toArray(new ItemStack[0]));
             }
 
             // Health
-            p.setHealth(config.getInt(name + ".data.health"));
+            p.setHealth(Configuration.config.getInt(name + ".data.health"));
 
             // Hunger
-            p.setFoodLevel(config.getInt(name + ".data.hunger.foodlevel"));
-            p.setSaturation(Float.parseFloat(config.getString(name + ".data.hunger.saturation")));
-            p.setExhaustion(Float.parseFloat(config.getString(name + ".data.hunger.exhaustion")));
+            p.setFoodLevel(Configuration.config.getInt(name + ".data.hunger.foodlevel"));
+            p.setSaturation(Float.parseFloat(Configuration.config.getString(name + ".data.hunger.saturation")));
+            p.setExhaustion(Float.parseFloat(Configuration.config.getString(name + ".data.hunger.exhaustion")));
 
             // Experience
-            p.setLevel(config.getInt(name + ".data.exp.level"));
-            p.setExp(Float.parseFloat(config.getString(name + ".data.exp.ammount")));
+            p.setLevel(Configuration.config.getInt(name + ".data.exp.level"));
+            p.setExp(Float.parseFloat(Configuration.config.getString(name + ".data.exp.ammount")));
 
             // GameMode
-            p.setGameMode(GameMode.getByValue(config.getInt(name + ".data.gamemode")));
+            p.setGameMode(GameMode.getByValue(Configuration.config.getInt(name + ".data.gamemode")));
 
             // Flying
-            p.setAllowFlight(config.getBoolean(name + ".data.flight.allowed"));
-            p.setFlying(config.getBoolean(name + ".data.flight.flying"));
+            p.setAllowFlight(Configuration.config.getBoolean(name + ".data.flight.allowed"));
+            p.setFlying(Configuration.config.getBoolean(name + ".data.flight.flying"));
 
             // Sleep
-            p.setSleepingIgnored(config.getBoolean(name + ".data.sleepignored"));
+            p.setSleepingIgnored(Configuration.config.getBoolean(name + ".data.sleepignored"));
 
             // Information
-            p.setDisplayName(config.getString(name + ".data.info.displayname"));
-            p.setPlayerListName(config.getString(name + ".data.info.listname"));
+            p.setDisplayName(Configuration.config.getString(name + ".data.info.displayname"));
+            p.setPlayerListName(Configuration.config.getString(name + ".data.info.listname"));
 
             // Statistics
-            p.setTicksLived(config.getInt(name + ".data.stats.tickslived"));
-            p.setNoDamageTicks(config.getInt(name + ".data.stats.nodamageticks"));
+            p.setTicksLived(Configuration.config.getInt(name + ".data.stats.tickslived"));
+            p.setNoDamageTicks(Configuration.config.getInt(name + ".data.stats.nodamageticks"));
 
         } catch (NullPointerException e) {
             log.warning("Failed to restore data for player: '" + name + "'.");
@@ -934,11 +769,11 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    private static void reloadClasses() {
-        ClassList = classes.getConfigurationSection("Classes").getKeys(false);
+    public static void reloadClasses() {
+        ClassList = Configuration.classes.getConfigurationSection("Classes").getKeys(false);
         for (String className : ClassList) {
-            BattleClasses.put(className, classes.getString("Classes." + className + ".Items", null));
-            BattleArmor.put(className, classes.getString("Classes." + className + ".Armor", null));
+            BattleClasses.put(className, Configuration.classes.getString("Classes." + className + ".Items", null));
+            BattleArmor.put(className, Configuration.classes.getString("Classes." + className + ".Armor", null));
         }
     }
 
