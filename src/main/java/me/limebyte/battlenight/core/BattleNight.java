@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -38,6 +40,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -60,10 +63,10 @@ public class BattleNight extends JavaPlugin {
     public static Set<String> ClassList;
 
     // HashMaps
-    public final static Map<String, String> BattleClasses = new HashMap<String, String>();
-    public final static Map<String, String> BattleArmor = new HashMap<String, String>();
-    public final Map<String, Sign> BattleSigns = new HashMap<String, Sign>();
-    public final static Map<String, String> BattleTelePass = new HashMap<String, String>();
+    public static final Map<String, String> BattleClasses = new HashMap<String, String>();
+    public static final Map<String, String> BattleArmor = new HashMap<String, String>();
+    public static final Set<Block> classSigns = new HashSet<Block>();
+    public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
 
     // Other Classes
     public static Battle battle;
@@ -324,24 +327,32 @@ public class BattleNight extends JavaPlugin {
 
     // Clean Up All Signs People Have Used For Classes
     public void cleanSigns() {
-        for (Entry<String, Sign> entry : BattleSigns.entrySet()) {
-            if (entry.getValue() != null) {
-                Sign currentSign = entry.getValue();
-                currentSign.setLine(2, "");
-                currentSign.setLine(3, "");
-                currentSign.update();
+        Iterator<Block> it = classSigns.iterator();
+        while (it.hasNext()) {
+            Block block = it.next();
+            if (block != null && block instanceof Sign) {
+                Sign sign = (Sign) block;
+                sign.setLine(2, "");
+                sign.setLine(3, "");
+                sign.update();
+            } else {
+                it.remove();
             }
         }
     }
 
     // Clean Up Signs Specific Player Has Used For Classes
     public void cleanSigns(Player player) {
-        for (Entry<String, Sign> entry : BattleSigns.entrySet()) {
-            if (entry.getValue() != null && player != null) {
-                Sign currentSign = entry.getValue();
-                if (currentSign.getLine(2) == player.getName()) currentSign.setLine(2, "");
-                if (currentSign.getLine(3) == player.getName()) currentSign.setLine(3, "");
-                currentSign.update();
+        Iterator<Block> it = classSigns.iterator();
+        while (it.hasNext()) {
+            Block block = it.next();
+            if (block != null && block instanceof Sign) {
+                Sign sign = (Sign) block;
+                if (sign.getLine(2).contains(player.getName())) sign.setLine(2, "");
+                if (sign.getLine(3).contains(player.getName())) sign.setLine(3, "");
+                sign.update();
+            } else {
+                it.remove();
             }
         }
     }

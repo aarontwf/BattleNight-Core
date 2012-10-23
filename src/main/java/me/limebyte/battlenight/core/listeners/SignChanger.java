@@ -1,6 +1,8 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,17 +21,17 @@ public class SignChanger implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent e) {
-        final Player player = e.getPlayer();
-        if ((BattleNight.ClassList.contains(e.getLine(0))) && (!e.getLine(1).isEmpty()) && (!e.getLine(2).isEmpty())
-                && (!e.getLine(3).isEmpty())) {
-            player.sendMessage(BattleNight.BNTag + "Error creating sign for "
-                    + e.getLine(0) + "!  Leave last 3 lines blank.");
-        } else if ((BattleNight.ClassList.contains(e.getLine(0)))
-                && (e.getLine(1).isEmpty()) && (e.getLine(2).isEmpty())
-                && (e.getLine(3).isEmpty())) {
-            e.setLine(1, "--------");
-            player.sendMessage(BattleNight.BNTag
-                    + "Successfully created sign for " + e.getLine(0) + "!");
+        Player player = e.getPlayer();
+        if (BattleNight.ClassList.contains(e.getLine(0))) {
+            if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
+                Messaging.tell(player, Message.UNSUCCESSFUL_SIGN, e.getLine(0));
+                return;
+            }
+
+            e.setLine(1, "----------");
+            BattleNight.classSigns.add(e.getBlock());
+            Messaging.tell(player, Message.SUCCESSFUL_SIGN, e.getLine(0));
+            return;
         }
     }
 }

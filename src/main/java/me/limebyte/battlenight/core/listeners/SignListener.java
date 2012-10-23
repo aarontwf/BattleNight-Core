@@ -30,7 +30,6 @@ public class SignListener implements Listener {
             if ((block.getState() instanceof Sign)) {
                 Sign sign = (Sign) block.getState();
                 if ((BattleNight.BattleClasses.containsKey(sign.getLine(0))) && (BattleNight.getBattle().usersTeam.containsKey(player.getName()))) {
-                    plugin.BattleSigns.put(player.getName(), sign);
                     if (BattleNight.getBattle().usersClass.containsKey(player.getName())) {
                         if (BattleNight.getBattle().usersClass.get(player.getName()) == sign.getLine(0)) {
                             BattleNight.getBattle().usersClass.remove(player.getName());

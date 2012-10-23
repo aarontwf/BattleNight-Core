@@ -112,6 +112,9 @@ public class Messaging {
     }
 
     public enum Message {
+        SUCCESSFUL_SIGN(ChatColor.GREEN + "Successfully created sign for $1!"),
+        UNSUCCESSFUL_SIGN(ChatColor.RED + "Error creating sign for $1!  Leave last 3 lines blank."),
+
         BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
         BATTLE_ENDED("The Battle has ended."),
 
