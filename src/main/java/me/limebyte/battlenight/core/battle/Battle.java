@@ -135,7 +135,7 @@ public class Battle {
 
         plugin.removeAllSpectators();
         plugin.cleanSigns();
-        plugin.classSigns.clear();
+        BattleNight.classSigns.clear();
         inProgress = false;
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
