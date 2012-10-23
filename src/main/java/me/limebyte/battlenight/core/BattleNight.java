@@ -14,7 +14,6 @@ import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.battle.Team;
 import me.limebyte.battlenight.core.battle.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandMap;
-import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.listeners.CheatListener;
@@ -486,56 +485,6 @@ public class BattleNight extends JavaPlugin {
         player.teleport(destination);
         BattleTelePass.remove(player.getName());
         TagAPI.refreshPlayer(player);
-    }
-
-    public boolean hasPerm(CommandPermission perm, CommandSender sender) {
-        // Player check
-        if (!(sender instanceof Player)) { return true; }
-        Player player = (Player) sender;
-
-        if (perm.equals(CommandPermission.ADMIN)) {
-            if ((Configuration.config.getBoolean("UsePermissions", false) && player.hasPermission("battlenight.admin")) || (!Configuration.config.getBoolean("UsePermissions", false) && player.isOp())) {
-                return true;
-            } else if ((Configuration.config.getBoolean("UsePermissions", false) && !player
-                    .hasPermission("battlenight.admin"))
-                    || (!Configuration.config.getBoolean("UsePermissions", false) && !player.isOp())) {
-                tellPlayer(player, Track.NO_PERMISSION);
-                return false;
-            } else {
-                tellPlayer(player, Track.CONFIG_UNSET);
-                return false;
-            }
-        }
-        if (perm.equals(CommandPermission.MODERATOR)) {
-            if ((Configuration.config.getBoolean("UsePermissions", false) && player
-                    .hasPermission("battlenight.moderator"))
-                    || (!Configuration.config.getBoolean("UsePermissions", false) && player.isOp())) {
-                return true;
-            } else if ((Configuration.config.getBoolean("UsePermissions", false) && !player
-                    .hasPermission("battlenight.moderator"))
-                    || (!Configuration.config.getBoolean("UsePermissions", false) && !player.isOp())) {
-                tellPlayer(player, Track.NO_PERMISSION);
-                return false;
-            } else {
-                tellPlayer(player, Track.CONFIG_UNSET);
-                return false;
-            }
-        } else if (perm.equals(CommandPermission.USER)) {
-            if ((Configuration.config.getBoolean("UsePermissions", false) && player
-                    .hasPermission("battlenight.user"))
-                    || !Configuration.config.getBoolean("UsePermissions", false)) {
-                return true;
-            } else if (Configuration.config.getBoolean("UsePermissions", false)
-                    && !player.hasPermission("battlenight.user")) {
-                tellPlayer(player, Track.NO_PERMISSION);
-                return false;
-            } else {
-                tellPlayer(player, Track.CONFIG_UNSET);
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 
     public static ItemStack parseItem(String rawItem) {
