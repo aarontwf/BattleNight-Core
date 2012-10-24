@@ -4,3 +4,9 @@ rules:
   - Play Nice
   - Respect others
   - Have Fun
+
+this:
+    is:
+      a:
+        test:
+            path: Is it now
