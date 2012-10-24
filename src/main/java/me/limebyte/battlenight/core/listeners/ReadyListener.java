@@ -3,6 +3,8 @@ package me.limebyte.battlenight.core.listeners;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Team;
 import me.limebyte.battlenight.core.util.Configuration;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -25,34 +27,34 @@ public class ReadyListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-            final Block block = event.getClickedBlock();
-            final Player player = event.getPlayer();
-            final String name = player.getName();
-            if ((block.getTypeId() == Configuration.config.getInt("ReadyBlock", 42))
-                    && (BattleNight.getBattle().usersTeam.containsKey(name) && (BattleNight.playersInLounge))
-                    && (plugin.teamReady(BattleNight.getBattle().usersTeam.get(player
-                            .getName())))) {
-                final Team team = BattleNight.getBattle().usersTeam.get(name);
+            Block block = event.getClickedBlock();
+            Player player = event.getPlayer();
 
-                if (team.equals(Team.RED)) {
-                    plugin.redTeamIronClicked = true;
-                    BattleNight.tellEveryone(ChatColor.RED + "Red " + ChatColor.WHITE + "team is ready!");
+            if (block.getTypeId() == Configuration.config.getInt("ReadyBlock", 42)) {
+                if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && (BattleNight.playersInLounge)) {
+                    String name = player.getName();
+                    Team team = BattleNight.getBattle().usersTeam.get(name);
 
-                    if ((plugin.teamReady(Team.BLUE)) && (plugin.blueTeamIronClicked)) {
-                        BattleNight.playersInLounge = false;
-                        BattleNight.getBattle().start();
-                    }
-                } else if (team.equals(Team.BLUE)) {
-                    plugin.blueTeamIronClicked = true;
-                    BattleNight.tellEveryone(ChatColor.BLUE + "Blue " + ChatColor.WHITE + "team is ready!");
+                    if (plugin.teamReady(team)) {
+                        Messaging.tellEveryone(Message.TEAM_IS_READY, team.getColour() + team.getName());
 
-                    if ((plugin.teamReady(Team.RED)) && (plugin.redTeamIronClicked)) {
-                        BattleNight.playersInLounge = false;
-                        BattleNight.getBattle().start();
+                        if (team.equals(Team.RED)) {
+                            plugin.redTeamIronClicked = true;
+
+                            if ((plugin.teamReady(Team.BLUE)) && (plugin.blueTeamIronClicked)) {
+                                BattleNight.getBattle().start();
+                            }
+                        } else if (team.equals(Team.BLUE)) {
+                            plugin.blueTeamIronClicked = true;
+
+                            if ((plugin.teamReady(Team.RED)) && (plugin.redTeamIronClicked)) {
+                                BattleNight.getBattle().start();
+                            }
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
                     }
                 }
-            } else if ((block.getTypeId() == Configuration.config.getInt("ReadyBlock", 42)) && (BattleNight.getBattle().usersTeam.containsKey(name) && (BattleNight.playersInLounge))) {
-                player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
             }
         }
     }

@@ -40,7 +40,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -65,7 +64,7 @@ public class BattleNight extends JavaPlugin {
     // HashMaps
     public static final Map<String, String> BattleClasses = new HashMap<String, String>();
     public static final Map<String, String> BattleArmor = new HashMap<String, String>();
-    public static final Set<Block> classSigns = new HashSet<Block>();
+    public static final Set<Sign> classSigns = new HashSet<Sign>();
     public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
 
     // Other Classes
@@ -142,7 +141,7 @@ public class BattleNight extends JavaPlugin {
             log.info("Ending current Battle...");
             battle.stop();
         }
-        this.cleanSigns();
+        cleanSigns();
         PluginDescriptionFile pdfFile = getDescription();
         log.info("Version " + pdfFile.getVersion() + " has been disabled.");
     }
@@ -326,12 +325,11 @@ public class BattleNight extends JavaPlugin {
     }
 
     // Clean Up All Signs People Have Used For Classes
-    public void cleanSigns() {
-        Iterator<Block> it = classSigns.iterator();
+    public static void cleanSigns() {
+        Iterator<Sign> it = classSigns.iterator();
         while (it.hasNext()) {
-            Block block = it.next();
-            if (block != null && block instanceof Sign) {
-                Sign sign = (Sign) block;
+            Sign sign = it.next();
+            if (sign != null) {
                 sign.setLine(2, "");
                 sign.setLine(3, "");
                 sign.update();
@@ -342,15 +340,12 @@ public class BattleNight extends JavaPlugin {
     }
 
     // Clean Up Signs Specific Player Has Used For Classes
-    public void cleanSigns(Player player) {
-        Iterator<Block> it = classSigns.iterator();
+    public static void cleanSigns(Player player) {
+        Iterator<Sign> it = classSigns.iterator();
         while (it.hasNext()) {
-            Block block = it.next();
-            if (block != null && block instanceof Sign) {
-                Sign sign = (Sign) block;
-                if (sign.getLine(2).contains(player.getName())) sign.setLine(2, "");
-                if (sign.getLine(3).contains(player.getName())) sign.setLine(3, "");
-                sign.update();
+            Sign sign = it.next();
+            if (sign != null) {
+                SignListener.removeName(player, sign);
             } else {
                 it.remove();
             }

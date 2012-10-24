@@ -118,7 +118,7 @@ public class Battle {
         player.getInventory().clear();
         plugin.restorePlayer(player);
         if (teleport) BattleNight.goToWaypoint(player, Waypoint.EXIT);
-        plugin.cleanSigns(player);
+        BattleNight.cleanSigns(player);
 
         if (removeHash) {
             usersTeam.remove(player.getName());
@@ -134,7 +134,7 @@ public class Battle {
         Set<String> toRefresh = usersTeam.keySet();
 
         plugin.removeAllSpectators();
-        plugin.cleanSigns();
+        BattleNight.cleanSigns();
         inProgress = false;
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
@@ -183,7 +183,9 @@ public class Battle {
 
     public void start() {
         inProgress = true;
+        BattleNight.playersInLounge = false;
         Messaging.tellEveryone(Message.BATTLE_STARTED);
         plugin.teleportAllToSpawn();
+        BattleNight.cleanSigns();
     }
 }

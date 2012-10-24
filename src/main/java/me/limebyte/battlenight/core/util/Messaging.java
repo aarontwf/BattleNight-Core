@@ -133,6 +133,8 @@ public class Messaging {
         BATTLE_IN_PROGRESS(ChatColor.RED + "A game is already in progress."),
         BATTLE_NOT_IN_PROGRESS(ChatColor.RED + "A Battle is not currently in progress."),
 
+        TEAM_IS_READY("$1" + ChatColor.WHITE + " Team is ready!"),
+
         BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
         BATTLE_ENDED("The Battle has ended."),
 
