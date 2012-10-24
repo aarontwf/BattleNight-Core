@@ -77,13 +77,13 @@ public class SignListener implements Listener {
     public static boolean removeName(Player player, Sign sign) {
         boolean result = false;
 
-        if (sign.getLine(2).contains(player.getName())) {
-            sign.setLine(2, sign.getLine(3));
+        if (sign.getLine(3).contains(player.getName())) {
             sign.setLine(3, "");
             result = true;
         }
 
-        if (sign.getLine(3).contains(player.getName())) {
+        if (sign.getLine(2).contains(player.getName())) {
+            sign.setLine(2, sign.getLine(3));
             sign.setLine(3, "");
             result = true;
         }
