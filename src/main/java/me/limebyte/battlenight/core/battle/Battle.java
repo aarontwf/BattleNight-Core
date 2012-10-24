@@ -99,7 +99,7 @@ public class Battle {
                 for (String currentName : usersTeam.keySet()) {
                     if (Bukkit.getPlayer(currentName) != null) {
                         Player currentPlayer = Bukkit.getPlayer(currentName);
-                        if (!(death && currentPlayer.equals(player))) {
+                        if (!(death && currentPlayer == player)) {
                             resetPlayer(currentPlayer, true, false);
                         }
                     }
@@ -135,7 +135,6 @@ public class Battle {
 
         plugin.removeAllSpectators();
         plugin.cleanSigns();
-        BattleNight.classSigns.clear();
         inProgress = false;
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
