@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class Messaging {
 
-    private static final String PREFIX = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
+    public static final String PREFIX = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 
     /** Strings **/
 

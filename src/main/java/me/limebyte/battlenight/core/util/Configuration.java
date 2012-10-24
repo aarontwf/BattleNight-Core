@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.config.Config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,6 +22,7 @@ public class Configuration {
     public static FileConfiguration classes;
     public static FileConfiguration waypoints;
     public static FileConfiguration players;
+    public static Config testConfig;
 
     public static void init() {
         try {
@@ -28,6 +30,7 @@ public class Configuration {
             classesFile = new File(BattleNight.instance.getDataFolder(), "classes.yml");
             waypointsFile = new File(BattleNight.instance.getDataFolder() + "/PluginData", "waypoints.dat");
             playerFile = new File(BattleNight.instance.getDataFolder() + "/PluginData", "players.dat");
+            testConfig = new Config("test.yml");
 
             if (!configFile.exists()) {
                 configFile.getParentFile().mkdirs();
@@ -45,6 +48,8 @@ public class Configuration {
                 playerFile.getParentFile().mkdirs();
                 copy(BattleNight.instance.getResource("players.dat"), playerFile);
             }
+
+            testConfig.reloadConfig();
         } catch (Exception e) {
             e.printStackTrace();
         }
