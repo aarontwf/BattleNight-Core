@@ -50,6 +50,7 @@ public class Configuration {
             }
 
             testConfig.reloadConfig();
+            testConfig.saveConfig();
         } catch (Exception e) {
             e.printStackTrace();
         }

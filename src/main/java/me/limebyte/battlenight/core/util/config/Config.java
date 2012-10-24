@@ -34,6 +34,7 @@ public class Config {
             defConfig.options().copyHeader(true);
             defConfig.options().indent(4);
             fileConfiguration.setDefaults(defConfig);
+            fileConfiguration.options().copyDefaults(true);
         }
     }
 
