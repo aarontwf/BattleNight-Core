@@ -13,7 +13,7 @@ public class Config {
     private final String fileName;
 
     private File configFile;
-    private FileConfiguration fileConfiguration;
+    private YamlConfiguration fileConfiguration;
 
     public Config(String fileName) {
         this.fileName = fileName;
@@ -31,9 +31,8 @@ public class Config {
         InputStream defConfigStream = BattleNight.instance.getResource(fileName);
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            defConfig.options().copyHeader(true);
-            defConfig.options().indent(4);
             fileConfiguration.setDefaults(defConfig);
+            fileConfiguration.options().indent(4);
             fileConfiguration.options().copyDefaults(true);
         }
     }
