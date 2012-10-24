@@ -37,7 +37,7 @@ public class SignListener implements Listener {
                     addSign(sign);
 
                     if (BattleNight.getBattle().usersClass.containsKey(name)) {
-                        if (BattleNight.getBattle().usersClass.get(name).equalsIgnoreCase(title)) {
+                        if (BattleNight.getBattle().usersClass.get(name).equals(title)) {
                             BattleNight.getBattle().usersClass.remove(name);
 
                             if (removeName(player, sign)) {
@@ -61,7 +61,7 @@ public class SignListener implements Listener {
                         plugin.giveItems(player);
                         ParticleEffect.spiral(player);
                     } else {
-                        BattleNight.tellPlayer(player, "There are too many of this class, pick another class.");
+                        BattleNight.tellPlayer(player, "There are too many of this class, pick another.");
                     }
                 }
             }
