@@ -4,8 +4,9 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Configuration;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class ReloadCommand extends BattleNightCommand {
@@ -22,15 +23,15 @@ public class ReloadCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        sender.sendMessage(BattleNight.BNTag + "Reloading BattleNight...");
+        Messaging.tell(sender, Message.RELOADING);
 
         try {
             BattleNight.getBattle().stop();
             Configuration.reloadYamls();
-            sender.sendMessage(BattleNight.BNTag + ChatColor.GREEN + "Reloaded successfully.");
+            Messaging.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;
         } catch (Exception e) {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Reload failed.  See console for error log.");
+            Messaging.tell(sender, Message.RELOAD_FAILED);
             BattleNight.log.severe(e.getMessage());
             return false;
         }

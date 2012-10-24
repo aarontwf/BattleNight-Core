@@ -99,7 +99,7 @@ public class Battle {
                 for (String currentName : usersTeam.keySet()) {
                     if (Bukkit.getPlayer(currentName) != null) {
                         Player currentPlayer = Bukkit.getPlayer(currentName);
-                        if (!(death && currentPlayer == player)) {
+                        if (!(death && currentPlayer.equals(player))) {
                             resetPlayer(currentPlayer, true, false);
                         }
                     }

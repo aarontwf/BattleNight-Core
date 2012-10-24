@@ -3,9 +3,10 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,8 +25,8 @@ public class KickCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Please specify a Player.");
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            Messaging.tell(sender, Message.SPECIFY_PLAYER);
+            Messaging.tell(sender, Message.USAGE, getUsage());
             return false;
         }
 
@@ -47,12 +48,12 @@ public class KickCommand extends BattleNightCommand {
 
                 return true;
             } else {
-                sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Player \"" + args[0] + "\" is not in the Battle.  No kick.");
+                Messaging.tell(sender, Message.PLAYER_NOT_IN_BATTLE, args[0]);
                 return false;
             }
 
         } else {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Can't find player \"" + args[0] + "\".  No kick.");
+            Messaging.tell(sender, Message.CANT_FIND_PLAYER, args[0]);
             return false;
         }
     }

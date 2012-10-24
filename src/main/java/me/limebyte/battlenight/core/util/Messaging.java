@@ -115,11 +115,33 @@ public class Messaging {
         SUCCESSFUL_SIGN(ChatColor.GREEN + "Successfully created sign for $1!"),
         UNSUCCESSFUL_SIGN(ChatColor.RED + "Error creating sign for $1!  Leave last 3 lines blank."),
 
+        SPECIFY_MESSAGE(ChatColor.RED + "Please specify a message."),
+        SPECIFY_PLAYER(ChatColor.RED + "Please specify a player."),
+        SPECIFY_WAYPOINT(ChatColor.RED + "Please specify a waypoint."),
+        USAGE("Usage: $1"),
+        NO_PERMISSION(ChatColor.RED + "You do not have permission to use this command."),
+        PLAYER_ONLY(ChatColor.RED + "This command can only be performed by a player!"),
+        INVALID_COMMAND(ChatColor.RED + "Invalid Command.  Type '/bn help' for help."),
+        INCORRECT_USAGE(ChatColor.RED + "Incorrect usage."),
+        DEPRICATED_COMMAND(ChatColor.RED + "This command is deprecated, please use \"/bn $1\" instead."),
+        WAYPOINTS_UNSET(ChatColor.RED + "All waypoints must be set up first."),
+        ALREADY_IN_BATTLE(ChatColor.RED + "You have already joined a Battle!"),
+        NOT_IN_BATTLE(ChatColor.RED + "You are not in a Battle."),
+        PLAYER_NOT_IN_BATTLE(ChatColor.RED + "Player \"$1\" is not in the Battle."),
+        CANT_FIND_PLAYER(ChatColor.RED + "Can't find player \"$1\"."),
+
+        BATTLE_IN_PROGRESS(ChatColor.RED + "A game is already in progress."),
+        BATTLE_NOT_IN_PROGRESS(ChatColor.RED + "A Battle is not currently in progress."),
+
         BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
         BATTLE_ENDED("The Battle has ended."),
 
         TEAM_WON("$1 Team won the Battle!"),
-        DRAW(ChatColor.DARK_PURPLE + "Draw!");
+        DRAW(ChatColor.DARK_PURPLE + "Draw!"),
+
+        RELOADING("Reloading BattleNight..."),
+        RELOAD_SUCCESSFUL(ChatColor.GREEN + "Reloaded successfully."),
+        RELOAD_FAILED(ChatColor.RED + "Reload failed.  See console for error log.");
 
         private String message;
 

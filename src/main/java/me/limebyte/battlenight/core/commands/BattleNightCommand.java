@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.Configuration;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
 import org.bukkit.command.CommandSender;
 
@@ -131,7 +132,7 @@ public abstract class BattleNightCommand {
             if (sender.hasPermission(permission)) {
                 return true;
             } else {
-                sender.sendMessage(Track.NO_PERMISSION.msg);
+                Messaging.tell(sender, Message.NO_PERMISSION);
                 return false;
             }
         } else {
@@ -139,7 +140,7 @@ public abstract class BattleNightCommand {
                 if (sender.isOp()) {
                     return true;
                 } else {
-                    sender.sendMessage(Track.NO_PERMISSION.msg);
+                    Messaging.tell(sender, Message.NO_PERMISSION);
                     return false;
                 }
             } else {

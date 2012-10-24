@@ -3,7 +3,8 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -23,17 +24,17 @@ public class AnnounceCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (!BattleNight.getBattle().isInProgress() && !BattleNight.playersInLounge) {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.BATTLE_NOT_IN_PROGRESS.msg);
+            Messaging.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
             return false;
         }
 
         if (args.length < 1) {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Please specify a message.");
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            Messaging.tell(sender, Message.SPECIFY_MESSAGE);
+            Messaging.tell(sender, Message.USAGE, getUsage());
             return false;
         }
 
-        BattleNight.tellEveryone(ChatColor.translateAlternateColorCodes('&', createString(args, 0)));
+        Messaging.tellEveryone(ChatColor.translateAlternateColorCodes('&', createString(args, 0)));
         return true;
     }
 

@@ -3,9 +3,9 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -33,11 +33,11 @@ public class LeaveCommand extends BattleNightCommand {
                 BattleNight.removeSpectator(player);
                 return true;
             } else {
-                BattleNight.tellPlayer(player, Track.NOT_IN_TEAM);
+                Messaging.tell(sender, Message.NOT_IN_BATTLE);
                 return false;
             }
         } else {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");
+            Messaging.tell(sender, Message.PLAYER_ONLY);
             return false;
         }
     }

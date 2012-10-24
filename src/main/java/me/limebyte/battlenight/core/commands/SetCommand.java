@@ -2,6 +2,8 @@ package me.limebyte.battlenight.core.commands;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Waypoint;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,8 +26,8 @@ public class SetCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Please specify a waypoint.");
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            Messaging.tell(sender, Message.SPECIFY_WAYPOINT);
+            Messaging.tell(sender, Message.USAGE, getUsage());
             return false;
         } else {
             Waypoint waypoint = null;
@@ -42,11 +44,11 @@ public class SetCommand extends BattleNightCommand {
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
                         BattleNight.setCoords(waypoint, player.getLocation());
-                        BattleNight.tellPlayer(player, ChatColor.GREEN + waypoint.getDisplayName() + " Waypoint set to your current location.");
+                        BattleNight.tellPlayer(player, ChatColor.GREEN + waypoint.getDisplayName() + " Waypoint set to your current location."); //TODO
                         return true;
                     } else {
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Please specify a coordinate.");
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Usage: " + getUsage());
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Please specify a coordinate."); //TODO
+                        Messaging.tell(sender, Message.USAGE, getUsage());
                         return false;
                     }
                 } else if (args.length == 4 && sender instanceof Player) {
@@ -54,26 +56,26 @@ public class SetCommand extends BattleNightCommand {
                     Location loc = parseArgsToLocation(args, player.getWorld());
                     BattleNight.setCoords(waypoint, loc);
                     BattleNight.tellPlayer(player, ChatColor.GREEN + waypoint.getDisplayName() + " Waypoint set to: " +
-                            loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + " in this world.");
+                            loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + " in this world."); //TODO
                     return true;
                 } else if (args.length == 5) {
                     if (Bukkit.getWorld(args[4]) != null) {
                         Location loc = parseArgsToLocation(args);
                         BattleNight.setCoords(waypoint, loc);
                         sender.sendMessage(BattleNight.BNTag + ChatColor.GREEN + waypoint.getDisplayName() + " Waypoint set to: " +
-                                loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + " in world " + loc.getWorld().getName() + ".");
+                                loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + " in world " + loc.getWorld().getName() + "."); //TODO
                         return true;
                     } else {
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Can't find world \"" + args[4] + "\".");
+                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Can't find world \"" + args[4] + "\"."); //TODO
                         return false;
                     }
                 } else {
-                    sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Incorrect usage.");
-                    sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Usage: " + getUsage());
+                    Messaging.tell(sender, Message.INCORRECT_USAGE);
+                    Messaging.tell(sender, Message.USAGE, getUsage());
                     return false;
                 }
             } else {
-                sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Invalid waypoint.  Type \"/bn waypoints\" for a list.");
+                sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Invalid waypoint.  Type \"/bn waypoints\" for a list."); //TODO
                 return false;
             }
         }

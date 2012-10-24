@@ -3,9 +3,9 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -27,24 +27,24 @@ public class JoinCommand extends BattleNightCommand {
             Player player = (Player) sender;
 
             if (!BattleNight.isSetup()) {
-                BattleNight.tellPlayer(player, Track.WAYPOINTS_UNSET);
+                Messaging.tell(sender, Message.WAYPOINTS_UNSET);
                 return false;
             }
 
             if (BattleNight.getBattle().isInProgress()) {
-                BattleNight.tellPlayer(player, Track.BATTLE_IN_PROGRESS);
+                Messaging.tell(sender, Message.BATTLE_IN_PROGRESS);
                 return false;
             }
 
             if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
-                BattleNight.tellPlayer(player, Track.ALREADY_IN_TEAM);
+                Messaging.tell(sender, Message.ALREADY_IN_BATTLE);
                 return false;
             }
 
             BattleNight.getBattle().addPlayer(player);
             return true;
         } else {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");
+            Messaging.tell(sender, Message.PLAYER_ONLY);
             return false;
         }
     }

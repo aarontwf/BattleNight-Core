@@ -3,10 +3,9 @@ package me.limebyte.battlenight.core.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class CommandMap {
@@ -42,7 +41,7 @@ public class CommandMap {
             }
         }
 
-        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + Track.INVALID_COMAND.msg);
+        Messaging.tell(sender, Message.INVALID_COMMAND);
         return false;
     }
 

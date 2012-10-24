@@ -1,8 +1,8 @@
 package me.limebyte.battlenight.core.commands;
 
-import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.Messaging;
+import me.limebyte.battlenight.core.util.Messaging.Message;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class DeprecatedCommand extends BattleNightCommand {
@@ -20,7 +20,7 @@ public class DeprecatedCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command is deprecated, please use \"/bn " + newLabel + "\" instead.");
+        Messaging.tell(sender, Message.DEPRICATED_COMMAND, newLabel);
         return true;
     }
 
