@@ -49,8 +49,8 @@ public class Configuration {
                 copy(BattleNight.instance.getResource("players.dat"), playerFile);
             }
 
-            testConfig.reloadConfig();
-            testConfig.saveConfig();
+            testConfig.reload();
+            testConfig.save();
         } catch (Exception e) {
             e.printStackTrace();
         }

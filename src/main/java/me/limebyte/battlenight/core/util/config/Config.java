@@ -12,53 +12,47 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Config {
     private final String fileName;
 
-    private File configFile;
-    private YamlConfiguration fileConfiguration;
+    private File file;
+    private YamlConfiguration fileConfig;
 
     public Config(String fileName) {
         this.fileName = fileName;
     }
 
-    public void reloadConfig() {
-        if (configFile == null) {
+    public void reload() {
+        if (file == null) {
             File dataFolder = BattleNight.instance.getDataFolder();
             if (dataFolder == null) throw new IllegalStateException();
-            configFile = new File(dataFolder, fileName);
+            file = new File(dataFolder, fileName);
         }
-        fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
+        fileConfig = YamlConfiguration.loadConfiguration(file);
 
-        // Look for defaults in the jar
+        // Look for non-existant defaults
         InputStream defConfigStream = BattleNight.instance.getResource(fileName);
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            fileConfiguration.setDefaults(defConfig);
-            fileConfiguration.options().indent(4);
-            fileConfiguration.options().copyDefaults(true);
+            fileConfig.setDefaults(defConfig);
+            fileConfig.options().indent(4);
+            fileConfig.options().copyDefaults(true);
         }
     }
 
     public FileConfiguration getConfig() {
-        if (fileConfiguration == null) {
-            this.reloadConfig();
+        if (fileConfig == null) {
+            this.reload();
         }
-        return fileConfiguration;
+        return fileConfig;
     }
 
-    public void saveConfig() {
-        if (fileConfiguration == null || configFile == null) {
+    public void save() {
+        if (fileConfig == null || file == null) {
             return;
         } else {
             try {
-                getConfig().save(configFile);
+                getConfig().save(file);
             } catch (IOException ex) {
-                BattleNight.log.severe("Could not save config to " + configFile + ": " + ex.getMessage());
+                BattleNight.log.severe("Could not save config to " + file + ": " + ex.getMessage());
             }
-        }
-    }
-
-    public void saveDefaultConfig() {
-        if (!configFile.exists()) {
-            BattleNight.instance.saveResource(fileName, false);
         }
     }
 }
