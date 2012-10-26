@@ -2,7 +2,8 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Team;
-import me.limebyte.battlenight.core.util.Configuration;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -57,7 +58,7 @@ public class DeathListener implements Listener {
                                 + " killed " + playerName + ".");
                     } catch (final NullPointerException error) {
                         plugin.killFeed(ChatColor.RED + name + ChatColor.GRAY + " was killed.");
-                        if (Configuration.config.getBoolean("Debug", false)) {
+                        if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
                             BattleNight.log.warning("Could not find killer for player: " + name);
                         }
                     }

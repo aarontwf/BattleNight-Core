@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.limebyte.battlenight.core.util.Configuration;
 import me.limebyte.battlenight.core.util.Messaging;
 import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.command.CommandSender;
 
@@ -126,7 +127,7 @@ public abstract class BattleNightCommand {
 
         if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) { return true; }
 
-        if (Configuration.config.getBoolean("UsePermissions", false)) {
+        if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
             String permission = getPermission().getBukkitPerm();
 
             if (sender.hasPermission(permission)) {

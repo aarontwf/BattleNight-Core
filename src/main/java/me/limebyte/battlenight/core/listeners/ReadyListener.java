@@ -2,9 +2,10 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Team;
-import me.limebyte.battlenight.core.util.Configuration;
 import me.limebyte.battlenight.core.util.Messaging;
 import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -30,7 +31,7 @@ public class ReadyListener implements Listener {
             Block block = event.getClickedBlock();
             Player player = event.getPlayer();
 
-            if (block.getTypeId() == Configuration.config.getInt("ReadyBlock", 42)) {
+            if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
                 if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && (BattleNight.playersInLounge)) {
                     String name = player.getName();
                     Team team = BattleNight.getBattle().usersTeam.get(name);

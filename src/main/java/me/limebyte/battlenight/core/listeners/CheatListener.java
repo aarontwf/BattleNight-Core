@@ -2,7 +2,8 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.other.Tracks.Track;
-import me.limebyte.battlenight.core.util.Configuration;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -36,14 +37,14 @@ public class CheatListener implements Listener {
                     BattleNight.tellPlayer(player, Track.NO_TP);
                     break;
                 case ENDER_PEARL:
-                    if (!Configuration.config.getBoolean("Teleportation.EnderPearls", true)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
                         event.setCancelled(true);
                         BattleNight.tellPlayer(player, Track.NO_TP);
                     }
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
-                    if (!Configuration.config.getBoolean("Teleportation.Portals", false)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", false)) {
                         event.setCancelled(true);
                         BattleNight.tellPlayer(player, Track.NO_TP);
                     }

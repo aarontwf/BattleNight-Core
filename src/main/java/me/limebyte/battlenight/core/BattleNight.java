@@ -32,6 +32,8 @@ import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.Configuration;
 import me.limebyte.battlenight.core.util.Configuration.ConfigFile;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -86,6 +88,7 @@ public class BattleNight extends JavaPlugin {
 
         battle = new Battle();
 
+        ConfigManager.initConfigurations();
         Configuration.init();
 
         // Metrics
@@ -97,8 +100,8 @@ public class BattleNight extends JavaPlugin {
         }
 
         // Debug
-        if (Configuration.config.getBoolean("Debug", false)) {
-            if (Configuration.config.getBoolean("UsePermissions", false)) {
+        if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
+            if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
                 log.info("Permissions Enabled.");
             } else {
                 log.info("Permissions Disabled, using Op.");
@@ -269,8 +272,8 @@ public class BattleNight extends JavaPlugin {
         for (int i = 0; i < items.length; i++) {
             String item = items[i];
             player.getInventory().setItem(i, parseItem(item));
-            if (player.getInventory().contains(Configuration.classes.getInt("DummyItem", 6))) {
-                player.getInventory().remove(Configuration.classes.getInt("DummyItem", 6));
+            if (player.getInventory().contains(ConfigManager.get(Config.CLASSES).getInt("DummyItem", 6))) {
+                player.getInventory().remove(ConfigManager.get(Config.CLASSES).getInt("DummyItem", 6));
             }
         }
         // Set Armour
@@ -574,50 +577,50 @@ public class BattleNight extends JavaPlugin {
     }
 
     public boolean preparePlayer(Player p) {
-        if (Configuration.config.getString("InventoryType", "save").equalsIgnoreCase("prompt") && !hasEmptyInventory(p)) return false;
+        if (ConfigManager.get(Config.MAIN).getString("InventoryType", "save").equalsIgnoreCase("prompt") && !hasEmptyInventory(p)) return false;
 
         String name = p.getName();
 
         // Inventory
-        if (Configuration.config.getString("InventoryType", "save").equalsIgnoreCase("save")) {
-            Configuration.config.set(name + ".data.inv.main", Arrays.asList(p.getInventory().getContents()));
-            Configuration.config.set(name + ".data.inv.armor", Arrays.asList(p.getInventory().getArmorContents()));
+        if (ConfigManager.get(Config.MAIN).getString("InventoryType", "save").equalsIgnoreCase("save")) {
+            Configuration.players.set(name + ".data.inv.main", Arrays.asList(p.getInventory().getContents()));
+            Configuration.players.set(name + ".data.inv.armor", Arrays.asList(p.getInventory().getArmorContents()));
         }
 
         // Health
-        Configuration.config.set(name + ".data.health", p.getHealth());
+        Configuration.players.set(name + ".data.health", p.getHealth());
 
         // Hunger
-        Configuration.config.set(name + ".data.hunger.foodlevel", p.getFoodLevel());
-        Configuration.config.set(name + ".data.hunger.saturation", Float.toString(p.getSaturation()));
-        Configuration.config.set(name + ".data.hunger.exhaustion", Float.toString(p.getExhaustion()));
+        Configuration.players.set(name + ".data.hunger.foodlevel", p.getFoodLevel());
+        Configuration.players.set(name + ".data.hunger.saturation", Float.toString(p.getSaturation()));
+        Configuration.players.set(name + ".data.hunger.exhaustion", Float.toString(p.getExhaustion()));
 
         // Experience
-        Configuration.config.set(name + ".data.exp.level", p.getLevel());
-        Configuration.config.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
+        Configuration.players.set(name + ".data.exp.level", p.getLevel());
+        Configuration.players.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
 
         // GameMode
-        Configuration.config.set(name + ".data.gamemode", p.getGameMode().getValue());
+        Configuration.players.set(name + ".data.gamemode", p.getGameMode().getValue());
 
         // Flying
-        Configuration.config.set(name + ".data.flight.allowed", p.getAllowFlight());
-        Configuration.config.set(name + ".data.flight.flying", p.isFlying());
+        Configuration.players.set(name + ".data.flight.allowed", p.getAllowFlight());
+        Configuration.players.set(name + ".data.flight.flying", p.isFlying());
 
         // Sleep
-        Configuration.config.set(name + ".data.sleepignored", p.isSleepingIgnored());
+        Configuration.players.set(name + ".data.sleepignored", p.isSleepingIgnored());
 
         // Information
-        Configuration.config.set(name + ".data.info.displayname", p.getDisplayName());
-        Configuration.config.set(name + ".data.info.listname", p.getPlayerListName());
+        Configuration.players.set(name + ".data.info.displayname", p.getDisplayName());
+        Configuration.players.set(name + ".data.info.listname", p.getPlayerListName());
 
         // Statistics
-        Configuration.config.set(name + ".data.stats.tickslived", p.getTicksLived());
-        Configuration.config.set(name + ".data.stats.nodamageticks", p.getNoDamageTicks());
+        Configuration.players.set(name + ".data.stats.tickslived", p.getTicksLived());
+        Configuration.players.set(name + ".data.stats.nodamageticks", p.getNoDamageTicks());
 
         // State
-        Configuration.config.set(name + ".data.state.remainingair", p.getRemainingAir());
-        Configuration.config.set(name + ".data.state.falldistance", Float.toString(p.getFallDistance()));
-        Configuration.config.set(name + ".data.state.fireticks", p.getFireTicks());
+        Configuration.players.set(name + ".data.state.remainingair", p.getRemainingAir());
+        Configuration.players.set(name + ".data.state.falldistance", Float.toString(p.getFallDistance()));
+        Configuration.players.set(name + ".data.state.fireticks", p.getFireTicks());
 
         Configuration.saveYAML(ConfigFile.Players);
 
@@ -632,40 +635,40 @@ public class BattleNight extends JavaPlugin {
 
         try {
             // Inventory
-            if (Configuration.config.getString("InventoryType", "save").equalsIgnoreCase("save")) {
-                p.getInventory().setContents(Configuration.config.getList(name + ".data.inv.main").toArray(new ItemStack[0]));
-                p.getInventory().setArmorContents(Configuration.config.getList(name + ".data.inv.armor").toArray(new ItemStack[0]));
+            if (ConfigManager.get(Config.MAIN).getString("InventoryType", "save").equalsIgnoreCase("save")) {
+                p.getInventory().setContents(Configuration.players.getList(name + ".data.inv.main").toArray(new ItemStack[0]));
+                p.getInventory().setArmorContents(Configuration.players.getList(name + ".data.inv.armor").toArray(new ItemStack[0]));
             }
 
             // Health
-            p.setHealth(Configuration.config.getInt(name + ".data.health"));
+            p.setHealth(Configuration.players.getInt(name + ".data.health"));
 
             // Hunger
-            p.setFoodLevel(Configuration.config.getInt(name + ".data.hunger.foodlevel"));
-            p.setSaturation(Float.parseFloat(Configuration.config.getString(name + ".data.hunger.saturation")));
-            p.setExhaustion(Float.parseFloat(Configuration.config.getString(name + ".data.hunger.exhaustion")));
+            p.setFoodLevel(Configuration.players.getInt(name + ".data.hunger.foodlevel"));
+            p.setSaturation(Float.parseFloat(Configuration.players.getString(name + ".data.hunger.saturation")));
+            p.setExhaustion(Float.parseFloat(Configuration.players.getString(name + ".data.hunger.exhaustion")));
 
             // Experience
-            p.setLevel(Configuration.config.getInt(name + ".data.exp.level"));
-            p.setExp(Float.parseFloat(Configuration.config.getString(name + ".data.exp.ammount")));
+            p.setLevel(Configuration.players.getInt(name + ".data.exp.level"));
+            p.setExp(Float.parseFloat(Configuration.players.getString(name + ".data.exp.ammount")));
 
             // GameMode
-            p.setGameMode(GameMode.getByValue(Configuration.config.getInt(name + ".data.gamemode")));
+            p.setGameMode(GameMode.getByValue(Configuration.players.getInt(name + ".data.gamemode")));
 
             // Flying
-            p.setAllowFlight(Configuration.config.getBoolean(name + ".data.flight.allowed"));
-            p.setFlying(Configuration.config.getBoolean(name + ".data.flight.flying"));
+            p.setAllowFlight(Configuration.players.getBoolean(name + ".data.flight.allowed"));
+            p.setFlying(Configuration.players.getBoolean(name + ".data.flight.flying"));
 
             // Sleep
-            p.setSleepingIgnored(Configuration.config.getBoolean(name + ".data.sleepignored"));
+            p.setSleepingIgnored(Configuration.players.getBoolean(name + ".data.sleepignored"));
 
             // Information
-            p.setDisplayName(Configuration.config.getString(name + ".data.info.displayname"));
-            p.setPlayerListName(Configuration.config.getString(name + ".data.info.listname"));
+            p.setDisplayName(Configuration.players.getString(name + ".data.info.displayname"));
+            p.setPlayerListName(Configuration.players.getString(name + ".data.info.listname"));
 
             // Statistics
-            p.setTicksLived(Configuration.config.getInt(name + ".data.stats.tickslived"));
-            p.setNoDamageTicks(Configuration.config.getInt(name + ".data.stats.nodamageticks"));
+            p.setTicksLived(Configuration.players.getInt(name + ".data.stats.tickslived"));
+            p.setNoDamageTicks(Configuration.players.getInt(name + ".data.stats.nodamageticks"));
 
         } catch (NullPointerException e) {
             log.warning("Failed to restore data for player: '" + name + "'.");
@@ -725,10 +728,10 @@ public class BattleNight extends JavaPlugin {
     }
 
     public static void reloadClasses() {
-        ClassList = Configuration.classes.getConfigurationSection("Classes").getKeys(false);
+        ClassList = ConfigManager.get(Config.CLASSES).getConfigurationSection("Classes").getKeys(false);
         for (String className : ClassList) {
-            BattleClasses.put(className, Configuration.classes.getString("Classes." + className + ".Items", null));
-            BattleArmor.put(className, Configuration.classes.getString("Classes." + className + ".Armor", null));
+            BattleClasses.put(className, ConfigManager.get(Config.CLASSES).getString("Classes." + className + ".Items", null));
+            BattleArmor.put(className, ConfigManager.get(Config.CLASSES).getString("Classes." + className + ".Armor", null));
         }
     }
 

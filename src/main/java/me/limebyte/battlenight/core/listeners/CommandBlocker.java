@@ -3,7 +3,8 @@ package me.limebyte.battlenight.core.listeners;
 import java.util.List;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.Configuration;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.command.Command;
 import org.bukkit.event.EventHandler;
@@ -24,9 +25,9 @@ public class CommandBlocker implements Listener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled()) return;
         if (!BattleNight.getBattle().usersTeam.containsKey(event.getPlayer().getName())) return;
-        if (!Configuration.config.getBoolean("Commands.Block", true)) return;
+        if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
-        final List<String> whitelist = Configuration.config.getStringList("Commands.Whitelist");
+        final List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
         whitelist.add("bn");
 
         final String[] cmdArg = event.getMessage().split(" ");

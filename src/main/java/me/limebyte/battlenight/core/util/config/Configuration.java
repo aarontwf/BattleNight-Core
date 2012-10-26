@@ -9,13 +9,13 @@ import me.limebyte.battlenight.core.BattleNight;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class Config {
+public class Configuration {
     private final String fileName;
 
     private File file;
     private YamlConfiguration fileConfig;
 
-    public Config(String fileName) {
+    public Configuration(String fileName) {
         this.fileName = fileName;
     }
 
@@ -27,7 +27,7 @@ public class Config {
         }
         fileConfig = YamlConfiguration.loadConfiguration(file);
 
-        // Look for non-existant defaults
+        // Look for non-existent defaults
         InputStream defConfigStream = BattleNight.instance.getResource(fileName);
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
@@ -37,7 +37,7 @@ public class Config {
         }
     }
 
-    public FileConfiguration getConfig() {
+    public FileConfiguration get() {
         if (fileConfig == null) {
             this.reload();
         }
@@ -49,7 +49,7 @@ public class Config {
             return;
         } else {
             try {
-                getConfig().save(file);
+                get().save(file);
             } catch (IOException ex) {
                 BattleNight.log.severe("Could not save config to " + file + ": " + ex.getMessage());
             }

@@ -1,7 +1,8 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.Configuration;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -63,7 +64,7 @@ public class DamageListener implements Listener {
             if (areEnemies(damager, damaged) || damager == damaged) {
                 return true;
             } else {
-                return Configuration.config.getBoolean("FriendlyFire", false);
+                return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
             }
         }
 
