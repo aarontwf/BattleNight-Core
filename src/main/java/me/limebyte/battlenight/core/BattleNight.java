@@ -30,8 +30,6 @@ import me.limebyte.battlenight.core.listeners.RespawnListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
-import me.limebyte.battlenight.core.util.Configuration;
-import me.limebyte.battlenight.core.util.Configuration.ConfigFile;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -90,7 +88,6 @@ public class BattleNight extends JavaPlugin {
         battle = new Battle();
 
         ConfigManager.initConfigurations();
-        Configuration.init();
 
         // Metrics
         try {
@@ -557,52 +554,55 @@ public class BattleNight extends JavaPlugin {
     }
 
     public boolean preparePlayer(Player p) {
-        if (ConfigManager.get(Config.MAIN).getString("InventoryType", "save").equalsIgnoreCase("prompt") && !hasEmptyInventory(p)) return false;
+        String inventoryType = ConfigManager.get(Config.MAIN).getString("InventoryType", "save");
+        FileConfiguration storage = ConfigManager.get(Config.PLAYERS);
+
+        if (inventoryType.equalsIgnoreCase("prompt") && !hasEmptyInventory(p)) return false;
 
         String name = p.getName();
 
         // Inventory
-        if (ConfigManager.get(Config.MAIN).getString("InventoryType", "save").equalsIgnoreCase("save")) {
-            Configuration.players.set(name + ".data.inv.main", Arrays.asList(p.getInventory().getContents()));
-            Configuration.players.set(name + ".data.inv.armor", Arrays.asList(p.getInventory().getArmorContents()));
+        if (inventoryType.equalsIgnoreCase("save")) {
+            storage.set(name + ".data.inv.main", Arrays.asList(p.getInventory().getContents()));
+            storage.set(name + ".data.inv.armor", Arrays.asList(p.getInventory().getArmorContents()));
         }
 
         // Health
-        Configuration.players.set(name + ".data.health", p.getHealth());
+        storage.set(name + ".data.health", p.getHealth());
 
         // Hunger
-        Configuration.players.set(name + ".data.hunger.foodlevel", p.getFoodLevel());
-        Configuration.players.set(name + ".data.hunger.saturation", Float.toString(p.getSaturation()));
-        Configuration.players.set(name + ".data.hunger.exhaustion", Float.toString(p.getExhaustion()));
+        storage.set(name + ".data.hunger.foodlevel", p.getFoodLevel());
+        storage.set(name + ".data.hunger.saturation", Float.toString(p.getSaturation()));
+        storage.set(name + ".data.hunger.exhaustion", Float.toString(p.getExhaustion()));
 
         // Experience
-        Configuration.players.set(name + ".data.exp.level", p.getLevel());
-        Configuration.players.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
+        storage.set(name + ".data.exp.level", p.getLevel());
+        storage.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
 
         // GameMode
-        Configuration.players.set(name + ".data.gamemode", p.getGameMode().getValue());
+        storage.set(name + ".data.gamemode", p.getGameMode().getValue());
 
         // Flying
-        Configuration.players.set(name + ".data.flight.allowed", p.getAllowFlight());
-        Configuration.players.set(name + ".data.flight.flying", p.isFlying());
+        storage.set(name + ".data.flight.allowed", p.getAllowFlight());
+        storage.set(name + ".data.flight.flying", p.isFlying());
 
         // Sleep
-        Configuration.players.set(name + ".data.sleepignored", p.isSleepingIgnored());
+        storage.set(name + ".data.sleepignored", p.isSleepingIgnored());
 
         // Information
-        Configuration.players.set(name + ".data.info.displayname", p.getDisplayName());
-        Configuration.players.set(name + ".data.info.listname", p.getPlayerListName());
+        storage.set(name + ".data.info.displayname", p.getDisplayName());
+        storage.set(name + ".data.info.listname", p.getPlayerListName());
 
         // Statistics
-        Configuration.players.set(name + ".data.stats.tickslived", p.getTicksLived());
-        Configuration.players.set(name + ".data.stats.nodamageticks", p.getNoDamageTicks());
+        storage.set(name + ".data.stats.tickslived", p.getTicksLived());
+        storage.set(name + ".data.stats.nodamageticks", p.getNoDamageTicks());
 
         // State
-        Configuration.players.set(name + ".data.state.remainingair", p.getRemainingAir());
-        Configuration.players.set(name + ".data.state.falldistance", Float.toString(p.getFallDistance()));
-        Configuration.players.set(name + ".data.state.fireticks", p.getFireTicks());
+        storage.set(name + ".data.state.remainingair", p.getRemainingAir());
+        storage.set(name + ".data.state.falldistance", Float.toString(p.getFallDistance()));
+        storage.set(name + ".data.state.fireticks", p.getFireTicks());
 
-        Configuration.saveYAML(ConfigFile.Players);
+        ConfigManager.save(Config.PLAYERS);
 
         // Reset Player
         reset(p, false);
@@ -613,42 +613,46 @@ public class BattleNight extends JavaPlugin {
         String name = p.getName();
         reset(p, true);
 
+        String inventoryType = ConfigManager.get(Config.MAIN).getString("InventoryType", "save");
+        ConfigManager.reload(Config.PLAYERS);
+        FileConfiguration storage = ConfigManager.get(Config.PLAYERS);
+
         try {
             // Inventory
-            if (ConfigManager.get(Config.MAIN).getString("InventoryType", "save").equalsIgnoreCase("save")) {
-                p.getInventory().setContents(Configuration.players.getList(name + ".data.inv.main").toArray(new ItemStack[0]));
-                p.getInventory().setArmorContents(Configuration.players.getList(name + ".data.inv.armor").toArray(new ItemStack[0]));
+            if (inventoryType.equalsIgnoreCase("save")) {
+                p.getInventory().setContents(storage.getList(name + ".data.inv.main").toArray(new ItemStack[0]));
+                p.getInventory().setArmorContents(storage.getList(name + ".data.inv.armor").toArray(new ItemStack[0]));
             }
 
             // Health
-            p.setHealth(Configuration.players.getInt(name + ".data.health"));
+            p.setHealth(storage.getInt(name + ".data.health"));
 
             // Hunger
-            p.setFoodLevel(Configuration.players.getInt(name + ".data.hunger.foodlevel"));
-            p.setSaturation(Float.parseFloat(Configuration.players.getString(name + ".data.hunger.saturation")));
-            p.setExhaustion(Float.parseFloat(Configuration.players.getString(name + ".data.hunger.exhaustion")));
+            p.setFoodLevel(storage.getInt(name + ".data.hunger.foodlevel"));
+            p.setSaturation(Float.parseFloat(storage.getString(name + ".data.hunger.saturation")));
+            p.setExhaustion(Float.parseFloat(storage.getString(name + ".data.hunger.exhaustion")));
 
             // Experience
-            p.setLevel(Configuration.players.getInt(name + ".data.exp.level"));
-            p.setExp(Float.parseFloat(Configuration.players.getString(name + ".data.exp.ammount")));
+            p.setLevel(storage.getInt(name + ".data.exp.level"));
+            p.setExp(Float.parseFloat(storage.getString(name + ".data.exp.ammount")));
 
             // GameMode
-            p.setGameMode(GameMode.getByValue(Configuration.players.getInt(name + ".data.gamemode")));
+            p.setGameMode(GameMode.getByValue(storage.getInt(name + ".data.gamemode")));
 
             // Flying
-            p.setAllowFlight(Configuration.players.getBoolean(name + ".data.flight.allowed"));
-            p.setFlying(Configuration.players.getBoolean(name + ".data.flight.flying"));
+            p.setAllowFlight(storage.getBoolean(name + ".data.flight.allowed"));
+            p.setFlying(storage.getBoolean(name + ".data.flight.flying"));
 
             // Sleep
-            p.setSleepingIgnored(Configuration.players.getBoolean(name + ".data.sleepignored"));
+            p.setSleepingIgnored(storage.getBoolean(name + ".data.sleepignored"));
 
             // Information
-            p.setDisplayName(Configuration.players.getString(name + ".data.info.displayname"));
-            p.setPlayerListName(Configuration.players.getString(name + ".data.info.listname"));
+            p.setDisplayName(storage.getString(name + ".data.info.displayname"));
+            p.setPlayerListName(storage.getString(name + ".data.info.listname"));
 
             // Statistics
-            p.setTicksLived(Configuration.players.getInt(name + ".data.stats.tickslived"));
-            p.setNoDamageTicks(Configuration.players.getInt(name + ".data.stats.nodamageticks"));
+            p.setTicksLived(storage.getInt(name + ".data.stats.tickslived"));
+            p.setNoDamageTicks(storage.getInt(name + ".data.stats.nodamageticks"));
 
         } catch (NullPointerException e) {
             log.warning("Failed to restore data for player: '" + name + "'.");

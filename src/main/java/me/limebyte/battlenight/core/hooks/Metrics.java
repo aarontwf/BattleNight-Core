@@ -26,10 +26,9 @@
  * either expressed or implied, of anybody else.
  */
 
-package me.limebyte.battlenight.core.hooks; // BattleNight
+package me.limebyte.battlenight.core.hooks;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -45,13 +44,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-
-// import java.util.logging.Level;    // BattleNight
 
 /**
  * <p>
@@ -112,16 +111,6 @@ public class Metrics {
     private final Graph defaultGraph = new Graph("Default");
 
     /**
-     * The plugin configuration file
-     */
-    private final YamlConfiguration configuration;
-
-    /**
-     * The plugin configuration file
-     */
-    private final File configurationFile;
-
-    /**
      * Unique server id
      */
     private final String guid;
@@ -141,22 +130,12 @@ public class Metrics {
 
         this.plugin = plugin;
 
-        // load the config
-        configurationFile = getConfigFile();
-        configuration = YamlConfiguration.loadConfiguration(configurationFile);
+        FileConfiguration config = ConfigManager.get(Config.METRICS);
+        config.addDefault("opt-out", false);
+        config.addDefault("guid", UUID.randomUUID().toString());
+        ConfigManager.save(Config.METRICS);
 
-        // add some defaults
-        configuration.addDefault("opt-out", false);
-        configuration.addDefault("guid", UUID.randomUUID().toString());
-
-        // Do we need to create the file?
-        if (configuration.get("guid", null) == null) {
-            configuration.options().header("http://mcstats.org").copyDefaults(true);
-            configuration.save(configurationFile);
-        }
-
-        // Load the guid then
-        guid = configuration.getString("guid");
+        guid = config.getString("guid");
     }
 
     /**
@@ -256,7 +235,6 @@ public class Metrics {
                         // Each post thereafter will be a ping
                         firstPost = false;
                     } catch (IOException e) {
-                        // BattleNight
                     }
                 }
             }, 0, PING_INTERVAL * 1200);
@@ -272,17 +250,8 @@ public class Metrics {
      */
     public boolean isOptOut() {
         synchronized (optOutLock) {
-            try {
-                // Reload the metrics file
-                configuration.load(getConfigFile());
-            } catch (IOException ex) {
-                // BattleNight
-                return true;
-            } catch (InvalidConfigurationException ex) {
-                // BattleNight
-                return true;
-            }
-            return configuration.getBoolean("opt-out", false);
+            ConfigManager.reload(Config.METRICS);
+            return ConfigManager.get(Config.METRICS).getBoolean("opt-out", false);
         }
     }
 
@@ -297,8 +266,8 @@ public class Metrics {
         synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
             if (isOptOut()) {
-                configuration.set("opt-out", false);
-                configuration.save(configurationFile);
+                ConfigManager.get(Config.METRICS).set("opt-out", false);
+                ConfigManager.save(Config.METRICS);
             }
 
             // Enable Task, if it is not running
@@ -319,8 +288,8 @@ public class Metrics {
         synchronized (optOutLock) {
             // Check if the server owner has already set opt-out, if not, set it.
             if (!isOptOut()) {
-                configuration.set("opt-out", true);
-                configuration.save(configurationFile);
+                ConfigManager.get(Config.METRICS).set("opt-out", true);
+                ConfigManager.save(Config.METRICS);
             }
 
             // Disable Task, if it is running
@@ -329,24 +298,6 @@ public class Metrics {
                 taskId = -1;
             }
         }
-    }
-
-    /**
-     * Gets the File object of the config file that should be used to store data
-     * such as the GUID and opt-out status
-     * 
-     * @return the File object for the config file
-     */
-    public File getConfigFile() {
-        // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
-        // is to abuse the plugin object we already have
-        // plugin.getDataFolder() => base/plugins/PluginA/
-        // pluginsFolder => base/plugins/
-        // The base is not necessarily relative to the startup directory.
-        File pluginsFolder = plugin.getDataFolder().getParentFile();
-
-        // return => base/plugins/PluginMetrics/config.yml
-        return new File(new File(pluginsFolder, "BattleNight/PluginData"), "metrics.yml"); // BattleNight
     }
 
     /**

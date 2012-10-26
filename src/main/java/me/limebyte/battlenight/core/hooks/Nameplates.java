@@ -1,9 +1,11 @@
 package me.limebyte.battlenight.core.hooks;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.Configuration;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -30,7 +32,7 @@ public class Nameplates {
 
     private static void install(BattleNight plugin, PluginManager pm) throws UnknownDependencyException, InvalidPluginException, InvalidDescriptionException {
         File tagAPI = new File(plugin.getDataFolder().getParent(), "TagAPI.jar");
-        Configuration.copy(plugin.getResource("TagAPI.jar"), tagAPI);
+        copyResource("TagAPI.jar", tagAPI);
         load(tagAPI);
     }
 
@@ -38,5 +40,21 @@ public class Nameplates {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.loadPlugin(file);
         pm.enablePlugin(pm.getPlugin("TagAPI"));
+    }
+
+    public static void copyResource(String resource, File file) {
+        InputStream in = BattleNight.instance.getResource(resource);
+        try {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

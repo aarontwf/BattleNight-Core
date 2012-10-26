@@ -3,25 +3,29 @@ package me.limebyte.battlenight.core.util.config;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class ConfigManager {
-    private static Configuration mainConfig = new Configuration("config.yml");
-    private static Configuration classesConfig = new Configuration("classes.yml");
-    private static Configuration waypointsConfig = new Configuration("waypoints.dat", ".plugindata");
+    public static final String DATA_DIRECTORY = ".PluginData";
+
+    private static Configuration mainConfig = new Configuration("Config.yml");
+    private static Configuration classesConfig = new Configuration("Classes.yml");
+    private static Configuration metricsConfig = new Configuration("Metrics.yml");
+    private static Configuration waypointsConfig = new Configuration("Waypoints.dat", DATA_DIRECTORY);
+    private static Configuration playersConfig = new Configuration("Players.dat", DATA_DIRECTORY);
 
     public static void initConfigurations() {
         reloadAll();
         saveAll();
     }
 
-    public static FileConfiguration get(Config configFile) {
-        return configFile.getConfiguration().get();
+    public static FileConfiguration get(Config config) {
+        return config.getConfiguration().get();
     }
 
-    public static void reload(Config configFile) {
-        configFile.getConfiguration().reload();
+    public static void reload(Config config) {
+        config.getConfiguration().reload();
     }
 
-    public static void save(Config configFile) {
-        configFile.getConfiguration().save();
+    public static void save(Config config) {
+        config.getConfiguration().save();
     }
 
     public static void reloadAll() {
@@ -39,7 +43,9 @@ public class ConfigManager {
     public enum Config {
         MAIN(mainConfig),
         CLASSES(classesConfig),
-        WAYPOINTS(waypointsConfig);
+        METRICS(metricsConfig),
+        WAYPOINTS(waypointsConfig),
+        PLAYERS(playersConfig);
 
         private Configuration config;
 
