@@ -10,6 +10,7 @@ import me.limebyte.battlenight.core.api.BattleEndEvent;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.Messaging;
 import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,11 +40,11 @@ public class Battle {
             if (blueTeam > redTeam) {
                 team = Team.RED;
                 redTeam++;
-                BattleNight.goToWaypoint(player, Waypoint.RED_LOUNGE);
+                SafeTeleporter.tp(player, Waypoint.RED_LOUNGE);
             } else {
                 team = Team.BLUE;
                 blueTeam++;
-                BattleNight.goToWaypoint(player, Waypoint.BLUE_LOUNGE);
+                SafeTeleporter.tp(player, Waypoint.BLUE_LOUNGE);
             }
 
             usersTeam.put(name, team);
@@ -117,7 +118,7 @@ public class Battle {
     public void resetPlayer(Player player, boolean teleport, boolean removeHash) {
         player.getInventory().clear();
         plugin.restorePlayer(player);
-        if (teleport) BattleNight.goToWaypoint(player, Waypoint.EXIT);
+        if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
         BattleNight.cleanSigns(player);
 
         if (removeHash) {

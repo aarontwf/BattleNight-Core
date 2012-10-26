@@ -30,12 +30,12 @@ import me.limebyte.battlenight.core.listeners.RespawnListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -428,13 +428,15 @@ public class BattleNight extends JavaPlugin {
             if (Bukkit.getPlayer(name) != null) {
                 Player currentPlayer = Bukkit.getPlayer(name);
                 if (getBattle().usersTeam.get(name).equals(Team.RED)) {
-                    goToWaypoint(currentPlayer, Waypoint.RED_SPAWN);
+                    SafeTeleporter.tp(currentPlayer, Waypoint.RED_SPAWN);
                 }
                 if (getBattle().usersTeam.get(name).equals(Team.BLUE)) {
-                    goToWaypoint(currentPlayer, Waypoint.BLUE_SPAWN);
+                    SafeTeleporter.tp(currentPlayer, Waypoint.BLUE_SPAWN);
                 }
             }
         }
+
+        SafeTeleporter.startTeleporting();
     }
 
     public boolean hasEmptyInventory(Player player) {
@@ -456,22 +458,22 @@ public class BattleNight extends JavaPlugin {
                 && (armNullCounter == armContents.length);
     }
 
-    public static void goToWaypoint(Player player, Waypoint waypoint) {
-        Location destination = getCoords(waypoint.getName());
-        Chunk chunk = destination.getChunk();
-
-        if (!chunk.isLoaded()) {
-            chunk.load();
-            while (!chunk.isLoaded()) {
-                // Wait until loaded
-            }
-        }
-
-        BattleTelePass.put(player.getName(), "yes");
-        player.teleport(destination);
-        BattleTelePass.remove(player.getName());
-        TagAPI.refreshPlayer(player);
-    }
+    //    public static void goToWaypoint(Player player, Waypoint waypoint) {
+    //        Location destination = getCoords(waypoint.getName());
+    //        Chunk chunk = destination.getChunk();
+    //
+    //        if (!chunk.isLoaded()) {
+    //            chunk.load();
+    //            while (!chunk.isLoaded()) {
+    //                // Wait until loaded
+    //            }
+    //        }
+    //
+    //        BattleTelePass.put(player.getName(), "yes");
+    //        player.teleport(destination);
+    //        BattleTelePass.remove(player.getName());
+    //        TagAPI.refreshPlayer(player);
+    //    }
 
     public static ItemStack parseItem(String rawItem) {
         if (rawItem == null || rawItem.equals(""))
@@ -530,14 +532,14 @@ public class BattleNight extends JavaPlugin {
 
     public static void addSpectator(Player player, String type) {
         if (!type.equals("death")) {
-            goToWaypoint(player, Waypoint.SPECTATOR);
+            SafeTeleporter.tp(player, Waypoint.SPECTATOR);
         }
         getBattle().spectators.add(player.getName());
         tellPlayer(player, Track.WELCOME_SPECTATOR);
     }
 
     public static void removeSpectator(Player player) {
-        goToWaypoint(player, Waypoint.EXIT);
+        SafeTeleporter.tp(player, Waypoint.EXIT);
         getBattle().spectators.remove(player.getName());
         tellPlayer(player, Track.GOODBYE_SPECTATOR);
     }
@@ -546,9 +548,10 @@ public class BattleNight extends JavaPlugin {
         for (String pName : getBattle().spectators) {
             if (Bukkit.getPlayer(pName) != null) {
                 Player currentPlayer = Bukkit.getPlayer(pName);
-                goToWaypoint(currentPlayer, Waypoint.EXIT);
+                SafeTeleporter.queue(currentPlayer, Waypoint.EXIT);
             }
         }
+        SafeTeleporter.startTeleporting();
 
         getBattle().spectators.clear();
     }

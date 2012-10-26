@@ -1,5 +1,9 @@
 package me.limebyte.battlenight.core.battle;
 
+import me.limebyte.battlenight.core.BattleNight;
+
+import org.bukkit.Location;
+
 public enum Waypoint {
     RED_LOUNGE("redlounge", "Red Lounge"),
     BLUE_LOUNGE("bluelounge", "Blue Lounge"),
@@ -22,6 +26,10 @@ public enum Waypoint {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public Location getLocation() {
+        return BattleNight.getCoords(name);
     }
 
     @Override

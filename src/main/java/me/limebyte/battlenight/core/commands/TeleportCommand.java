@@ -5,6 +5,7 @@ import java.util.Arrays;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Waypoint;
 import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -55,8 +56,7 @@ public class TeleportCommand extends BattleNightCommand {
                 BattleNight.tellPlayer(player, ChatColor.RED + "The " + waypoint.getDisplayName() + " waypoint is not set.  No TP.");
                 return false;
             }
-
-            BattleNight.goToWaypoint(player, waypoint);
+            SafeTeleporter.tp(player, waypoint);
             return true;
         } else {
             sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");
