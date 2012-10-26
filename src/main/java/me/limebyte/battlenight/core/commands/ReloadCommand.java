@@ -6,6 +6,7 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Configuration;
 import me.limebyte.battlenight.core.util.Messaging;
 import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
 
 import org.bukkit.command.CommandSender;
 
@@ -27,6 +28,7 @@ public class ReloadCommand extends BattleNightCommand {
 
         try {
             BattleNight.getBattle().stop();
+            ConfigManager.reloadAll();
             Configuration.reloadYamls();
             Messaging.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;

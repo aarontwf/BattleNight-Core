@@ -11,19 +11,24 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Configuration {
     private final String fileName;
+    private final String directory;
 
     private File file;
     private YamlConfiguration fileConfig;
 
     public Configuration(String fileName) {
         this.fileName = fileName;
+        this.directory = BattleNight.instance.getDataFolder().getAbsolutePath();
+    }
+
+    public Configuration(String fileName, String directory) {
+        this.fileName = fileName;
+        this.directory = BattleNight.instance.getDataFolder().getAbsolutePath() + File.separator + directory;
     }
 
     public void reload() {
         if (file == null) {
-            File dataFolder = BattleNight.instance.getDataFolder();
-            if (dataFolder == null) throw new IllegalStateException();
-            file = new File(dataFolder, fileName);
+            file = new File(directory, fileName);
         }
         fileConfig = YamlConfiguration.loadConfiguration(file);
 

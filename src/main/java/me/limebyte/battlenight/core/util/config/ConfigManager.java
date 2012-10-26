@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class ConfigManager {
     private static Configuration mainConfig = new Configuration("config.yml");
     private static Configuration classesConfig = new Configuration("classes.yml");
+    private static Configuration waypointsConfig = new Configuration("waypoints.dat", ".plugindata");
 
     public static void initConfigurations() {
         reloadAll();
@@ -37,7 +38,8 @@ public class ConfigManager {
 
     public enum Config {
         MAIN(mainConfig),
-        CLASSES(classesConfig);
+        CLASSES(classesConfig),
+        WAYPOINTS(waypointsConfig);
 
         private Configuration config;
 

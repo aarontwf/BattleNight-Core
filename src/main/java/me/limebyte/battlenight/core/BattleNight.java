@@ -45,6 +45,7 @@ import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -163,38 +164,27 @@ public class BattleNight extends JavaPlugin {
     }
 
     // Set Coords and put in waypoints.data
-    public void setCoords(Player player, String place) {
-        Location location = player.getLocation();
-        Configuration.loadWaypoints();
-        Configuration.waypoints.set("coords." + place + ".world", location.getWorld().getName());
-        Configuration.waypoints.set("coords." + place + ".x", location.getX());
-        Configuration.waypoints.set("coords." + place + ".y", location.getY());
-        Configuration.waypoints.set("coords." + place + ".z", location.getZ());
-        Configuration.waypoints.set("coords." + place + ".yaw", location.getYaw());
-        Configuration.waypoints.set("coords." + place + ".pitch", location.getPitch());
-        Configuration.saveYAML(ConfigFile.Waypoints);
-    }
-
-    // Set Coords and put in waypoints.data
     public static void setCoords(Waypoint waypoint, Location location) {
         String place = waypoint.getName();
-        Configuration.loadWaypoints();
-        Configuration.waypoints.set("coords." + place + ".world", location.getWorld().getName());
-        Configuration.waypoints.set("coords." + place + ".x", location.getX());
-        Configuration.waypoints.set("coords." + place + ".y", location.getY());
-        Configuration.waypoints.set("coords." + place + ".z", location.getZ());
-        Configuration.waypoints.set("coords." + place + ".yaw", location.getYaw());
-        Configuration.waypoints.set("coords." + place + ".pitch", location.getPitch());
-        Configuration.saveYAML(ConfigFile.Waypoints);
+        ConfigManager.reload(Config.WAYPOINTS);
+        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
+        config.set("coords." + place + ".world", location.getWorld().getName());
+        config.set("coords." + place + ".x", location.getX());
+        config.set("coords." + place + ".y", location.getY());
+        config.set("coords." + place + ".z", location.getZ());
+        config.set("coords." + place + ".yaw", location.getYaw());
+        config.set("coords." + place + ".pitch", location.getPitch());
+        ConfigManager.save(Config.WAYPOINTS);
     }
 
     // Get Coords from waypoints.data
     public static Location getCoords(String place) {
-        Configuration.loadWaypoints();
-        Double x = Configuration.waypoints.getDouble("coords." + place + ".x", 0);
-        Double y = Configuration.waypoints.getDouble("coords." + place + ".y", 0);
-        Double z = Configuration.waypoints.getDouble("coords." + place + ".z", 0);
-        String yawToParse = Configuration.waypoints.getString("coords." + place + ".yaw");
+        ConfigManager.reload(Config.WAYPOINTS);
+        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
+        Double x = config.getDouble("coords." + place + ".x", 0);
+        Double y = config.getDouble("coords." + place + ".y", 0);
+        Double z = config.getDouble("coords." + place + ".z", 0);
+        String yawToParse = config.getString("coords." + place + ".yaw");
         float yaw = 0;
         if (yawToParse != null) {
             try {
@@ -204,7 +194,7 @@ public class BattleNight extends JavaPlugin {
                 // a default value
             }
         }
-        String pitchToParse = Configuration.waypoints.getString("coords." + place + ".pitch");
+        String pitchToParse = config.getString("coords." + place + ".pitch");
         float pitch = 0;
         if (pitchToParse != null) {
             try {
@@ -214,21 +204,16 @@ public class BattleNight extends JavaPlugin {
                 // a default value
             }
         }
-        World world = Bukkit.getServer().getWorld(Configuration.waypoints.getString("coords." + place + ".world"));
+        World world = Bukkit.getServer().getWorld(config.getString("coords." + place + ".world"));
         return new Location(world, x, y, z, yaw, pitch);
     }
 
     public static boolean pointSet(Waypoint waypoint) {
-        Configuration.loadWaypoints();
+        ConfigManager.reload(Config.WAYPOINTS);
+        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
         try {
-            Set<String> set = Configuration.waypoints.getConfigurationSection("coords")
-                    .getKeys(false);
-            List<String> setpoints = new ArrayList<String>(set);
-            if (setpoints.contains(waypoint.getName())) {
-                return true;
-            } else {
-                return false;
-            }
+            Set<String> set = config.getConfigurationSection("coords").getKeys(false);
+            return set.contains(waypoint.getName());
         } catch (NullPointerException e) {
             return false;
         }
@@ -236,29 +221,24 @@ public class BattleNight extends JavaPlugin {
 
     // Check if all Waypoints have been set.
     public static Boolean isSetup() {
-        Configuration.loadWaypoints();
-        if (!Configuration.waypoints.isSet("coords")) {
+        ConfigManager.reload(Config.WAYPOINTS);
+        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
+        if (!config.isSet("coords")) {
             return false;
         } else {
-            Set<String> set = Configuration.waypoints.getConfigurationSection("coords")
-                    .getKeys(false);
-            List<String> list = new ArrayList<String>(set);
-            if (list.size() == 6) {
-                return true;
-            } else {
-                return false;
-            }
+            Set<String> set = config.getConfigurationSection("coords").getKeys(false);
+            return set.size() == Waypoint.values().length;
         }
     }
 
     public static int numSetupPoints() {
-        Configuration.loadWaypoints();
-        if (!Configuration.waypoints.isSet("coords")) {
+        ConfigManager.reload(Config.WAYPOINTS);
+        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
+        if (!config.isSet("coords")) {
             return 0;
         } else {
-            Set<String> set = Configuration.waypoints.getConfigurationSection("coords").getKeys(false);
-            List<String> list = new ArrayList<String>(set);
-            return list.size();
+            Set<String> set = config.getConfigurationSection("coords").getKeys(false);
+            return set.size();
         }
     }
 
