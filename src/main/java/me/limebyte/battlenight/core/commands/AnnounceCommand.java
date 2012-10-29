@@ -15,7 +15,7 @@ public class AnnounceCommand extends BattleNightCommand {
         super("Announce");
 
         this.setLabel("announce");
-        this.setDescription("Announces a message to all player in the Battle.");
+        this.setDescription("Announces a message to all players in the Battle.");
         this.setUsage("/bn announce <message>");
         this.setPermission(CommandPermission.MODERATOR);
         this.setAliases(Arrays.asList("tellall"));
