@@ -35,16 +35,18 @@ public class DamageListener implements Listener {
 
             if (!BattleNight.getBattle().usersTeam.containsKey(player.getName())) return;
 
-            subEvent.setCancelled(!canBeDamaged(player, subEvent.getDamager()));
+            subEvent.setCancelled(!canBeDamaged(player, subEvent));
 
         }
-
     }
 
-    private boolean canBeDamaged(Player damaged, Entity eDamager) {
+    private boolean canBeDamaged(Player damaged, EntityDamageByEntityEvent event) {
+        Entity eDamager = event.getDamager();
         Player damager;
 
         if (eDamager instanceof Projectile) {
+            if (checkCrashBug(damaged, event)) return false;
+
             LivingEntity shooter = ((Projectile) eDamager).getShooter();
             if (shooter instanceof Player)
                 damager = (Player) shooter;
@@ -77,6 +79,11 @@ public class DamageListener implements Listener {
         } else {
             return false;
         }
+    }
+
+    private boolean checkCrashBug(Player damaged, EntityDamageByEntityEvent event) {
+        if (event.getDamage() >= damaged.getHealth()) return true;
+        return false;
     }
 
 }
