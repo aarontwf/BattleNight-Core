@@ -45,20 +45,21 @@ public class SafeTeleporter {
     }
 
     private static void safeTP(final Player player, Waypoint waypoint) {
-        Location loc = waypoint.getLocation();
+        final Location loc = waypoint.getLocation();
 
         BattleNight.BattleTelePass.put(player.getName(), "yes");
         player.teleport(loc, TeleportCause.PLUGIN);
         player.setAllowFlight(true);
         player.setFlying(true);
-        BattleNight.BattleTelePass.remove(player.getName());
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
             public void run() {
+                player.teleport(loc, TeleportCause.PLUGIN);
+                BattleNight.BattleTelePass.remove(player.getName());
                 player.setFlying(false);
                 player.setAllowFlight(false);
                 TagAPI.refreshPlayer(player);
             }
-        }, 10L);
+        }, 5L);
     }
 }
