@@ -23,16 +23,18 @@ public class SignChanger implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent e) {
         Player player = e.getPlayer();
-        if (BattleNight.ClassList.contains(e.getLine(0))) {
-            if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
-                Messaging.tell(player, Message.UNSUCCESSFUL_SIGN, e.getLine(0));
+        if (BattleNight.ClassList != null) {
+            if (BattleNight.ClassList.contains(e.getLine(0))) {
+                if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
+                    Messaging.tell(player, Message.UNSUCCESSFUL_SIGN, e.getLine(0));
+                    return;
+                }
+
+                e.setLine(1, "----------");
+                BattleNight.classSigns.add((Sign) e.getBlock().getState());
+                Messaging.tell(player, Message.SUCCESSFUL_SIGN, e.getLine(0));
                 return;
             }
-
-            e.setLine(1, "----------");
-            BattleNight.classSigns.add((Sign) e.getBlock().getState());
-            Messaging.tell(player, Message.SUCCESSFUL_SIGN, e.getLine(0));
-            return;
         }
     }
 }
