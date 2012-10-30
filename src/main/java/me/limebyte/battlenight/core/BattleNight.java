@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,7 +38,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -65,7 +62,6 @@ public class BattleNight extends JavaPlugin {
     // HashMaps
     public static final Map<String, String> BattleClasses = new HashMap<String, String>();
     public static final Map<String, String> BattleArmor = new HashMap<String, String>();
-    public static final Set<Sign> classSigns = new HashSet<Sign>();
     public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
 
     // Other Classes
@@ -123,7 +119,7 @@ public class BattleNight extends JavaPlugin {
             pm.registerEvents(new ReadyListener(this), this);
             pm.registerEvents(new RespawnListener(), this);
             pm.registerEvents(new SignChanger(this), this);
-            pm.registerEvents(new SignListener(this), this);
+            pm.registerEvents(new SignListener(), this);
 
             // Enable Message
             log.info("Version " + pdfFile.getVersion() + " enabled successfully.");
@@ -142,7 +138,7 @@ public class BattleNight extends JavaPlugin {
             log.info("Ending current Battle...");
             battle.stop();
         }
-        cleanSigns();
+        SignListener.cleanSigns();
         PluginDescriptionFile pdfFile = getDescription();
         log.info("Version " + pdfFile.getVersion() + " has been disabled.");
     }
@@ -240,7 +236,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     // Give Player Class Items
-    public void giveItems(Player player) {
+    public static void giveItems(Player player) {
         String playerClass = getBattle().usersClass.get(player.getName());
         String rawItems = BattleClasses.get(playerClass);
         String ArmorList = BattleArmor.get(playerClass);
@@ -301,34 +297,6 @@ public class BattleNight extends JavaPlugin {
             player.getInventory().setBoots(new ItemStack(313, 1));
         } else if (ArmorList.contains("317")) {
             player.getInventory().setBoots(new ItemStack(317, 1));
-        }
-    }
-
-    // Clean Up All Signs People Have Used For Classes
-    public static void cleanSigns() {
-        Iterator<Sign> it = classSigns.iterator();
-        while (it.hasNext()) {
-            Sign sign = it.next();
-            if (sign != null) {
-                sign.setLine(2, "");
-                sign.setLine(3, "");
-                sign.update();
-            } else {
-                it.remove();
-            }
-        }
-    }
-
-    // Clean Up Signs Specific Player Has Used For Classes
-    public static void cleanSigns(Player player) {
-        Iterator<Sign> it = classSigns.iterator();
-        while (it.hasNext()) {
-            Sign sign = it.next();
-            if (sign != null) {
-                SignListener.removeName(player, sign);
-            } else {
-                it.remove();
-            }
         }
     }
 
@@ -662,7 +630,7 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    public void reset(Player p, boolean light) {
+    public static void reset(Player p, boolean light) {
         PlayerInventory inv = p.getInventory();
         inv.clear();
         inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
@@ -691,7 +659,7 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    public void setNames(Player player) {
+    public static void setNames(Player player) {
         String name = player.getName();
 
         String pListName = ChatColor.GRAY + "[BN] " + name;
@@ -708,7 +676,7 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    private void removePotionEffects(Player p) {
+    private static void removePotionEffects(Player p) {
         for (PotionEffect effect : p.getActivePotionEffects()) {
             p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
         }

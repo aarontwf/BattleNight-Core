@@ -1,5 +1,9 @@
 package me.limebyte.battlenight.core.listeners;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.ParticleEffect;
 
@@ -14,12 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
 
-    // Get Main Class
-    public static BattleNight plugin;
-
-    public SignListener(BattleNight instance) {
-        plugin = instance;
-    }
+    public static final Set<Sign> classSigns = new HashSet<Sign>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -38,57 +37,82 @@ public class SignListener implements Listener {
 
                     if (BattleNight.getBattle().usersClass.containsKey(name)) {
                         if (BattleNight.getBattle().usersClass.get(name).equals(title)) {
-                            BattleNight.getBattle().usersClass.remove(name);
-
-                            if (removeName(player, sign)) {
-                                plugin.reset(player, true);
-                            }
-
-                            ParticleEffect.spiral(player);
-                        } else {
-                            BattleNight.tellPlayer(player, "You must first remove yourself from the other class!");
+                            //TODO Maybe alert the player?
+                            return;
                         }
-                    } else if (sign.getLine(2).trim().equals("")) {
-                        BattleNight.getBattle().usersClass.put(name, title);
-                        sign.setLine(2, name);
-                        sign.update();
-                        plugin.giveItems(player);
-                        ParticleEffect.spiral(player);
-                    } else if (sign.getLine(3).trim().equals("")) {
-                        BattleNight.getBattle().usersClass.put(name, title);
-                        sign.setLine(3, name);
-                        sign.update();
-                        plugin.giveItems(player);
-                        ParticleEffect.spiral(player);
-                    } else {
-                        BattleNight.tellPlayer(player, "There are too many of this class, pick another.");
                     }
+                    cleanSigns(player);
+                    addName(player, sign);
+
+                    BattleNight.getBattle().usersClass.put(name, title);
+                    BattleNight.reset(player, true);
+                    BattleNight.giveItems(player);
+                    ParticleEffect.spiral(player);
                 }
             }
         }
     }
 
     private static void addSign(Sign sign) {
-        if (!BattleNight.classSigns.contains(sign)) {
-            BattleNight.classSigns.add(sign);
+        if (!classSigns.contains(sign)) {
+            classSigns.add(sign);
         }
     }
 
-    public static boolean removeName(Player player, Sign sign) {
-        boolean result = false;
-
-        if (sign.getLine(3).contains(player.getName())) {
-            sign.setLine(3, "");
-            result = true;
+    private static void addName(Player player, Sign sign) {
+        // Third line is not empty
+        if (!sign.getLine(2).isEmpty()) {
+            // Move the first name down
+            sign.setLine(3, sign.getLine(2));
         }
 
-        if (sign.getLine(2).contains(player.getName())) {
-            sign.setLine(2, sign.getLine(3));
-            sign.setLine(3, "");
-            result = true;
-        }
+        // Add the players name
+        sign.setLine(2, player.getName());
 
+        // Update the sign
         sign.update();
-        return result;
+    }
+
+    private static void cleanName(Player player, Sign sign) {
+        // Forth line has the players name
+        if (sign.getLine(3).contains(player.getName())) {
+            // Clear line four
+            sign.setLine(3, "");
+        }
+
+        // Third line has the players name
+        if (sign.getLine(2).contains(player.getName())) {
+            // Move the second name up
+            sign.setLine(2, sign.getLine(3));
+        }
+
+        // Update the sign
+        sign.update();
+    }
+
+    public static void cleanSigns() {
+        Iterator<Sign> it = classSigns.iterator();
+        while (it.hasNext()) {
+            Sign sign = it.next();
+            if (sign != null) {
+                sign.setLine(2, "");
+                sign.setLine(3, "");
+                sign.update();
+            } else {
+                it.remove();
+            }
+        }
+    }
+
+    public static void cleanSigns(Player player) {
+        Iterator<Sign> it = classSigns.iterator();
+        while (it.hasNext()) {
+            Sign sign = it.next();
+            if (sign != null) {
+                SignListener.cleanName(player, sign);
+            } else {
+                it.remove();
+            }
+        }
     }
 }

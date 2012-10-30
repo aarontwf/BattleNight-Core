@@ -7,6 +7,7 @@ import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.api.BattleEndEvent;
+import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.Messaging;
 import me.limebyte.battlenight.core.util.Messaging.Message;
@@ -51,7 +52,7 @@ public class Battle {
             Messaging.tell(player, "Welcome! You are on team " + team.getColour() + team.getName() + ChatColor.WHITE + ".");
             Messaging.tellEveryoneExcept(player, name + " has joined team " + team.getColour() + team.getName() + ChatColor.WHITE + ".");
 
-            plugin.setNames(player);
+            BattleNight.setNames(player);
             BattleNight.playersInLounge = true;
         } else {
             Messaging.tell(player, Track.MUST_HAVE_EMPTY.msg);
@@ -119,7 +120,7 @@ public class Battle {
         player.getInventory().clear();
         plugin.restorePlayer(player);
         if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
-        BattleNight.cleanSigns(player);
+        SignListener.cleanSigns(player);
 
         if (removeHash) {
             usersTeam.remove(player.getName());
@@ -135,7 +136,7 @@ public class Battle {
         Set<String> toRefresh = usersTeam.keySet();
 
         plugin.removeAllSpectators();
-        BattleNight.cleanSigns();
+        SignListener.cleanSigns();
         inProgress = false;
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
@@ -187,6 +188,6 @@ public class Battle {
         BattleNight.playersInLounge = false;
         Messaging.tellEveryone(Message.BATTLE_STARTED);
         plugin.teleportAllToSpawn();
-        BattleNight.cleanSigns();
+        SignListener.cleanSigns();
     }
 }

@@ -31,7 +31,7 @@ public class SignChanger implements Listener {
                 }
 
                 e.setLine(1, "----------");
-                BattleNight.classSigns.add((Sign) e.getBlock().getState());
+                SignListener.classSigns.add((Sign) e.getBlock().getState());
                 Messaging.tell(player, Message.SUCCESSFUL_SIGN, e.getLine(0));
                 return;
             }
