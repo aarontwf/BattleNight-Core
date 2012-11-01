@@ -73,11 +73,11 @@ public class SignListener implements Listener {
         sign.update();
     }
 
-    private static void cleanName(Player player, Sign sign) {
+    private static void cleanName(String name, Sign sign) {
         //TODO Make it work for names longer than the sign.
 
         // Forth line has the players name
-        if (player.getName().equals(sign.getLine(3))) {
+        if (sign.getLine(3) == name) {
             // Clear line four
             sign.setLine(3, "");
 
@@ -86,7 +86,7 @@ public class SignListener implements Listener {
         }
 
         // Third line has the players name
-        if (player.getName().equals(sign.getLine(2))) {
+        if (sign.getLine(3) == name) {
             // Move the second name up
             sign.setLine(2, sign.getLine(3));
             sign.setLine(3, "");
@@ -115,7 +115,7 @@ public class SignListener implements Listener {
         while (it.hasNext()) {
             Sign sign = it.next();
             if (sign != null) {
-                cleanName(player, sign);
+                cleanName(player.getName(), sign);
             } else {
                 it.remove();
             }
