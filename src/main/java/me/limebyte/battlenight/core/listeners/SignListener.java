@@ -35,12 +35,6 @@ public class SignListener implements Listener {
                 if (BattleNight.BattleClasses.containsKey(title) && BattleNight.getBattle().usersTeam.containsKey(name)) {
                     addSign(sign);
 
-                    if (BattleNight.getBattle().usersClass.containsKey(name)) {
-                        if (BattleNight.getBattle().usersClass.get(name).equals(title)) {
-                            //TODO Maybe alert the player?
-                            return;
-                        }
-                    }
                     cleanSigns(player);
                     addName(player, sign);
 
@@ -48,6 +42,12 @@ public class SignListener implements Listener {
                     BattleNight.reset(player, true);
                     BattleNight.giveItems(player);
                     ParticleEffect.spiral(player);
+
+                    if (BattleNight.getBattle().usersClass.containsKey(name)) {
+                        if (!BattleNight.getBattle().usersClass.get(name).equals(title)) {
+                            ParticleEffect.spiral(player);
+                        }
+                    }
                 }
             }
         }
@@ -74,20 +74,26 @@ public class SignListener implements Listener {
     }
 
     private static void cleanName(Player player, Sign sign) {
+        //TODO Make it work for names longer than the sign.
+
         // Forth line has the players name
-        if (sign.getLine(3).contains(player.getName())) {
+        if (player.getName().equals(sign.getLine(3))) {
             // Clear line four
             sign.setLine(3, "");
+
+            // Update the sign
+            sign.update();
         }
 
         // Third line has the players name
-        if (sign.getLine(2).contains(player.getName())) {
+        if (player.getName().equals(sign.getLine(2))) {
             // Move the second name up
             sign.setLine(2, sign.getLine(3));
-        }
+            sign.setLine(3, "");
 
-        // Update the sign
-        sign.update();
+            // Update the sign
+            sign.update();
+        }
     }
 
     public static void cleanSigns() {
@@ -109,7 +115,7 @@ public class SignListener implements Listener {
         while (it.hasNext()) {
             Sign sign = it.next();
             if (sign != null) {
-                SignListener.cleanName(player, sign);
+                cleanName(player, sign);
             } else {
                 it.remove();
             }
