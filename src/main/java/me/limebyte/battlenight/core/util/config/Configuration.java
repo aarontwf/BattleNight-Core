@@ -12,18 +12,29 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Configuration {
     private final String fileName;
     private final String directory;
+    private final boolean copyDefaults;
 
     private File file;
     private YamlConfiguration fileConfig;
 
     public Configuration(String fileName) {
-        this.fileName = fileName;
-        this.directory = BattleNight.instance.getDataFolder().getAbsolutePath();
+        this(fileName, true);
     }
 
     public Configuration(String fileName, String directory) {
+        this(fileName, directory, true);
+    }
+
+    public Configuration(String fileName, boolean copyDefaults) {
+        this.fileName = fileName;
+        this.directory = BattleNight.instance.getDataFolder().getAbsolutePath();
+        this.copyDefaults = copyDefaults;
+    }
+
+    public Configuration(String fileName, String directory, boolean copyDefaults) {
         this.fileName = fileName;
         this.directory = BattleNight.instance.getDataFolder().getAbsolutePath() + File.separator + directory;
+        this.copyDefaults = copyDefaults;
     }
 
     public void reload() {
@@ -38,7 +49,7 @@ public class Configuration {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfig.setDefaults(defConfig);
             fileConfig.options().indent(4);
-            fileConfig.options().copyDefaults(true);
+            fileConfig.options().copyDefaults(file.length() == 0 || copyDefaults);
         }
     }
 

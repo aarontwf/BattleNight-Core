@@ -1,15 +1,6 @@
 # BattleNight Version: ${project.version}
 # Classes Configuration File
-#
-# Add Classes as you wish but do not use spaces in names.
-# Items are i:dxa, i=Item d=data a=Ammount.  Data and ammount are optional
-# Each class must have at least 2 items, use the dummyitem if you only want 1
-# The DummyItem can also be used as a spacer (examples bellow)
-# Remember, potions can not be stacked
-# I have made a searchable Potion ID list available at http://bit.ly/potionlist
-
 DummyItem: 6
-
 Classes:
     Scout:
         Armor: 6,6

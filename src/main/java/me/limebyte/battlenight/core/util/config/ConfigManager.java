@@ -8,7 +8,7 @@ public class ConfigManager {
     public static final String DATA_DIRECTORY = ".PluginData";
 
     private static Configuration mainConfig = new Configuration("Config.yml");
-    private static Configuration classesConfig = new Configuration("Classes.yml");
+    private static Configuration classesConfig = new Configuration("Classes.yml", false);
     private static Configuration metricsConfig = new Configuration("Metrics.yml");
     private static Configuration waypointsConfig = new Configuration("Waypoints.dat", DATA_DIRECTORY);
     private static Configuration playersConfig = new Configuration("Players.dat", DATA_DIRECTORY);
