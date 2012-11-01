@@ -49,7 +49,7 @@ public class Configuration {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfig.setDefaults(defConfig);
             fileConfig.options().indent(4);
-            fileConfig.options().copyDefaults(file.length() == 0 || copyDefaults);
+            fileConfig.options().copyDefaults(!file.exists() || copyDefaults);
         }
     }
 
