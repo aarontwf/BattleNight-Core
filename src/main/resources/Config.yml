@@ -1,36 +1,20 @@
 # BattleNight Version: ${project.version}
 # Main Configuration File
-#
-# Set classes in classes.yml
-#
-# ReadyBlock is the block you punch when your team is ready.
-# InventoryType is what you want to do with the players inventory when they join a Battle.
-# Possibe InventoryType values: prompt, clear, save
-# FriendlyFire when disabled, stops players on the same team attacking each other.
-# StopHealthRegen sets the users hunger level at a neutral postion where it prevents health regeneration.
-# Teleportation -> EnderPearls allows players to use EnderPearls in the Battle.
-# Teleportation -> Portals allows players to use Portals in the Battle.
-# Debug just adds more details on plugin enable.
-# Remember to use spaces not tabs.
 
 UsePermissions: false
 ReadyBlock: 42
 InventoryType: save
-
 FriendlyFire: false
 StopHealthRegen: true
-
 Teleprtation:
     EnderPearls: true
     Portals: false
-    
 Commands:
     Block: true
-    Whitelist: 
-        - list
-        - me
-        - toggledownfall
-        - stop
-        - reload
-
+    Whitelist:
+    - list
+    - me
+    - toggledownfall
+    - stop
+    - reload
 Debug: false

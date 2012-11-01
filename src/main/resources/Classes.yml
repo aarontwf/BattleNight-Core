@@ -1,5 +1,6 @@
 # BattleNight Version: ${project.version}
 # Classes Configuration File
+
 DummyItem: 6
 Classes:
     Scout:
