@@ -1,8 +1,9 @@
 package me.limebyte.battlenight.core.listeners;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.ParticleEffect;
@@ -18,7 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
 
-    public static final Set<Sign> classSigns = new HashSet<Sign>();
+    public static final Map<Sign, String[]> classSigns = new HashMap<Sign, String[]>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -54,56 +55,77 @@ public class SignListener implements Listener {
     }
 
     private static void addSign(Sign sign) {
-        if (!classSigns.contains(sign)) {
-            classSigns.add(sign);
+        if (!classSigns.containsKey(sign)) {
+            classSigns.put(sign, new String[2]);
         }
     }
 
     private static void addName(Player player, Sign sign) {
+        // Get the players from the HashMap
+        String[] players = classSigns.get(sign);
+
         // Third line is not empty
         if (!sign.getLine(2).isEmpty()) {
             // Move the first name down
             sign.setLine(3, sign.getLine(2));
+            players[1] = players[0];
         }
 
         // Add the players name
-        sign.setLine(2, player.getName());
+        String name = player.getName();
+        sign.setLine(2, name);
+        players[0] = name;
 
         // Update the sign
         sign.update();
+
+        // Refresh the HashMap
+        classSigns.put(sign, players);
     }
 
     private static void cleanName(String name, Sign sign) {
-        //TODO Make it work for names longer than the sign.
+        // Get the players from the HashMap
+        String[] players = classSigns.get(sign);
 
         // Forth line has the players name
-        if (sign.getLine(3) == name) {
+        if (players[1] == name) {
             // Clear line four
             sign.setLine(3, "");
-
+            players[1] = "";
             // Update the sign
             sign.update();
         }
 
         // Third line has the players name
-        if (sign.getLine(3) == name) {
+        if (players[0] == name) {
             // Move the second name up
             sign.setLine(2, sign.getLine(3));
             sign.setLine(3, "");
+            players[0] = players[1];
+            players[1] = "";
 
             // Update the sign
             sign.update();
         }
+
+        // Refresh the HashMap
+        classSigns.put(sign, players);
     }
 
     public static void cleanSigns() {
-        Iterator<Sign> it = classSigns.iterator();
+        Iterator<Entry<Sign, String[]>> it = classSigns.entrySet().iterator();
         while (it.hasNext()) {
-            Sign sign = it.next();
+            Entry<Sign, String[]> entry = it.next();
+            Sign sign = entry.getKey();
+            String[] players = entry.getValue();
+
             if (sign != null) {
                 sign.setLine(2, "");
                 sign.setLine(3, "");
                 sign.update();
+
+                players[0] = "";
+                players[1] = "";
             } else {
                 it.remove();
             }
@@ -111,7 +133,7 @@ public class SignListener implements Listener {
     }
 
     public static void cleanSigns(Player player) {
-        Iterator<Sign> it = classSigns.iterator();
+        Iterator<Sign> it = classSigns.keySet().iterator();
         while (it.hasNext()) {
             Sign sign = it.next();
             if (sign != null) {

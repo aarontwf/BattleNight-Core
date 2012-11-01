@@ -4,7 +4,6 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messaging;
 import me.limebyte.battlenight.core.util.Messaging.Message;
 
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,7 +30,6 @@ public class SignChanger implements Listener {
                 }
 
                 e.setLine(1, "----------");
-                SignListener.classSigns.add((Sign) e.getBlock().getState());
                 Messaging.tell(player, Message.SUCCESSFUL_SIGN, e.getLine(0));
                 return;
             }

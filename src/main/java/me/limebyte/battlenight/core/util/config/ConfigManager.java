@@ -16,7 +16,6 @@ public class ConfigManager {
     public static void initConfigurations() {
         reloadAll();
         saveAll();
-        BattleNight.reloadClasses();
     }
 
     public static FileConfiguration get(Config config) {

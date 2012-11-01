@@ -84,6 +84,7 @@ public class BattleNight extends JavaPlugin {
         battle = new Battle();
 
         ConfigManager.initConfigurations();
+        reloadClasses();
 
         // Metrics
         try {
