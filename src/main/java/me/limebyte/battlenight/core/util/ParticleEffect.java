@@ -3,29 +3,33 @@ package me.limebyte.battlenight.core.util;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionType;
 
 public class ParticleEffect {
 
-    private final static int SPIRAL_SMOKE_COUNT = 11;
+    private final static int SPIRAL_PARTICLE_COUNT = 30;
 
     public static void spiral(Player player) {
-        for (double i = 0; i < SPIRAL_SMOKE_COUNT; i++) {
-            double deg = i / SPIRAL_SMOKE_COUNT * 360;
-            double diffX = Math.rint(10 * (Math.sin(deg))) / 16;
-            double diffZ = Math.rint(10 * (Math.cos(deg))) / 16;
+        for (double i = 0; i < SPIRAL_PARTICLE_COUNT; i++) {
+            double deg = i / SPIRAL_PARTICLE_COUNT * 360;
+            double diffX = Math.rint(10 * (Math.sin(deg))) / 10;
+            double diffZ = Math.rint(10 * (Math.cos(deg))) / 10;
 
             Location loc = player.getLocation();
             loc.setX(loc.getBlockX() + 0.5 + diffX);
-            loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_SMOKE_COUNT) * 2);
+            loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_PARTICLE_COUNT) * 2);
             loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
-            playSmokeEffect(loc, Direction.UP);
-            playSmokeEffect(loc, Direction.UP);
+            playOrangeEffect(loc);
         }
     }
 
     private static void playSmokeEffect(Location location, Direction direction) {
         location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
+    }
+
+    private static void playOrangeEffect(Location location) {
+        location.getWorld().playEffect(location, Effect.POTION_BREAK, PotionType.FIRE_RESISTANCE.getDamageValue());
     }
 
     private enum Direction {
