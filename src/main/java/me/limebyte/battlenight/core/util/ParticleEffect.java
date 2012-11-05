@@ -24,12 +24,11 @@ public class ParticleEffect {
     }
 
     public static void classSelect(Player player) {
-        for (double h = 0.0; h < 2.0; h += 0.2) {
-            for (int i = 0; i < 4; i++) {
-                Location loc = player.getLocation();
-                loc.setY(loc.getY() + h);
-                playEnderEffect(loc, Direction.UP);
-            }
+        for (double h = 0.0; h < 1.8; h += 0.2) {
+            Location loc = player.getLocation();
+            loc.setY(loc.getY() + h);
+            playEnderEffect(loc, Direction.UP);
+            playEnderEffect(loc, Direction.UP);
         }
     }
 
