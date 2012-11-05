@@ -49,6 +49,7 @@ public class SafeTeleporter {
 
         BattleNight.BattleTelePass.put(player.getName(), "yes");
         player.teleport(loc, TeleportCause.PLUGIN);
+        final boolean flightAllowed = player.getAllowFlight();
         player.setAllowFlight(true);
         player.setFlying(true);
 
@@ -57,7 +58,7 @@ public class SafeTeleporter {
                 player.teleport(loc, TeleportCause.PLUGIN);
                 BattleNight.BattleTelePass.remove(player.getName());
                 player.setFlying(false);
-                player.setAllowFlight(false);
+                player.setAllowFlight(flightAllowed);
                 try {
                     TagAPI.refreshPlayer(player);
                 } catch (Exception e) {
