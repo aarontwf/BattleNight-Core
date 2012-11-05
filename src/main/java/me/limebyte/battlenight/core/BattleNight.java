@@ -584,12 +584,12 @@ public class BattleNight extends JavaPlugin {
             p.setLevel(storage.getInt(name + ".data.exp.level"));
             p.setExp(Float.parseFloat(storage.getString(name + ".data.exp.ammount")));
 
-            // GameMode
-            p.setGameMode(GameMode.getByValue(storage.getInt(name + ".data.gamemode")));
-
             // Flying
             p.setAllowFlight(storage.getBoolean(name + ".data.flight.allowed"));
             p.setFlying(storage.getBoolean(name + ".data.flight.flying"));
+
+            // GameMode
+            p.setGameMode(GameMode.getByValue(storage.getInt(name + ".data.gamemode")));
 
             // Locations
             World storedWorld = Util.locationFromString(storage.getString(name + ".data.location")).getWorld();
