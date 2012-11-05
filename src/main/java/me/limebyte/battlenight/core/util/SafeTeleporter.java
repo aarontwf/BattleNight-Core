@@ -65,5 +65,7 @@ public class SafeTeleporter {
                 }
             }
         }, 10L);
+
+        player.setAllowFlight(flightAllowed);
     }
 }
