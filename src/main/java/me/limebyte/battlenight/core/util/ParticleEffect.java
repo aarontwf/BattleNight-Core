@@ -3,7 +3,6 @@ package me.limebyte.battlenight.core.util;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionType;
 
 public class ParticleEffect {
 
@@ -20,16 +19,17 @@ public class ParticleEffect {
             loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_PARTICLE_COUNT) * 2);
             loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
-            playOrangeEffect(loc);
+            playEnderEffect(loc, Direction.UP);
         }
     }
 
+    @SuppressWarnings("unused")
     private static void playSmokeEffect(Location location, Direction direction) {
         location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
     }
 
-    private static void playOrangeEffect(Location location) {
-        location.getWorld().playEffect(location, Effect.POTION_BREAK, PotionType.FIRE_RESISTANCE.getDamageValue());
+    private static void playEnderEffect(Location location, Direction direction) {
+        location.getWorld().playEffect(location, Effect.ENDER_SIGNAL, direction.getValue());
     }
 
     private enum Direction {
