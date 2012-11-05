@@ -71,6 +71,8 @@ public class SignListener implements Listener {
             if (s.getSign().equals(sign)) { return s; }
         }
 
-        return new ClassSign(sign);
+        ClassSign s = new ClassSign(sign);
+        classSigns.add(s);
+        return s;
     }
 }
