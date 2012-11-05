@@ -6,13 +6,13 @@ import org.bukkit.entity.Player;
 
 public class ParticleEffect {
 
-    private final static int SPIRAL_SMOKE_COUNT = 16;
+    private final static int SPIRAL_SMOKE_COUNT = 11;
 
     public static void spiral(Player player) {
         for (double i = 0; i < SPIRAL_SMOKE_COUNT; i++) {
             double deg = i / SPIRAL_SMOKE_COUNT * 360;
-            double diffX = Math.rint(10 * (Math.sin(deg))) / 10;
-            double diffZ = Math.rint(10 * (Math.cos(deg))) / 10;
+            double diffX = Math.rint(10 * (Math.sin(deg))) / 16;
+            double diffZ = Math.rint(10 * (Math.cos(deg))) / 16;
 
             Location loc = player.getLocation();
             loc.setX(loc.getBlockX() + 0.5 + diffX);
