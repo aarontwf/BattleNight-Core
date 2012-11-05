@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.util;
 
+import me.limebyte.battlenight.core.listeners.SignListener;
+
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
@@ -13,7 +15,7 @@ public class ClassSign {
     }
 
     public void add(Player player) {
-        this.remove(player);
+        SignListener.cleanSigns(player);
 
         // Third line is not empty
         if (!this.sign.getLine(2).isEmpty()) {
