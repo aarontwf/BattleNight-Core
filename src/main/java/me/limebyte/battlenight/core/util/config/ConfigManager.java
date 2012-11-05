@@ -10,7 +10,7 @@ public class ConfigManager {
     private static Configuration mainConfig = new Configuration("Config.yml");
     private static Configuration classesConfig = new Configuration("Classes.yml", false);
     private static Configuration metricsConfig = new Configuration("Metrics.yml");
-    private static Configuration waypointsConfig = new Configuration("Waypoints.dat", DATA_DIRECTORY);
+    private static Configuration arenasConfig = new Configuration("Arenas.dat", DATA_DIRECTORY);
     private static Configuration playersConfig = new Configuration("Players.dat", DATA_DIRECTORY);
 
     public static void initConfigurations() {
@@ -50,7 +50,7 @@ public class ConfigManager {
         MAIN(mainConfig),
         CLASSES(classesConfig),
         METRICS(metricsConfig),
-        WAYPOINTS(waypointsConfig),
+        ARENAS(arenasConfig),
         PLAYERS(playersConfig);
 
         private Configuration config;

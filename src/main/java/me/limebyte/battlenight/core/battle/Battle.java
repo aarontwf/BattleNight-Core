@@ -118,8 +118,8 @@ public class Battle {
 
     public void resetPlayer(Player player, boolean teleport, boolean removeHash) {
         player.getInventory().clear();
-        plugin.restorePlayer(player);
         if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
+        plugin.restorePlayer(player);
         SignListener.cleanSigns(player);
 
         if (removeHash) {

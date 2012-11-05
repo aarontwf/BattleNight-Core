@@ -29,6 +29,7 @@ import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
+import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -43,7 +44,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -160,53 +160,24 @@ public class BattleNight extends JavaPlugin {
     // Set Coords and put in waypoints.data
     public static void setCoords(Waypoint waypoint, Location location) {
         String place = waypoint.getName();
-        ConfigManager.reload(Config.WAYPOINTS);
-        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
-        config.set("coords." + place + ".world", location.getWorld().getName());
-        config.set("coords." + place + ".x", location.getX());
-        config.set("coords." + place + ".y", location.getY());
-        config.set("coords." + place + ".z", location.getZ());
-        config.set("coords." + place + ".yaw", location.getYaw());
-        config.set("coords." + place + ".pitch", location.getPitch());
-        ConfigManager.save(Config.WAYPOINTS);
+        ConfigManager.reload(Config.ARENAS);
+        FileConfiguration config = ConfigManager.get(Config.ARENAS);
+        config.set("default." + place, Util.locationToString(location));
+        ConfigManager.save(Config.ARENAS);
     }
 
     // Get Coords from waypoints.data
     public static Location getCoords(String place) {
-        ConfigManager.reload(Config.WAYPOINTS);
-        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
-        Double x = config.getDouble("coords." + place + ".x", 0);
-        Double y = config.getDouble("coords." + place + ".y", 0);
-        Double z = config.getDouble("coords." + place + ".z", 0);
-        String yawToParse = config.getString("coords." + place + ".yaw");
-        float yaw = 0;
-        if (yawToParse != null) {
-            try {
-                yaw = Float.parseFloat(yawToParse);
-            } catch (NumberFormatException nfe) {
-                // log it, do whatever you want, it's not a float. Maybe give it
-                // a default value
-            }
-        }
-        String pitchToParse = config.getString("coords." + place + ".pitch");
-        float pitch = 0;
-        if (pitchToParse != null) {
-            try {
-                pitch = Float.parseFloat(pitchToParse);
-            } catch (NumberFormatException nfe) {
-                // log it, do whatever you want, it's not a float. Maybe give it
-                // a default value
-            }
-        }
-        World world = Bukkit.getServer().getWorld(config.getString("coords." + place + ".world"));
-        return new Location(world, x, y, z, yaw, pitch);
+        ConfigManager.reload(Config.ARENAS);
+        FileConfiguration config = ConfigManager.get(Config.ARENAS);
+        return Util.locationFromString(config.getString("default." + place));
     }
 
     public static boolean pointSet(Waypoint waypoint) {
-        ConfigManager.reload(Config.WAYPOINTS);
-        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
+        ConfigManager.reload(Config.ARENAS);
+        FileConfiguration config = ConfigManager.get(Config.ARENAS);
         try {
-            Set<String> set = config.getConfigurationSection("coords").getKeys(false);
+            Set<String> set = config.getConfigurationSection("default").getKeys(false);
             return set.contains(waypoint.getName());
         } catch (NullPointerException e) {
             return false;
@@ -215,29 +186,31 @@ public class BattleNight extends JavaPlugin {
 
     // Check if all Waypoints have been set.
     public static Boolean isSetup() {
-        ConfigManager.reload(Config.WAYPOINTS);
-        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
-        if (!config.isSet("coords")) {
+        ConfigManager.reload(Config.ARENAS);
+        FileConfiguration config = ConfigManager.get(Config.ARENAS);
+        if (!config.isSet("default")) {
             return false;
         } else {
-            Set<String> set = config.getConfigurationSection("coords").getKeys(false);
+            Set<String> set = config.getConfigurationSection("default").getKeys(false);
             return set.size() == Waypoint.values().length;
         }
     }
 
     public static int numSetupPoints() {
-        ConfigManager.reload(Config.WAYPOINTS);
-        FileConfiguration config = ConfigManager.get(Config.WAYPOINTS);
-        if (!config.isSet("coords")) {
+        ConfigManager.reload(Config.ARENAS);
+        FileConfiguration config = ConfigManager.get(Config.ARENAS);
+        if (!config.isSet("default")) {
             return 0;
         } else {
-            Set<String> set = config.getConfigurationSection("coords").getKeys(false);
+            Set<String> set = config.getConfigurationSection("default").getKeys(false);
             return set.size();
         }
     }
 
     // Give Player Class Items
     public static void giveItems(Player player) {
+        if (BattleClasses == null) reloadClasses();
+
         String playerClass = getBattle().usersClass.get(player.getName());
         String rawItems = BattleClasses.get(playerClass);
         String ArmorList = BattleArmor.get(playerClass);
@@ -558,6 +531,9 @@ public class BattleNight extends JavaPlugin {
         storage.set(name + ".data.flight.allowed", p.getAllowFlight());
         storage.set(name + ".data.flight.flying", p.isFlying());
 
+        // Locations
+        storage.set(name + ".data.location", Util.locationToString(p.getLocation()));
+
         // Sleep
         storage.set(name + ".data.sleepignored", p.isSleepingIgnored());
 
@@ -615,6 +591,12 @@ public class BattleNight extends JavaPlugin {
             p.setAllowFlight(storage.getBoolean(name + ".data.flight.allowed"));
             p.setFlying(storage.getBoolean(name + ".data.flight.flying"));
 
+            // Locations
+            World storedWorld = Util.locationFromString(storage.getString(name + ".data.location")).getWorld();
+            if (p.getWorld() != storedWorld) {
+                p.setGameMode(Bukkit.getDefaultGameMode());
+            }
+
             // Sleep
             p.setSleepingIgnored(storage.getBoolean(name + ".data.sleepignored"));
 
@@ -632,10 +614,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     public static void reset(Player p, boolean light) {
-        PlayerInventory inv = p.getInventory();
-        inv.clear();
-        inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
-
+        Util.clearInventory(p);
         removePotionEffects(p);
 
         if (!light) {
