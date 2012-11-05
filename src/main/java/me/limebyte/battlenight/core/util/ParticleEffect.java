@@ -19,15 +19,20 @@ public class ParticleEffect {
             loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_PARTICLE_COUNT) * 2);
             loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
-            playEnderEffect(loc, Direction.UP);
+            playSmokeEffect(loc, Direction.UP);
         }
     }
 
     public static void classSelect(Player player) {
-        playEnderEffect(player.getLocation(), Direction.UP);
+        for (double h = 0.0; h < 2.0; h += 0.2) {
+            for (int i = 0; i < 4; i++) {
+                Location loc = player.getLocation();
+                loc.setY(loc.getY() + h);
+                playEnderEffect(loc, Direction.UP);
+            }
+        }
     }
 
-    @SuppressWarnings("unused")
     private static void playSmokeEffect(Location location, Direction direction) {
         location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
     }
