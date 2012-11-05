@@ -1,7 +1,6 @@
 package me.limebyte.battlenight.core.listeners;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
@@ -56,23 +55,19 @@ public class SignListener implements Listener {
     }
 
     public static void cleanSigns() {
-        Iterator<ClassSign> it = classSigns.iterator();
-        while (it.hasNext()) {
-            it.next().clear();
+        for (ClassSign s : classSigns) {
+            s.clear();
         }
     }
 
     public static void cleanSigns(Player player) {
-        Iterator<ClassSign> it = classSigns.iterator();
-        while (it.hasNext()) {
-            it.next().remove(player);
+        for (ClassSign s : classSigns) {
+            s.remove(player);
         }
     }
 
     private static ClassSign getClassSign(Sign sign) {
-        Iterator<ClassSign> it = classSigns.iterator();
-        while (it.hasNext()) {
-            ClassSign s = it.next();
+        for (ClassSign s : classSigns) {
             if (s.getSign().equals(sign)) { return s; }
         }
 
