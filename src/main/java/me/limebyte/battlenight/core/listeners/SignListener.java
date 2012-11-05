@@ -38,7 +38,7 @@ public class SignListener implements Listener {
                     BattleNight.getBattle().usersClass.put(name, title);
                     BattleNight.reset(player, true);
                     BattleNight.giveItems(player);
-                    ParticleEffect.spiral(player);
+                    ParticleEffect.classSelect(player);
 
                     if (BattleNight.getBattle().usersClass.containsKey(name)) {
                         if (!BattleNight.getBattle().usersClass.get(name).equals(title)) {

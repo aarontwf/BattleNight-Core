@@ -23,6 +23,10 @@ public class ParticleEffect {
         }
     }
 
+    public static void classSelect(Player player) {
+        playEnderEffect(player.getLocation(), Direction.UP);
+    }
+
     @SuppressWarnings("unused")
     private static void playSmokeEffect(Location location, Direction direction) {
         location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
