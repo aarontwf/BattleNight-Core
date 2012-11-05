@@ -1,6 +1,8 @@
 package me.limebyte.battlenight.core.util;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 import me.limebyte.battlenight.core.BattleNight;
@@ -10,13 +12,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.kitteh.tag.TagAPI;
 
 public class SafeTeleporter {
 
     private static Queue<String> playerQueue = new LinkedList<String>();
     private static Queue<Waypoint> waypointQueue = new LinkedList<Waypoint>();
     private static int taskID = 0;
+
+    public static Map<String, Waypoint> locationQueue = new HashMap<String, Waypoint>();
 
     public static void queue(Player player, Waypoint waypoint) {
         playerQueue.add(player.getName());
@@ -45,20 +48,13 @@ public class SafeTeleporter {
     }
 
     private static void safeTP(final Player player, Waypoint waypoint) {
-        final Location loc = waypoint.getLocation();
+        Location loc = waypoint.getLocation();
+        String name = player.getName();
 
-        BattleNight.BattleTelePass.put(player.getName(), "yes");
+        BattleNight.BattleTelePass.put(name, "yes");
         player.teleport(loc, TeleportCause.PLUGIN);
+        BattleNight.BattleTelePass.remove(name);
 
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
-            public void run() {
-                player.teleport(loc, TeleportCause.PLUGIN);
-                BattleNight.BattleTelePass.remove(player.getName());
-                try {
-                    TagAPI.refreshPlayer(player);
-                } catch (Exception e) {
-                }
-            }
-        }, 10L);
+        locationQueue.put(name, waypoint);
     }
 }
