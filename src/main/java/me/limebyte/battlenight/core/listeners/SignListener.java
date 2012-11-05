@@ -6,6 +6,8 @@ import java.util.Set;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.ParticleEffect;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -38,11 +40,11 @@ public class SignListener implements Listener {
                     BattleNight.getBattle().usersClass.put(name, title);
                     BattleNight.reset(player, true);
                     BattleNight.giveItems(player);
-                    ParticleEffect.classSelect(player);
+                    ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
 
                     if (BattleNight.getBattle().usersClass.containsKey(name)) {
                         if (!BattleNight.getBattle().usersClass.get(name).equals(title)) {
-                            ParticleEffect.spiral(player);
+                            ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                         }
                     }
                 }

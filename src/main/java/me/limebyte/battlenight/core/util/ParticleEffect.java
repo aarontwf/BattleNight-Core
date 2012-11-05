@@ -8,7 +8,7 @@ public class ParticleEffect {
 
     private final static int SPIRAL_PARTICLE_COUNT = 30;
 
-    public static void spiral(Player player) {
+    private static void spiral(Player player) {
         for (double i = 0; i < SPIRAL_PARTICLE_COUNT; i++) {
             double deg = i / SPIRAL_PARTICLE_COUNT * 360;
             double diffX = Math.rint(10 * (Math.sin(deg))) / 10;
@@ -16,19 +16,25 @@ public class ParticleEffect {
 
             Location loc = player.getLocation();
             loc.setX(loc.getBlockX() + 0.5 + diffX);
-            loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_PARTICLE_COUNT) * 2);
+            loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_PARTICLE_COUNT) * 1.8);
             loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
             playSmokeEffect(loc, Direction.UP);
         }
     }
 
-    public static void classSelect(Player player) {
-        for (double h = 0.0; h < 1.8; h += 0.2) {
-            Location loc = player.getLocation();
-            loc.setY(loc.getY() + h);
-            playEnderEffect(loc, Direction.UP);
-            playEnderEffect(loc, Direction.UP);
+    public static void classSelect(Player player, String type) {
+        if (type == "ender") {
+            for (double h = 0.0; h < 1.8; h += 0.2) {
+                Location loc = player.getLocation();
+                loc.setY(loc.getY() + h);
+                playEnderEffect(loc, Direction.UP);
+                playEnderEffect(loc, Direction.UP);
+            }
+        } else if (type == "smoke") {
+            spiral(player);
+        } else {
+            return;
         }
     }
 

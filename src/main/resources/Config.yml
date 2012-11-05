@@ -9,6 +9,8 @@ StopHealthRegen: true
 Teleprtation:
     EnderPearls: true
     Portals: false
+Particles:
+    ClassSelection: smoke
 Commands:
     Block: true
     Whitelist:
