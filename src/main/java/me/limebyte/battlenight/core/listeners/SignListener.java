@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
 
-    public static final Map<Sign, String[]> classSigns = new HashMap<Sign, String[]>();
+    public static Map<Sign, String[]> classSigns = new HashMap<Sign, String[]>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -37,6 +37,7 @@ public class SignListener implements Listener {
                     addSign(sign);
 
                     cleanSigns(player);
+                    cleanName(name, sign);
                     addName(player, sign);
 
                     BattleNight.getBattle().usersClass.put(name, title);
