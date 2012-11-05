@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.util.chat;
 
 import me.limebyte.battlenight.core.BattleNight;
 

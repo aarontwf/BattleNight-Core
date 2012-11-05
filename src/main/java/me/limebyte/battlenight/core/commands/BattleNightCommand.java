@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.limebyte.battlenight.core.util.Messaging;
-import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 

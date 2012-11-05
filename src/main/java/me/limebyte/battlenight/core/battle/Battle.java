@@ -9,8 +9,8 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.api.BattleEndEvent;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
-import me.limebyte.battlenight.core.util.Messaging;
-import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.Bukkit;

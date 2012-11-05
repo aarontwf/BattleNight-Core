@@ -1,8 +1,8 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.Messaging;
-import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

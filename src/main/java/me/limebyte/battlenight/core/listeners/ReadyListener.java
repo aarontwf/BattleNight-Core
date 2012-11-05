@@ -2,8 +2,8 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Team;
-import me.limebyte.battlenight.core.util.Messaging;
-import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 

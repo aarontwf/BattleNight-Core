@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
-import me.limebyte.battlenight.core.util.Messaging;
-import me.limebyte.battlenight.core.util.Messaging.Message;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 
 import org.bukkit.command.CommandSender;
 
