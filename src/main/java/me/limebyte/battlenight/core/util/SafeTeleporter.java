@@ -49,23 +49,16 @@ public class SafeTeleporter {
 
         BattleNight.BattleTelePass.put(player.getName(), "yes");
         player.teleport(loc, TeleportCause.PLUGIN);
-        final boolean flightAllowed = player.getAllowFlight();
-        player.setAllowFlight(true);
-        player.setFlying(true);
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
             public void run() {
                 player.teleport(loc, TeleportCause.PLUGIN);
                 BattleNight.BattleTelePass.remove(player.getName());
-                player.setFlying(false);
-                player.setAllowFlight(flightAllowed);
                 try {
                     TagAPI.refreshPlayer(player);
                 } catch (Exception e) {
                 }
             }
         }, 10L);
-
-        player.setAllowFlight(flightAllowed);
     }
 }
