@@ -58,8 +58,11 @@ public class SafeTeleporter {
                 BattleNight.BattleTelePass.remove(player.getName());
                 player.setFlying(false);
                 player.setAllowFlight(false);
-                TagAPI.refreshPlayer(player);
+                try {
+                    TagAPI.refreshPlayer(player);
+                } catch (Exception e) {
+                }
             }
-        }, 5L);
+        }, 10L);
     }
 }
