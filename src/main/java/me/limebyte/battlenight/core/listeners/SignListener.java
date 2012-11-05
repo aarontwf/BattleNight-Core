@@ -1,11 +1,10 @@
 package me.limebyte.battlenight.core.listeners;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.HashSet;
+import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.ParticleEffect;
 
 import org.bukkit.block.Block;
@@ -19,7 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
 
-    public static Map<Sign, String[]> classSigns = new HashMap<Sign, String[]>();
+    public static Set<ClassSign> classSigns = new HashSet<ClassSign>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -34,10 +33,6 @@ public class SignListener implements Listener {
                 String title = sign.getLine(0);
 
                 if (BattleNight.BattleClasses.containsKey(title) && BattleNight.getBattle().usersTeam.containsKey(name)) {
-                    addSign(sign);
-
-                    cleanSigns(player);
-                    cleanName(name, sign);
                     addName(player, sign);
 
                     BattleNight.getBattle().usersClass.put(name, title);
@@ -55,93 +50,27 @@ public class SignListener implements Listener {
         }
     }
 
-    private static void addSign(Sign sign) {
-        if (!classSigns.containsKey(sign)) {
-            classSigns.put(sign, new String[2]);
-        }
-    }
-
     private static void addName(Player player, Sign sign) {
-        // Get the players from the HashMap
-        String[] players = classSigns.get(sign);
-
-        // Third line is not empty
-        if (!sign.getLine(2).isEmpty()) {
-            // Move the first name down
-            sign.setLine(3, sign.getLine(2));
-            players[1] = players[0];
-        }
-
-        // Add the players name
-        String name = player.getName();
-        sign.setLine(2, name);
-        players[0] = name;
-
-        // Update the sign
-        sign.update();
-
-        // Refresh the HashMap
-        classSigns.put(sign, players);
-    }
-
-    private static void cleanName(String name, Sign sign) {
-        // Get the players from the HashMap
-        String[] players = classSigns.get(sign);
-
-        // Forth line has the players name
-        if (players[1] == name) {
-            // Clear line four
-            sign.setLine(3, "");
-            players[1] = "";
-            // Update the sign
-            sign.update();
-        }
-
-        // Third line has the players name
-        if (players[0] == name) {
-            // Move the second name up
-            sign.setLine(2, sign.getLine(3));
-            sign.setLine(3, "");
-            players[0] = players[1];
-            players[1] = "";
-
-            // Update the sign
-            sign.update();
-        }
-
-        // Refresh the HashMap
-        classSigns.put(sign, players);
+        getClassSign(sign).add(player);
     }
 
     public static void cleanSigns() {
-        Iterator<Entry<Sign, String[]>> it = classSigns.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry<Sign, String[]> entry = it.next();
-            Sign sign = entry.getKey();
-            String[] players = entry.getValue();
-
-            if (sign != null) {
-                sign.setLine(2, "");
-                sign.setLine(3, "");
-                sign.update();
-
-                players[0] = "";
-                players[1] = "";
-            } else {
-                it.remove();
-            }
+        for (ClassSign s : classSigns) {
+            s.clear();
         }
     }
 
     public static void cleanSigns(Player player) {
-        Iterator<Sign> it = classSigns.keySet().iterator();
-        while (it.hasNext()) {
-            Sign sign = it.next();
-            if (sign != null) {
-                cleanName(player.getName(), sign);
-            } else {
-                it.remove();
-            }
+        for (ClassSign s : classSigns) {
+            s.remove(player);
         }
+    }
+
+    private static ClassSign getClassSign(Sign sign) {
+        for (ClassSign s : classSigns) {
+            if (s.getSign().equals(sign)) { return s; }
+        }
+
+        return new ClassSign(sign);
     }
 }
