@@ -13,6 +13,8 @@ public class Util {
     //   Locations    //
     ////////////////////
 
+    private static final String LOC_SEP = ", ";
+
     public static String locationToString(Location loc) {
         String w = loc.getWorld().getName();
         double x = loc.getBlockX() + 0.5;
@@ -20,11 +22,11 @@ public class Util {
         double z = loc.getBlockZ() + 0.5;
         float yaw = loc.getYaw();
         float pitch = loc.getPitch();
-        return w + "," + x + "," + y + "," + z + "," + yaw + "," + pitch;
+        return w + LOC_SEP + x + LOC_SEP + y + LOC_SEP + z + LOC_SEP + yaw + LOC_SEP + pitch;
     }
 
     public static Location locationFromString(String s) {
-        String part[] = s.split(",");
+        String part[] = s.split(LOC_SEP);
         World w = Bukkit.getServer().getWorld(part[0]);
         double x = Double.parseDouble(part[1]);
         double y = Double.parseDouble(part[2]);
