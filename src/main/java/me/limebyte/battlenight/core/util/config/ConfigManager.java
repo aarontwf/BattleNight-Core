@@ -1,7 +1,5 @@
 package me.limebyte.battlenight.core.util.config;
 
-import me.limebyte.battlenight.core.BattleNight;
-
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class ConfigManager {
@@ -34,7 +32,6 @@ public class ConfigManager {
         for (Config configFile : Config.values()) {
             configFile.getConfiguration().reload();
         }
-        BattleNight.reloadClasses();
     }
 
     public static void saveAll() {
