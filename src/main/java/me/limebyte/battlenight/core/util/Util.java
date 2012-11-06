@@ -22,17 +22,20 @@ public class Util {
         double z = loc.getBlockZ() + 0.5;
         float yaw = loc.getYaw();
         float pitch = loc.getPitch();
-        return w + LOC_SEP + x + LOC_SEP + y + LOC_SEP + z + LOC_SEP + yaw + LOC_SEP + pitch;
+        return w + "(" + x + LOC_SEP + y + LOC_SEP + z + LOC_SEP + yaw + LOC_SEP + pitch + ")";
     }
 
     public static Location locationFromString(String s) {
-        String part[] = s.split(LOC_SEP);
-        World w = Bukkit.getServer().getWorld(part[0]);
-        double x = Double.parseDouble(part[1]);
-        double y = Double.parseDouble(part[2]);
-        double z = Double.parseDouble(part[3]);
-        float yaw = Float.parseFloat(part[4]);
-        float pitch = Float.parseFloat(part[5]);
+        String[] parts = s.split("(");
+        World w = Bukkit.getServer().getWorld(parts[0]);
+
+        String[] coords = parts[1].substring(0, parts[1].length() - 1).split(LOC_SEP);
+        double x = Double.parseDouble(coords[0]);
+        double y = Double.parseDouble(coords[1]);
+        double z = Double.parseDouble(coords[2]);
+        float yaw = Float.parseFloat(coords[3]);
+        float pitch = Float.parseFloat(coords[4]);
+
         return new Location(w, x, y, z, yaw, pitch);
     }
 
