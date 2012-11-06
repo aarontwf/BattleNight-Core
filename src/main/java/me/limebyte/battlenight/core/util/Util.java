@@ -26,7 +26,7 @@ public class Util {
     }
 
     public static Location locationFromString(String s) {
-        String[] parts = s.split("(");
+        String[] parts = s.split("\\(");
         World w = Bukkit.getServer().getWorld(parts[0]);
 
         String[] coords = parts[1].substring(0, parts[1].length() - 1).split(LOC_SEP);
