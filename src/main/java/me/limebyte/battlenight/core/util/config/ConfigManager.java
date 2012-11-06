@@ -24,9 +24,6 @@ public class ConfigManager {
 
     public static void reload(Config config) {
         config.getConfiguration().reload();
-        if (config.equals(Config.CLASSES)) {
-            BattleNight.reloadClasses();
-        }
     }
 
     public static void save(Config config) {
