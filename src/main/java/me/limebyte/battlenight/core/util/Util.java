@@ -1,8 +1,5 @@
 package me.limebyte.battlenight.core.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -45,28 +42,5 @@ public class Util {
         PlayerInventory inv = player.getInventory();
         inv.clear();
         inv.setArmorContents(new ItemStack[inv.getArmorContents().length]);
-    }
-
-    public static List<ItemStack> sortArmour(List<ItemStack> armour) {
-        ItemStack helmet = null, chestplate = null, leggings = null, boots = null;
-        for (ItemStack stack : armour) {
-            if (ArmourType.HELMET.contains(stack)) {
-                helmet = stack;
-            } else if (ArmourType.CHESTPLATE.contains(stack)) {
-                chestplate = stack;
-            } else if (ArmourType.LEGGINGS.contains(stack)) {
-                leggings = stack;
-            } else if (ArmourType.BOOTS.contains(stack)) {
-                boots = stack;
-            }
-        }
-
-        List<ItemStack> sorted = new ArrayList<ItemStack>();
-        sorted.add(0, helmet);
-        sorted.add(1, chestplate);
-        sorted.add(2, leggings);
-        sorted.add(3, boots);
-
-        return sorted;
     }
 }

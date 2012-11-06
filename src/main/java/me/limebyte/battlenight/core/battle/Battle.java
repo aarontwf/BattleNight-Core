@@ -9,9 +9,10 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.api.BattleEndEvent;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.BattleClass;
+import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.chat.Messaging.Message;
-import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,7 +27,7 @@ public class Battle {
     private boolean inProgress = false;
 
     public final Map<String, Team> usersTeam = new HashMap<String, Team>();
-    public final Map<String, String> usersClass = new HashMap<String, String>();
+    public final Map<String, BattleClass> usersClass = new HashMap<String, BattleClass>();
     public final Set<String> spectators = new HashSet<String>();
 
     public Battle() {

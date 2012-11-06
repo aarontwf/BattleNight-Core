@@ -1,9 +1,12 @@
 package me.limebyte.battlenight.core.listeners;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.BattleClass;
+import me.limebyte.battlenight.core.util.ClassManager;
 import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.ParticleEffect;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -33,20 +36,22 @@ public class SignListener implements Listener {
                 Sign sign = (Sign) block.getState();
                 String name = player.getName();
                 String title = sign.getLine(0);
+                HashMap<String, BattleClass> classes = ClassManager.getClassNames();
 
-                if (BattleNight.BattleClasses.containsKey(title) && BattleNight.getBattle().usersTeam.containsKey(name)) {
+                if (classes.containsKey(title) && BattleNight.getBattle().usersTeam.containsKey(name)) {
+                    BattleClass playerClass = classes.get(title);
+
                     addName(player, sign);
 
-                    BattleNight.getBattle().usersClass.put(name, title);
-                    BattleNight.reset(player, true);
-                    BattleNight.giveItems(player);
-                    ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
-
                     if (BattleNight.getBattle().usersClass.containsKey(name)) {
-                        if (!BattleNight.getBattle().usersClass.get(name).equals(title)) {
+                        if (BattleNight.getBattle().usersClass.get(name) != playerClass) {
                             ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                         }
                     }
+
+                    BattleNight.getBattle().usersClass.put(name, playerClass);
+                    BattleNight.reset(player, true);
+                    classes.get(title).equip(player);
                 }
             }
         }

@@ -29,6 +29,7 @@ import me.limebyte.battlenight.core.listeners.SafeTeleportListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.ClassManager;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -61,8 +62,6 @@ public class BattleNight extends JavaPlugin {
     public static Set<String> ClassList;
 
     // HashMaps
-    public static final Map<String, String> BattleClasses = new HashMap<String, String>();
-    public static final Map<String, String> BattleArmor = new HashMap<String, String>();
     public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
 
     // Other Classes
@@ -102,8 +101,7 @@ public class BattleNight extends JavaPlugin {
             } else {
                 log.info("Permissions Disabled, using Op.");
             }
-            log.info("Classes: " + BattleClasses);
-            log.info("Armor: " + BattleArmor);
+            log.info("Loaded Classes: " + ClassManager.getClassNames().keySet().toString());
         }
 
         PluginManager pm = getServer().getPluginManager();
@@ -142,6 +140,8 @@ public class BattleNight extends JavaPlugin {
             battle.stop();
         }
         SignListener.cleanSigns();
+        reloadClasses();
+
         PluginDescriptionFile pdfFile = getDescription();
         log.info("Version " + pdfFile.getVersion() + " has been disabled.");
     }
@@ -206,73 +206,6 @@ public class BattleNight extends JavaPlugin {
         } else {
             Set<String> set = config.getConfigurationSection("default").getKeys(false);
             return set.size();
-        }
-    }
-
-    // Give Player Class Items
-    public static void giveItems(Player player) {
-        if (BattleClasses == null) reloadClasses();
-
-        String playerClass = getBattle().usersClass.get(player.getName());
-        String rawItems = BattleClasses.get(playerClass);
-        String ArmorList = BattleArmor.get(playerClass);
-        String[] items;
-        items = rawItems.split(",");
-        for (int i = 0; i < items.length; i++) {
-            String item = items[i];
-            player.getInventory().setItem(i, parseItem(item));
-            if (player.getInventory().contains(ConfigManager.get(Config.CLASSES).getInt("DummyItem", 6))) {
-                player.getInventory().remove(ConfigManager.get(Config.CLASSES).getInt("DummyItem", 6));
-            }
-        }
-        // Set Armour
-        // Helmets
-        if (ArmorList.contains("298")) {
-            player.getInventory().setHelmet(new ItemStack(298, 1));
-        } else if (ArmorList.contains("302")) {
-            player.getInventory().setHelmet(new ItemStack(302, 1));
-        } else if (ArmorList.contains("306")) {
-            player.getInventory().setHelmet(new ItemStack(306, 1));
-        } else if (ArmorList.contains("310")) {
-            player.getInventory().setHelmet(new ItemStack(310, 1));
-        } else if (ArmorList.contains("314")) {
-            player.getInventory().setHelmet(new ItemStack(314, 1));
-        }
-        // Chestplates
-        if (ArmorList.contains("299")) {
-            player.getInventory().setChestplate(new ItemStack(299, 1));
-        } else if (ArmorList.contains("303")) {
-            player.getInventory().setChestplate(new ItemStack(303, 1));
-        } else if (ArmorList.contains("307")) {
-            player.getInventory().setChestplate(new ItemStack(307, 1));
-        } else if (ArmorList.contains("311")) {
-            player.getInventory().setChestplate(new ItemStack(311, 1));
-        } else if (ArmorList.contains("315")) {
-            player.getInventory().setChestplate(new ItemStack(315, 1));
-        }
-        // Leggings
-        if (ArmorList.contains("300")) {
-            player.getInventory().setLeggings(new ItemStack(300, 1));
-        } else if (ArmorList.contains("304")) {
-            player.getInventory().setLeggings(new ItemStack(304, 1));
-        } else if (ArmorList.contains("308")) {
-            player.getInventory().setLeggings(new ItemStack(308, 1));
-        } else if (ArmorList.contains("312")) {
-            player.getInventory().setLeggings(new ItemStack(312, 1));
-        } else if (ArmorList.contains("316")) {
-            player.getInventory().setLeggings(new ItemStack(316, 1));
-        }
-        // Boots
-        if (ArmorList.contains("301")) {
-            player.getInventory().setBoots(new ItemStack(301, 1));
-        } else if (ArmorList.contains("305")) {
-            player.getInventory().setBoots(new ItemStack(305, 1));
-        } else if (ArmorList.contains("309")) {
-            player.getInventory().setBoots(new ItemStack(309, 1));
-        } else if (ArmorList.contains("313")) {
-            player.getInventory().setBoots(new ItemStack(313, 1));
-        } else if (ArmorList.contains("317")) {
-            player.getInventory().setBoots(new ItemStack(317, 1));
         }
     }
 
@@ -665,11 +598,8 @@ public class BattleNight extends JavaPlugin {
     }
 
     public static void reloadClasses() {
-        ClassList = ConfigManager.get(Config.CLASSES).getConfigurationSection("Classes").getKeys(false);
-        for (String className : ClassList) {
-            BattleClasses.put(className, ConfigManager.get(Config.CLASSES).getString("Classes." + className + ".Items", null));
-            BattleArmor.put(className, ConfigManager.get(Config.CLASSES).getString("Classes." + className + ".Armor", null));
-        }
+        ClassManager.loadClasses();
+        ClassManager.saveClasses();
     }
 
     public static Battle getBattle() {
