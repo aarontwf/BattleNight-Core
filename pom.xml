@@ -14,8 +14,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<githubRepo>BattleNight/BattleNight-Core</githubRepo>
-		<bukkitVersion>1.3.2-R3.0</bukkitVersion>
-		<tagapiVersion>RELEASE</tagapiVersion>
+		<bukkitVersion>1.4.2-R0.2</bukkitVersion>
+		<tagapiVersion>1.7.1</tagapiVersion>
 	</properties>
   
 	<!-- License -->
