@@ -58,7 +58,6 @@ public class BattleNight extends JavaPlugin {
     public static Logger log;
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
     public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
-    public static Set<String> ClassList;
 
     // HashMaps
     public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
@@ -118,7 +117,7 @@ public class BattleNight extends JavaPlugin {
             pm.registerEvents(new ReadyListener(this), this);
             pm.registerEvents(new RespawnListener(), this);
             pm.registerEvents(new SafeTeleporter(), this);
-            pm.registerEvents(new SignChanger(this), this);
+            pm.registerEvents(new SignChanger(), this);
             pm.registerEvents(new SignListener(), this);
 
             // Enable Message
@@ -593,6 +592,7 @@ public class BattleNight extends JavaPlugin {
     private static void removePotionEffects(Player p) {
         for (PotionEffect effect : p.getActivePotionEffects()) {
             p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
+            p.removePotionEffect(effect.getType());
         }
     }
 
