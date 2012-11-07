@@ -35,6 +35,7 @@ public class ClassManager {
     public static void loadClasses() {
         ConfigManager.reload(configFile);
         for (String className : ConfigManager.get(configFile).getConfigurationSection("Classes").getKeys(false)) {
+            fixOldFiles(className);
             String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour", "");
             String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
             classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour))));
@@ -294,6 +295,20 @@ public class ClassManager {
                 if (stack.getType().equals(material)) return true;
             }
             return false;
+        }
+    }
+
+    private static void fixOldFiles(String className) {
+        String armor = ConfigManager.get(configFile).getString("Classes." + className + ".Armor");
+        String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour");
+        if (armor != null) {
+            if (armour == null) {
+                ConfigManager.get(configFile).set("Classes." + className + ".Armour", armor);
+            } else {
+                ConfigManager.get(configFile).set("Classes." + className + ".Armour", "none, none, none, none");
+            }
+            ConfigManager.get(configFile).set("Classes." + className + ".Armor", null);
+            ConfigManager.save(configFile);
         }
     }
 }
