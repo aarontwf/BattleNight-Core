@@ -51,7 +51,7 @@ public class Battle {
 
             usersTeam.put(name, team);
             Messaging.tell(player, "Welcome! You are on team " + team.getColour() + team.getName() + ChatColor.WHITE + ".");
-            Messaging.tellEveryoneExcept(player, name + " has joined team " + team.getColour() + team.getName() + ChatColor.WHITE + ".");
+            Messaging.tellEveryoneExcept(player, name + " has joined team " + team.getColour() + team.getName() + ChatColor.WHITE + ".", true);
 
             BattleNight.setNames(player);
             BattleNight.playersInLounge = true;
@@ -73,7 +73,7 @@ public class Battle {
                 blueTeam--;
             }
 
-            if (sendMsg1) Messaging.tellEveryoneExcept(player, team.getColour() + name + ChatColor.WHITE + " " + msg1);
+            if (sendMsg1) Messaging.tellEveryoneExcept(player, team.getColour() + name + ChatColor.WHITE + " " + msg1, true);
 
             if (msg2 != null) {
                 Messaging.tell(player, msg2);
@@ -86,15 +86,15 @@ public class Battle {
                 if (!BattleNight.playersInLounge) {
                     // If red won
                     if (redTeam > 0) {
-                        Messaging.tellEveryone(Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
+                        Messaging.tellEveryone(Message.TEAM_WON, true, Team.RED.getColour() + Team.RED.getName());
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
                         // If blue won
                     } else if (blueTeam > 0) {
-                        Messaging.tellEveryone(Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
+                        Messaging.tellEveryone(Message.TEAM_WON, true, Team.BLUE.getColour() + Team.BLUE.getName());
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
                         // If neither team won
                     } else {
-                        Messaging.tellEveryone(Message.DRAW);
+                        Messaging.tellEveryone(Message.DRAW, true);
                         Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
                     }
                 }
@@ -158,13 +158,13 @@ public class Battle {
 
     public void stop() {
         if (blueTeam > redTeam) {
-            Messaging.tellEveryone(Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
+            Messaging.tellEveryone(Message.TEAM_WON, true, Team.BLUE.getColour() + Team.BLUE.getName());
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
         } else if (redTeam > blueTeam) {
-            Messaging.tellEveryone(Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
+            Messaging.tellEveryone(Message.TEAM_WON, true, Team.RED.getColour() + Team.RED.getName());
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
         } else {
-            Messaging.tellEveryone(Message.DRAW);
+            Messaging.tellEveryone(Message.DRAW, true);
             Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
         }
 
@@ -187,7 +187,7 @@ public class Battle {
     public void start() {
         inProgress = true;
         BattleNight.playersInLounge = false;
-        Messaging.tellEveryone(Message.BATTLE_STARTED);
+        Messaging.tellEveryone(Message.BATTLE_STARTED, true);
         plugin.teleportAllToSpawn();
         SignListener.cleanSigns();
     }

@@ -37,7 +37,7 @@ public class ReadyListener implements Listener {
                     Team team = BattleNight.getBattle().usersTeam.get(name);
 
                     if (plugin.teamReady(team)) {
-                        Messaging.tellEveryone(Message.TEAM_IS_READY, team.getColour() + team.getName());
+                        Messaging.tellEveryone(Message.TEAM_IS_READY, false, team.getColour() + team.getName());
 
                         if (team.equals(Team.RED)) {
                             plugin.redTeamIronClicked = true;

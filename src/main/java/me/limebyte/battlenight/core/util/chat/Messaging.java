@@ -23,17 +23,31 @@ public class Messaging {
         sender.sendMessage(PREFIX + message);
     }
 
-    public static void tellEveryone(String message) {
+    public static void tellEveryone(String message, boolean spectators) {
+        if (spectators) {
+            for (String name : BattleNight.getBattle().spectators) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null) tell(p, message);
+            }
+        }
+
         for (String name : BattleNight.getBattle().usersTeam.keySet()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) tell(p, message);
         }
     }
 
-    public static void tellEveryoneExcept(Player player, String message) {
+    public static void tellEveryoneExcept(Player player, String message, boolean spectators) {
+        if (spectators) {
+            for (String name : BattleNight.getBattle().spectators) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null && player != p) tell(p, message);
+            }
+        }
+
         for (String name : BattleNight.getBattle().usersTeam.keySet()) {
             Player p = Bukkit.getPlayerExact(name);
-            if (p != null && p != player) tell(p, message);
+            if (p != null && player != p) tell(p, message);
         }
     }
 
@@ -53,32 +67,32 @@ public class Messaging {
         tell(sender, msg);
     }
 
-    public static void tellEveryone(Message message) {
-        tellEveryone(message.getMessage());
+    public static void tellEveryone(Message message, boolean spectators) {
+        tellEveryone(message.getMessage(), spectators);
     }
 
-    public static void tellEveryone(Message message, Object... args) {
+    public static void tellEveryone(Message message, boolean spectators, Object... args) {
         String msg = "";
 
         for (int i = 0; i < args.length; i++) {
             msg = message.getMessage().replace("$" + (i + 1), describeObject(args[i]));
         }
 
-        tellEveryone(msg);
+        tellEveryone(msg, spectators);
     }
 
-    public static void tellEveryoneExcept(Player player, Message message) {
-        tellEveryoneExcept(player, message.getMessage());
+    public static void tellEveryoneExcept(Player player, Message message, boolean spectators) {
+        tellEveryoneExcept(player, message.getMessage(), spectators);
     }
 
-    public static void tellEveryoneExcept(Player player, Message message, Object... args) {
+    public static void tellEveryoneExcept(Player player, Message message, boolean spectators, Object... args) {
         String msg = "";
 
         for (int i = 0; i < args.length; i++) {
             msg = message.getMessage().replace("$" + (i + 1), describeObject(args[i]));
         }
 
-        tellEveryoneExcept(player, msg);
+        tellEveryoneExcept(player, msg, spectators);
     }
 
     private static String describeObject(Object obj) {
