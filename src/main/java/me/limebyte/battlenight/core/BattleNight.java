@@ -457,6 +457,9 @@ public class BattleNight extends JavaPlugin {
         storage.set(name + ".data.exp.level", p.getLevel());
         storage.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
 
+        // Potions
+        storage.set(name + ".data.potions", Arrays.asList(p.getActivePotionEffects().toArray()));
+
         // GameMode
         storage.set(name + ".data.gamemode", p.getGameMode().getValue());
 
@@ -516,6 +519,13 @@ public class BattleNight extends JavaPlugin {
             // Experience
             p.setLevel(storage.getInt(name + ".data.exp.level"));
             p.setExp(Float.parseFloat(storage.getString(name + ".data.exp.ammount")));
+
+            // Potions
+            @SuppressWarnings("unchecked")
+            List<PotionEffect> potions = (List<PotionEffect>) storage.getList(name + ".data.potions");
+            for (PotionEffect effect : potions) {
+                p.addPotionEffect(effect, true);
+            }
 
             // GameMode
             p.setGameMode(GameMode.getByValue(storage.getInt(name + ".data.gamemode")));
@@ -592,7 +602,6 @@ public class BattleNight extends JavaPlugin {
     private static void removePotionEffects(Player p) {
         for (PotionEffect effect : p.getActivePotionEffects()) {
             p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
-            p.removePotionEffect(effect.getType());
         }
     }
 
