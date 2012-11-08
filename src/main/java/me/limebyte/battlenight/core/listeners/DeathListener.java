@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Team;
+import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -16,50 +17,30 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class DeathListener implements Listener {
 
-    // Get Main Class
-    public static BattleNight plugin;
-
-    public DeathListener(BattleNight instance) {
-        plugin = instance;
-    }
-
     // Called when player dies
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
-        final Entity e = event.getEntity();
+        Entity e = event.getEntity();
+
         if (e instanceof Player) {
-            final Player player = (Player) e;
-            final String name = player.getName();
+            Player player = (Player) e;
+            String name = player.getName();
+
             if (BattleNight.getBattle().usersTeam.containsKey(name)) {
                 event.getDrops().clear();
                 ((PlayerDeathEvent) event).setDeathMessage("");
 
                 if (!BattleNight.playersInLounge) {
+                    String colouredName = getColouredName(player);
+
                     try {
-                        final Player killer = player.getKiller();
-                        String playerName;
-                        String killerName;
-
-                        // Colour Names
-                        if (isInTeam(killer, Team.BLUE))
-                            killerName = ChatColor.BLUE + killer.getName();
-                        else if (isInTeam(killer, Team.RED))
-                            killerName = ChatColor.RED + killer.getName();
-                        else killerName = ChatColor.BLACK + killer.getName();
-
-                        if (isInTeam(player, Team.BLUE))
-                            playerName = ChatColor.BLUE + player.getName();
-                        else if (isInTeam(player, Team.RED))
-                            playerName = ChatColor.RED + player.getName();
-                        else playerName = ChatColor.BLACK + player.getName();
-                        // ------------
-
-                        plugin.killFeed(killerName + ChatColor.GRAY
-                                + " killed " + playerName + ".");
+                        Player killer = player.getKiller();
+                        Messaging.tellEveryone(getColouredName(killer) + ChatColor.GRAY + " killed " + colouredName + ".", true);
                     } catch (final NullPointerException error) {
-                        plugin.killFeed(ChatColor.RED + name + ChatColor.GRAY + " was killed.");
+                        Messaging.tellEveryone(colouredName + ChatColor.GRAY + " was killed.", true);
+
                         if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
-                            BattleNight.log.warning("Could not find killer for player: " + name);
+                            BattleNight.log.warning("Could not find killer for player: " + colouredName);
                         }
                     }
                 }
@@ -70,12 +51,14 @@ public class DeathListener implements Listener {
         }
     }
 
-    private boolean isInTeam(Player player, Team team) {
-        final String name = player.getName();
-        if (BattleNight.getBattle().usersTeam.containsKey(name)) {
-            if ((BattleNight.getBattle().usersTeam.get(name).equals(team))) { return true; }
-        }
+    private String getColouredName(Player player) {
+        String name = player.getName();
 
-        return false;
+        if (BattleNight.getBattle().usersTeam.containsKey(name)) {
+            Team team = BattleNight.getBattle().usersTeam.get(name);
+            return team.getColour() + name;
+        } else {
+            return ChatColor.DARK_GRAY + name;
+        }
     }
 }

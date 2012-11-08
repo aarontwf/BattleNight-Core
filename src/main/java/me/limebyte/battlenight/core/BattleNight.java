@@ -1,7 +1,6 @@
 package me.limebyte.battlenight.core;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +56,6 @@ public class BattleNight extends JavaPlugin {
     public static BattleNight instance;
     public static Logger log;
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
-    public static final String BNKTag = ChatColor.GRAY + "[BattleNight KillFeed] " + ChatColor.WHITE;
 
     // HashMaps
     public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
@@ -110,7 +108,7 @@ public class BattleNight extends JavaPlugin {
             pm.registerEvents(new CheatListener(this), this);
             pm.registerEvents(new CommandBlocker(this), this);
             pm.registerEvents(new DamageListener(this), this);
-            pm.registerEvents(new DeathListener(this), this);
+            pm.registerEvents(new DeathListener(), this);
             pm.registerEvents(new DisconnectListener(this), this);
             pm.registerEvents(new DropListener(this), this);
             pm.registerEvents(new NameplateListener(this), this);
@@ -237,30 +235,6 @@ public class BattleNight extends JavaPlugin {
         for (String name : getBattle().usersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + track.msg);
         }
-    }
-
-    public void killFeed(String msg) {
-        List<Player> told = new ArrayList<Player>();
-
-        for (String name : getBattle().usersTeam.keySet()) {
-            if (Bukkit.getPlayer(name) != null) {
-                Player currentPlayer = Bukkit.getPlayer(name);
-                currentPlayer.sendMessage(BNTag + msg);
-                told.add(currentPlayer);
-            }
-        }
-
-        for (String name : getBattle().spectators) {
-            if (Bukkit.getPlayer(name) != null) {
-                Player currentPlayer = Bukkit.getPlayer(name);
-                if (!told.contains(currentPlayer)) {
-                    currentPlayer.sendMessage(BNTag + msg);
-                    told.add(currentPlayer);
-                }
-            }
-        }
-
-        told.clear();
     }
 
     public static void tellEveryoneExcept(Player player, String msg) {
