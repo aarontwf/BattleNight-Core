@@ -13,12 +13,12 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class RespawnListener implements Listener {
 
-    public static final Set<String> toProcess = new HashSet<String>();
+    public static Set<String> toProcess = new HashSet<String>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        final Player player = event.getPlayer();
-        final String name = player.getName();
+        Player player = event.getPlayer();
+        String name = player.getName();
         if (toProcess.contains(name)) {
             // If the Battle is still going on, take them to the spectator area
             // to watch
