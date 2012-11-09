@@ -31,7 +31,7 @@ public class BattleClass {
     public void equip(Player player) {
         PlayerInventory inv = player.getInventory();
 
-        inv.setContents((ItemStack[]) items.toArray());
+        inv.setContents(items.toArray(new ItemStack[items.size()]));
         inv.setHelmet(armour.get(0));
         inv.setChestplate(armour.get(1));
         inv.setLeggings(armour.get(2));
