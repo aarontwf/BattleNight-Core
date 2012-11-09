@@ -78,6 +78,8 @@ public class ClassManager {
                 Material mat = Material.getMaterial(part3[0].toUpperCase());
                 if (mat != null) {
                     id = mat.getId();
+                } else if (part3[0].toLowerCase() == "none") {
+                    id = Material.AIR.getId();
                 } else {
                     continue;
                 }
@@ -299,6 +301,7 @@ public class ClassManager {
     }
 
     private static void fixOldFiles(String className) {
+        // Armour
         String armor = ConfigManager.get(configFile).getString("Classes." + className + ".Armor");
         String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour");
         if (armor != null) {
@@ -308,7 +311,14 @@ public class ClassManager {
                 ConfigManager.get(configFile).set("Classes." + className + ".Armour", "none, none, none, none");
             }
             ConfigManager.get(configFile).set("Classes." + className + ".Armor", null);
-            ConfigManager.save(configFile);
         }
+
+        // DummyItem
+        int dummyItem = ConfigManager.get(configFile).getInt("DummyItem");
+        if (dummyItem != 0) {
+            ConfigManager.get(configFile).set("DummyItem", null);
+        }
+
+        ConfigManager.save(configFile);
     }
 }
