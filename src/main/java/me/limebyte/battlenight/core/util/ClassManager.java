@@ -180,7 +180,7 @@ public class ClassManager {
 
         for (ItemStack item : items) {
 
-            if (item == null) {
+            if (item == null || item.getType() == Material.AIR) {
                 rawItems += ", none";
             }
             else {
