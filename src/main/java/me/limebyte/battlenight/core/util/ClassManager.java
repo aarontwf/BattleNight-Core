@@ -153,7 +153,11 @@ public class ClassManager {
                 data = d;
             }
 
-            ItemStack stack = new ItemStack(id, 1, data);
+            ItemStack stack = null;
+
+            if (id != Material.AIR.getId()) {
+                stack = new ItemStack(id, 1, data);
+            }
 
             if (!enchantments.isEmpty()) {
                 try {
@@ -165,13 +169,8 @@ public class ClassManager {
 
             if (amount > 1) {
                 items.addAll(Arrays.asList(splitIntoStacks(stack, amount)));
-            }
-            else {
-                if (stack.getType() == Material.AIR) {
-                    items.add(null);
-                } else {
-                    items.add(stack);
-                }
+            } else {
+                items.add(stack);
             }
 
         }
@@ -214,26 +213,30 @@ public class ClassManager {
     }
 
     private static ItemStack[] splitIntoStacks(ItemStack item, int amount) {
-        final int maxSize = item.getMaxStackSize();
-        final int fullStacks = (int) Math.floor(amount / maxSize);
-        final int finalStackAmount = amount % maxSize;
-
-        ItemStack fullStack = item.clone();
-        ItemStack finalStack = item.clone();
-        fullStack.setAmount(maxSize);
-        finalStack.setAmount(finalStackAmount);
-
         ItemStack[] items;
 
-        if (finalStackAmount > 0)
-            items = new ItemStack[fullStacks + 1];
-        else items = new ItemStack[fullStacks];
+        if (item != null) {
+            final int maxSize = item.getMaxStackSize();
+            final int fullStacks = (int) Math.floor(amount / maxSize);
+            final int finalStackAmount = amount % maxSize;
 
-        for (int i = 0; i < fullStacks; i++) {
-            items[i] = fullStack;
+            ItemStack fullStack = item.clone();
+            ItemStack finalStack = item.clone();
+            fullStack.setAmount(maxSize);
+            finalStack.setAmount(finalStackAmount);
+
+            if (finalStackAmount > 0)
+                items = new ItemStack[fullStacks + 1];
+            else items = new ItemStack[fullStacks];
+
+            for (int i = 0; i < fullStacks; i++) {
+                items[i] = fullStack;
+            }
+
+            if (finalStackAmount > 0) items[items.length - 1] = finalStack;
+        } else {
+            items = new ItemStack[amount];
         }
-
-        if (finalStackAmount > 0) items[items.length - 1] = finalStack;
 
         return items;
     }
