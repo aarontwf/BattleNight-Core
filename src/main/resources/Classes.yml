@@ -3,26 +3,26 @@
 
 Classes:
     Scout:
-        Armour: 309e(2~4)
-        Items: 268e(19~2), 373:8262, 373:8226x3
+        Armour: none, none, none, 309e(2~4)
+        Items: 268e(19~2), 373:8262, none, none, none, none, 373:8226, 373:8226, 373:8226
     Pyro:
         Armour: 298e(1~4), 299e(1~4), 300e(1~4), 301e(1~4)
-        Items: 268e(20~2), 259, 46x2, 373:8195
+        Items: 268e(20~2), 259, none, 46x2, none, none, none, none, 373:8195
     Tank:
         Armour: 310e(3~3), 311e(3~3), 312e(3~3), 313e(3~3)
-        Items: 272
+        Items: '272'
     Swordsman:
-        Armour: none
+        Armour: none, none, none, none
         Items: 276e(16~1)
     Archer:
         Armour: 302e(4~2), 303e(4~2), 304e(4~2), 305e(4~2)
-        Items: 261e(48~1/49~2), 368x8, 262x128
+        Items: 261e(49~2/48~1), 368x8, none, none, none, none, none, 262x64, 262x64
     Medic:
         Armour: 298e(0~2), 303e(0~2), 304e(0~2), 305e(0~2)
-        Items: 283e(19~2), 322x4, 373:16389x2, 373:16385
+        Items: 283e(19~2), 322x4, none, none, none, none, 373:16389, 373:16389, 373:16385
     Magician:
         Armour: 306, 307, 308, 309
-        Items: 272, 368x4, 373:16386, 373:16396, 373:16388, 373:16458
+        Items: 272, 368x4, none, none, none, 373:16386, 373:16396, 373:16388, 373:16458
     Spy:
-        Armour: 306e(5~3)
-        Items: 267, 373:8258, 373:8206
+        Armour: 306e(5~3), none, none, none
+        Items: 267, none, none, none, none, none, none, 373:8258, 373:8206
