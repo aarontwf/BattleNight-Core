@@ -167,7 +167,11 @@ public class ClassManager {
                 items.addAll(Arrays.asList(splitIntoStacks(stack, amount)));
             }
             else {
-                items.add(stack);
+                if (stack.getType() == Material.AIR) {
+                    items.add(null);
+                } else {
+                    items.add(stack);
+                }
             }
 
         }
@@ -180,7 +184,7 @@ public class ClassManager {
 
         for (ItemStack item : items) {
 
-            if (item == null || item.getType() == Material.AIR) {
+            if (item == null) {
                 rawItems += ", none";
             }
             else {
