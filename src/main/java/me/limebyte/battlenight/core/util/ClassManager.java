@@ -84,7 +84,7 @@ public class ClassManager {
                 Material mat = Material.getMaterial(part3[0].toUpperCase());
                 if (mat != null) {
                     id = mat.getId();
-                } else if (part3[0].toLowerCase() == "none") {
+                } else if (part3[0].equalsIgnoreCase("none")) {
                     id = Material.AIR.getId();
                 } else {
                     Messaging.debug(Level.WARNING, "Skipping ID: " + part3[0]);
