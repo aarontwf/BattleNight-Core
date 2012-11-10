@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.limebyte.battlenight.core.battle.Battle;
@@ -30,6 +31,7 @@ import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.ClassManager;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.Util;
+import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -90,15 +92,14 @@ public class BattleNight extends JavaPlugin {
             // Failed to submit the stats :-(
         }
 
-        // Debug
-        if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
-            if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
-                log.info("Permissions Enabled.");
-            } else {
-                log.info("Permissions Disabled, using Op.");
-            }
-            log.info("Loaded Classes: " + ClassManager.getClassNames().keySet().toString());
+        // Debugging
+        if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
+            Messaging.debug(Level.INFO, "Permissions Enabled.");
+        } else {
+            Messaging.debug(Level.INFO, "Permissions Disabled, using Op.");
         }
+        String loadedClasses = ClassManager.getClassNames().keySet().toString();
+        Messaging.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", ""));
 
         PluginManager pm = getServer().getPluginManager();
 

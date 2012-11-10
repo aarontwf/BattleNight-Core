@@ -1,6 +1,10 @@
 package me.limebyte.battlenight.core.util.chat;
 
+import java.util.logging.Level;
+
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,6 +52,12 @@ public class Messaging {
         for (String name : BattleNight.getBattle().usersTeam.keySet()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) tell(p, message);
+        }
+    }
+
+    public static void debug(Level level, String message) {
+        if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
+            BattleNight.log.log(level, message);
         }
     }
 

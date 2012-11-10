@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 
+import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -33,6 +35,7 @@ public class ClassManager {
     }
 
     public static void loadClasses() {
+        Messaging.debug(Level.INFO, "Loading classes...");
         ConfigManager.reload(configFile);
         for (String className : ConfigManager.get(configFile).getConfigurationSection("Classes").getKeys(false)) {
             fixOldFiles(className);
@@ -40,14 +43,17 @@ public class ClassManager {
             String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
             classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour))));
         }
+        Messaging.debug(Level.INFO, "Classes loaded.");
     }
 
     public static void saveClasses() {
+        Messaging.debug(Level.INFO, "Saving classes...");
         for (BattleClass c : classes) {
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Armour", parseItems(c.getArmour()));
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
         }
         ConfigManager.save(configFile);
+        Messaging.debug(Level.INFO, "Classes saved.");
     }
 
     private static List<ItemStack> parseItems(String rawItems) {
@@ -81,9 +87,12 @@ public class ClassManager {
                 } else if (part3[0].toLowerCase() == "none") {
                     id = Material.AIR.getId();
                 } else {
+                    Messaging.debug(Level.WARNING, "Skipping ID: " + part3[0]);
                     continue;
                 }
             }
+
+            Messaging.debug(Level.INFO, "Parsing ID: " + id);
 
             // Do we have more than one item?
             if (part1.length == 2) {
@@ -166,6 +175,8 @@ public class ClassManager {
                     //TODO Log it
                 }
             }
+
+            Messaging.debug(Level.INFO, "Adding item: " + stack.toString());
 
             if (amount > 1) {
                 items.addAll(Arrays.asList(splitIntoStacks(stack, amount)));
