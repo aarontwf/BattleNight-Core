@@ -74,7 +74,7 @@ public class ClassManager {
             short data = 0;
 
             String[] part1 = item.split("x");
-            String[] part2 = part1[0].split("e");
+            String[] part2 = part1[0].split("e(");
             String[] part3 = part2[0].split(":");
 
             int id;
@@ -111,7 +111,7 @@ public class ClassManager {
                 String[] part4 = part2[1].split("/");
 
                 for (String s : part4) {
-                    String[] splitEnchantment = s.replace("(", "").replace(")", "").split("~");
+                    String[] splitEnchantment = s.replace(")", "").split("~");
                     int e = -1;
                     int lvl = 1;
                     Enchantment enc;
