@@ -99,7 +99,7 @@ public class BattleNight extends JavaPlugin {
             Messaging.debug(Level.INFO, "Permissions Disabled, using Op.");
         }
         String loadedClasses = ClassManager.getClassNames().keySet().toString();
-        Messaging.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", ""));
+        Messaging.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
 
         PluginManager pm = getServer().getPluginManager();
 
