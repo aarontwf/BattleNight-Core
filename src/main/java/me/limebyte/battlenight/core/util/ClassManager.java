@@ -176,7 +176,9 @@ public class ClassManager {
                 }
             }
 
-            Messaging.debug(Level.INFO, "Adding item: " + stack.toString());
+            if (stack != null) {
+                Messaging.debug(Level.INFO, "Adding item: " + stack.getType().toString().toLowerCase().replace('_', ' '));
+            }
 
             if (amount > 1) {
                 items.addAll(Arrays.asList(splitIntoStacks(stack, amount)));
