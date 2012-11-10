@@ -314,6 +314,7 @@ public class ClassManager {
 
         public boolean contains(ItemStack stack) {
             for (Material material : materials) {
+                if (stack == null) continue;
                 if (stack.getType().equals(material)) return true;
             }
             return false;
