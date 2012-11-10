@@ -74,7 +74,7 @@ public class ClassManager {
             short data = 0;
 
             String[] part1 = item.split("x");
-            String[] part2 = part1[0].split("e(");
+            String[] part2 = part1[0].split("e\\(");
             String[] part3 = part2[0].split(":");
 
             int id;
