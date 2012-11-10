@@ -10,6 +10,7 @@ import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * Represents a BattleNight sub-command, which executes various tasks upon user
@@ -127,7 +128,7 @@ public abstract class BattleNightCommand {
 
         if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) { return true; }
 
-        if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
+        if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false) && sender instanceof Player) {
             String permission = getPermission().getBukkitPerm();
 
             if (sender.hasPermission(permission)) {
