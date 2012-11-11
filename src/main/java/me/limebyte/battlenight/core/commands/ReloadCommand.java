@@ -29,6 +29,7 @@ public class ReloadCommand extends BattleNightCommand {
             BattleNight.getBattle().stop();
             ConfigManager.reloadAll();
             ConfigManager.saveAll();
+            BattleNight.reloadClasses();
             Messaging.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;
         } catch (Exception e) {
