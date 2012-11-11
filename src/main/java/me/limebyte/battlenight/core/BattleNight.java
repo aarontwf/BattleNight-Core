@@ -82,7 +82,7 @@ public class BattleNight extends JavaPlugin {
         battle = new Battle();
 
         ConfigManager.initConfigurations();
-        reloadClasses();
+        ClassManager.reloadClasses();
 
         // Metrics
         try {
@@ -137,7 +137,6 @@ public class BattleNight extends JavaPlugin {
             battle.stop();
         }
         SignListener.cleanSigns();
-        reloadClasses();
 
         PluginDescriptionFile pdfFile = getDescription();
         log.info("Version " + pdfFile.getVersion() + " has been disabled.");
@@ -324,61 +323,6 @@ public class BattleNight extends JavaPlugin {
     //        BattleTelePass.remove(player.getName());
     //        TagAPI.refreshPlayer(player);
     //    }
-
-    public static ItemStack parseItem(String rawItem) {
-        if (rawItem == null || rawItem.equals(""))
-            return null;
-
-        String[] part1 = rawItem.split("x");
-        String[] part2 = part1[0].split(":");
-        String item = part2[0];
-        if (part1.length == 1) {
-            if (part2.length == 1) {
-                return parseItemWithoutData(item, "1");
-            } else if (part2.length == 2) {
-                String data = part2[1];
-                return parseItemWithData(item, data);
-            }
-        } else if (part1.length == 2) {
-            String amount = part1[1];
-            if (part2.length == 1) {
-                return parseItemWithoutData(item, amount);
-            } else if (part2.length == 2) {
-                String data = part2[1];
-                return parseItemWithData(item, data, amount);
-            }
-        }
-        return null;
-    }
-
-    private static ItemStack parseItemWithoutData(String item, String amount) {
-        Material m = Material.getMaterial(Integer.parseInt(item));
-        int a = Integer.parseInt(amount);
-        if (a > m.getMaxStackSize()) {
-            log.warning("You attempted to set the item:" + m + " to have a greater stack size than possible.");
-            a = m.getMaxStackSize();
-        }
-        return new ItemStack(m, a);
-    }
-
-    private static ItemStack parseItemWithData(String item, String data) {
-        int i = Integer.parseInt(item);
-        short d = Short.parseShort(data);
-
-        return new ItemStack(i, 1, d);
-    }
-
-    private static ItemStack parseItemWithData(String item, String data,
-            String amount) {
-        Material m = Material.getMaterial(Integer.parseInt(item));
-        byte d = Byte.parseByte(data);
-        int a = Integer.parseInt(amount);
-        if (a > m.getMaxStackSize()) {
-            log.warning("You attempted to set the item:" + m + " to have a greater stack size than possible.");
-            a = m.getMaxStackSize();
-        }
-        return new ItemStack(m, a, d);
-    }
 
     public static void addSpectator(Player player, String type) {
         if (!type.equals("death")) {
@@ -578,11 +522,6 @@ public class BattleNight extends JavaPlugin {
         for (PotionEffect effect : p.getActivePotionEffects()) {
             p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
         }
-    }
-
-    public static void reloadClasses() {
-        ClassManager.loadClasses();
-        ClassManager.saveClasses();
     }
 
     public static Battle getBattle() {

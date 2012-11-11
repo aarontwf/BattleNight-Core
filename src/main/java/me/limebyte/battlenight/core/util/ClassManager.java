@@ -34,6 +34,11 @@ public class ClassManager {
         return classList;
     }
 
+    public static void reloadClasses() {
+        loadClasses();
+        saveClasses();
+    }
+
     public static void loadClasses() {
         Messaging.debug(Level.INFO, "Loading classes...");
         ConfigManager.reload(configFile);

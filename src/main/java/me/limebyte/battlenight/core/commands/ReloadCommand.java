@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.ClassManager;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -29,7 +30,7 @@ public class ReloadCommand extends BattleNightCommand {
             BattleNight.getBattle().stop();
             ConfigManager.reloadAll();
             ConfigManager.saveAll();
-            BattleNight.reloadClasses();
+            ClassManager.reloadClasses();
             Messaging.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;
         } catch (Exception e) {
