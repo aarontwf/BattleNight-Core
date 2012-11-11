@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,7 @@ public class RespawnListener implements Listener {
         if (toProcess.contains(name)) {
             // If the Battle is still going on, take them to the spectator area
             // to watch
+            Messaging.tellEveryone("The respawn process HashSet contained " + name + ".", true);
             if (BattleNight.getBattle().isInProgress()) {
                 event.setRespawnLocation(BattleNight.getCoords("spectator"));
                 BattleNight.getBattle().resetPlayer(player, false, true);
