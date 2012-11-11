@@ -30,6 +30,8 @@ public class DeathListener implements Listener {
                 event.getDrops().clear();
                 ((PlayerDeathEvent) event).setDeathMessage("");
 
+                RespawnListener.toProcess.add(name);
+
                 if (!BattleNight.getBattle().isInLounge()) {
                     String colouredName = getColouredName(player);
 
@@ -45,7 +47,6 @@ public class DeathListener implements Listener {
                     }
                 }
 
-                RespawnListener.toProcess.add(name);
                 BattleNight.getBattle().removePlayer(player, true, null, "You were killed!");
             }
         }

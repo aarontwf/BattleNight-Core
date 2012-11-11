@@ -35,7 +35,7 @@ public class ReloadCommand extends BattleNightCommand {
             return true;
         } catch (Exception e) {
             Messaging.tell(sender, Message.RELOAD_FAILED);
-            BattleNight.log.severe(e.getMessage());
+            BattleNight.log.severe(e.getStackTrace().toString());
             return false;
         }
     }
