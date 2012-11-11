@@ -43,7 +43,7 @@ public class ClassManager {
             String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
             classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour))));
         }
-        Messaging.debug(Level.INFO, "Classes loaded.");
+        Messaging.debug(Level.INFO, "Classes loaded!");
     }
 
     public static void saveClasses() {
@@ -53,7 +53,7 @@ public class ClassManager {
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
         }
         ConfigManager.save(configFile);
-        Messaging.debug(Level.INFO, "Classes saved.");
+        Messaging.debug(Level.INFO, "Classes saved!");
     }
 
     private static List<ItemStack> parseItems(String rawItems) {
@@ -91,8 +91,6 @@ public class ClassManager {
                     continue;
                 }
             }
-
-            Messaging.debug(Level.INFO, "Parsing ID: " + id);
 
             // Do we have more than one item?
             if (part1.length == 2) {
@@ -176,9 +174,7 @@ public class ClassManager {
                 }
             }
 
-            if (stack != null) {
-                Messaging.debug(Level.INFO, "Adding item: " + stack.getType().toString().toLowerCase().replace('_', ' '));
-            }
+            Messaging.debug(Level.INFO, "Adding item: " + formatStack(stack) + ".");
 
             if (amount > 1) {
                 items.addAll(Arrays.asList(splitIntoStacks(stack, amount)));
@@ -341,5 +337,12 @@ public class ClassManager {
         }
 
         ConfigManager.save(configFile);
+    }
+
+    private static String formatStack(ItemStack stack) {
+        if (stack == null) stack = new ItemStack(0);
+        String itemName = stack.getType().toString().toLowerCase().replace('_', ' ');
+
+        return itemName.substring(0, 1).toUpperCase() + itemName.substring(1);
     }
 }
