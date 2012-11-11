@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.battle;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -96,14 +97,16 @@ public class Battle {
                     }
                 }
 
-                for (String currentName : usersTeam.keySet()) {
+                Iterator<String> it = usersTeam.keySet().iterator();
+                while (it.hasNext()) {
+                    String currentName = it.next();
                     if (Bukkit.getPlayerExact(currentName) != null) {
                         Player currentPlayer = Bukkit.getPlayerExact(currentName);
                         if (!death) {
-                            resetPlayer(currentPlayer, true);
+                            resetPlayer(currentPlayer, true, it);
                         } else {
                             if (currentPlayer != player) {
-                                resetPlayer(currentPlayer, true);
+                                resetPlayer(currentPlayer, true, it);
                             }
                         }
                     }
@@ -112,19 +115,25 @@ public class Battle {
                 resetBattle();
             }
 
-            if (!death) resetPlayer(player, true);
+            if (!death) resetPlayer(player, true, null);
         } else {
             BattleNight.log.warning("Failed to remove player '" + name + "' from the Battle as they are not in it.");
         }
     }
 
-    public void resetPlayer(Player player, boolean teleport) {
+    public void resetPlayer(Player player, boolean teleport, Iterator<String> it) {
         player.getInventory().clear();
         if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
         plugin.restorePlayer(player);
         SignListener.cleanSigns(player);
-        usersTeam.remove(player.getName());
         usersClass.remove(player.getName());
+
+        if (it != null) {
+            it.remove();
+        } else {
+            usersTeam.remove(player.getName());
+        }
+
         try {
             TagAPI.refreshPlayer(player);
         } catch (Exception e) {
@@ -163,10 +172,12 @@ public class Battle {
             }
         }
 
-        for (String currentName : usersTeam.keySet()) {
+        Iterator<String> it = usersTeam.keySet().iterator();
+        while (it.hasNext()) {
+            String currentName = it.next();
             if (Bukkit.getPlayerExact(currentName) != null) {
                 Player currentPlayer = Bukkit.getPlayerExact(currentName);
-                resetPlayer(currentPlayer, true);
+                resetPlayer(currentPlayer, true, it);
             }
         }
 
