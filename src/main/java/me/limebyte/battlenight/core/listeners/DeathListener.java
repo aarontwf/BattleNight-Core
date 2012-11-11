@@ -47,7 +47,7 @@ public class DeathListener implements Listener {
                     }
                 }
 
-                BattleNight.getBattle().removePlayer(player, true, null, "You were killed!");
+                BattleNight.getBattle().removePlayer(player, true, null, null);
             }
         }
     }

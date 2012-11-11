@@ -2,8 +2,10 @@ package me.limebyte.battlenight.core.listeners;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.battle.Waypoint;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.entity.Player;
@@ -21,18 +23,17 @@ public class RespawnListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName();
         if (toProcess.contains(name)) {
-            // If the Battle is still going on, take them to the spectator area
-            // to watch
-            Messaging.tellEveryone("The respawn process HashSet contained " + name + ".", true);
+            Messaging.debug(Level.INFO, "The respawn HashSet contained " + name + ".");
+
             if (BattleNight.getBattle().isInProgress()) {
-                event.setRespawnLocation(BattleNight.getCoords("spectator"));
-                BattleNight.getBattle().resetPlayer(player, false, true);
+                event.setRespawnLocation(Waypoint.SPECTATOR.getLocation());
+                BattleNight.getBattle().resetPlayer(player, false);
                 BattleNight.addSpectator(player, "death");
-                // Else, take them to the exit area
             } else {
-                event.setRespawnLocation(BattleNight.getCoords("exit"));
-                BattleNight.getBattle().resetPlayer(player, false, false);
+                event.setRespawnLocation(Waypoint.EXIT.getLocation());
+                BattleNight.getBattle().resetPlayer(player, false);
             }
+
             toProcess.remove(name);
         }
     }

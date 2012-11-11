@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.api.BattleEndEvent;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.BattleClass;
@@ -62,11 +61,11 @@ public class Battle {
     }
 
     public void removePlayer(Player player, boolean death, String msg1, String msg2) {
-        final String name = player.getName();
+        String name = player.getName();
 
         if (usersTeam.containsKey(name)) {
-            final Team team = usersTeam.get(name);
-            final boolean sendMsg1 = msg1 != null;
+            Team team = usersTeam.get(name);
+            boolean sendMsg1 = msg1 != null;
 
             if (team.equals(Team.RED)) {
                 redTeam--;
@@ -88,23 +87,24 @@ public class Battle {
                     // If red won
                     if (redTeam > 0) {
                         Messaging.tellEveryone(Message.TEAM_WON, true, Team.RED.getColour() + Team.RED.getName());
-                        Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
                         // If blue won
                     } else if (blueTeam > 0) {
                         Messaging.tellEveryone(Message.TEAM_WON, true, Team.BLUE.getColour() + Team.BLUE.getName());
-                        Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
                         // If neither team won
                     } else {
                         Messaging.tellEveryone(Message.DRAW, true);
-                        Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
                     }
                 }
 
                 for (String currentName : usersTeam.keySet()) {
-                    if (Bukkit.getPlayer(currentName) != null) {
-                        Player currentPlayer = Bukkit.getPlayer(currentName);
-                        if (!(death && currentPlayer == player)) {
-                            resetPlayer(currentPlayer, true, false);
+                    if (Bukkit.getPlayerExact(currentName) != null) {
+                        Player currentPlayer = Bukkit.getPlayerExact(currentName);
+                        if (!death) {
+                            resetPlayer(currentPlayer, true);
+                        } else {
+                            if (currentPlayer != player) {
+                                resetPlayer(currentPlayer, true);
+                            }
                         }
                     }
                 }
@@ -112,67 +112,61 @@ public class Battle {
                 resetBattle();
             }
 
-            if (!death) resetPlayer(player, true, true);
+            if (!death) resetPlayer(player, true);
         } else {
             BattleNight.log.warning("Failed to remove player '" + name + "' from the Battle as they are not in it.");
         }
     }
 
-    public void resetPlayer(Player player, boolean teleport, boolean removeHash) {
+    public void resetPlayer(Player player, boolean teleport) {
         player.getInventory().clear();
         if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
         plugin.restorePlayer(player);
         SignListener.cleanSigns(player);
-
-        if (removeHash) {
-            usersTeam.remove(player.getName());
-            usersClass.remove(player.getName());
-            try {
-                TagAPI.refreshPlayer(player);
-            } catch (final Exception e) {
-            }
+        usersTeam.remove(player.getName());
+        usersClass.remove(player.getName());
+        try {
+            TagAPI.refreshPlayer(player);
+        } catch (Exception e) {
         }
     }
 
     private void resetBattle() {
-        Set<String> toRefresh = usersTeam.keySet();
-
         plugin.removeAllSpectators();
         SignListener.cleanSigns();
         inProgress = false;
+        inLounge = false;
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
         usersTeam.clear();
         usersClass.clear();
         redTeam = 0;
         blueTeam = 0;
+    }
 
-        for (String name : toRefresh) {
-            if (Bukkit.getPlayer(name) != null) {
-                try {
-                    TagAPI.refreshPlayer(Bukkit.getPlayer(name));
-                } catch (final Exception e) {
-                }
-            }
-        }
+    public void start() {
+        inProgress = true;
+        inLounge = false;
+        Messaging.tellEveryone(Message.BATTLE_STARTED, true);
+        plugin.teleportAllToSpawn();
+        SignListener.cleanSigns();
     }
 
     public void stop() {
-        if (blueTeam > redTeam) {
-            Messaging.tellEveryone(Message.TEAM_WON, true, Team.BLUE.getColour() + Team.BLUE.getName());
-            Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("blue", "red", usersTeam));
-        } else if (redTeam > blueTeam) {
-            Messaging.tellEveryone(Message.TEAM_WON, true, Team.RED.getColour() + Team.RED.getName());
-            Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("red", "blue", usersTeam));
-        } else {
-            Messaging.tellEveryone(Message.DRAW, true);
-            Bukkit.getServer().getPluginManager().callEvent(new BattleEndEvent("draw", "draw", null));
+        if (!inLounge) {
+            if (blueTeam > redTeam) {
+                Messaging.tellEveryone(Message.TEAM_WON, true, Team.BLUE.getColour() + Team.BLUE.getName());
+            } else if (redTeam > blueTeam) {
+                Messaging.tellEveryone(Message.TEAM_WON, true, Team.RED.getColour() + Team.RED.getName());
+            } else {
+                Messaging.tellEveryone(Message.DRAW, true);
+            }
         }
 
         for (String currentName : usersTeam.keySet()) {
-            if (Bukkit.getPlayer(currentName) != null) {
-                Player currentPlayer = Bukkit.getPlayer(currentName);
-                resetPlayer(currentPlayer, true, false);
+            if (Bukkit.getPlayerExact(currentName) != null) {
+                Player currentPlayer = Bukkit.getPlayerExact(currentName);
+                resetPlayer(currentPlayer, true);
             }
         }
 
@@ -187,13 +181,5 @@ public class Battle {
 
     public boolean isInProgress() {
         return inProgress;
-    }
-
-    public void start() {
-        inProgress = true;
-        inLounge = false;
-        Messaging.tellEveryone(Message.BATTLE_STARTED, true);
-        plugin.teleportAllToSpawn();
-        SignListener.cleanSigns();
     }
 }
