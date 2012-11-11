@@ -62,7 +62,7 @@ public class CheatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        if (!BattleNight.playersInLounge) return;
+        if (!BattleNight.getBattle().isInLounge()) return;
         final Projectile projectile = event.getEntity();
         if (projectile.getShooter() instanceof Player) {
             final Player thrower = (Player) projectile.getShooter();

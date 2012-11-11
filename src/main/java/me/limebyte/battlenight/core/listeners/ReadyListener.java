@@ -32,7 +32,7 @@ public class ReadyListener implements Listener {
             Player player = event.getPlayer();
 
             if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
-                if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && (BattleNight.playersInLounge)) {
+                if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && BattleNight.getBattle().isInLounge()) {
                     String name = player.getName();
                     Team team = BattleNight.getBattle().usersTeam.get(name);
 

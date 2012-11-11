@@ -22,7 +22,7 @@ public class DisconnectListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
-            BattleNight.battle.removePlayer(player, false, "has been removed from the Battle as they disconnected from the server.", null);
+            BattleNight.getBattle().removePlayer(player, false, "has been removed from the Battle as they disconnected from the server.", null);
         } else if (BattleNight.getBattle().spectators.contains(player.getName())) {
             BattleNight.removeSpectator(player);
         }
@@ -32,7 +32,7 @@ public class DisconnectListener implements Listener {
     public void onPlayerKick(PlayerKickEvent event) {
         final Player player = event.getPlayer();
         if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
-            BattleNight.battle.removePlayer(player, false, "has been removed from the Battle as they were kicked from the server.", null);
+            BattleNight.getBattle().removePlayer(player, false, "has been removed from the Battle as they were kicked from the server.", null);
         } else if (BattleNight.getBattle().spectators.contains(player.getName())) {
             BattleNight.removeSpectator(player);
         }

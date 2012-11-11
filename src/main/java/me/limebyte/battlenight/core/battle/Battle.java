@@ -24,6 +24,7 @@ public class Battle {
     private BattleNight plugin;
     private int redTeam = 0;
     private int blueTeam = 0;
+    private boolean inLounge = false;
     private boolean inProgress = false;
 
     public final Map<String, Team> usersTeam = new HashMap<String, Team>();
@@ -54,7 +55,7 @@ public class Battle {
             Messaging.tellEveryoneExcept(player, name + " has joined team " + team.getColour() + team.getName() + ChatColor.WHITE + ".", true);
 
             BattleNight.setNames(player);
-            BattleNight.playersInLounge = true;
+            inLounge = true;
         } else {
             Messaging.tell(player, Track.MUST_HAVE_EMPTY.msg);
         }
@@ -83,7 +84,7 @@ public class Battle {
             if (redTeam == 0 || blueTeam == 0) {
 
                 // If the battle started
-                if (!BattleNight.playersInLounge) {
+                if (!inLounge) {
                     // If red won
                     if (redTeam > 0) {
                         Messaging.tellEveryone(Message.TEAM_WON, true, Team.RED.getColour() + Team.RED.getName());
@@ -180,13 +181,17 @@ public class Battle {
         plugin.removeAllSpectators();
     }
 
+    public boolean isInLounge() {
+        return inLounge;
+    }
+
     public boolean isInProgress() {
         return inProgress;
     }
 
     public void start() {
         inProgress = true;
-        BattleNight.playersInLounge = false;
+        inLounge = false;
         Messaging.tellEveryone(Message.BATTLE_STARTED, true);
         plugin.teleportAllToSpawn();
         SignListener.cleanSigns();

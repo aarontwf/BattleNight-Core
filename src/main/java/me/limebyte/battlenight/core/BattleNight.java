@@ -54,31 +54,28 @@ import org.kitteh.tag.TagAPI;
 
 public class BattleNight extends JavaPlugin {
 
-    // Variables
+    /** Variables **/
+
+    // Instance Variables
     public static BattleNight instance;
+    private static Battle battle;
     public static Logger log;
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 
     // HashMaps
     public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
 
-    // Other Classes
-    public static Battle battle;
-
+    // Other Variables
     public boolean redTeamIronClicked = false;
     public boolean blueTeamIronClicked = false;
-    public static boolean playersInLounge = false;
 
-    // ///////////////////
-    // Plug-in Enable //
-    // ////////////////////
+    /** Events **/
+
     @Override
     public void onEnable() {
-
         // Set instances
         instance = this;
         log = getLogger();
-
         battle = new Battle();
 
         ConfigManager.initConfigurations();
@@ -132,7 +129,7 @@ public class BattleNight extends JavaPlugin {
     // ////////////////////
     @Override
     public void onDisable() {
-        if (getBattle().isInProgress() || playersInLounge) {
+        if (getBattle().isInProgress() || getBattle().isInLounge()) {
             log.info("Ending current Battle...");
             battle.stop();
         }
@@ -141,6 +138,8 @@ public class BattleNight extends JavaPlugin {
         PluginDescriptionFile pdfFile = getDescription();
         log.info("Version " + pdfFile.getVersion() + " has been disabled.");
     }
+
+    /** Commands **/
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
@@ -154,6 +153,8 @@ public class BattleNight extends JavaPlugin {
         }
         return false;
     }
+
+    /** Methods **/
 
     // Set Coords and put in waypoints.data
     public static void setCoords(Waypoint waypoint, Location location) {
@@ -182,7 +183,6 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    // Check if all Waypoints have been set.
     public static Boolean isSetup() {
         ConfigManager.reload(Config.ARENAS);
         FileConfiguration config = ConfigManager.get(Config.ARENAS);
@@ -306,23 +306,6 @@ public class BattleNight extends JavaPlugin {
         return (invNullCounter == invContents.length)
                 && (armNullCounter == armContents.length);
     }
-
-    //    public static void goToWaypoint(Player player, Waypoint waypoint) {
-    //        Location destination = getCoords(waypoint.getName());
-    //        Chunk chunk = destination.getChunk();
-    //
-    //        if (!chunk.isLoaded()) {
-    //            chunk.load();
-    //            while (!chunk.isLoaded()) {
-    //                // Wait until loaded
-    //            }
-    //        }
-    //
-    //        BattleTelePass.put(player.getName(), "yes");
-    //        player.teleport(destination);
-    //        BattleTelePass.remove(player.getName());
-    //        TagAPI.refreshPlayer(player);
-    //    }
 
     public static void addSpectator(Player player, String type) {
         if (!type.equals("death")) {
