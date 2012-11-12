@@ -1,11 +1,10 @@
 package me.limebyte.battlenight.core.listeners;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Waypoint;
+import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.entity.Player;
@@ -15,15 +14,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class RespawnListener implements Listener {
-
-    public static Set<String> toProcess = new HashSet<String>();
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        String name = player.getName();
-        if (toProcess.contains(name)) {
-            Messaging.debug(Level.INFO, "The respawn HashSet contained " + name + ".");
+        if (Metadata.getBoolean(player, "respawn")) {
+            Messaging.debug(Level.INFO, player.getName() + "'s respawn event has been handled.");
 
             if (BattleNight.getBattle().isInProgress()) {
                 event.setRespawnLocation(Waypoint.SPECTATOR.getLocation());
@@ -34,7 +29,7 @@ public class RespawnListener implements Listener {
                 BattleNight.getBattle().resetPlayer(player, false, null);
             }
 
-            toProcess.remove(name);
+            Metadata.set(player, "respawn", false);
         }
     }
 

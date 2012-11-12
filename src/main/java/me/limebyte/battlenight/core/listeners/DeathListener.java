@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Team;
+import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -30,7 +31,7 @@ public class DeathListener implements Listener {
                 event.getDrops().clear();
                 ((PlayerDeathEvent) event).setDeathMessage("");
 
-                RespawnListener.toProcess.add(name);
+                Metadata.set(player, "respawn", true);
 
                 if (!BattleNight.getBattle().isInLounge()) {
                     String colouredName = getColouredName(player);
