@@ -41,7 +41,7 @@ public class SafeTeleporter implements Listener {
     }
 
     public static void startTeleporting() {
-        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BattleNight.instance, new Runnable() {
+        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BattleNight.getInstance(), new Runnable() {
             public void run() {
                 if (playerQueue.isEmpty()) {
                     stopTeleporting();

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
@@ -21,7 +22,6 @@ import org.kitteh.tag.TagAPI;
 
 public class Battle {
 
-    private BattleNight plugin;
     private int redTeam = 0;
     private int blueTeam = 0;
     private boolean inLounge = false;
@@ -31,12 +31,8 @@ public class Battle {
     public final Map<String, Team> usersTeam = new HashMap<String, Team>();
     public final Set<String> spectators = new HashSet<String>();
 
-    public Battle() {
-        this.plugin = BattleNight.instance;
-    }
-
     public void addPlayer(Player player) {
-        if (plugin.preparePlayer(player)) {
+        if (BattleNight.preparePlayer(player)) {
             String name = player.getName();
             Team team;
 
@@ -119,14 +115,14 @@ public class Battle {
 
             if (!death) resetPlayer(player, true, null);
         } else {
-            BattleNight.log.warning("Failed to remove player '" + name + "' from the Battle as they are not in it.");
+            Messaging.log(Level.WARNING, "Failed to remove player '" + name + "' from the Battle as they are not in it.");
         }
     }
 
     public void resetPlayer(Player player, boolean teleport, Iterator<String> it) {
         player.getInventory().clear();
         if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
-        plugin.restorePlayer(player);
+        BattleNight.restorePlayer(player);
         SignListener.cleanSigns(player);
         Metadata.remove(player, "class");
 
@@ -159,7 +155,7 @@ public class Battle {
         inProgress = true;
         inLounge = false;
         Messaging.tellEveryone(Message.BATTLE_STARTED, true);
-        plugin.teleportAllToSpawn();
+        BattleNight.teleportAllToSpawn();
         SignListener.cleanSigns();
     }
 

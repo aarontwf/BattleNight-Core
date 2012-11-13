@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.battle.Team;
@@ -55,9 +54,9 @@ public class BattleNight extends JavaPlugin {
     /** Variables **/
 
     // Instance Variables
-    public static BattleNight instance;
+    private static BattleNight instance;
     private static Battle battle;
-    public static Logger log;
+
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 
     // HashMaps
@@ -73,7 +72,6 @@ public class BattleNight extends JavaPlugin {
     public void onEnable() {
         // Set instances
         instance = this;
-        log = getLogger();
         battle = new Battle();
 
         ConfigManager.initConfigurations();
@@ -118,8 +116,8 @@ public class BattleNight extends JavaPlugin {
         pm.registerEvents(new SignListener(), this);
 
         // Enable Message
-        log.info("Version " + pdfFile.getVersion() + " enabled successfully.");
-        log.info("Made by LimeByte.");
+        Messaging.log(Level.INFO, "Version " + pdfFile.getVersion() + " enabled successfully.");
+        Messaging.log(Level.INFO, "Made by LimeByte.");
     }
 
     // ////////////////////
@@ -128,13 +126,13 @@ public class BattleNight extends JavaPlugin {
     @Override
     public void onDisable() {
         if (getBattle().isInProgress() || getBattle().isInLounge()) {
-            log.info("Ending current Battle...");
+            Messaging.log(Level.INFO, "Ending current Battle...");
             battle.stop();
         }
         SignListener.cleanSigns();
 
         PluginDescriptionFile pdfFile = getDescription();
-        log.info("Version " + pdfFile.getVersion() + " has been disabled.");
+        Messaging.log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
     }
 
     /** Commands **/
@@ -154,7 +152,6 @@ public class BattleNight extends JavaPlugin {
 
     /** Methods **/
 
-    // Set Coords and put in waypoints.data
     public static void setCoords(Waypoint waypoint, Location location) {
         String place = waypoint.getName();
         ConfigManager.reload(Config.ARENAS);
@@ -163,7 +160,6 @@ public class BattleNight extends JavaPlugin {
         ConfigManager.save(Config.ARENAS);
     }
 
-    // Get Coords from waypoints.data
     public static Location getCoords(String place) {
         ConfigManager.reload(Config.ARENAS);
         FileConfiguration config = ConfigManager.get(Config.ARENAS);
@@ -250,7 +246,7 @@ public class BattleNight extends JavaPlugin {
         player.sendMessage(BNTag + track.msg);
     }
 
-    public void teleportAllToSpawn() {
+    public static void teleportAllToSpawn() {
         for (String name : getBattle().usersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) {
                 Player currentPlayer = Bukkit.getPlayer(name);
@@ -266,7 +262,7 @@ public class BattleNight extends JavaPlugin {
         SafeTeleporter.startTeleporting();
     }
 
-    public boolean hasEmptyInventory(Player player) {
+    public static boolean hasEmptyInventory(Player player) {
         PlayerInventory inv = player.getInventory();
 
         for (ItemStack item : inv.getContents()) {
@@ -280,7 +276,7 @@ public class BattleNight extends JavaPlugin {
         return true;
     }
 
-    public boolean preparePlayer(Player p) {
+    public static boolean preparePlayer(Player p) {
         String inventoryType = ConfigManager.get(Config.MAIN).getString("InventoryType", "save");
         FileConfiguration storage = ConfigManager.get(Config.PLAYERS);
 
@@ -342,7 +338,7 @@ public class BattleNight extends JavaPlugin {
         return true;
     }
 
-    public void restorePlayer(Player p) {
+    public static void restorePlayer(Player p) {
         String name = p.getName();
         reset(p, true);
 
@@ -401,7 +397,7 @@ public class BattleNight extends JavaPlugin {
             p.setNoDamageTicks(storage.getInt(name + ".data.stats.nodamageticks"));
 
         } catch (NullPointerException e) {
-            log.warning("Failed to restore data for player: '" + name + "'.");
+            Messaging.log(Level.WARNING, "Failed to restore data for player: '" + name + "'.");
         }
     }
 
@@ -433,15 +429,9 @@ public class BattleNight extends JavaPlugin {
 
     public static void setNames(Player player) {
         String name = player.getName();
-
         String pListName = ChatColor.GRAY + "[BN] " + name;
-        ChatColor teamColour = ChatColor.WHITE;
-        if (getBattle().usersTeam.containsKey(name)) {
-            teamColour = getBattle().usersTeam.get(name).equals(Team.RED) ? ChatColor.RED : ChatColor.BLUE;
-        }
-
         player.setPlayerListName(pListName.length() < 16 ? pListName : pListName.substring(0, 16));
-        player.setDisplayName(ChatColor.GRAY + "[BN] " + teamColour + name + ChatColor.RESET);
+
         try {
             TagAPI.refreshPlayer(player);
         } catch (Exception e) {
@@ -454,15 +444,11 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
+    public static BattleNight getInstance() {
+        return instance;
+    }
+
     public static Battle getBattle() {
         return battle;
-    }
-
-    public static String getVersion() {
-        return instance.getDescription().getVersion();
-    }
-
-    public static String getWebsite() {
-        return instance.getDescription().getWebsite();
     }
 }

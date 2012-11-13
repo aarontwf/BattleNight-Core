@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.ClassManager;
@@ -35,7 +36,7 @@ public class ReloadCommand extends BattleNightCommand {
             return true;
         } catch (Exception e) {
             Messaging.tell(sender, Message.RELOAD_FAILED);
-            BattleNight.log.severe(e.getStackTrace().toString());
+            Messaging.log(Level.SEVERE, e.getStackTrace().toString());
             return false;
         }
     }

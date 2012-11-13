@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.listeners;
 
+import java.util.logging.Level;
+
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Team;
 import me.limebyte.battlenight.core.util.Metadata;
@@ -42,7 +44,7 @@ public class DeathListener implements Listener {
                         Messaging.tellEveryone(colouredName + ChatColor.GRAY + " was killed.", true);
 
                         if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
-                            BattleNight.log.warning("Could not find killer for player: " + colouredName);
+                            Messaging.debug(Level.WARNING, "Could not find killer for player: " + colouredName);
                         }
                     }
                 }

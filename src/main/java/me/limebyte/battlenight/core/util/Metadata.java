@@ -11,11 +11,11 @@ import org.bukkit.metadata.MetadataValue;
 public class Metadata {
 
     public static void set(Player player, String key, Object value) {
-        player.setMetadata(key, new FixedMetadataValue(BattleNight.instance, value));
+        player.setMetadata(key, new FixedMetadataValue(BattleNight.getInstance(), value));
     }
 
     public static void remove(Player player, String key) {
-        player.removeMetadata(key, BattleNight.instance);
+        player.removeMetadata(key, BattleNight.getInstance());
     }
 
     public static boolean getBoolean(Player player, String key) {
@@ -44,7 +44,7 @@ public class Metadata {
 
     private static MetadataValue getValue(Player player, String key) {
         List<MetadataValue> values = player.getMetadata(key);
-        String bnName = BattleNight.instance.getDescription().getName();
+        String bnName = BattleNight.getInstance().getDescription().getName();
 
         for (MetadataValue value : values) {
             String owner = value.getOwningPlugin().getDescription().getName();

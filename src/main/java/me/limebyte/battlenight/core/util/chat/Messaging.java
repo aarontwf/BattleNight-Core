@@ -55,9 +55,13 @@ public class Messaging {
         }
     }
 
+    public static void log(Level level, String message) {
+        BattleNight.getInstance().getLogger().log(level, message);
+    }
+
     public static void debug(Level level, String message) {
         if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
-            BattleNight.log.log(level, message);
+            log(level, message);
         }
     }
 

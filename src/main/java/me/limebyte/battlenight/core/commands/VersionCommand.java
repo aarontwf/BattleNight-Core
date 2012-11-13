@@ -7,6 +7,7 @@ import me.limebyte.battlenight.core.util.chat.StandardPage;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 public class VersionCommand extends BattleNightCommand {
 
@@ -20,11 +21,13 @@ public class VersionCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
+        PluginDescriptionFile pdf = BattleNight.getInstance().getDescription();
+
         StandardPage versionPage = new StandardPage(
                 "BattleNight Version Info",
-                "This server is running BattleNight version " + BattleNight.getVersion() + ".  " +
+                "This server is running BattleNight version " + pdf.getVersion() + ".  " +
                         "For more information about Battlenight and this version, please visit:\n" +
-                        ChatColor.BLUE + ChatColor.UNDERLINE + BattleNight.getWebsite());
+                        ChatColor.BLUE + ChatColor.UNDERLINE + pdf.getWebsite());
         sender.sendMessage(versionPage.getPage());
         return true;
     }

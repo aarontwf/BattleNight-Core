@@ -3,8 +3,10 @@ package me.limebyte.battlenight.core.util.config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,13 +29,13 @@ public class Configuration {
 
     public Configuration(String fileName, boolean copyDefaults) {
         this.fileName = fileName;
-        this.directory = BattleNight.instance.getDataFolder().getAbsolutePath();
+        this.directory = BattleNight.getInstance().getDataFolder().getAbsolutePath();
         this.copyDefaults = copyDefaults;
     }
 
     public Configuration(String fileName, String directory, boolean copyDefaults) {
         this.fileName = fileName;
-        this.directory = BattleNight.instance.getDataFolder().getAbsolutePath() + File.separator + directory;
+        this.directory = BattleNight.getInstance().getDataFolder().getAbsolutePath() + File.separator + directory;
         this.copyDefaults = copyDefaults;
     }
 
@@ -44,7 +46,7 @@ public class Configuration {
         fileConfig = YamlConfiguration.loadConfiguration(file);
 
         // Look for non-existent defaults
-        InputStream defConfigStream = BattleNight.instance.getResource(fileName);
+        InputStream defConfigStream = BattleNight.getInstance().getResource(fileName);
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfig.setDefaults(defConfig);
@@ -67,7 +69,7 @@ public class Configuration {
             try {
                 get().save(file);
             } catch (IOException ex) {
-                BattleNight.log.severe("Could not save config to " + file + ": " + ex.getMessage());
+                Messaging.log(Level.SEVERE, "Could not save config to " + file + ": " + ex.getMessage());
             }
         }
     }

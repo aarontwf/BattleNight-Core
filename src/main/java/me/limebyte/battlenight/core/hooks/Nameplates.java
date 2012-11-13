@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -17,14 +19,14 @@ public class Nameplates {
     public static boolean init(BattleNight plugin) {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         if (pm.getPlugin("TagAPI") == null) {
-            BattleNight.log.info("TagAPI not found.  Installing...");
+            Messaging.log(Level.WARNING, "TagAPI not found.  Installing...");
             try {
                 install(plugin, pm);
             } catch (Exception e) {
-                BattleNight.log.info("Failed to install TagAPI.  Disabling...");
+                Messaging.log(Level.SEVERE, "Failed to install TagAPI.  Disabling...");
                 return false;
             } finally {
-                BattleNight.log.info("TagAPI installed successfully.");
+                Messaging.log(Level.INFO, "TagAPI installed successfully.");
             }
         }
         return true;
@@ -43,7 +45,7 @@ public class Nameplates {
     }
 
     public static void copyResource(String resource, File file) {
-        InputStream in = BattleNight.instance.getResource(resource);
+        InputStream in = BattleNight.getInstance().getResource(resource);
         try {
             OutputStream out = new FileOutputStream(file);
             byte[] buf = new byte[1024];
