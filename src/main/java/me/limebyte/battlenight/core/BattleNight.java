@@ -29,6 +29,7 @@ import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.ClassManager;
+import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.chat.Messaging;
@@ -210,10 +211,10 @@ public class BattleNight extends JavaPlugin {
         int membersReady = 0;
 
         for (Entry<String, Team> entry : getBattle().usersTeam.entrySet()) {
-            if (Bukkit.getPlayer(entry.getKey()) != null) {
+            if (Bukkit.getPlayerExact(entry.getKey()) != null) {
                 if (entry.getValue().equals(team)) {
                     members++;
-                    if (getBattle().usersClass.containsKey(entry.getKey())) membersReady++;
+                    if (Metadata.getBattleClass(Bukkit.getPlayerExact(entry.getKey()), "class") != null) membersReady++;
                 }
             }
         }

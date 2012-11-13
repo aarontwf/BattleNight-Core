@@ -14,6 +14,10 @@ public class Metadata {
         player.setMetadata(key, new FixedMetadataValue(BattleNight.instance, value));
     }
 
+    public static void remove(Player player, String key) {
+        player.removeMetadata(key, BattleNight.instance);
+    }
+
     public static boolean getBoolean(Player player, String key) {
         MetadataValue value = getValue(player, key);
         if (value != null) { return value.asBoolean(); }
@@ -29,6 +33,12 @@ public class Metadata {
     public static String getString(Player player, String key) {
         MetadataValue value = getValue(player, key);
         if (value != null) { return value.asString(); }
+        return null;
+    }
+
+    public static BattleClass getBattleClass(Player player, String key) {
+        MetadataValue value = getValue(player, key);
+        if (value != null && value instanceof BattleClass) { return (BattleClass) value; }
         return null;
     }
 

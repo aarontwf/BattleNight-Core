@@ -9,7 +9,7 @@ import java.util.Set;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
-import me.limebyte.battlenight.core.util.BattleClass;
+import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.chat.Messaging.Message;
@@ -29,7 +29,6 @@ public class Battle {
     private boolean ending = false;
 
     public final Map<String, Team> usersTeam = new HashMap<String, Team>();
-    public final Map<String, BattleClass> usersClass = new HashMap<String, BattleClass>();
     public final Set<String> spectators = new HashSet<String>();
 
     public Battle() {
@@ -129,7 +128,7 @@ public class Battle {
         if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
         plugin.restorePlayer(player);
         SignListener.cleanSigns(player);
-        usersClass.remove(player.getName());
+        Metadata.remove(player, "class");
 
         if (it != null) {
             it.remove();
@@ -152,7 +151,6 @@ public class Battle {
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
         usersTeam.clear();
-        usersClass.clear();
         redTeam = 0;
         blueTeam = 0;
     }

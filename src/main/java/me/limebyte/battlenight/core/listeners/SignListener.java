@@ -8,6 +8,7 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.BattleClass;
 import me.limebyte.battlenight.core.util.ClassManager;
 import me.limebyte.battlenight.core.util.ClassSign;
+import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.ParticleEffect;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -43,13 +44,13 @@ public class SignListener implements Listener {
 
                     addName(player, sign);
 
-                    if (BattleNight.getBattle().usersClass.containsKey(name)) {
-                        if (BattleNight.getBattle().usersClass.get(name) != playerClass) {
+                    if (Metadata.getBattleClass(player, "class") != null) {
+                        if (Metadata.getBattleClass(player, "class") != playerClass) {
                             ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                         }
                     }
 
-                    BattleNight.getBattle().usersClass.put(name, playerClass);
+                    Metadata.set(player, "class", playerClass);
                     BattleNight.reset(player, true);
                     classes.get(title).equip(player);
                 }
