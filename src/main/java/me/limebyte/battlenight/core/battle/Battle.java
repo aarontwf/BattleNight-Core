@@ -26,6 +26,7 @@ public class Battle {
     private int blueTeam = 0;
     private boolean inLounge = false;
     private boolean inProgress = false;
+    private boolean ending = false;
 
     public final Map<String, Team> usersTeam = new HashMap<String, Team>();
     public final Map<String, BattleClass> usersClass = new HashMap<String, BattleClass>();
@@ -82,6 +83,8 @@ public class Battle {
 
             // If red or blue won
             if (redTeam == 0 || blueTeam == 0) {
+
+                ending = true;
 
                 // If the battle started
                 if (!inLounge) {
@@ -145,6 +148,7 @@ public class Battle {
         SignListener.cleanSigns();
         inProgress = false;
         inLounge = false;
+        ending = false;
         plugin.redTeamIronClicked = false;
         plugin.blueTeamIronClicked = false;
         usersTeam.clear();
@@ -192,5 +196,9 @@ public class Battle {
 
     public boolean isInProgress() {
         return inProgress;
+    }
+
+    public boolean isEnding() {
+        return ending;
     }
 }
