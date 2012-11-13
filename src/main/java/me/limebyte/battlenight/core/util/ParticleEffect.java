@@ -1,5 +1,9 @@
 package me.limebyte.battlenight.core.util;
 
+import java.util.logging.Level;
+
+import me.limebyte.battlenight.core.util.chat.Messaging;
+
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,6 +28,7 @@ public class ParticleEffect {
     }
 
     public static void classSelect(Player player, String type) {
+        Messaging.debug(Level.INFO, "Particle type equals " + type + ".");
         if (type == "ender") {
             for (double h = 0.0; h < 1.8; h += 0.2) {
                 Location loc = player.getLocation();
@@ -34,6 +39,7 @@ public class ParticleEffect {
         } else if (type == "smoke") {
             spiral(player);
         } else {
+            Messaging.debug(Level.INFO, "Invalid or no particle type.");
             return;
         }
     }

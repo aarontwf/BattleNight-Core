@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.listeners;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.BattleClass;
@@ -10,6 +11,7 @@ import me.limebyte.battlenight.core.util.ClassManager;
 import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.ParticleEffect;
+import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -45,6 +47,7 @@ public class SignListener implements Listener {
                     addName(player, sign);
 
                     if (Metadata.getBattleClass(player, "class") != playerClass) {
+                        Messaging.debug(Level.INFO, "Making particles...");
                         ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                     }
 

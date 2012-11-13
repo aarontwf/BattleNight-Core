@@ -120,7 +120,6 @@ public class Battle {
     }
 
     public void resetPlayer(Player player, boolean teleport, Iterator<String> it) {
-        player.getInventory().clear();
         if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
         BattleNight.restorePlayer(player);
         SignListener.cleanSigns(player);
