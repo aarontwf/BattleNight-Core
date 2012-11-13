@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 
 import org.bukkit.ChatColor;
@@ -25,27 +26,28 @@ public class WatchCommand extends BattleNightCommand {
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
+            Battle battle = BattleNight.getBattle();
 
             if (!BattleNight.isSetup()) {
                 BattleNight.tellPlayer(player, Track.WAYPOINTS_UNSET);
                 return false;
             }
 
-            if (!BattleNight.getBattle().isInProgress()) {
+            if (!battle.isInProgress()) {
                 BattleNight.tellPlayer(player, Track.BATTLE_NOT_IN_PROGRESS);
                 return false;
             }
 
-            if (BattleNight.getBattle().spectators.contains(player.getName())) {
+            if (battle.spectators.contains(player.getName())) {
                 BattleNight.tellPlayer(player, "You are already watching the Battle!");
                 return false;
             }
 
-            if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
-                BattleNight.getBattle().removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
+            if (battle.usersTeam.containsKey(player.getName())) {
+                battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
             }
 
-            BattleNight.addSpectator(player, "command");
+            battle.addSpectator(player, "command");
             return true;
         } else {
             sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");

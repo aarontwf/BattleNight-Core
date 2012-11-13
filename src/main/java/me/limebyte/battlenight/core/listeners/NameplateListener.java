@@ -10,14 +10,6 @@ import org.bukkit.event.Listener;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 public class NameplateListener implements Listener {
-
-    // Get Main Class
-    public static BattleNight plugin;
-
-    public NameplateListener(BattleNight instance) {
-        plugin = instance;
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onNameplate(PlayerReceiveNameTagEvent event) {
         String tagged = event.getNamedPlayer().getName();

@@ -17,14 +17,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ReadyListener implements Listener {
-
-    // Get Main Class
-    public static BattleNight plugin;
-
-    public ReadyListener(BattleNight instance) {
-        plugin = instance;
-    }
-
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
@@ -36,19 +28,19 @@ public class ReadyListener implements Listener {
                     String name = player.getName();
                     Team team = BattleNight.getBattle().usersTeam.get(name);
 
-                    if (plugin.teamReady(team)) {
+                    if (team.isReady()) {
                         Messaging.tellEveryone(Message.TEAM_IS_READY, false, team.getColour() + team.getName());
 
                         if (team.equals(Team.RED)) {
-                            plugin.redTeamIronClicked = true;
+                            BattleNight.redTeamIronClicked = true;
 
-                            if ((plugin.teamReady(Team.BLUE)) && (plugin.blueTeamIronClicked)) {
+                            if (Team.BLUE.isReady() && BattleNight.blueTeamIronClicked) {
                                 BattleNight.getBattle().start();
                             }
                         } else if (team.equals(Team.BLUE)) {
-                            plugin.blueTeamIronClicked = true;
+                            BattleNight.blueTeamIronClicked = true;
 
-                            if ((plugin.teamReady(Team.RED)) && (plugin.redTeamIronClicked)) {
+                            if (Team.RED.isReady() && BattleNight.redTeamIronClicked) {
                                 BattleNight.getBattle().start();
                             }
                         }

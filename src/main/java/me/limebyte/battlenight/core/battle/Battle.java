@@ -143,13 +143,13 @@ public class Battle {
     }
 
     private void resetBattle() {
-        plugin.removeAllSpectators();
+        removeAllSpectators();
         SignListener.cleanSigns();
         inProgress = false;
         inLounge = false;
         ending = false;
-        plugin.redTeamIronClicked = false;
-        plugin.blueTeamIronClicked = false;
+        BattleNight.redTeamIronClicked = false;
+        BattleNight.blueTeamIronClicked = false;
         usersTeam.clear();
         redTeam = 0;
         blueTeam = 0;
@@ -184,8 +184,6 @@ public class Battle {
         }
 
         resetBattle();
-
-        plugin.removeAllSpectators();
     }
 
     public boolean isInLounge() {
@@ -198,5 +196,31 @@ public class Battle {
 
     public boolean isEnding() {
         return ending;
+    }
+
+    public void addSpectator(Player player, String type) {
+        if (!type.equals("death")) {
+            SafeTeleporter.tp(player, Waypoint.SPECTATOR);
+        }
+        spectators.add(player.getName());
+        BattleNight.tellPlayer(player, Track.WELCOME_SPECTATOR);
+    }
+
+    public void removeSpectator(Player player) {
+        SafeTeleporter.tp(player, Waypoint.EXIT);
+        spectators.remove(player.getName());
+        BattleNight.tellPlayer(player, Track.GOODBYE_SPECTATOR);
+    }
+
+    public void removeAllSpectators() {
+        for (String pName : spectators) {
+            if (Bukkit.getPlayer(pName) != null) {
+                Player currentPlayer = Bukkit.getPlayer(pName);
+                SafeTeleporter.queue(currentPlayer, Waypoint.EXIT);
+            }
+        }
+        SafeTeleporter.startTeleporting();
+
+        spectators.clear();
     }
 }

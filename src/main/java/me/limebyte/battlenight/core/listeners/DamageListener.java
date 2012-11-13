@@ -15,14 +15,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class DamageListener implements Listener {
-
-    // Get Main Class
-    public static BattleNight plugin;
-
-    public DamageListener(BattleNight instance) {
-        plugin = instance;
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;

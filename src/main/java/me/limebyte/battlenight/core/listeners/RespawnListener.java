@@ -20,11 +20,11 @@ public class RespawnListener implements Listener {
 
             if (battle.isInProgress() && !battle.isEnding()) {
                 event.setRespawnLocation(Waypoint.SPECTATOR.getLocation());
-                BattleNight.getBattle().resetPlayer(player, false, null);
-                BattleNight.addSpectator(player, "death");
+                battle.resetPlayer(player, false, null);
+                battle.addSpectator(player, "death");
             } else {
                 event.setRespawnLocation(Waypoint.EXIT.getLocation());
-                BattleNight.getBattle().resetPlayer(player, false, null);
+                battle.resetPlayer(player, false, null);
             }
 
             Metadata.set(player, "respawn", false);

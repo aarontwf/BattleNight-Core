@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 
@@ -24,13 +25,14 @@ public class LeaveCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
+            Battle battle = BattleNight.getBattle();
             Player player = (Player) sender;
 
-            if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
-                BattleNight.getBattle().removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
+            if (battle.usersTeam.containsKey(player.getName())) {
+                battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
                 return true;
-            } else if (BattleNight.getBattle().spectators.contains(player.getName())) {
-                BattleNight.removeSpectator(player);
+            } else if (battle.spectators.contains(player.getName())) {
+                battle.removeSpectator(player);
                 return true;
             } else {
                 Messaging.tell(sender, Message.NOT_IN_BATTLE);

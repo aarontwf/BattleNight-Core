@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +20,6 @@ import me.limebyte.battlenight.core.listeners.CommandBlocker;
 import me.limebyte.battlenight.core.listeners.DamageListener;
 import me.limebyte.battlenight.core.listeners.DeathListener;
 import me.limebyte.battlenight.core.listeners.DisconnectListener;
-import me.limebyte.battlenight.core.listeners.DropListener;
 import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.ReadyListener;
 import me.limebyte.battlenight.core.listeners.RespawnListener;
@@ -29,7 +27,6 @@ import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.ClassManager;
-import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.chat.Messaging;
@@ -40,13 +37,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -67,8 +64,8 @@ public class BattleNight extends JavaPlugin {
     public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
 
     // Other Variables
-    public boolean redTeamIronClicked = false;
-    public boolean blueTeamIronClicked = false;
+    public static boolean redTeamIronClicked = false;
+    public static boolean blueTeamIronClicked = false;
 
     /** Events **/
 
@@ -101,28 +98,28 @@ public class BattleNight extends JavaPlugin {
 
         PluginManager pm = getServer().getPluginManager();
 
-        if (Nameplates.init(this)) {
-            // Event Registration
-            PluginDescriptionFile pdfFile = getDescription();
-            pm.registerEvents(new CheatListener(this), this);
-            pm.registerEvents(new CommandBlocker(this), this);
-            pm.registerEvents(new DamageListener(this), this);
-            pm.registerEvents(new DeathListener(), this);
-            pm.registerEvents(new DisconnectListener(this), this);
-            pm.registerEvents(new DropListener(this), this);
-            pm.registerEvents(new NameplateListener(this), this);
-            pm.registerEvents(new ReadyListener(this), this);
-            pm.registerEvents(new RespawnListener(), this);
-            pm.registerEvents(new SafeTeleporter(), this);
-            pm.registerEvents(new SignChanger(), this);
-            pm.registerEvents(new SignListener(), this);
-
-            // Enable Message
-            log.info("Version " + pdfFile.getVersion() + " enabled successfully.");
-            log.info("Made by LimeByte.");
-        } else {
+        if (!Nameplates.init(this)) {
             pm.disablePlugin(this);
+            return;
         }
+
+        // Event Registration
+        PluginDescriptionFile pdfFile = getDescription();
+        pm.registerEvents(new CheatListener(), this);
+        pm.registerEvents(new CommandBlocker(), this);
+        pm.registerEvents(new DamageListener(), this);
+        pm.registerEvents(new DeathListener(), this);
+        pm.registerEvents(new DisconnectListener(), this);
+        pm.registerEvents(new NameplateListener(), this);
+        pm.registerEvents(new ReadyListener(), this);
+        pm.registerEvents(new RespawnListener(), this);
+        pm.registerEvents(new SafeTeleporter(), this);
+        pm.registerEvents(new SignChanger(), this);
+        pm.registerEvents(new SignListener(), this);
+
+        // Enable Message
+        log.info("Version " + pdfFile.getVersion() + " enabled successfully.");
+        log.info("Made by LimeByte.");
     }
 
     // ////////////////////
@@ -206,26 +203,6 @@ public class BattleNight extends JavaPlugin {
         }
     }
 
-    public boolean teamReady(Team team) {
-        int members = 0;
-        int membersReady = 0;
-
-        for (Entry<String, Team> entry : getBattle().usersTeam.entrySet()) {
-            if (Bukkit.getPlayerExact(entry.getKey()) != null) {
-                if (entry.getValue().equals(team)) {
-                    members++;
-                    if (Metadata.getBattleClass(Bukkit.getPlayerExact(entry.getKey()), "class") != null) membersReady++;
-                }
-            }
-        }
-
-        if (members == membersReady && members > 0) {
-            if (team.equals(Team.RED) || team.equals(Team.BLUE)) { return true; }
-        }
-
-        return false;
-    }
-
     public static void tellEveryone(String msg) {
         for (String name : getBattle().usersTeam.keySet()) {
             if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + msg);
@@ -290,48 +267,17 @@ public class BattleNight extends JavaPlugin {
     }
 
     public boolean hasEmptyInventory(Player player) {
-        ItemStack[] invContents = player.getInventory().getContents();
-        ItemStack[] armContents = player.getInventory().getArmorContents();
-        int invNullCounter = 0;
-        int armNullCounter = 0;
-        for (int i = 0; i < invContents.length; i++) {
-            if (invContents[i] == null) {
-                invNullCounter++;
-            }
-        }
-        for (int i = 0; i < armContents.length; i++) {
-            if (armContents[i].getType() == Material.AIR) {
-                armNullCounter++;
-            }
-        }
-        return (invNullCounter == invContents.length)
-                && (armNullCounter == armContents.length);
-    }
+        PlayerInventory inv = player.getInventory();
 
-    public static void addSpectator(Player player, String type) {
-        if (!type.equals("death")) {
-            SafeTeleporter.tp(player, Waypoint.SPECTATOR);
+        for (ItemStack item : inv.getContents()) {
+            if (item != null) return false;
         }
-        getBattle().spectators.add(player.getName());
-        tellPlayer(player, Track.WELCOME_SPECTATOR);
-    }
 
-    public static void removeSpectator(Player player) {
-        SafeTeleporter.tp(player, Waypoint.EXIT);
-        getBattle().spectators.remove(player.getName());
-        tellPlayer(player, Track.GOODBYE_SPECTATOR);
-    }
-
-    public void removeAllSpectators() {
-        for (String pName : getBattle().spectators) {
-            if (Bukkit.getPlayer(pName) != null) {
-                Player currentPlayer = Bukkit.getPlayer(pName);
-                SafeTeleporter.queue(currentPlayer, Waypoint.EXIT);
-            }
+        for (ItemStack item : inv.getArmorContents()) {
+            if (item != null) return false;
         }
-        SafeTeleporter.startTeleporting();
 
-        getBattle().spectators.clear();
+        return true;
     }
 
     public boolean preparePlayer(Player p) {

@@ -5,22 +5,17 @@ import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class CheatListener implements Listener {
-
-    // Get Main Class
-    public static BattleNight plugin;
-
-    public CheatListener(BattleNight instance) {
-        plugin = instance;
-    }
 
     // //////////////////
     // General Events //
@@ -53,6 +48,15 @@ public class CheatListener implements Listener {
                     event.setCancelled(true);
                     break;
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Not so fast! No Cheating!");
         }
     }
 
