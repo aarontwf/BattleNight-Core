@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.api;
+package me.limebyte.battlenight.api;
 
 import org.bukkit.ChatColor;
 
@@ -11,5 +11,7 @@ public interface Team {
     public ChatColor getColour();
 
     public void setColour(ChatColor colour);
+
+    public boolean isReady();
 
 }

@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.api;
+package me.limebyte.battlenight.api;
 
 import java.util.Set;
 
