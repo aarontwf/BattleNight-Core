@@ -44,10 +44,8 @@ public class SignListener implements Listener {
 
                     addName(player, sign);
 
-                    if (Metadata.getBattleClass(player, "class") != null) {
-                        if (Metadata.getBattleClass(player, "class") != playerClass) {
-                            ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
-                        }
+                    if (Metadata.getBattleClass(player, "class") != playerClass) {
+                        ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                     }
 
                     Metadata.set(player, "class", playerClass.getName());
