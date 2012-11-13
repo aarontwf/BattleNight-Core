@@ -50,7 +50,7 @@ public class SignListener implements Listener {
                         }
                     }
 
-                    Metadata.set(player, "class", playerClass);
+                    Metadata.set(player, "class", playerClass.getName());
                     BattleNight.reset(player, true);
                     classes.get(title).equip(player);
                 }
