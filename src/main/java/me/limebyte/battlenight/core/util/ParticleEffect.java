@@ -29,14 +29,14 @@ public class ParticleEffect {
 
     public static void classSelect(Player player, String type) {
         Messaging.debug(Level.INFO, "Particle type equals " + type + ".");
-        if (type == "ender") {
+        if (type.equalsIgnoreCase("ender")) {
             for (double h = 0.0; h < 1.8; h += 0.2) {
                 Location loc = player.getLocation();
                 loc.setY(loc.getY() + h);
                 playEnderEffect(loc, Direction.UP);
                 playEnderEffect(loc, Direction.UP);
             }
-        } else if (type == "smoke") {
+        } else if (type.equalsIgnoreCase("smoke")) {
             spiral(player);
         } else {
             Messaging.debug(Level.INFO, "Invalid or no particle type.");
