@@ -1,8 +1,10 @@
 package me.limebyte.battlenight.core.util;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -37,8 +39,14 @@ public class Metadata {
     }
 
     public static BattleClass getBattleClass(Player player, String key) {
+        Messaging.debug(Level.INFO, "Getting " + player.getName() + "'s class.");
         MetadataValue value = getValue(player, key);
-        if (value != null && value instanceof BattleClass) { return (BattleClass) value; }
+        if (value != null && value instanceof BattleClass) {
+            Messaging.debug(Level.INFO, "Found a class for " + player.getName() + ".");
+            return (BattleClass) value;
+        }
+
+        Messaging.debug(Level.INFO, player.getName() + " doesn't have a class.");
         return null;
     }
 

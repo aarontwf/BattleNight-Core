@@ -7,6 +7,7 @@ import me.limebyte.battlenight.core.util.Metadata;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public enum Team {
     RED("Red", ChatColor.RED),
@@ -38,10 +39,11 @@ public enum Team {
         int membersReady = 0;
 
         for (Entry<String, Team> entry : BattleNight.getBattle().usersTeam.entrySet()) {
-            if (Bukkit.getPlayerExact(entry.getKey()) != null) {
+            Player player = Bukkit.getPlayerExact(entry.getKey());
+            if (player != null) {
                 if (entry.getValue() == this) {
                     members++;
-                    if (Metadata.getBattleClass(Bukkit.getPlayerExact(entry.getKey()), "class") != null) membersReady++;
+                    if (Metadata.getBattleClass(player, "class") != null) membersReady++;
                 }
             }
         }
