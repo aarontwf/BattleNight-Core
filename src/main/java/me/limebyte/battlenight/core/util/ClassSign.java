@@ -49,13 +49,19 @@ public class ClassSign {
     }
 
     private String getLine2() {
-        String line2 = this.names.get(0);
-        return line2 != null ? line2 : "";
+        String line2 = "";
+        if (this.names.size() >= 1 && this.names.get(0) != null) {
+            line2 = this.names.get(0);
+        }
+        return line2;
     }
 
     private String getLine3() {
-        String line3 = this.names.get(1);
-        return line3 != null ? line3 : "";
+        String line3 = "";
+        if (this.names.size() >= 2 && this.names.get(1) != null) {
+            line3 = this.names.get(1);
+        }
+        return line3;
     }
 
     private void refresh() {
