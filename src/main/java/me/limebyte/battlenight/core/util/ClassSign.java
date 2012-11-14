@@ -1,7 +1,6 @@
 package me.limebyte.battlenight.core.util;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import me.limebyte.battlenight.core.listeners.SignListener;
 
@@ -10,10 +9,11 @@ import org.bukkit.entity.Player;
 
 public class ClassSign {
     private final Sign sign;
-    private List<String> names = new ArrayList<String>();
+    private ArrayList<String> names = new ArrayList<String>();
 
     public ClassSign(Sign sign) {
         this.sign = sign;
+        this.names.ensureCapacity(2);
     }
 
     public void add(Player player) {
