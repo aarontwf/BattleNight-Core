@@ -18,7 +18,7 @@ Classes:
         Armour: 302e(4~2), 303e(4~2), 304e(4~2), 305e(4~2)
         Items: 261e(49~2/48~1), 368x8, none, none, none, none, none, 262x64, 262x64
     Medic:
-        Armour: 298e(0~2), 303e(0~2), 304e(0~2), 305e(0~2)
+        Armour: 298e(0~2), none, none, none
         Items: 283e(19~2), 322x4, none, none, none, none, 373:16389, 373:16389, 373:16385
     Magician:
         Armour: 306, 307, 308, 309
