@@ -108,6 +108,10 @@ public class PlayerData {
             }
         }
 
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
+        }
+
         player.addPotionEffects(data.potionEffects);
         player.setAllowFlight(data.allowFlight);
         player.setBedSpawnLocation(data.bedSpawnLocation);
