@@ -53,7 +53,7 @@ public class Util {
         player.setSaturation(20);
         player.setTicksLived(1);
         player.setVelocity(new Vector());
-        player.setWalkSpeed(1);
+        player.setWalkSpeed(0.2F);
         player.setSleepingIgnored(true);
         player.setSneaking(false);
         player.setSprinting(false);
