@@ -114,7 +114,11 @@ public class PlayerData {
 
         player.addPotionEffects(data.potionEffects);
         player.setAllowFlight(data.allowFlight);
-        player.setBedSpawnLocation(data.bedSpawnLocation);
+
+        if (data.bedSpawnLocation != null) {
+            player.setBedSpawnLocation(data.bedSpawnLocation);
+        }
+
         player.setCompassTarget(data.compassTarget);
         player.setDisplayName(data.displayName);
         player.getEnderChest().setContents(data.enderItems);
@@ -130,9 +134,11 @@ public class PlayerData {
         player.getInventory().setArmorContents(data.invArmour);
         player.setLevel(data.level);
         player.setPlayerListName(data.playerListName);
+
         if (data.playerTimeRelative) {
             player.setPlayerTime(data.location.getWorld().getTime() + data.playerTimeOffset, true);
         }
+
         player.setRemainingAir(data.remainingAir);
         player.setSaturation(data.saturation);
         player.setTicksLived(data.ticksLived);
