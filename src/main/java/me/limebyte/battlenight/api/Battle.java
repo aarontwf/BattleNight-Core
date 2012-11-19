@@ -32,4 +32,8 @@ public interface Battle {
 
     public Set<Team> getTeams();
 
+    public Arena getArena();
+
+    public boolean setArena(Arena arena);
+
 }

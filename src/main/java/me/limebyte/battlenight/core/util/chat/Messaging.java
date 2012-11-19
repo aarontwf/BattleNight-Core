@@ -146,6 +146,7 @@ public class Messaging {
         SPECIFY_MESSAGE(ChatColor.RED + "Please specify a message."),
         SPECIFY_PLAYER(ChatColor.RED + "Please specify a player."),
         SPECIFY_WAYPOINT(ChatColor.RED + "Please specify a waypoint."),
+        SPECIFY_TEST(ChatColor.RED + "Please specify a test."),
         USAGE("Usage: $1"),
         NO_PERMISSION(ChatColor.RED + "You do not have permission to use this command."),
         PLAYER_ONLY(ChatColor.RED + "This command can only be performed by a player!"),

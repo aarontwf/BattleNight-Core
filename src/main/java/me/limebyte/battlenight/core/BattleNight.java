@@ -56,6 +56,7 @@ public class BattleNight extends JavaPlugin {
     // Instance Variables
     private static BattleNight instance;
     private static Battle battle;
+    private static me.limebyte.battlenight.api.Battle newBattle;
 
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 
@@ -73,6 +74,7 @@ public class BattleNight extends JavaPlugin {
         // Set instances
         instance = this;
         battle = new Battle();
+        newBattle = new ClassicBattle();
 
         ConfigManager.initConfigurations();
         ClassManager.reloadClasses();
@@ -450,5 +452,9 @@ public class BattleNight extends JavaPlugin {
 
     public static Battle getBattle() {
         return battle;
+    }
+
+    public static me.limebyte.battlenight.api.Battle getNewBattle() {
+        return newBattle;
     }
 }

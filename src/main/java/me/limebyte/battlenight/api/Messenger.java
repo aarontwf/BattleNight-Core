@@ -1,5 +1,5 @@
 package me.limebyte.battlenight.api;
 
-public interface Class {
+public interface Messenger {
 
 }

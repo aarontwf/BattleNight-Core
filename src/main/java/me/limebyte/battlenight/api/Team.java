@@ -14,4 +14,12 @@ public interface Team {
 
     public boolean isReady();
 
+    public void setReady(boolean ready);
+
+    public int getKills();
+
+    public void setKills(int kills);
+
+    public void addKill();
+
 }
