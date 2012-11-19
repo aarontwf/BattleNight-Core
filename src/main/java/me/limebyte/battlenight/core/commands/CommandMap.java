@@ -21,6 +21,7 @@ public class CommandMap {
         commands.add(new ReloadCommand());
         commands.add(new SetCommand());
         commands.add(new TeleportCommand());
+        commands.add(new TestCommand());
         commands.add(new VersionCommand());
         commands.add(new WatchCommand());
         commands.add(new WaypointsCommand());
