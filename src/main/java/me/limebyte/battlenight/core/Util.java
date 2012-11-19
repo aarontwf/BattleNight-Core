@@ -35,8 +35,6 @@ public class Util {
 
         player.setFlying(false);
         player.setAllowFlight(false);
-        player.setBedSpawnLocation(null);
-        player.setCompassTarget(null);
         player.getEnderChest().clear();
         player.setExhaustion(0);
         player.setExp(0);
