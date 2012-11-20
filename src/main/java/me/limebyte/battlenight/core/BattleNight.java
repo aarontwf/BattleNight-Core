@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.Util;
 import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.battle.Team;
 import me.limebyte.battlenight.core.battle.Waypoint;
@@ -26,8 +27,8 @@ import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.ClassManager;
+import me.limebyte.battlenight.core.util.OldUtil;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
-import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -57,6 +58,7 @@ public class BattleNight extends JavaPlugin {
     private static BattleNight instance;
     private static Battle battle;
     private static me.limebyte.battlenight.api.Battle newBattle;
+    private static final Util util = new UtilImpl();
 
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 
@@ -158,14 +160,14 @@ public class BattleNight extends JavaPlugin {
         String place = waypoint.getName();
         ConfigManager.reload(Config.ARENAS);
         FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        config.set("default." + place, Util.locationToString(location));
+        config.set("default." + place, util.parseLocation(location));
         ConfigManager.save(Config.ARENAS);
     }
 
     public static Location getCoords(String place) {
         ConfigManager.reload(Config.ARENAS);
         FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        return Util.locationFromString(config.getString("default." + place));
+        return util.parseLocation(config.getString("default." + place));
     }
 
     public static boolean pointSet(Waypoint waypoint) {
@@ -315,7 +317,7 @@ public class BattleNight extends JavaPlugin {
         storage.set(name + ".data.flight.flying", p.isFlying());
 
         // Locations
-        storage.set(name + ".data.location", Util.locationToString(p.getLocation()));
+        storage.set(name + ".data.location", util.parseLocation(p.getLocation()));
 
         // Sleep
         storage.set(name + ".data.sleepignored", p.isSleepingIgnored());
@@ -382,7 +384,7 @@ public class BattleNight extends JavaPlugin {
             p.setFlying(storage.getBoolean(name + ".data.flight.flying"));
 
             // Locations
-            World storedWorld = Util.locationFromString(storage.getString(name + ".data.location")).getWorld();
+            World storedWorld = util.parseLocation(storage.getString(name + ".data.location")).getWorld();
             if (p.getWorld() != storedWorld) {
                 p.setGameMode(Bukkit.getDefaultGameMode());
             }
@@ -404,7 +406,7 @@ public class BattleNight extends JavaPlugin {
     }
 
     public static void reset(Player p, boolean light) {
-        Util.clearInventory(p);
+        OldUtil.clearInventory(p);
         removePotionEffects(p);
 
         if (!light) {
@@ -456,5 +458,9 @@ public class BattleNight extends JavaPlugin {
 
     public static me.limebyte.battlenight.api.Battle getNewBattle() {
         return newBattle;
+    }
+
+    public static Util getUtil() {
+        return util;
     }
 }

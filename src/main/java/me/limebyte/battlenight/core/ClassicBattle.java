@@ -5,6 +5,7 @@ import java.util.Set;
 
 import me.limebyte.battlenight.api.Arena;
 import me.limebyte.battlenight.api.Battle;
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.Team;
 import me.limebyte.battlenight.core.battle.Waypoint;
 
@@ -39,13 +40,13 @@ public class ClassicBattle implements Battle {
 
     @Override
     public boolean addPlayer(Player player) {
-        Util.prepare(player, Waypoint.BLUE_LOUNGE.getLocation());
+        BattleNightAPI.getUtil().preparePlayer(player, Waypoint.BLUE_LOUNGE.getLocation());
         return true;
     }
 
     @Override
     public boolean removePlayer(Player player) {
-        Util.restore(player);
+        BattleNightAPI.getUtil().restorePlayer(player);
         return true;
     }
 
