@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.Util;
 import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.battle.Team;
@@ -56,9 +57,11 @@ public class BattleNight extends JavaPlugin {
 
     // Instance Variables
     private static BattleNight instance;
-    private static Battle battle;
-    private static me.limebyte.battlenight.api.Battle newBattle;
-    private static final Util util = new UtilImpl();
+    private BattleNightAPI api;
+    protected static final Util util = new SimpleUtil();
+    protected static me.limebyte.battlenight.api.Battle battle;
+
+    private static Battle oldBattle;
 
     public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 
@@ -75,8 +78,10 @@ public class BattleNight extends JavaPlugin {
     public void onEnable() {
         // Set instances
         instance = this;
-        battle = new Battle();
-        newBattle = new ClassicBattle();
+        api = new SimpleAPI(this);
+        battle = new ClassicBattle(this);
+
+        oldBattle = new Battle();
 
         ConfigManager.initConfigurations();
         ClassManager.reloadClasses();
@@ -131,7 +136,7 @@ public class BattleNight extends JavaPlugin {
     public void onDisable() {
         if (getBattle().isInProgress() || getBattle().isInLounge()) {
             Messaging.log(Level.INFO, "Ending current Battle...");
-            battle.stop();
+            oldBattle.stop();
         }
         SignListener.cleanSigns();
 
@@ -453,14 +458,10 @@ public class BattleNight extends JavaPlugin {
     }
 
     public static Battle getBattle() {
-        return battle;
+        return oldBattle;
     }
 
-    public static me.limebyte.battlenight.api.Battle getNewBattle() {
-        return newBattle;
-    }
-
-    public static Util getUtil() {
-        return util;
+    public BattleNightAPI getAPI() {
+        return api;
     }
 }

@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
-public class UtilImpl implements Util {
+public class SimpleUtil implements Util {
 
     private static final String LOC_SEP = ", ";
 

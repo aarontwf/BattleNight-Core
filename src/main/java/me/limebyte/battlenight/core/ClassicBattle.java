@@ -4,20 +4,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.Arena;
-import me.limebyte.battlenight.api.Battle;
-import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.Team;
+import me.limebyte.battlenight.api.TeamedBattle;
 import me.limebyte.battlenight.core.battle.Waypoint;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class ClassicBattle implements Battle {
+public class ClassicBattle implements TeamedBattle {
 
+    private BattleNight plugin;
     private Arena arena;
     private Team teamA = new SimpleTeam("Red", ChatColor.RED);
     private Team teamB = new SimpleTeam("Blue", ChatColor.BLUE);
     private boolean inProgress = false;
+
+    public ClassicBattle(BattleNight plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean start() {
@@ -40,13 +44,13 @@ public class ClassicBattle implements Battle {
 
     @Override
     public boolean addPlayer(Player player) {
-        BattleNightAPI.getUtil().preparePlayer(player, Waypoint.BLUE_LOUNGE.getLocation());
+        plugin.getAPI().getUtil().preparePlayer(player, Waypoint.BLUE_LOUNGE.getLocation());
         return true;
     }
 
     @Override
     public boolean removePlayer(Player player) {
-        BattleNightAPI.getUtil().restorePlayer(player);
+        plugin.getAPI().getUtil().restorePlayer(player);
         return true;
     }
 
@@ -87,7 +91,7 @@ public class ClassicBattle implements Battle {
     }
 
     @Override
-    public Team getWinningTeam() {
+    public Team getLeadingTeam() {
         if (teamA.getKills() == teamB.getKills()) return null;
         return teamA.getKills() > teamB.getKills() ? teamA : teamB;
     }
@@ -110,6 +114,12 @@ public class ClassicBattle implements Battle {
         if (isInProgress()) return false;
         this.arena = arena;
         return true;
+    }
+
+    @Override
+    public Player getLeadingPlayer() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

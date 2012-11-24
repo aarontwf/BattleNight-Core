@@ -28,9 +28,7 @@ public interface Battle {
 
     public Set<Player> getSpectators();
 
-    public Team getWinningTeam();
-
-    public Set<Team> getTeams();
+    public Player getLeadingPlayer();
 
     public Arena getArena();
 

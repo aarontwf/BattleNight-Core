@@ -31,7 +31,7 @@ public class TestCommand extends BattleNightCommand {
 
         if (args[0].equalsIgnoreCase("join")) {
             if (sender instanceof Player) {
-                BattleNight.getNewBattle().addPlayer((Player) sender);
+                BattleNight.getInstance().getAPI().getBattle().addPlayer((Player) sender);
                 return true;
             } else {
                 Messaging.tell(sender, Message.PLAYER_ONLY);
@@ -39,7 +39,7 @@ public class TestCommand extends BattleNightCommand {
             }
         } else if (args[0].equalsIgnoreCase("leave")) {
             if (sender instanceof Player) {
-                BattleNight.getNewBattle().removePlayer((Player) sender);
+                BattleNight.getInstance().getAPI().getBattle().removePlayer((Player) sender);
                 return true;
             } else {
                 Messaging.tell(sender, Message.PLAYER_ONLY);
