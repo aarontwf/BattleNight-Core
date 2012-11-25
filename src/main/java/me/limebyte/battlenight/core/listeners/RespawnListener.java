@@ -29,6 +29,11 @@ public class RespawnListener implements Listener {
 
             Metadata.set(player, "respawn", false);
         }
+
+        if (Metadata.getBoolean(player, "HandleRespawn")) {
+            BattleNight.getInstance().getAPI().getBattle().onPlayerRespawn(event);
+            Metadata.set(player, "HandleRespawn", false);
+        }
     }
 
 }

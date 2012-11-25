@@ -3,6 +3,9 @@ package me.limebyte.battlenight.api;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 public interface Battle {
 
@@ -19,6 +22,12 @@ public interface Battle {
     public boolean containsPlayer(Player player);
 
     public Set<String> getPlayers();
+
+    public void onPlayerDamage(EntityDamageByEntityEvent event);
+
+    public void onPlayerDeath(PlayerDeathEvent event);
+
+    public void onPlayerRespawn(PlayerRespawnEvent event);
 
     public boolean addSpectator(Player player);
 

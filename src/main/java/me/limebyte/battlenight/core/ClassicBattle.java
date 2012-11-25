@@ -10,6 +10,9 @@ import me.limebyte.battlenight.core.battle.Waypoint;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class ClassicBattle implements TeamedBattle {
 
@@ -121,6 +124,25 @@ public class ClassicBattle implements TeamedBattle {
     public Player getLeadingPlayer() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        removePlayer(player);
+        if (isInProgress()) addSpectator(player);
     }
 
 }
