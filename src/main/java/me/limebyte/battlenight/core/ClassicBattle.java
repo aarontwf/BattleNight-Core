@@ -19,6 +19,9 @@ public class ClassicBattle implements TeamedBattle {
     private Team teamB = new SimpleTeam("Blue", ChatColor.BLUE);
     private boolean inProgress = false;
 
+    private Set<String> players;
+    private Set<String> spectators;
+
     public ClassicBattle(BattleNight plugin) {
         this.plugin = plugin;
     }
@@ -44,50 +47,48 @@ public class ClassicBattle implements TeamedBattle {
 
     @Override
     public boolean addPlayer(Player player) {
+        players.add(player.getName());
         plugin.getAPI().getUtil().preparePlayer(player, Waypoint.BLUE_LOUNGE.getLocation());
         return true;
     }
 
     @Override
     public boolean removePlayer(Player player) {
+        players.remove(player.getName());
         plugin.getAPI().getUtil().restorePlayer(player);
         return true;
     }
 
     @Override
     public boolean containsPlayer(Player player) {
-        // TODO Auto-generated method stub
-        return false;
+        return players.contains(player.getName());
     }
 
     @Override
-    public Set<Player> getPlayers() {
-        // TODO Auto-generated method stub
-        return null;
+    public Set<String> getPlayers() {
+        return players;
     }
 
     @Override
     public boolean addSpectator(Player player) {
-        // TODO Auto-generated method stub
-        return false;
+        spectators.add(player.getName());
+        return true;
     }
 
     @Override
     public boolean removeSpectator(Player player) {
-        // TODO Auto-generated method stub
-        return false;
+        spectators.remove(player.getName());
+        return true;
     }
 
     @Override
     public boolean containsSpectator(Player player) {
-        // TODO Auto-generated method stub
-        return false;
+        return spectators.contains(player.getName());
     }
 
     @Override
-    public Set<Player> getSpectators() {
-        // TODO Auto-generated method stub
-        return null;
+    public Set<String> getSpectators() {
+        return spectators;
     }
 
     @Override

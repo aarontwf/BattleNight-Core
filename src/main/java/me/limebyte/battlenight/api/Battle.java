@@ -18,7 +18,7 @@ public interface Battle {
 
     public boolean containsPlayer(Player player);
 
-    public Set<Player> getPlayers();
+    public Set<String> getPlayers();
 
     public boolean addSpectator(Player player);
 
@@ -26,7 +26,7 @@ public interface Battle {
 
     public boolean containsSpectator(Player player);
 
-    public Set<Player> getSpectators();
+    public Set<String> getSpectators();
 
     public Player getLeadingPlayer();
 
