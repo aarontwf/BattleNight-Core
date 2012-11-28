@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
+import org.kitteh.tag.TagAPI;
 
 public class PlayerData {
     private static Map<String, PlayerData> storage = new HashMap<String, PlayerData>();
@@ -148,6 +149,8 @@ public class PlayerData {
         player.setSleepingIgnored(data.sleepingIgnored);
         player.setSneaking(data.sneaking);
         player.setSprinting(data.sprinting);
+
+        TagAPI.refreshPlayer(player);
 
         if (!keepInMemory) storage.remove(name);
         return true;

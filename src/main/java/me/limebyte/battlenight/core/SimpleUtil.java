@@ -6,12 +6,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
+import org.kitteh.tag.TagAPI;
 
 public class SimpleUtil implements Util {
 
@@ -86,6 +89,22 @@ public class SimpleUtil implements Util {
         player.setSleepingIgnored(true);
         player.setSneaking(false);
         player.setSprinting(false);
+        TagAPI.refreshPlayer(player);
+    }
+
+    @Override
+    public boolean inventoryEmpty(PlayerInventory inv) {
+        if (inv == null) return false;
+
+        for (ItemStack item : inv.getContents()) {
+            if (item != null) return false;
+        }
+
+        for (ItemStack item : inv.getArmorContents()) {
+            if (item.getType() != Material.AIR) return false;
+        }
+
+        return true;
     }
 
 }

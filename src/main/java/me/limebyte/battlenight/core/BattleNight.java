@@ -44,7 +44,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -271,25 +270,11 @@ public class BattleNight extends JavaPlugin {
         SafeTeleporter.startTeleporting();
     }
 
-    public static boolean hasEmptyInventory(Player player) {
-        PlayerInventory inv = player.getInventory();
-
-        for (ItemStack item : inv.getContents()) {
-            if (item != null) return false;
-        }
-
-        for (ItemStack item : inv.getArmorContents()) {
-            if (item != null) return false;
-        }
-
-        return true;
-    }
-
     public static boolean preparePlayer(Player p) {
         String inventoryType = ConfigManager.get(Config.MAIN).getString("InventoryType", "save");
         FileConfiguration storage = ConfigManager.get(Config.PLAYERS);
 
-        if (inventoryType.equalsIgnoreCase("prompt") && !hasEmptyInventory(p)) return false;
+        if (inventoryType.equalsIgnoreCase("prompt") && !util.inventoryEmpty(p.getInventory())) return false;
 
         String name = p.getName();
 
