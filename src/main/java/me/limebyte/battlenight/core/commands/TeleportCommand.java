@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Waypoint;
-import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,13 +29,13 @@ public class TeleportCommand extends BattleNightCommand {
             Player player = (Player) sender;
 
             if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) || BattleNight.getBattle().spectators.contains(player.getName())) {
-                BattleNight.tellPlayer(player, Track.NO_TP);
+                Messaging.tell(sender, Message.NO_TELEPORTING);
                 return false;
             }
 
             if (args.length < 1) {
-                BattleNight.tellPlayer(player, ChatColor.RED + "Please specify a waypoint.");
-                BattleNight.tellPlayer(player, ChatColor.RED + "Usage: " + getUsage());
+                Messaging.tell(sender, Message.SPECIFY_WAYPOINT);
+                Messaging.tell(sender, Message.USAGE, getUsage());
                 return false;
             }
 
@@ -48,18 +48,18 @@ public class TeleportCommand extends BattleNightCommand {
             }
 
             if (waypoint == null) {
-                BattleNight.tellPlayer(player, ChatColor.RED + "Invalid waypoint.  Type \"/bn waypoints\" for a list.");
+                Messaging.tell(sender, Message.INVALID_WAYPOINT);
                 return false;
             }
 
-            if (!BattleNight.pointSet(waypoint)) {
-                BattleNight.tellPlayer(player, ChatColor.RED + "The " + waypoint.getDisplayName() + " waypoint is not set.  No TP.");
+            if (!waypoint.isSet()) {
+                Messaging.tell(sender, Message.WAYPOINT_UNSET, waypoint);
                 return false;
             }
             SafeTeleporter.tp(player, waypoint);
             return true;
         } else {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");
+            Messaging.tell(sender, Message.PLAYER_ONLY);
             return false;
         }
     }

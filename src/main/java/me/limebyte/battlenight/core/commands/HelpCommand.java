@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.limebyte.battlenight.core.util.chat.ListPage;
+import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -32,7 +33,7 @@ public class HelpCommand extends BattleNightCommand {
         }
 
         ListPage page = new ListPage("BattleNight Help Menu", lines);
-        sender.sendMessage(page.getPage());
+        Messaging.tell(sender, page);
         return true;
     }
 

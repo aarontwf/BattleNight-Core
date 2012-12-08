@@ -9,7 +9,6 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
-import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.chat.Messaging;
@@ -47,13 +46,13 @@ public class Battle {
             }
 
             usersTeam.put(name, team);
-            Messaging.tell(player, "Welcome! You are on team " + team.getColour() + team.getName() + ChatColor.WHITE + ".");
-            Messaging.tellEveryoneExcept(player, name + " has joined team " + team.getColour() + team.getName() + ChatColor.WHITE + ".", true);
+            Messaging.tell(player, Message.JOINED_TEAMED_BATTLE, team);
+            Messaging.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_TEAMED_BATTLE, player, team);
 
             BattleNight.setNames(player);
             inLounge = true;
         } else {
-            Messaging.tell(player, Track.MUST_HAVE_EMPTY.msg);
+            Messaging.tell(player, Message.INVENTORY_NOT_EMPTY);
         }
     }
 
@@ -85,13 +84,13 @@ public class Battle {
                 if (!inLounge) {
                     // If red won
                     if (redTeam > 0) {
-                        Messaging.tellEveryone(Message.TEAM_WON, true, Team.RED.getColour() + Team.RED.getName());
+                        Messaging.tellEveryone(true, Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
                         // If blue won
                     } else if (blueTeam > 0) {
-                        Messaging.tellEveryone(Message.TEAM_WON, true, Team.BLUE.getColour() + Team.BLUE.getName());
+                        Messaging.tellEveryone(true, Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
                         // If neither team won
                     } else {
-                        Messaging.tellEveryone(Message.DRAW, true);
+                        Messaging.tellEveryone(true, Message.DRAW);
                     }
                 }
 
@@ -153,7 +152,7 @@ public class Battle {
     public void start() {
         inProgress = true;
         inLounge = false;
-        Messaging.tellEveryone(Message.BATTLE_STARTED, true);
+        Messaging.tellEveryone(true, Message.BATTLE_STARTED);
         BattleNight.teleportAllToSpawn();
         SignListener.cleanSigns();
     }
@@ -161,11 +160,11 @@ public class Battle {
     public void stop() {
         if (!inLounge) {
             if (blueTeam > redTeam) {
-                Messaging.tellEveryone(Message.TEAM_WON, true, Team.BLUE.getColour() + Team.BLUE.getName());
+                Messaging.tellEveryone(true, Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
             } else if (redTeam > blueTeam) {
-                Messaging.tellEveryone(Message.TEAM_WON, true, Team.RED.getColour() + Team.RED.getName());
+                Messaging.tellEveryone(true, Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
             } else {
-                Messaging.tellEveryone(Message.DRAW, true);
+                Messaging.tellEveryone(true, Message.DRAW);
             }
         }
 
@@ -194,17 +193,19 @@ public class Battle {
     }
 
     public void addSpectator(Player player, String type) {
-        if (!type.equals("death")) {
+        if (type.equals("death")) {
+            Messaging.tell(player, Message.WELCOME_SPECTATOR_DEATH);
+        } else {
             SafeTeleporter.tp(player, Waypoint.SPECTATOR);
+            Messaging.tell(player, Message.WELCOME_SPECTATOR);
         }
         spectators.add(player.getName());
-        BattleNight.tellPlayer(player, Track.WELCOME_SPECTATOR);
     }
 
     public void removeSpectator(Player player) {
         SafeTeleporter.tp(player, Waypoint.EXIT);
         spectators.remove(player.getName());
-        BattleNight.tellPlayer(player, Track.GOODBYE_SPECTATOR);
+        Messaging.tell(player, Message.GOODBYE_SPECTATOR);
     }
 
     public void removeAllSpectators() {

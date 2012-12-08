@@ -1,11 +1,11 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -23,25 +23,25 @@ public class CheatListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        final Player player = event.getPlayer();
+        Player player = event.getPlayer();
         if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && !BattleNight.BattleTelePass.containsKey(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
                 case PLUGIN:
                     event.setCancelled(true);
-                    BattleNight.tellPlayer(player, Track.NO_TP);
+                    Messaging.tell(player, Message.NO_TELEPORTING);
                     break;
                 case ENDER_PEARL:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
                         event.setCancelled(true);
-                        BattleNight.tellPlayer(player, Track.NO_TP);
+                        Messaging.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", false)) {
                         event.setCancelled(true);
-                        BattleNight.tellPlayer(player, Track.NO_TP);
+                        Messaging.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 default:
@@ -56,7 +56,7 @@ public class CheatListener implements Listener {
         Player player = event.getPlayer();
         if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Not so fast! No Cheating!");
+            Messaging.tell(player, Message.NO_CHEATING);
         }
     }
 
@@ -72,7 +72,7 @@ public class CheatListener implements Listener {
             final Player thrower = (Player) projectile.getShooter();
             if (BattleNight.getBattle().usersTeam.containsKey(thrower.getName())) {
                 event.setCancelled(true);
-                BattleNight.tellPlayer(thrower, Track.NO_CHEATING);
+                Messaging.tell(thrower, Message.NO_CHEATING);
             }
         }
     }

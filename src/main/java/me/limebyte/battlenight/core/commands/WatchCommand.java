@@ -4,9 +4,9 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Battle;
-import me.limebyte.battlenight.core.other.Tracks.Track;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,17 +29,17 @@ public class WatchCommand extends BattleNightCommand {
             Battle battle = BattleNight.getBattle();
 
             if (!BattleNight.isSetup()) {
-                BattleNight.tellPlayer(player, Track.WAYPOINTS_UNSET);
+                Messaging.tell(sender, Message.WAYPOINTS_UNSET);
                 return false;
             }
 
             if (!battle.isInProgress()) {
-                BattleNight.tellPlayer(player, Track.BATTLE_NOT_IN_PROGRESS);
+                Messaging.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
                 return false;
             }
 
             if (battle.spectators.contains(player.getName())) {
-                BattleNight.tellPlayer(player, "You are already watching the Battle!");
+                Messaging.tell(sender, Message.ALREADY_SPECTATING);
                 return false;
             }
 
@@ -50,7 +50,7 @@ public class WatchCommand extends BattleNightCommand {
             battle.addSpectator(player, "command");
             return true;
         } else {
-            sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "This command can only be performed by a player!");
+            Messaging.tell(sender, Message.PLAYER_ONLY);
             return false;
         }
     }

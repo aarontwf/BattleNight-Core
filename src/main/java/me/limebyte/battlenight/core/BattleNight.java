@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -26,7 +25,6 @@ import me.limebyte.battlenight.core.listeners.ReadyListener;
 import me.limebyte.battlenight.core.listeners.RespawnListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
-import me.limebyte.battlenight.core.other.Tracks.Track;
 import me.limebyte.battlenight.core.util.ClassManager;
 import me.limebyte.battlenight.core.util.OldUtil;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -37,7 +35,6 @@ import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -160,98 +157,19 @@ public class BattleNight extends JavaPlugin {
 
     /** Methods **/
 
-    public static void setCoords(Waypoint waypoint, Location location) {
-        String place = waypoint.getName();
-        ConfigManager.reload(Config.ARENAS);
-        FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        config.set("default." + place, util.parseLocation(location));
-        ConfigManager.save(Config.ARENAS);
-    }
-
-    public static Location getCoords(String place) {
-        ConfigManager.reload(Config.ARENAS);
-        FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        return util.parseLocation(config.getString("default." + place));
-    }
-
-    public static boolean pointSet(Waypoint waypoint) {
-        ConfigManager.reload(Config.ARENAS);
-        FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        try {
-            Set<String> set = config.getConfigurationSection("default").getKeys(false);
-            return set.contains(waypoint.getName());
-        } catch (NullPointerException e) {
-            return false;
+    public static boolean isSetup() {
+        for (Waypoint wp : Waypoint.values()) {
+            if (!wp.isSet()) return false;
         }
-    }
-
-    public static Boolean isSetup() {
-        ConfigManager.reload(Config.ARENAS);
-        FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        if (!config.isSet("default")) {
-            return false;
-        } else {
-            Set<String> set = config.getConfigurationSection("default").getKeys(false);
-            return set.size() == Waypoint.values().length;
-        }
+        return true;
     }
 
     public static int numSetupPoints() {
-        ConfigManager.reload(Config.ARENAS);
-        FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        if (!config.isSet("default")) {
-            return 0;
-        } else {
-            Set<String> set = config.getConfigurationSection("default").getKeys(false);
-            return set.size();
+        int set = 0;
+        for (Waypoint wp : Waypoint.values()) {
+            if (wp.isSet()) set++;
         }
-    }
-
-    public static void tellEveryone(String msg) {
-        for (String name : getBattle().usersTeam.keySet()) {
-            if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + msg);
-        }
-    }
-
-    public void tellEveryone(Track track) {
-        for (String name : getBattle().usersTeam.keySet()) {
-            if (Bukkit.getPlayer(name) != null) Bukkit.getPlayer(name).sendMessage(BNTag + track.msg);
-        }
-    }
-
-    public static void tellEveryoneExcept(Player player, String msg) {
-        for (String name : getBattle().usersTeam.keySet()) {
-            if (Bukkit.getPlayerExact(name) != null) {
-                Player currentPlayer = Bukkit.getPlayerExact(name);
-                if (currentPlayer != player) currentPlayer.sendMessage(BNTag + msg);
-            }
-        }
-    }
-
-    public void tellTeam(Team team, String msg) {
-        for (String name : getBattle().usersTeam.keySet()) {
-            if (Bukkit.getPlayer(name) != null) {
-                Player currentPlayer = Bukkit.getPlayer(name);
-                if (getBattle().usersTeam.get(name).equals(team)) currentPlayer.sendMessage(BNTag + msg);
-            }
-        }
-    }
-
-    public void tellTeam(Team team, Track track) {
-        for (String name : getBattle().usersTeam.keySet()) {
-            if (Bukkit.getPlayer(name) != null) {
-                Player currentPlayer = Bukkit.getPlayer(name);
-                if (getBattle().usersTeam.get(name).equals(team)) currentPlayer.sendMessage(BNTag + track.msg);
-            }
-        }
-    }
-
-    public static void tellPlayer(Player player, String msg) {
-        player.sendMessage(BNTag + msg);
-    }
-
-    public static void tellPlayer(Player player, Track track) {
-        player.sendMessage(BNTag + track.msg);
+        return set;
     }
 
     public static void teleportAllToSpawn() {
@@ -397,7 +315,9 @@ public class BattleNight extends JavaPlugin {
 
     public static void reset(Player p, boolean light) {
         OldUtil.clearInventory(p);
-        removePotionEffects(p);
+        for (PotionEffect effect : p.getActivePotionEffects()) {
+            p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
+        }
 
         if (!light) {
             p.setHealth(p.getMaxHealth());
@@ -429,12 +349,6 @@ public class BattleNight extends JavaPlugin {
         try {
             TagAPI.refreshPlayer(player);
         } catch (Exception e) {
-        }
-    }
-
-    private static void removePotionEffects(Player p) {
-        for (PotionEffect effect : p.getActivePotionEffects()) {
-            p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
         }
     }
 

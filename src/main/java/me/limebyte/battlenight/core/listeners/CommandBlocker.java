@@ -3,11 +3,14 @@ package me.limebyte.battlenight.core.listeners;
 import java.util.List;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,7 +20,9 @@ public class CommandBlocker implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled()) return;
-        if (!BattleNight.getBattle().usersTeam.containsKey(event.getPlayer().getName())) return;
+
+        Player player = event.getPlayer();
+        if (!BattleNight.getBattle().usersTeam.containsKey(player.getName())) return;
         if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
         List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
@@ -45,7 +50,7 @@ public class CommandBlocker implements Listener {
 
         // Its not listed so block it
         event.setCancelled(true);
-        BattleNight.tellPlayer(event.getPlayer(), "You are not permitted to perform this command while in a Battle.");
+        Messaging.tell(player, Message.NO_COMMAND);
         return;
     }
 

@@ -1,12 +1,10 @@
 package me.limebyte.battlenight.core.commands;
 
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Waypoint;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -43,30 +41,28 @@ public class SetCommand extends BattleNightCommand {
                 if (args.length == 1) {
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
-                        BattleNight.setCoords(waypoint, player.getLocation());
-                        BattleNight.tellPlayer(player, ChatColor.GREEN + waypoint.getDisplayName() + " Waypoint set to your current location."); //TODO
+                        waypoint.setLocation(player.getLocation());
+                        Messaging.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, waypoint);
                         return true;
                     } else {
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Please specify a coordinate."); //TODO
+                        Messaging.tell(sender, Message.SPECIFY_COORDINATE);
                         Messaging.tell(sender, Message.USAGE, getUsage());
                         return false;
                     }
                 } else if (args.length == 4 && sender instanceof Player) {
                     Player player = (Player) sender;
                     Location loc = parseArgsToLocation(args, player.getWorld());
-                    BattleNight.setCoords(waypoint, loc);
-                    BattleNight.tellPlayer(player, ChatColor.GREEN + waypoint.getDisplayName() + " Waypoint set to: " +
-                            loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + " in this world."); //TODO
+                    waypoint.setLocation(loc);
+                    Messaging.tell(sender, Message.WAYPOINT_SET_THIS_WORLD, waypoint, loc);
                     return true;
                 } else if (args.length == 5) {
                     if (Bukkit.getWorld(args[4]) != null) {
                         Location loc = parseArgsToLocation(args);
-                        BattleNight.setCoords(waypoint, loc);
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.GREEN + waypoint.getDisplayName() + " Waypoint set to: " +
-                                loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + " in world " + loc.getWorld().getName() + "."); //TODO
+                        waypoint.setLocation(loc);
+                        Messaging.tell(sender, Message.WAYPOINT_SET, waypoint, loc, loc.getWorld());
                         return true;
                     } else {
-                        sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Can't find world \"" + args[4] + "\"."); //TODO
+                        Messaging.tell(sender, Message.CANT_FIND_WORLD, args[4]);
                         return false;
                     }
                 } else {
@@ -75,7 +71,7 @@ public class SetCommand extends BattleNightCommand {
                     return false;
                 }
             } else {
-                sender.sendMessage(BattleNight.BNTag + ChatColor.RED + "Invalid waypoint.  Type \"/bn waypoints\" for a list."); //TODO
+                Messaging.tell(sender, Message.INVALID_WAYPOINT);
                 return false;
             }
         }
