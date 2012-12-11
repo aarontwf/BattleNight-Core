@@ -18,10 +18,10 @@ public class DamageListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
-        final Player player = (Player) event.getEntity();
+        Player player = (Player) event.getEntity();
 
         if (event instanceof EntityDamageByEntityEvent) {
-            final EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
 
             if (BattleNight.getBattle().spectators.contains(player.getName())) event.setCancelled(true);
 
@@ -40,9 +40,11 @@ public class DamageListener implements Listener {
             if (checkCrashBug(damaged, event)) return false;
 
             LivingEntity shooter = ((Projectile) eDamager).getShooter();
-            if (shooter instanceof Player)
+            if (shooter instanceof Player) {
                 damager = (Player) shooter;
-            else return true;
+            } else {
+                return true;
+            }
         } else {
             if (eDamager instanceof Player) {
                 damager = (Player) eDamager;
@@ -74,7 +76,7 @@ public class DamageListener implements Listener {
     }
 
     private boolean checkCrashBug(Player damaged, EntityDamageByEntityEvent event) {
-        if (event.getDamage() >= damaged.getHealth()) return true;
+        //if (event.getDamage() >= damaged.getHealth()) return true;
         return false;
     }
 
