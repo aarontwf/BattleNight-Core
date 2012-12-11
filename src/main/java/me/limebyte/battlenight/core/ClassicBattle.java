@@ -22,8 +22,8 @@ public class ClassicBattle implements TeamedBattle {
     private Team teamB = new SimpleTeam("Blue", ChatColor.BLUE);
     private boolean inProgress = false;
 
-    private Set<String> players;
-    private Set<String> spectators;
+    private Set<String> players = new HashSet<String>();
+    private Set<String> spectators = new HashSet<String>();
 
     public ClassicBattle(BattleNight plugin) {
         this.plugin = plugin;
