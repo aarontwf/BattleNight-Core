@@ -46,7 +46,7 @@
         </repository>
         <repository>
             <id>kitteh-repo</id>
-            <url>http://repo.kitteh.org/content/repositories/releases</url>
+            <url>http://repo.kitteh.org/content/groups/public</url>
         </repository>
     </repositories>
 
