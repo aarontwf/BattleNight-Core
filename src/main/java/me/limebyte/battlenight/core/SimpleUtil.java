@@ -89,7 +89,10 @@ public class SimpleUtil implements Util {
         player.setSleepingIgnored(true);
         player.setSneaking(false);
         player.setSprinting(false);
-        TagAPI.refreshPlayer(player);
+        try {
+            TagAPI.refreshPlayer(player);
+        } catch (Exception e) {
+        }
     }
 
     @Override
