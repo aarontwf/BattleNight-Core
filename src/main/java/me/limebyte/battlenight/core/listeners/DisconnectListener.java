@@ -33,7 +33,7 @@ public class DisconnectListener implements Listener {
         }
 
         if (battle.spectators.contains(name)) {
-            battle.removeSpectator(player);
+            battle.removeSpectator(player, null);
         }
     }
 }

@@ -58,7 +58,7 @@ public class ClassicBattle implements TeamedBattle {
     @Override
     public boolean removePlayer(Player player) {
         players.remove(player.getName());
-        plugin.getAPI().getUtil().restorePlayer(player);
+        PlayerData.restore(player, true, false);
         return true;
     }
 

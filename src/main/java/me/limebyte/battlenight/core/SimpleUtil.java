@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core;
 
 import me.limebyte.battlenight.api.Util;
+import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,7 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
@@ -22,12 +22,8 @@ public class SimpleUtil implements Util {
 
     public void preparePlayer(Player player, Location dest) {
         PlayerData.store(player);
-        player.teleport(dest, TeleportCause.PLUGIN);
+        SafeTeleporter.tp(player, dest);
         reset(player);
-    }
-
-    public void restorePlayer(Player player) {
-        PlayerData.restore(player, false);
     }
 
     public String parseLocation(Location loc) {

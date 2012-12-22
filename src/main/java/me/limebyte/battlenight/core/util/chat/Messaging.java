@@ -220,6 +220,7 @@ public class Messaging {
         WELCOME_SPECTATOR("Welcome!  You are now watching the current Battle"),
         WELCOME_SPECTATOR_DEATH("You have been taken to the Spectator Area to watch the rest of the Battle.  To leave, type '/bn leave'."),
         GOODBYE_SPECTATOR("You are no longer watching a Battle."),
+        CANT_SPECTATE("You must leave the Battle before spectating."),
 
         CANT_FIND_PLAYER(ChatColor.RED + "Can't find player \"$1\"."),
         CANT_FIND_WORLD(ChatColor.RED + "Can't find world \"$1\"."),

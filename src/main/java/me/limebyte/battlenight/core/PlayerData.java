@@ -20,7 +20,7 @@ import org.kitteh.tag.TagAPI;
 public class PlayerData {
     private static Map<String, PlayerData> storage = new HashMap<String, PlayerData>();
 
-    private Set<String> vanishedTo = new HashSet<String>();
+    private Set<String> vanishedPlayers = new HashSet<String>();
     private Collection<PotionEffect> potionEffects;
     private boolean allowFlight;
     private Location bedSpawnLocation;
@@ -57,7 +57,7 @@ public class PlayerData {
 
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (!player.canSee(p)) {
-                data.vanishedTo.add(p.getName());
+                data.vanishedPlayers.add(p.getName());
             }
         }
 
@@ -95,18 +95,19 @@ public class PlayerData {
         storage.put(player.getName(), data);
     }
 
-    public static boolean restore(Player player, boolean keepInMemory) {
+    public static boolean restore(Player player, boolean teleport, boolean keepInMemory) {
         String name = player.getName();
         if (!storage.containsKey(name)) return false;
 
         PlayerData data = storage.get(name);
 
-        SafeTeleporter.tp(player, data.location);
+        if (teleport) SafeTeleporter.tp(player, data.location);
 
-        for (String n : data.vanishedTo) {
-            Player p = Bukkit.getPlayerExact(n);
-            if (p != null) {
+        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+            if (data.vanishedPlayers.contains(p.getName())) {
                 player.hidePlayer(p);
+            } else {
+                player.showPlayer(p);
             }
         }
 
@@ -155,5 +156,15 @@ public class PlayerData {
 
         if (!keepInMemory) storage.remove(name);
         return true;
+    }
+
+    public static Location getSavedLocation(Player player) {
+        String name = player.getName();
+        if (!storage.containsKey(name)) return null;
+        return storage.get(name).location;
+    }
+
+    public static boolean storageContains(Player player) {
+        return storage.containsKey(player.getName());
     }
 }

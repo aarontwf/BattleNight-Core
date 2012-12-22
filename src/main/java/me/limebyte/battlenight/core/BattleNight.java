@@ -195,11 +195,6 @@ public class BattleNight extends JavaPlugin {
         return true;
     }
 
-    public static void restorePlayer(Player player) {
-        SimpleUtil.reset(player);
-        util.restorePlayer(player);
-    }
-
     public static void reset(Player p, boolean light) {
         OldUtil.clearInventory(p);
         for (PotionEffect effect : p.getActivePotionEffects()) {

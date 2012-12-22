@@ -8,8 +8,6 @@ public interface Util {
 
     public void preparePlayer(Player player, Location dest);
 
-    public void restorePlayer(Player player);
-
     public String parseLocation(Location loc);
 
     public Location parseLocation(String string);

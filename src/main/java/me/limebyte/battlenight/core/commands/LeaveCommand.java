@@ -32,7 +32,7 @@ public class LeaveCommand extends BattleNightCommand {
                 battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
                 return true;
             } else if (battle.spectators.contains(player.getName())) {
-                battle.removeSpectator(player);
+                battle.removeSpectator(player, null);
                 return true;
             } else {
                 Messaging.tell(sender, Message.NOT_IN_BATTLE);

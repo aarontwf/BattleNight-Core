@@ -44,7 +44,8 @@ public class WatchCommand extends BattleNightCommand {
             }
 
             if (battle.usersTeam.containsKey(player.getName())) {
-                battle.removePlayer(player, false, "has left the Battle.", "You have left the Battle.");
+                Messaging.tell(sender, Message.CANT_SPECTATE);
+                return false;
             }
 
             battle.addSpectator(player, "command");

@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.PlayerData;
+import me.limebyte.battlenight.core.SimpleUtil;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -100,7 +102,7 @@ public class Battle {
                     if (Bukkit.getPlayerExact(currentName) != null) {
                         Player currentPlayer = Bukkit.getPlayerExact(currentName);
                         if (currentPlayer != player) {
-                            resetPlayer(currentPlayer, true, it);
+                            resetPlayer(currentPlayer, true, it, false);
                         }
                     }
                 }
@@ -108,15 +110,15 @@ public class Battle {
                 resetBattle();
             }
 
-            if (!death) resetPlayer(player, true, null);
+            if (!death) resetPlayer(player, true, null, false);
         } else {
             Messaging.log(Level.WARNING, "Failed to remove player '" + name + "' from the Battle as they are not in it.");
         }
     }
 
-    public void resetPlayer(Player player, boolean teleport, Iterator<String> it) {
-        if (teleport) SafeTeleporter.tp(player, Waypoint.EXIT);
-        BattleNight.restorePlayer(player);
+    public void resetPlayer(Player player, boolean teleport, Iterator<String> it, boolean keepData) {
+        SimpleUtil.reset(player);
+        PlayerData.restore(player, teleport, keepData);
         SignListener.cleanSigns(player);
         Metadata.remove(player, "class");
 
@@ -140,6 +142,7 @@ public class Battle {
         ending = false;
         BattleNight.redTeamIronClicked = false;
         BattleNight.blueTeamIronClicked = false;
+        spectators.clear();
         usersTeam.clear();
         redTeam = 0;
         blueTeam = 0;
@@ -169,7 +172,7 @@ public class Battle {
             String currentName = it.next();
             if (Bukkit.getPlayerExact(currentName) != null) {
                 Player currentPlayer = Bukkit.getPlayerExact(currentName);
-                resetPlayer(currentPlayer, true, it);
+                resetPlayer(currentPlayer, true, it, false);
             }
         }
 
@@ -195,24 +198,43 @@ public class Battle {
             SafeTeleporter.tp(player, Waypoint.SPECTATOR);
             Messaging.tell(player, Message.WELCOME_SPECTATOR);
         }
+
+        if (!PlayerData.storageContains(player)) {
+            PlayerData.store(player);
+            SimpleUtil.reset(player);
+        }
+
+        player.setAllowFlight(true);
+
+        for (String n : usersTeam.keySet()) {
+            if (Bukkit.getPlayerExact(n) != null) {
+                Bukkit.getPlayerExact(n).hidePlayer(player);
+            }
+        }
+
         spectators.add(player.getName());
     }
 
-    public void removeSpectator(Player player) {
-        SafeTeleporter.tp(player, Waypoint.EXIT);
-        spectators.remove(player.getName());
+    public void removeSpectator(Player player, Iterator<String> it) {
+        SimpleUtil.reset(player);
+        PlayerData.restore(player, true, false);
         Messaging.tell(player, Message.GOODBYE_SPECTATOR);
+
+        if (it != null) {
+            it.remove();
+        } else {
+            spectators.remove(player.getName());
+        }
     }
 
     public void removeAllSpectators() {
-        for (String pName : spectators) {
-            if (Bukkit.getPlayer(pName) != null) {
-                Player currentPlayer = Bukkit.getPlayer(pName);
-                SafeTeleporter.queue(currentPlayer, Waypoint.EXIT);
+        Iterator<String> it = spectators.iterator();
+        while (it.hasNext()) {
+            String currentName = it.next();
+            if (Bukkit.getPlayerExact(currentName) != null) {
+                Player currentPlayer = Bukkit.getPlayerExact(currentName);
+                removeSpectator(currentPlayer, it);
             }
         }
-        SafeTeleporter.startTeleporting();
-
-        spectators.clear();
     }
 }
