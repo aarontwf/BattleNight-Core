@@ -13,8 +13,25 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
-public class DamageListener implements Listener {
+public class HealthListener implements Listener {
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
+
+        Player player = (Player) event.getEntity();
+        if (!BattleNight.getBattle().usersTeam.containsKey(player.getName())) return;
+
+        RegainReason reason = event.getRegainReason();
+        if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
