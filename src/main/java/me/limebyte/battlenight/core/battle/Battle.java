@@ -99,12 +99,8 @@ public class Battle {
                     String currentName = it.next();
                     if (Bukkit.getPlayerExact(currentName) != null) {
                         Player currentPlayer = Bukkit.getPlayerExact(currentName);
-                        if (!death) {
+                        if (currentPlayer != player) {
                             resetPlayer(currentPlayer, true, it);
-                        } else {
-                            if (currentPlayer != player) {
-                                resetPlayer(currentPlayer, true, it);
-                            }
                         }
                     }
                 }

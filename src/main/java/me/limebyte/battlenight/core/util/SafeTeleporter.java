@@ -37,7 +37,15 @@ public class SafeTeleporter implements Listener {
     }
 
     public static void tp(Player player, Waypoint waypoint) {
-        safeTP(player, waypoint);
+        tp(player, waypoint.getLocation());
+    }
+
+    public static void tp(Player player, Location location) {
+        //safeTP(player, waypoint);
+        String name = player.getName();
+        BattleNight.BattleTelePass.put(name, "yes");
+        player.teleport(location, TeleportCause.PLUGIN);
+        BattleNight.BattleTelePass.remove(name);
     }
 
     public static void startTeleporting() {
@@ -46,7 +54,7 @@ public class SafeTeleporter implements Listener {
                 if (playerQueue.isEmpty()) {
                     stopTeleporting();
                 } else {
-                    safeTP(Bukkit.getPlayerExact(playerQueue.poll()), waypointQueue.poll());
+                    tp(Bukkit.getPlayerExact(playerQueue.poll()), waypointQueue.poll());
                 }
             }
         }, 0L, 10L);
@@ -57,6 +65,7 @@ public class SafeTeleporter implements Listener {
         taskID = 0;
     }
 
+    @SuppressWarnings("unused")
     private static void safeTP(final Player player, Waypoint waypoint) {
         Location loc = waypoint.getLocation();
         loc.setY(loc.getY() + 0.5);

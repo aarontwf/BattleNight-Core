@@ -188,10 +188,9 @@ public class BattleNight extends JavaPlugin {
 
         if (invType.equalsIgnoreCase("prompt")) {
             if (!util.inventoryEmpty(player.getInventory())) return false;
-        } else if (!invType.equalsIgnoreCase("clear")) {
-            PlayerData.store(player);
         }
 
+        PlayerData.store(player);
         SimpleUtil.reset(player);
         return true;
     }

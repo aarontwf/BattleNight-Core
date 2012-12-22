@@ -6,11 +6,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import me.limebyte.battlenight.core.util.SafeTeleporter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
@@ -100,7 +101,7 @@ public class PlayerData {
 
         PlayerData data = storage.get(name);
 
-        player.teleport(data.location, TeleportCause.PLUGIN);
+        SafeTeleporter.tp(player, data.location);
 
         for (String n : data.vanishedTo) {
             Player p = Bukkit.getPlayerExact(n);
