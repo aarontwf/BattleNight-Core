@@ -1,9 +1,7 @@
 package me.limebyte.battlenight.core;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -35,12 +33,9 @@ import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -188,129 +183,22 @@ public class BattleNight extends JavaPlugin {
         SafeTeleporter.startTeleporting();
     }
 
-    public static boolean preparePlayer(Player p) {
-        String inventoryType = ConfigManager.get(Config.MAIN).getString("InventoryType", "save");
-        FileConfiguration storage = ConfigManager.get(Config.PLAYERS);
+    public static boolean preparePlayer(Player player) {
+        String invType = ConfigManager.get(Config.MAIN).getString("InventoryType", "save");
 
-        if (inventoryType.equalsIgnoreCase("prompt") && !util.inventoryEmpty(p.getInventory())) return false;
-
-        String name = p.getName();
-
-        // Inventory
-        if (inventoryType.equalsIgnoreCase("save")) {
-            storage.set(name + ".data.inv.main", Arrays.asList(p.getInventory().getContents()));
-            storage.set(name + ".data.inv.armor", Arrays.asList(p.getInventory().getArmorContents()));
+        if (invType.equalsIgnoreCase("prompt")) {
+            if (!util.inventoryEmpty(player.getInventory())) return false;
+        } else if (!invType.equalsIgnoreCase("clear")) {
+            PlayerData.store(player);
         }
 
-        // Health
-        storage.set(name + ".data.health", p.getHealth());
-
-        // Hunger
-        storage.set(name + ".data.hunger.foodlevel", p.getFoodLevel());
-        storage.set(name + ".data.hunger.saturation", Float.toString(p.getSaturation()));
-        storage.set(name + ".data.hunger.exhaustion", Float.toString(p.getExhaustion()));
-
-        // Experience
-        storage.set(name + ".data.exp.level", p.getLevel());
-        storage.set(name + ".data.exp.ammount", Float.toString(p.getExp()));
-
-        // Potions
-        storage.set(name + ".data.potions", Arrays.asList(p.getActivePotionEffects().toArray()));
-
-        // GameMode
-        storage.set(name + ".data.gamemode", p.getGameMode().getValue());
-
-        // Flying
-        storage.set(name + ".data.flight.allowed", p.getAllowFlight());
-        storage.set(name + ".data.flight.flying", p.isFlying());
-
-        // Locations
-        storage.set(name + ".data.location", util.parseLocation(p.getLocation()));
-
-        // Sleep
-        storage.set(name + ".data.sleepignored", p.isSleepingIgnored());
-
-        // Information
-        storage.set(name + ".data.info.displayname", p.getDisplayName());
-        storage.set(name + ".data.info.listname", p.getPlayerListName());
-
-        // Statistics
-        storage.set(name + ".data.stats.tickslived", p.getTicksLived());
-        storage.set(name + ".data.stats.nodamageticks", p.getNoDamageTicks());
-
-        // State
-        storage.set(name + ".data.state.remainingair", p.getRemainingAir());
-        storage.set(name + ".data.state.falldistance", Float.toString(p.getFallDistance()));
-        storage.set(name + ".data.state.fireticks", p.getFireTicks());
-
-        ConfigManager.save(Config.PLAYERS);
-
-        // Reset Player
-        reset(p, false);
+        SimpleUtil.reset(player);
         return true;
     }
 
-    public static void restorePlayer(Player p) {
-        String name = p.getName();
-        reset(p, true);
-
-        String inventoryType = ConfigManager.get(Config.MAIN).getString("InventoryType", "save");
-        ConfigManager.reload(Config.PLAYERS);
-        FileConfiguration storage = ConfigManager.get(Config.PLAYERS);
-
-        try {
-            // Inventory
-            if (inventoryType.equalsIgnoreCase("save")) {
-                p.getInventory().setContents(storage.getList(name + ".data.inv.main").toArray(new ItemStack[0]));
-                p.getInventory().setArmorContents(storage.getList(name + ".data.inv.armor").toArray(new ItemStack[0]));
-            }
-
-            // Health
-            p.setHealth(storage.getInt(name + ".data.health"));
-
-            // Hunger
-            p.setFoodLevel(storage.getInt(name + ".data.hunger.foodlevel"));
-            p.setSaturation(Float.parseFloat(storage.getString(name + ".data.hunger.saturation")));
-            p.setExhaustion(Float.parseFloat(storage.getString(name + ".data.hunger.exhaustion")));
-
-            // Experience
-            p.setLevel(storage.getInt(name + ".data.exp.level"));
-            p.setExp(Float.parseFloat(storage.getString(name + ".data.exp.ammount")));
-
-            // Potions
-            @SuppressWarnings("unchecked")
-            List<PotionEffect> potions = (List<PotionEffect>) storage.getList(name + ".data.potions");
-            for (PotionEffect effect : potions) {
-                p.addPotionEffect(effect, true);
-            }
-
-            // GameMode
-            p.setGameMode(GameMode.getByValue(storage.getInt(name + ".data.gamemode")));
-
-            // Flying
-            p.setAllowFlight(storage.getBoolean(name + ".data.flight.allowed"));
-            p.setFlying(storage.getBoolean(name + ".data.flight.flying"));
-
-            // Locations
-            World storedWorld = util.parseLocation(storage.getString(name + ".data.location")).getWorld();
-            if (p.getWorld() != storedWorld) {
-                p.setGameMode(Bukkit.getDefaultGameMode());
-            }
-
-            // Sleep
-            p.setSleepingIgnored(storage.getBoolean(name + ".data.sleepignored"));
-
-            // Information
-            p.setDisplayName(storage.getString(name + ".data.info.displayname"));
-            p.setPlayerListName(storage.getString(name + ".data.info.listname"));
-
-            // Statistics
-            p.setTicksLived(storage.getInt(name + ".data.stats.tickslived"));
-            p.setNoDamageTicks(storage.getInt(name + ".data.stats.nodamageticks"));
-
-        } catch (NullPointerException e) {
-            Messaging.log(Level.WARNING, "Failed to restore data for player: '" + name + "'.");
-        }
+    public static void restorePlayer(Player player) {
+        SimpleUtil.reset(player);
+        util.restorePlayer(player);
     }
 
     public static void reset(Player p, boolean light) {

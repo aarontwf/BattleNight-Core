@@ -54,7 +54,7 @@ public class SimpleUtil implements Util {
         return new Location(w, x, y, z, yaw, pitch);
     }
 
-    private static void reset(Player player) {
+    public static void reset(Player player) {
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (!player.canSee(p)) {
                 player.showPlayer(p);
