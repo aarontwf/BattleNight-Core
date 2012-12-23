@@ -201,9 +201,9 @@ public class Battle {
 
         if (!PlayerData.storageContains(player)) {
             PlayerData.store(player);
-            SimpleUtil.reset(player);
         }
 
+        SimpleUtil.reset(player);
         player.setAllowFlight(true);
 
         for (String n : usersTeam.keySet()) {
