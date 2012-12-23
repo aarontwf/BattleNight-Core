@@ -152,7 +152,10 @@ public class PlayerData {
         player.setSneaking(data.sneaking);
         player.setSprinting(data.sprinting);
 
-        TagAPI.refreshPlayer(player);
+        try {
+            TagAPI.refreshPlayer(player);
+        } catch (Exception e) {
+        }
 
         if (!keepInMemory) storage.remove(name);
         return true;
