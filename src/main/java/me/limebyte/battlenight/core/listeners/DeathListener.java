@@ -9,6 +9,7 @@ import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +21,7 @@ public class DeathListener implements Listener {
     // Called when player dies
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
+        final Player player = event.getEntity();
         String name = player.getName();
 
         if (BattleNight.getBattle().usersTeam.containsKey(name)) {
@@ -44,7 +45,12 @@ public class DeathListener implements Listener {
                 }
             }
 
-            BattleNight.getBattle().removePlayer(player, true, null, null);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    BattleNight.getBattle().removePlayer(player, true, null, null);
+                }
+            }, 20L);
         }
 
         if (BattleNight.getInstance().getAPI().getBattle().containsPlayer(player)) {
