@@ -50,7 +50,7 @@ public class DeathListener implements Listener {
                 public void run() {
                     BattleNight.getBattle().removePlayer(player, true, null, null);
                 }
-            }, 20L);
+            }, 1L);
         }
 
         if (BattleNight.getInstance().getAPI().getBattle().containsPlayer(player)) {
