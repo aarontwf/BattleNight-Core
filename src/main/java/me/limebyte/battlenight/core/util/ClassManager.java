@@ -64,8 +64,7 @@ public class ClassManager {
     private static List<ItemStack> parseItems(String rawItems) {
         String[] splitRawItems = new String[1];
 
-        if (rawItems.contains(","))
-            splitRawItems = rawItems.split(",");
+        if (rawItems.contains(",")) splitRawItems = rawItems.split(",");
         else splitRawItems[0] = rawItems;
 
         List<ItemStack> items = new ArrayList<ItemStack>();
@@ -239,8 +238,7 @@ public class ClassManager {
             fullStack.setAmount(maxSize);
             finalStack.setAmount(finalStackAmount);
 
-            if (finalStackAmount > 0)
-                items = new ItemStack[fullStacks + 1];
+            if (finalStackAmount > 0) items = new ItemStack[fullStacks + 1];
             else items = new ItemStack[fullStacks];
 
             for (int i = 0; i < fullStacks; i++) {

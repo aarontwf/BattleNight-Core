@@ -2,9 +2,12 @@ package me.limebyte.battlenight.core.util;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 public class BattleClass {
     private String name;
@@ -16,6 +19,13 @@ public class BattleClass {
         this.name = name;
         this.items = items;
         this.armour = armour;
+
+        String permission = "battlenight.class." + name.toLowerCase().replaceAll(" ", "-").replaceAll(".", "");
+        Permission perm = new Permission(permission, "Permission for the class: " + name + ".", PermissionDefault.TRUE);
+        try {
+            Bukkit.getServer().getPluginManager().addPermission(perm);
+        } catch (Exception e) {
+        }
     }
 
     public String getName() {
