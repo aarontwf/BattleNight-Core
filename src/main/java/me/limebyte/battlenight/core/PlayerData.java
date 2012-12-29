@@ -6,7 +6,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import me.limebyte.battlenight.core.battle.Waypoint;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -101,7 +104,13 @@ public class PlayerData {
 
         PlayerData data = storage.get(name);
 
-        if (teleport) SafeTeleporter.tp(player, data.location);
+        if (teleport) {
+            if (ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false)) {
+                SafeTeleporter.tp(player, Waypoint.EXIT);
+            } else {
+                SafeTeleporter.tp(player, data.location);
+            }
+        }
 
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (data.vanishedPlayers.contains(p.getName())) {

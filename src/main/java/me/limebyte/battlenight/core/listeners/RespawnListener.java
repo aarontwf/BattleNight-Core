@@ -5,6 +5,8 @@ import me.limebyte.battlenight.core.PlayerData;
 import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.battle.Waypoint;
 import me.limebyte.battlenight.core.util.Metadata;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,7 +29,7 @@ public class RespawnListener implements Listener {
                 battle.addSpectator(player, "death");
             } else {
                 // Last death
-                if (PlayerData.getSavedLocation(player) != null) {
+                if (PlayerData.getSavedLocation(player) != null && !ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false)) {
                     event.setRespawnLocation(PlayerData.getSavedLocation(player));
                 } else {
                     event.setRespawnLocation(Waypoint.EXIT.getLocation());
