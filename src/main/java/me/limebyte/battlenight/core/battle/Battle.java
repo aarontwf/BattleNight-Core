@@ -12,12 +12,14 @@ import me.limebyte.battlenight.core.PlayerData;
 import me.limebyte.battlenight.core.SimpleUtil;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.Metadata;
+import me.limebyte.battlenight.core.util.OldUtil;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.kitteh.tag.TagAPI;
 
@@ -204,6 +206,8 @@ public class Battle {
         }
 
         SimpleUtil.reset(player);
+        player.setGameMode(GameMode.ADVENTURE);
+        OldUtil.equipArrows(player);
         player.setAllowFlight(true);
 
         for (String n : usersTeam.keySet()) {

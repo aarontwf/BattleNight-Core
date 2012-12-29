@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -58,6 +59,10 @@ public class CheatListener implements Listener {
             event.setCancelled(true);
             Messaging.tell(player, Message.NO_CHEATING);
         }
+
+        if (BattleNight.getBattle().spectators.contains(player.getName())) {
+            event.setCancelled(true);
+        }
     }
 
     // //////////////////
@@ -75,5 +80,13 @@ public class CheatListener implements Listener {
                 Messaging.tell(thrower, Message.NO_CHEATING);
             }
         }
+    }
+
+    /** Spectator Events **/
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        String name = event.getPlayer().getName();
+        if (BattleNight.getBattle().spectators.contains(name)) event.setCancelled(true);
     }
 }

@@ -16,12 +16,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class ReadyListener implements Listener {
+public class InteractListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+        Action action = event.getAction();
+        Player player = event.getPlayer();
+
+        if (action.equals(Action.LEFT_CLICK_BLOCK)) {
             Block block = event.getClickedBlock();
-            Player player = event.getPlayer();
 
             if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
                 if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && BattleNight.getBattle().isInLounge()) {
@@ -47,6 +49,17 @@ public class ReadyListener implements Listener {
                     } else {
                         player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
                     }
+                }
+            }
+        }
+
+        if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK)) {
+            if (BattleNight.getBattle().spectators.contains(player.getName())) {
+                String itemName = player.getItemInHand().getItemMeta().getDisplayName();
+                if (itemName.contains("Previous Player")) {
+                    Messaging.tell(player, "Teleporting to previous player.");
+                } else if (itemName.contains("Next Player")) {
+                    Messaging.tell(player, "Teleporting to next player.");
                 }
             }
         }

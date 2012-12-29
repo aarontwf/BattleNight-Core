@@ -19,7 +19,7 @@ import me.limebyte.battlenight.core.listeners.DeathListener;
 import me.limebyte.battlenight.core.listeners.DisconnectListener;
 import me.limebyte.battlenight.core.listeners.HealthListener;
 import me.limebyte.battlenight.core.listeners.NameplateListener;
-import me.limebyte.battlenight.core.listeners.ReadyListener;
+import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.RespawnListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
@@ -109,7 +109,7 @@ public class BattleNight extends JavaPlugin {
         pm.registerEvents(new DeathListener(), this);
         pm.registerEvents(new DisconnectListener(), this);
         pm.registerEvents(new NameplateListener(), this);
-        pm.registerEvents(new ReadyListener(), this);
+        pm.registerEvents(new InteractListener(), this);
         pm.registerEvents(new RespawnListener(), this);
         pm.registerEvents(new SafeTeleporter(), this);
         pm.registerEvents(new SignChanger(), this);
