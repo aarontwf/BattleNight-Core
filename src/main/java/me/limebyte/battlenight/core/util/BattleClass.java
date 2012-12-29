@@ -11,6 +11,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 public class BattleClass {
     private String name;
+    private Permission permission;
     private List<ItemStack> items, armour;
 
     private static final int LAST_INV_SLOT = 35;
@@ -20,16 +21,20 @@ public class BattleClass {
         this.items = items;
         this.armour = armour;
 
-        String permission = "battlenight.class." + name.toLowerCase().replaceAll(" ", "-").replaceAll(".", "");
-        Permission perm = new Permission(permission, "Permission for the class: " + name + ".", PermissionDefault.TRUE);
+        String perm = "battlenight.class." + name.toLowerCase();
+        permission = new Permission(perm, "Permission for the class: " + name + ".", PermissionDefault.TRUE);
         try {
-            Bukkit.getServer().getPluginManager().addPermission(perm);
+            Bukkit.getServer().getPluginManager().addPermission(permission);
         } catch (Exception e) {
         }
     }
 
     public String getName() {
         return name;
+    }
+
+    public Permission getPermission() {
+        return permission;
     }
 
     public List<ItemStack> getItems() {

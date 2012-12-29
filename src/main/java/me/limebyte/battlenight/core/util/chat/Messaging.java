@@ -214,6 +214,7 @@ public class Messaging {
 
         SUCCESSFUL_SIGN(ChatColor.GREEN + "Successfully created sign for $1!"),
         UNSUCCESSFUL_SIGN(ChatColor.RED + "Error creating sign for $1!  Leave last 3 lines blank."),
+        NO_PERMISSION_CLASS(ChatColor.RED + "You do not have permission to use this class."),
 
         SPECIFY_MESSAGE(ChatColor.RED + "Please specify a message."),
         SPECIFY_PLAYER(ChatColor.RED + "Please specify a player."),
@@ -222,7 +223,7 @@ public class Messaging {
         SPECIFY_TEST(ChatColor.RED + "Please specify a test."),
 
         USAGE("Usage: $1"),
-        NO_PERMISSION(ChatColor.RED + "You do not have permission to use this command."),
+        NO_PERMISSION_COMMAND(ChatColor.RED + "You do not have permission to use this $1."),
         PLAYER_ONLY(ChatColor.RED + "This command can only be performed by a player!"),
 
         INVALID_COMMAND(ChatColor.RED + "Invalid Command.  Type '/bn help' for help."),

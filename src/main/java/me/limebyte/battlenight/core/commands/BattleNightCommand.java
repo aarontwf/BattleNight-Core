@@ -134,7 +134,7 @@ public abstract class BattleNightCommand {
             if (sender.hasPermission(permission)) {
                 return true;
             } else {
-                Messaging.tell(sender, Message.NO_PERMISSION);
+                Messaging.tell(sender, Message.NO_PERMISSION_COMMAND);
                 return false;
             }
         } else {
@@ -142,7 +142,7 @@ public abstract class BattleNightCommand {
                 if (sender.isOp()) {
                     return true;
                 } else {
-                    Messaging.tell(sender, Message.NO_PERMISSION);
+                    Messaging.tell(sender, Message.NO_PERMISSION_COMMAND);
                     return false;
                 }
             } else {

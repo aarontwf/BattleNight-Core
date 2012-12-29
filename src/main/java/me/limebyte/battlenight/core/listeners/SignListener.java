@@ -12,6 +12,7 @@ import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.ParticleEffect;
 import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -44,16 +45,20 @@ public class SignListener implements Listener {
                 if (classes.containsKey(title) && BattleNight.getBattle().usersTeam.containsKey(name)) {
                     BattleClass playerClass = classes.get(title);
 
-                    addName(player, sign);
+                    if (player.hasPermission(playerClass.getPermission())) {
+                        addName(player, sign);
 
-                    if (Metadata.getBattleClass(player, "class") != playerClass) {
-                        Messaging.debug(Level.INFO, "Making particles...");
-                        ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
+                        if (Metadata.getBattleClass(player, "class") != playerClass) {
+                            Messaging.debug(Level.INFO, "Making particles...");
+                            ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
+                        }
+
+                        Metadata.set(player, "class", playerClass.getName());
+                        BattleNight.reset(player, true);
+                        classes.get(title).equip(player);
+                    } else {
+                        Messaging.tell(player, Message.NO_PERMISSION_CLASS);
                     }
-
-                    Metadata.set(player, "class", playerClass.getName());
-                    BattleNight.reset(player, true);
-                    classes.get(title).equip(player);
                 }
             }
         }
