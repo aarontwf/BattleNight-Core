@@ -6,11 +6,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.Waypoint;
-import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -44,10 +42,6 @@ public class SafeTeleporter implements Listener {
 
     public static void tp(Player player, Location location) {
         String name = player.getName();
-        StackTraceElement[] element = new Exception().getStackTrace();
-        Messaging.debug(Level.INFO, "Teleporting " + name + "...");
-        Messaging.debug(Level.INFO, "At " + element[1].getClassName() + ":" + element[1].getLineNumber());
-        Messaging.debug(Level.INFO, "   " + element[2].getClassName() + ":" + element[2].getLineNumber());
 
         //safeTP(player, waypoint);
         BattleNight.BattleTelePass.put(name, "yes");
