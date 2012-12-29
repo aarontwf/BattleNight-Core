@@ -19,6 +19,7 @@ import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
 public class Messaging {
@@ -67,6 +68,21 @@ public class Messaging {
         if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
             log(level, message);
         }
+    }
+
+    /** Kill feed **/
+
+    public static void killFeed(Player player, Player killer) {
+        String reason;
+
+        if (killer != null) {
+            reason = getColouredName(killer);
+        } else {
+            DamageCause cause = (player.getLastDamageCause() != null) ? player.getLastDamageCause().getCause() : DamageCause.SUICIDE;
+            reason = cause.toString();
+        }
+
+        tellEveryone(true, Message.KILLED, getColouredName(player), reason);
     }
 
     /** Pages **/
@@ -179,6 +195,17 @@ public class Messaging {
         return loc.getX() + ", " + loc.getY() + ", " + loc.getZ();
     }
 
+    private static String getColouredName(Player player) {
+        String name = player.getName();
+
+        if (BattleNight.getBattle().usersTeam.containsKey(name)) {
+            Team team = BattleNight.getBattle().usersTeam.get(name);
+            return team.getColour() + name;
+        } else {
+            return ChatColor.DARK_GRAY + name;
+        }
+    }
+
     public enum Message {
         INVENTORY_NOT_EMPTY(ChatColor.RED + "You must have an empty inventory to join the Battle."),
 
@@ -232,6 +259,8 @@ public class Messaging {
 
         BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
         BATTLE_ENDED("The Battle has ended."),
+
+        KILLED("$1 " + ChatColor.GRAY + "was killed by" + ChatColor.WHITE + " $2" + ChatColor.GRAY + "."),
 
         TEAM_WON("$1 Team won the Battle!"),
         DRAW(ChatColor.DARK_PURPLE + "Draw!"),
