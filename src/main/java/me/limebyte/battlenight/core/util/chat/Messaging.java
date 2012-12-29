@@ -79,7 +79,7 @@ public class Messaging {
             reason = getColouredName(killer);
         } else {
             DamageCause cause = (player.getLastDamageCause() != null) ? player.getLastDamageCause().getCause() : DamageCause.SUICIDE;
-            reason = cause.toString();
+            reason = cause.toString().toLowerCase().replace('_', ' ');
         }
 
         tellEveryone(true, Message.KILLED, getColouredName(player), reason);
