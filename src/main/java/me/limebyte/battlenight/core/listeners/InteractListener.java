@@ -55,8 +55,8 @@ public class InteractListener implements Listener {
 
         if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK)) {
             if (BattleNight.getBattle().spectators.contains(player.getName())) {
-                String itemName = player.getItemInHand().getItemMeta().getDisplayName();
-                if (itemName != null) {
+                if (player.getItemInHand() != null) {
+                    String itemName = player.getItemInHand().getItemMeta().getDisplayName();
                     if (itemName.contains("Previous Player")) {
                         Messaging.tell(player, "Teleporting to previous player.");
                     } else if (itemName.contains("Next Player")) {
