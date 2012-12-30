@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class InteractListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
@@ -55,8 +56,9 @@ public class InteractListener implements Listener {
 
         if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK)) {
             if (BattleNight.getBattle().spectators.contains(player.getName())) {
-                if (player.getItemInHand() != null) {
-                    String itemName = player.getItemInHand().getItemMeta().getDisplayName();
+                ItemStack stack = player.getItemInHand();
+                if (stack != null && stack.getItemMeta() != null) {
+                    String itemName = stack.getItemMeta().getDisplayName();
                     if (itemName.contains("Previous Player")) {
                         Messaging.tell(player, "Teleporting to previous player.");
                     } else if (itemName.contains("Next Player")) {
