@@ -1,9 +1,58 @@
 package me.limebyte.battlenight.api;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
-public interface Waypoint {
+public class Waypoint {
 
-    public Location getLocation();
+    private String name;
+    private Location location;
+    private static final String LOC_SEP = ", ";
+
+    public Waypoint(String name, Location location) {
+        this.name = name;
+        this.location = location;
+    }
+
+    public Waypoint(String name, String location) {
+        this(name, parseLocation(location));
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getParsedLocation() {
+        return parseLocation(getLocation());
+    }
+
+    public static final String parseLocation(Location loc) {
+        String w = loc.getWorld().getName();
+        double x = loc.getBlockX() + 0.5;
+        double y = loc.getBlockY();
+        double z = loc.getBlockZ() + 0.5;
+        float yaw = loc.getYaw();
+        float pitch = loc.getPitch();
+        return w + "(" + x + LOC_SEP + y + LOC_SEP + z + LOC_SEP + yaw + LOC_SEP + pitch + ")";
+    }
+
+    public static final Location parseLocation(String string) {
+        String[] parts = string.split("\\(");
+        World w = Bukkit.getServer().getWorld(parts[0]);
+
+        String[] coords = parts[1].substring(0, parts[1].length() - 1).split(LOC_SEP);
+        double x = Double.parseDouble(coords[0]);
+        double y = Double.parseDouble(coords[1]);
+        double z = Double.parseDouble(coords[2]);
+        float yaw = Float.parseFloat(coords[3]);
+        float pitch = Float.parseFloat(coords[4]);
+
+        return new Location(w, x, y, z, yaw, pitch);
+    }
 
 }

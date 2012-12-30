@@ -1,46 +1,103 @@
 package me.limebyte.battlenight.api;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import me.limebyte.battlenight.api.util.PlayerData;
+
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-public interface Battle {
+public abstract class Battle {
 
-    public boolean start();
+    private Arena arena;
+    private boolean inProgress = false;
 
-    public boolean end();
+    private Set<String> players = new HashSet<String>();
+    private Set<String> spectators = new HashSet<String>();
 
-    public boolean isInProgress();
+    public boolean start() {
+        inProgress = true;
+        onStart();
+        return true;
+    }
 
-    public boolean addPlayer(Player player);
+    public boolean end() {
+        inProgress = false;
+        onEnd();
+        return true;
+    }
 
-    public boolean removePlayer(Player player);
+    public abstract void onStart();
 
-    public boolean containsPlayer(Player player);
+    public abstract void onEnd();
 
-    public Set<String> getPlayers();
+    public boolean isInProgress() {
+        return inProgress;
+    }
 
-    public void onPlayerDamage(EntityDamageByEntityEvent event);
+    public boolean addPlayer(Player player) {
+        PlayerData.store(player);
+        PlayerData.reset(player);
+        players.add(player.getName());
+        return true;
+    }
 
-    public void onPlayerDeath(PlayerDeathEvent event);
+    public boolean removePlayer(Player player) {
+        PlayerData.restore(player, true, false);
+        players.remove(player.getName());
+        return true;
+    }
 
-    public void onPlayerRespawn(PlayerRespawnEvent event);
+    public boolean containsPlayer(Player player) {
+        return players.contains(player.getName());
+    }
 
-    public boolean addSpectator(Player player);
+    public Set<String> getPlayers() {
+        return players;
+    }
 
-    public boolean removeSpectator(Player player);
+    public boolean addSpectator(Player player) {
+        spectators.add(player.getName());
+        return true;
+    }
 
-    public boolean containsSpectator(Player player);
+    public boolean removeSpectator(Player player) {
+        spectators.remove(player.getName());
+        return true;
+    }
 
-    public Set<String> getSpectators();
+    public boolean containsSpectator(Player player) {
+        return spectators.contains(player.getName());
+    }
 
-    public Player getLeadingPlayer();
+    public Set<String> getSpectators() {
+        return spectators;
+    }
 
-    public Arena getArena();
+    public Player getLeadingPlayer() {
+        return null;
+    }
 
-    public boolean setArena(Arena arena);
+    public Arena getArena() {
+        return arena;
+    }
+
+    public boolean setArena(Arena arena) {
+        if (isInProgress()) return false;
+        this.arena = arena;
+        return true;
+    }
+
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.Util;
+import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.battle.Team;
 import me.limebyte.battlenight.core.battle.Waypoint;
@@ -18,8 +18,8 @@ import me.limebyte.battlenight.core.listeners.CommandBlocker;
 import me.limebyte.battlenight.core.listeners.DeathListener;
 import me.limebyte.battlenight.core.listeners.DisconnectListener;
 import me.limebyte.battlenight.core.listeners.HealthListener;
-import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.InteractListener;
+import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.RespawnListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
@@ -49,8 +49,7 @@ public class BattleNight extends JavaPlugin {
     // Instance Variables
     private static BattleNight instance;
     private BattleNightAPI api;
-    protected static final Util util = new SimpleUtil();
-    protected static me.limebyte.battlenight.api.Battle battle;
+    protected static final SimpleUtil util = new SimpleUtil();
 
     private static Battle oldBattle;
 
@@ -69,8 +68,9 @@ public class BattleNight extends JavaPlugin {
     public void onEnable() {
         // Set instances
         instance = this;
-        api = new SimpleAPI(this);
-        battle = new ClassicBattle(this);
+
+        api = new BattleNightAPI();
+        api.setBattle(new ClassicBattle());
 
         oldBattle = new Battle();
 
@@ -191,7 +191,7 @@ public class BattleNight extends JavaPlugin {
         }
 
         PlayerData.store(player);
-        SimpleUtil.reset(player);
+        PlayerData.reset(player);
         return true;
     }
 

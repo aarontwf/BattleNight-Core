@@ -1,6 +1,5 @@
 package me.limebyte.battlenight.core.battle;
 
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -33,13 +32,13 @@ public enum Waypoint {
 
     public Location getLocation() {
         FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        return BattleNight.getInstance().getAPI().getUtil().parseLocation(config.getString("default." + name));
+        return me.limebyte.battlenight.api.Waypoint.parseLocation(config.getString("default." + name));
     }
 
     public void setLocation(Location loc) {
         ConfigManager.reload(Config.ARENAS);
         FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        config.set("default." + name, BattleNight.getInstance().getAPI().getUtil().parseLocation(loc));
+        config.set("default." + name, me.limebyte.battlenight.api.Waypoint.parseLocation(loc));
         ConfigManager.save(Config.ARENAS);
     }
 

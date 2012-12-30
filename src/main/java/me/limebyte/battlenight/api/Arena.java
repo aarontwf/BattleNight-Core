@@ -2,26 +2,55 @@ package me.limebyte.battlenight.api;
 
 import java.util.Set;
 
-public interface Arena {
+public class Arena {
 
-    public String getName();
+    private String name;
+    private String displayName;
+    private Set<Waypoint> waypoints;
+    private boolean enabled = true;
 
-    public String getDisplayName();
+    public Arena(String name) {
+        this.name = name;
+    }
 
-    public void setDisplayName();
+    public String getName() {
+        return name;
+    }
 
-    public Set<Waypoint> getWaypoints();
+    public String getDisplayName() {
+        return displayName;
+    }
 
-    public void addWaypoint(Waypoint waypoint);
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-    public void removeWaypoint(Waypoint waypoint);
+    public Set<Waypoint> getWaypoints() {
+        return waypoints;
+    }
 
-    public void enable();
+    public void addWaypoint(Waypoint waypoint) {
+        waypoints.add(waypoint);
+    }
 
-    public void disable();
+    public void removeWaypoint(Waypoint waypoint) {
+        waypoints.remove(waypoint);
+    }
 
-    public boolean isEnabled();
+    public void enable() {
+        enabled = true;
+    }
 
-    public boolean isSetup();
+    public void disable() {
+        enabled = false;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public boolean isSetup() {
+        return waypoints.size() >= 2;
+    }
 
 }

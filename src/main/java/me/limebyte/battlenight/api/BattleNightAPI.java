@@ -1,9 +1,17 @@
 package me.limebyte.battlenight.api;
 
-public interface BattleNightAPI {
+public class BattleNightAPI {
 
-    public Battle getBattle();
+    private Battle battle;
 
-    public Util getUtil();
+    public Battle getBattle() {
+        return battle;
+    }
+
+    public boolean setBattle(Battle battle) {
+        if (this.battle.isInProgress()) return false;
+        this.battle = battle;
+        return true;
+    }
 
 }

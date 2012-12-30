@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.listeners;
 
+import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.PlayerData;
 import me.limebyte.battlenight.core.battle.Battle;
 import me.limebyte.battlenight.core.battle.Waypoint;
 import me.limebyte.battlenight.core.util.Metadata;

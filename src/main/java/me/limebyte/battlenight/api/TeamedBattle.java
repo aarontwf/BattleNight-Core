@@ -2,10 +2,22 @@ package me.limebyte.battlenight.api;
 
 import java.util.Set;
 
-public interface TeamedBattle extends Battle {
+public abstract class TeamedBattle extends Battle {
 
-    public Team getLeadingTeam();
+    Set<Team> teams;
 
-    public Set<Team> getTeams();
+    public Team getLeadingTeam() {
+        return null;
+    }
+
+    public Set<Team> getTeams() {
+        return teams;
+    }
+
+    @Override
+    public abstract void onStart();
+
+    @Override
+    public abstract void onEnd();
 
 }

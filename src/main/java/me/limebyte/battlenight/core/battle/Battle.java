@@ -7,9 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.PlayerData;
-import me.limebyte.battlenight.core.SimpleUtil;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.OldUtil;
@@ -119,7 +118,7 @@ public class Battle {
     }
 
     public void resetPlayer(Player player, boolean teleport, Iterator<String> it, boolean keepData) {
-        SimpleUtil.reset(player);
+        PlayerData.reset(player);
         PlayerData.restore(player, teleport, keepData);
         SignListener.cleanSigns(player);
         Metadata.remove(player, "class");
@@ -205,7 +204,7 @@ public class Battle {
             PlayerData.store(player);
         }
 
-        SimpleUtil.reset(player);
+        PlayerData.reset(player);
         player.setGameMode(GameMode.ADVENTURE);
         OldUtil.equipArrows(player);
         player.setAllowFlight(true);
@@ -220,7 +219,7 @@ public class Battle {
     }
 
     public void removeSpectator(Player player, Iterator<String> it) {
-        SimpleUtil.reset(player);
+        PlayerData.reset(player);
         PlayerData.restore(player, true, false);
         Messaging.tell(player, Message.GOODBYE_SPECTATOR);
 
