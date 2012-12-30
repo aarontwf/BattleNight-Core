@@ -14,11 +14,11 @@ public class AnnounceCommand extends BattleNightCommand {
     protected AnnounceCommand() {
         super("Announce");
 
-        this.setLabel("announce");
-        this.setDescription("Announces a message to all players in the Battle.");
-        this.setUsage("/bn announce <message>");
-        this.setPermission(CommandPermission.MODERATOR);
-        this.setAliases(Arrays.asList("tellall"));
+        setLabel("announce");
+        setDescription("Announces a message to all players in the Battle.");
+        setUsage("/bn announce <message>");
+        setPermission(CommandPermission.MODERATOR);
+        setAliases(Arrays.asList("tellall"));
     }
 
     @Override

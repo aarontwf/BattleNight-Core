@@ -26,10 +26,10 @@ public abstract class BattleNightCommand {
 
     protected BattleNightCommand(String name) {
         this.name = name;
-        this.label = name.toLowerCase();
-        this.aliases = new ArrayList<String>();
-        this.description = "";
-        this.usageMessage = "/bn " + label;
+        label = name.toLowerCase();
+        aliases = new ArrayList<String>();
+        description = "";
+        usageMessage = "/bn " + label;
     }
 
     public boolean matches(String input) {
@@ -91,7 +91,7 @@ public abstract class BattleNightCommand {
      *         was scheduled for re-registration
      */
     public boolean setLabel(String name) {
-        this.label = name;
+        label = name;
         return true;
     }
 
@@ -124,30 +124,26 @@ public abstract class BattleNightCommand {
      * @return true if they can use it, otherwise false
      */
     protected boolean testPermission(CommandSender sender) {
-        if (getPermission() == null) { return true; }
+        if (getPermission() == null) return true;
 
-        if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) { return true; }
+        if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) return true;
 
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false) && sender instanceof Player) {
             String permission = getPermission().getBukkitPerm();
 
-            if (sender.hasPermission(permission)) {
-                return true;
-            } else {
+            if (sender.hasPermission(permission)) return true;
+            else {
                 Messaging.tell(sender, Message.NO_PERMISSION_COMMAND);
                 return false;
             }
         } else {
             if (getPermission().isOpPerm()) {
-                if (sender.isOp()) {
-                    return true;
-                } else {
+                if (sender.isOp()) return true;
+                else {
                     Messaging.tell(sender, Message.NO_PERMISSION_COMMAND);
                     return false;
                 }
-            } else {
-                return true;
-            }
+            } else return true;
         }
     }
 
@@ -216,7 +212,7 @@ public abstract class BattleNightCommand {
      * @return This command object, for linking
      */
     public BattleNightCommand setUsage(String usage) {
-        this.usageMessage = usage;
+        usageMessage = usage;
         return this;
     }
 

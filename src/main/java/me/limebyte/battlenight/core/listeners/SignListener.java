@@ -82,7 +82,7 @@ public class SignListener implements Listener {
 
     private static ClassSign getClassSign(Sign sign) {
         for (ClassSign s : classSigns) {
-            if (s.getSign().equals(sign)) { return s; }
+            if (s.getSign().equals(sign)) return s;
         }
 
         ClassSign s = new ClassSign(sign);

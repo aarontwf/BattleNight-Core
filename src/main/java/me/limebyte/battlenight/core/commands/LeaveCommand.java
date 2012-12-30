@@ -15,11 +15,11 @@ public class LeaveCommand extends BattleNightCommand {
     protected LeaveCommand() {
         super("Leave");
 
-        this.setLabel("leave");
-        this.setDescription("Leave the Battle.");
-        this.setUsage("/bn leave");
-        this.setPermission(CommandPermission.USER);
-        this.setAliases(Arrays.asList("l", "quit"));
+        setLabel("leave");
+        setDescription("Leave the Battle.");
+        setUsage("/bn leave");
+        setPermission(CommandPermission.USER);
+        setAliases(Arrays.asList("l", "quit"));
     }
 
     @Override

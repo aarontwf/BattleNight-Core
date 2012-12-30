@@ -16,11 +16,11 @@ public class ReloadCommand extends BattleNightCommand {
     protected ReloadCommand() {
         super("Reload");
 
-        this.setLabel("reload");
-        this.setDescription("Reloads BattleNight.");
-        this.setUsage("/bn reload");
-        this.setPermission(CommandPermission.ADMIN);
-        this.setAliases(Arrays.asList("rl", "refresh", "restart"));
+        setLabel("reload");
+        setDescription("Reloads BattleNight.");
+        setUsage("/bn reload");
+        setPermission(CommandPermission.ADMIN);
+        setAliases(Arrays.asList("rl", "refresh", "restart"));
     }
 
     @Override

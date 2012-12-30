@@ -15,11 +15,11 @@ public class KickCommand extends BattleNightCommand {
     protected KickCommand() {
         super("Kick");
 
-        this.setLabel("kick");
-        this.setDescription("Removes the specified player from the Battle.");
-        this.setUsage("/bn kick <player> [reason]");
-        this.setPermission(CommandPermission.MODERATOR);
-        this.setAliases(Arrays.asList("remove", "rm"));
+        setLabel("kick");
+        setDescription("Removes the specified player from the Battle.");
+        setUsage("/bn kick <player> [reason]");
+        setPermission(CommandPermission.MODERATOR);
+        setAliases(Arrays.asList("remove", "rm"));
     }
 
     @Override

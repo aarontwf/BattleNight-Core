@@ -48,7 +48,7 @@ public class CommandMap {
 
     public static BattleNightCommand getCommand(String name) {
         for (BattleNightCommand cmd : commands) {
-            if (cmd.matches(name)) { return cmd; }
+            if (cmd.matches(name)) return cmd;
         }
 
         return null;

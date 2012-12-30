@@ -142,9 +142,7 @@ public class Page {
                 result.addAll(wrapText(line));
             }
             return result;
-        } else {
-            return wrapText(text);
-        }
+        } else return wrapText(text);
     }
 
     private List<String> wrapText(String text) {

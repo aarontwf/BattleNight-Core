@@ -15,11 +15,11 @@ public class WatchCommand extends BattleNightCommand {
     protected WatchCommand() {
         super("Watch");
 
-        this.setLabel("watch");
-        this.setDescription("Watch the Battle.");
-        this.setUsage("/bn watch");
-        this.setPermission(CommandPermission.USER);
-        this.setAliases(Arrays.asList("w", "spectate", "view"));
+        setLabel("watch");
+        setDescription("Watch the Battle.");
+        setUsage("/bn watch");
+        setPermission(CommandPermission.USER);
+        setAliases(Arrays.asList("w", "spectate", "view"));
     }
 
     @Override

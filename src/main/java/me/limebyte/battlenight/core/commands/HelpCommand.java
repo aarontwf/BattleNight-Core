@@ -15,10 +15,10 @@ public class HelpCommand extends BattleNightCommand {
     protected HelpCommand() {
         super("Help");
 
-        this.setLabel("help");
-        this.setDescription("Displays the help menu.");
-        this.setUsage("/bn help");
-        this.setAliases(Arrays.asList("?", "helpme"));
+        setLabel("help");
+        setDescription("Displays the help menu.");
+        setUsage("/bn help");
+        setAliases(Arrays.asList("?", "helpme"));
     }
 
     @Override

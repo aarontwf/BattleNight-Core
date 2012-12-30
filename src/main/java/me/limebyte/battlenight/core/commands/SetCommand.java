@@ -15,10 +15,10 @@ public class SetCommand extends BattleNightCommand {
     protected SetCommand() {
         super("Set");
 
-        this.setLabel("set");
-        this.setDescription("Sets a BattleNight waypoint.");
-        this.setUsage("/bn set <waypoint> [x] [y] [z]\n/bn set <waypoint> [x] [y] [z] [world]");
-        this.setPermission(CommandPermission.ADMIN);
+        setLabel("set");
+        setDescription("Sets a BattleNight waypoint.");
+        setUsage("/bn set <waypoint> [x] [y] [z]\n/bn set <waypoint> [x] [y] [z] [world]");
+        setPermission(CommandPermission.ADMIN);
     }
 
     @Override

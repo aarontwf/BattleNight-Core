@@ -50,7 +50,9 @@ public class BattleClass {
 
         // Main Inventory
         for (int i = 0; i < items.size(); i++) {
-            if (i > LAST_INV_SLOT) break;
+            if (i > LAST_INV_SLOT) {
+                break;
+            }
             inv.setItem(i, items.get(i));
         }
 

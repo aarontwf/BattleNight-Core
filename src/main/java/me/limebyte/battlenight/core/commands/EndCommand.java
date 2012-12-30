@@ -13,11 +13,11 @@ public class EndCommand extends BattleNightCommand {
     protected EndCommand() {
         super("End");
 
-        this.setLabel("end");
-        this.setDescription("Ends the Battle.");
-        this.setUsage("/bn end");
-        this.setPermission(CommandPermission.MODERATOR);
-        this.setAliases(Arrays.asList("stop", "kickall"));
+        setLabel("end");
+        setDescription("Ends the Battle.");
+        setUsage("/bn end");
+        setPermission(CommandPermission.MODERATOR);
+        setAliases(Arrays.asList("stop", "kickall"));
     }
 
     @Override

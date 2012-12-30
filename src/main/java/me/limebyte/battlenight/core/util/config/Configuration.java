@@ -29,7 +29,7 @@ public class Configuration {
 
     public Configuration(String fileName, boolean copyDefaults) {
         this.fileName = fileName;
-        this.directory = BattleNight.getInstance().getDataFolder().getAbsolutePath();
+        directory = BattleNight.getInstance().getDataFolder().getAbsolutePath();
         this.copyDefaults = copyDefaults;
     }
 
@@ -57,15 +57,14 @@ public class Configuration {
 
     public FileConfiguration get() {
         if (fileConfig == null) {
-            this.reload();
+            reload();
         }
         return fileConfig;
     }
 
     public void save() {
-        if (fileConfig == null || file == null) {
-            return;
-        } else {
+        if (fileConfig == null || file == null) return;
+        else {
             try {
                 get().save(file);
             } catch (IOException ex) {

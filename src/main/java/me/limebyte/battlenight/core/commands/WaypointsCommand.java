@@ -17,11 +17,11 @@ public class WaypointsCommand extends BattleNightCommand {
     protected WaypointsCommand() {
         super("Waypoints");
 
-        this.setLabel("waypoints");
-        this.setDescription("Displays the BattleNight waypoints.");
-        this.setUsage("/bn waypoints");
-        this.setPermission(CommandPermission.ADMIN);
-        this.setAliases(Arrays.asList("wpoints"));
+        setLabel("waypoints");
+        setDescription("Displays the BattleNight waypoints.");
+        setUsage("/bn waypoints");
+        setPermission(CommandPermission.ADMIN);
+        setAliases(Arrays.asList("wpoints"));
     }
 
     @Override

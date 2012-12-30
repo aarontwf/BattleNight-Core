@@ -36,13 +36,17 @@ public class Messaging {
         if (spectators) {
             for (String name : BattleNight.getBattle().spectators) {
                 Player p = Bukkit.getPlayerExact(name);
-                if (p != null) tell(p, message);
+                if (p != null) {
+                    tell(p, message);
+                }
             }
         }
 
         for (String name : BattleNight.getBattle().usersTeam.keySet()) {
             Player p = Bukkit.getPlayerExact(name);
-            if (p != null) tell(p, message);
+            if (p != null) {
+                tell(p, message);
+            }
         }
     }
 
@@ -50,13 +54,17 @@ public class Messaging {
         if (spectators) {
             for (String name : BattleNight.getBattle().spectators) {
                 Player p = Bukkit.getPlayerExact(name);
-                if (p != null && player != p) tell(p, message);
+                if (p != null && player != p) {
+                    tell(p, message);
+                }
             }
         }
 
         for (String name : BattleNight.getBattle().usersTeam.keySet()) {
             Player p = Bukkit.getPlayerExact(name);
-            if (p != null && player != p) tell(p, message);
+            if (p != null && player != p) {
+                tell(p, message);
+            }
         }
     }
 
@@ -95,13 +103,17 @@ public class Messaging {
         if (spectators) {
             for (String name : BattleNight.getBattle().spectators) {
                 Player p = Bukkit.getPlayerExact(name);
-                if (p != null) tell(p, page);
+                if (p != null) {
+                    tell(p, page);
+                }
             }
         }
 
         for (String name : BattleNight.getBattle().usersTeam.keySet()) {
             Player p = Bukkit.getPlayerExact(name);
-            if (p != null) tell(p, page);
+            if (p != null) {
+                tell(p, page);
+            }
         }
     }
 
@@ -109,13 +121,17 @@ public class Messaging {
         if (spectators) {
             for (String name : BattleNight.getBattle().spectators) {
                 Player p = Bukkit.getPlayerExact(name);
-                if (p != null && player != p) tell(p, page);
+                if (p != null && player != p) {
+                    tell(p, page);
+                }
             }
         }
 
         for (String name : BattleNight.getBattle().usersTeam.keySet()) {
             Player p = Bukkit.getPlayerExact(name);
-            if (p != null && player != p) tell(p, page);
+            if (p != null && player != p) {
+                tell(p, page);
+            }
         }
     }
 
@@ -156,37 +172,28 @@ public class Messaging {
     }
 
     private static String describeObject(Object obj) {
-        if (obj instanceof ComplexEntityPart) { // Complex entities
-            return describeObject(((ComplexEntityPart) obj).getParent());
-        } else if (obj instanceof Item) { // Dropped items
-            return describeMaterial(((Item) obj).getItemStack().getType());
-        } else if (obj instanceof ItemStack) { // Items
-            return describeMaterial(((ItemStack) obj).getType());
-        } else if (obj instanceof Entity) { // Entities
-            return describeEntity((Entity) obj);
-        } else if (obj instanceof Block) { // Blocks
-            return describeMaterial(((Block) obj).getType());
-        } else if (obj instanceof Material) { // Just material
-            return describeMaterial((Material) obj);
-        } else if (obj instanceof Waypoint) {
-            return ((Waypoint) obj).getDisplayName();
-        } else if (obj instanceof Location) {
-            return describeLocation((Location) obj);
-        } else if (obj instanceof World) {
-            return ((World) obj).getName();
-        } else if (obj instanceof Team) { return ((Team) obj).getColour() + ((Team) obj).getName(); }
+        if (obj instanceof ComplexEntityPart) return describeObject(((ComplexEntityPart) obj).getParent());
+        else if (obj instanceof Item) return describeMaterial(((Item) obj).getItemStack().getType());
+        else if (obj instanceof ItemStack) return describeMaterial(((ItemStack) obj).getType());
+        else if (obj instanceof Entity) return describeEntity((Entity) obj);
+        else if (obj instanceof Block) return describeMaterial(((Block) obj).getType());
+        else if (obj instanceof Material) return describeMaterial((Material) obj);
+        else if (obj instanceof Waypoint) return ((Waypoint) obj).getDisplayName();
+        else if (obj instanceof Location) return describeLocation((Location) obj);
+        else if (obj instanceof World) return ((World) obj).getName();
+        else if (obj instanceof Team) return ((Team) obj).getColour() + ((Team) obj).getName();
 
         return obj.toString();
     }
 
     private static String describeEntity(Entity entity) {
-        if (entity instanceof Player) { return ((Player) entity).getName(); }
+        if (entity instanceof Player) return ((Player) entity).getName();
 
         return entity.getType().toString().toLowerCase().replace("_", " ");
     }
 
     private static String describeMaterial(Material material) {
-        if (material == Material.INK_SACK) { return "dye"; }
+        if (material == Material.INK_SACK) return "dye";
 
         return material.toString().toLowerCase().replace("_", " ");
     }
@@ -201,9 +208,7 @@ public class Messaging {
         if (BattleNight.getBattle().usersTeam.containsKey(name)) {
             Team team = BattleNight.getBattle().usersTeam.get(name);
             return team.getColour() + name;
-        } else {
-            return ChatColor.DARK_GRAY + name;
-        }
+        } else return ChatColor.DARK_GRAY + name;
     }
 
     public enum Message {

@@ -167,7 +167,9 @@ public class PlayerData {
         } catch (Exception e) {
         }
 
-        if (!keepInMemory) storage.remove(name);
+        if (!keepInMemory) {
+            storage.remove(name);
+        }
         return true;
     }
 

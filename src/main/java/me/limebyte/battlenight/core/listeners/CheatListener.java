@@ -87,6 +87,8 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
         String name = event.getPlayer().getName();
-        if (BattleNight.getBattle().spectators.contains(name)) event.setCancelled(true);
+        if (BattleNight.getBattle().spectators.contains(name)) {
+            event.setCancelled(true);
+        }
     }
 }

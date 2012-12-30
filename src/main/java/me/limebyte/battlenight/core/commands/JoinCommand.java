@@ -14,11 +14,11 @@ public class JoinCommand extends BattleNightCommand {
     protected JoinCommand() {
         super("Join");
 
-        this.setLabel("join");
-        this.setDescription("Join the Battle.");
-        this.setUsage("/bn join");
-        this.setPermission(CommandPermission.USER);
-        this.setAliases(Arrays.asList("j", "play"));
+        setLabel("join");
+        setDescription("Join the Battle.");
+        setUsage("/bn join");
+        setPermission(CommandPermission.USER);
+        setAliases(Arrays.asList("j", "play"));
     }
 
     @Override

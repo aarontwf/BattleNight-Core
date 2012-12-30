@@ -143,9 +143,7 @@ public class BattleNight extends JavaPlugin {
             if (args.length < 1) {
                 sender.sendMessage(BNTag + ChatColor.RED + "Incorrect usage.  Type \"" + CommandMap.getCommand("Help").getUsage() + "\" to show the help menu.");
                 return true;
-            } else {
-                return CommandMap.dispatch(sender, args);
-            }
+            } else return CommandMap.dispatch(sender, args);
         }
         return false;
     }
@@ -162,7 +160,9 @@ public class BattleNight extends JavaPlugin {
     public static int numSetupPoints() {
         int set = 0;
         for (Waypoint wp : Waypoint.values()) {
-            if (wp.isSet()) set++;
+            if (wp.isSet()) {
+                set++;
+            }
         }
         return set;
     }

@@ -64,14 +64,19 @@ public class ClassManager {
     private static List<ItemStack> parseItems(String rawItems) {
         String[] splitRawItems = new String[1];
 
-        if (rawItems.contains(",")) splitRawItems = rawItems.split(",");
-        else splitRawItems[0] = rawItems;
+        if (rawItems.contains(",")) {
+            splitRawItems = rawItems.split(",");
+        } else {
+            splitRawItems[0] = rawItems;
+        }
 
         List<ItemStack> items = new ArrayList<ItemStack>();
 
         for (String item : splitRawItems) {
             item = item.trim();
-            if (item == null || item == "") continue;
+            if (item == null || item == "") {
+                continue;
+            }
 
             int amount = 1;
             Map<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>();
@@ -119,7 +124,9 @@ public class ClassManager {
                     Enchantment enc;
 
                     // Checks
-                    if (splitEnchantment.length == 0) continue;
+                    if (splitEnchantment.length == 0) {
+                        continue;
+                    }
 
                     // Get the enchantment id
                     try {
@@ -131,7 +138,9 @@ public class ClassManager {
                     enc = Enchantment.getById(e);
 
                     // More Checks
-                    if (enc == null) continue;
+                    if (enc == null) {
+                        continue;
+                    }
 
                     // Do we have a level?
                     if (splitEnchantment.length == 2) {
@@ -145,7 +154,9 @@ public class ClassManager {
                     }
 
                     // Cap levels
-                    if (lvl > enc.getMaxLevel()) lvl = enc.getMaxLevel();
+                    if (lvl > enc.getMaxLevel()) {
+                        lvl = enc.getMaxLevel();
+                    }
 
                     // Add it
                     enchantments.put(enc, lvl);
@@ -206,7 +217,9 @@ public class ClassManager {
                 Map<Enchantment, Integer> enchantments = item.getEnchantments();
 
                 rawItems += ", " + id;
-                if (data > 0) rawItems += ":" + data;
+                if (data > 0) {
+                    rawItems += ":" + data;
+                }
                 if (!item.getEnchantments().isEmpty()) {
                     String rawEnchantments = "";
                     rawItems += "e(";
@@ -218,7 +231,9 @@ public class ClassManager {
 
                     rawItems += ")";
                 }
-                if (amount > 1) rawItems += "x" + amount;
+                if (amount > 1) {
+                    rawItems += "x" + amount;
+                }
             }
         }
 
@@ -238,14 +253,19 @@ public class ClassManager {
             fullStack.setAmount(maxSize);
             finalStack.setAmount(finalStackAmount);
 
-            if (finalStackAmount > 0) items = new ItemStack[fullStacks + 1];
-            else items = new ItemStack[fullStacks];
+            if (finalStackAmount > 0) {
+                items = new ItemStack[fullStacks + 1];
+            } else {
+                items = new ItemStack[fullStacks];
+            }
 
             for (int i = 0; i < fullStacks; i++) {
                 items[i] = fullStack;
             }
 
-            if (finalStackAmount > 0) items[items.length - 1] = finalStack;
+            if (finalStackAmount > 0) {
+                items[items.length - 1] = finalStack;
+            }
         } else {
             items = new ItemStack[amount];
         }
@@ -313,7 +333,9 @@ public class ClassManager {
 
         public boolean contains(ItemStack stack) {
             for (Material material : materials) {
-                if (stack == null) continue;
+                if (stack == null) {
+                    continue;
+                }
                 if (stack.getType().equals(material)) return true;
             }
             return false;
@@ -343,7 +365,9 @@ public class ClassManager {
     }
 
     private static String formatStack(ItemStack stack) {
-        if (stack == null) stack = new ItemStack(0);
+        if (stack == null) {
+            stack = new ItemStack(0);
+        }
         String itemName = stack.getType().toString().toLowerCase().replace('_', ' ');
 
         return itemName.substring(0, 1).toUpperCase() + itemName.substring(1);

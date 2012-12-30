@@ -14,11 +14,11 @@ public class TestCommand extends BattleNightCommand {
     protected TestCommand() {
         super("Test");
 
-        this.setLabel("test");
-        this.setDescription("Runs the specified test.");
-        this.setUsage("/bn test <test>");
-        this.setPermission(CommandPermission.ADMIN);
-        this.setAliases(Arrays.asList("try"));
+        setLabel("test");
+        setDescription("Runs the specified test.");
+        setUsage("/bn test <test>");
+        setPermission(CommandPermission.ADMIN);
+        setAliases(Arrays.asList("try"));
     }
 
     @Override
@@ -45,9 +45,7 @@ public class TestCommand extends BattleNightCommand {
                 Messaging.tell(sender, Message.PLAYER_ONLY);
                 return false;
             }
-        } else {
-            return false;
-        }
+        } else return false;
     }
 
 }

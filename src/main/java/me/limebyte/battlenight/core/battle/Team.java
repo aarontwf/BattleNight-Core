@@ -43,7 +43,9 @@ public enum Team {
             if (player != null) {
                 if (entry.getValue() == this) {
                     members++;
-                    if (Metadata.getBattleClass(player, "class") != null) membersReady++;
+                    if (Metadata.getBattleClass(player, "class") != null) {
+                        membersReady++;
+                    }
                 }
             }
         }

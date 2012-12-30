@@ -16,11 +16,11 @@ public class TeleportCommand extends BattleNightCommand {
     protected TeleportCommand() {
         super("Teleport");
 
-        this.setLabel("tp");
-        this.setDescription("Teleport to a waypoint.");
-        this.setUsage("/bn tp <waypoint>");
-        this.setPermission(CommandPermission.ADMIN);
-        this.setAliases(Arrays.asList("teleport", "goto"));
+        setLabel("tp");
+        setDescription("Teleport to a waypoint.");
+        setUsage("/bn tp <waypoint>");
+        setPermission(CommandPermission.ADMIN);
+        setAliases(Arrays.asList("teleport", "goto"));
     }
 
     @Override

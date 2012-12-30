@@ -15,9 +15,9 @@ public class VersionCommand extends BattleNightCommand {
     protected VersionCommand() {
         super("Version");
 
-        this.setLabel("version");
-        this.setDescription("Gets the version of BattleNight running on the server.");
-        this.setAliases(Arrays.asList("ver", "about"));
+        setLabel("version");
+        setDescription("Gets the version of BattleNight running on the server.");
+        setAliases(Arrays.asList("ver", "about"));
     }
 
     @Override

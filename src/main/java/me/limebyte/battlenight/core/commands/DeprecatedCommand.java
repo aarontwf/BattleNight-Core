@@ -12,10 +12,10 @@ public class DeprecatedCommand extends BattleNightCommand {
     protected DeprecatedCommand(String label, String newLabel) {
         super("Deprecated");
 
-        this.setLabel(label);
-        this.setDescription("Deprecated Command.");
+        setLabel(label);
+        setDescription("Deprecated Command.");
 
-        this.setNewLabel(newLabel);
+        setNewLabel(newLabel);
     }
 
     @Override

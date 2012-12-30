@@ -143,7 +143,7 @@ public class Metrics {
     private volatile BukkitTask task = null;
 
     public Metrics(final Plugin plugin) throws IOException {
-        if (plugin == null) { throw new IllegalArgumentException("Plugin cannot be null"); }
+        if (plugin == null) throw new IllegalArgumentException("Plugin cannot be null");
 
         this.plugin = plugin;
 
@@ -173,7 +173,7 @@ public class Metrics {
      *         circumstances unless bad parameters are given
      */
     public Graph createGraph(final String name) {
-        if (name == null) { throw new IllegalArgumentException("Graph name cannot be null"); }
+        if (name == null) throw new IllegalArgumentException("Graph name cannot be null");
 
         // Construct the graph object
         final Graph graph = new Graph(name);
@@ -193,7 +193,7 @@ public class Metrics {
      *            The name of the graph
      */
     public void addGraph(final Graph graph) {
-        if (graph == null) { throw new IllegalArgumentException("Graph cannot be null"); }
+        if (graph == null) throw new IllegalArgumentException("Graph cannot be null");
 
         graphs.add(graph);
     }
@@ -205,7 +205,7 @@ public class Metrics {
      *            The plotter to use to plot custom data
      */
     public void addCustomData(final Plotter plotter) {
-        if (plotter == null) { throw new IllegalArgumentException("Plotter cannot be null"); }
+        if (plotter == null) throw new IllegalArgumentException("Plotter cannot be null");
 
         // Add the plotter to the graph o/
         defaultGraph.addPlotter(plotter);
@@ -225,16 +225,17 @@ public class Metrics {
     public boolean start() {
         synchronized (optOutLock) {
             // Did we opt out?
-            if (isOptOut()) { return false; }
+            if (isOptOut()) return false;
 
             // Is metrics already running?
-            if (task != null) { return true; }
+            if (task != null) return true;
 
             // Begin hitting the server with glorious data
             task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 
                 private boolean firstPost = true;
 
+                @Override
                 public void run() {
                     try {
                         // This has to be synchronized or it can collide with the disable method.
@@ -430,9 +431,8 @@ public class Metrics {
         writer.close();
         reader.close();
 
-        if (response == null || response.startsWith("ERR")) {
-            throw new IOException(response); //Throw the exception
-        } else {
+        if (response == null || response.startsWith("ERR")) throw new IOException(response); //Throw the exception
+        else {
             // Is this the first update this hour?
             if (response.contains("OK This is your first update this hour")) {
                 synchronized (graphs) {
@@ -563,7 +563,7 @@ public class Metrics {
 
         @Override
         public boolean equals(final Object object) {
-            if (!(object instanceof Graph)) { return false; }
+            if (!(object instanceof Graph)) return false;
 
             final Graph graph = (Graph) object;
             return graph.name.equals(name);
@@ -639,7 +639,7 @@ public class Metrics {
 
         @Override
         public boolean equals(final Object object) {
-            if (!(object instanceof Plotter)) { return false; }
+            if (!(object instanceof Plotter)) return false;
 
             final Plotter plotter = (Plotter) object;
             return plotter.name.equals(name) && plotter.getValue() == getValue();

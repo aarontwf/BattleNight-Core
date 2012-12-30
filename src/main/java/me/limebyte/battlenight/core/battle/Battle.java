@@ -72,7 +72,9 @@ public class Battle {
                 blueTeam--;
             }
 
-            if (sendMsg1) Messaging.tellEveryoneExcept(player, team.getColour() + name + ChatColor.WHITE + " " + msg1, true);
+            if (sendMsg1) {
+                Messaging.tellEveryoneExcept(player, team.getColour() + name + ChatColor.WHITE + " " + msg1, true);
+            }
 
             if (msg2 != null) {
                 Messaging.tell(player, msg2);
@@ -111,7 +113,9 @@ public class Battle {
                 resetBattle();
             }
 
-            if (!death) resetPlayer(player, true, null, false);
+            if (!death) {
+                resetPlayer(player, true, null, false);
+            }
         } else {
             Messaging.log(Level.WARNING, "Failed to remove player '" + name + "' from the Battle as they are not in it.");
         }

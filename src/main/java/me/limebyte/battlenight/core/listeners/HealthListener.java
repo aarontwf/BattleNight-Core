@@ -40,7 +40,9 @@ public class HealthListener implements Listener {
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
 
-            if (BattleNight.getBattle().spectators.contains(player.getName())) event.setCancelled(true);
+            if (BattleNight.getBattle().spectators.contains(player.getName())) {
+                event.setCancelled(true);
+            }
 
             if (!BattleNight.getBattle().usersTeam.containsKey(player.getName())) return;
 
@@ -59,37 +61,26 @@ public class HealthListener implements Listener {
             LivingEntity shooter = ((Projectile) eDamager).getShooter();
             if (shooter instanceof Player) {
                 damager = (Player) shooter;
-            } else {
-                return true;
-            }
+            } else return true;
         } else {
             if (eDamager instanceof Player) {
                 damager = (Player) eDamager;
-            }
-            else {
-                return true;
-            }
+            } else return true;
         }
 
         if (BattleNight.getBattle().usersTeam.containsKey(damager.getName())) {
             if (BattleNight.getBattle().isInLounge())
                 return false;
-            if (areEnemies(damager, damaged) || damager == damaged) {
-                return true;
-            } else {
-                return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
-            }
+            if (areEnemies(damager, damaged) || damager == damaged) return true;
+            else return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
         }
 
         return true;
     }
 
     private boolean areEnemies(Player player1, Player player2) {
-        if (BattleNight.getBattle().usersTeam.get(player1.getName()) != BattleNight.getBattle().usersTeam.get(player2.getName())) {
-            return true;
-        } else {
-            return false;
-        }
+        if (BattleNight.getBattle().usersTeam.get(player1.getName()) != BattleNight.getBattle().usersTeam.get(player2.getName())) return true;
+        else return false;
     }
 
     private boolean checkCrashBug(Player damaged, EntityDamageByEntityEvent event) {
