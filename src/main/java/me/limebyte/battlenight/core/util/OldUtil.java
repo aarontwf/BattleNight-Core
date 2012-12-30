@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class OldUtil {
 
@@ -28,7 +29,9 @@ public class OldUtil {
 
     private static ItemStack createArrow(String action) {
         ItemStack stack = new ItemStack(Material.PAPER);
-        stack.getItemMeta().setDisplayName(ChatColor.GREEN + action);
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName(ChatColor.GREEN + action);
+        stack.setItemMeta(meta);
         return stack;
     }
 }

@@ -56,10 +56,12 @@ public class InteractListener implements Listener {
         if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK)) {
             if (BattleNight.getBattle().spectators.contains(player.getName())) {
                 String itemName = player.getItemInHand().getItemMeta().getDisplayName();
-                if (itemName.contains("Previous Player")) {
-                    Messaging.tell(player, "Teleporting to previous player.");
-                } else if (itemName.contains("Next Player")) {
-                    Messaging.tell(player, "Teleporting to next player.");
+                if (itemName != null) {
+                    if (itemName.contains("Previous Player")) {
+                        Messaging.tell(player, "Teleporting to previous player.");
+                    } else if (itemName.contains("Next Player")) {
+                        Messaging.tell(player, "Teleporting to next player.");
+                    }
                 }
             }
         }
