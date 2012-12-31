@@ -20,21 +20,19 @@ import org.kitteh.tag.TagAPI;
 public class Nameplates {
     private static boolean enabled = false;
 
-    public static boolean init(BattleNight plugin) {
-        PluginManager pm = Bukkit.getServer().getPluginManager();
+    public static void init(BattleNight plugin, PluginManager pm) {
         if (pm.getPlugin("TagAPI") == null) {
             Messenger.log(Level.WARNING, "TagAPI not found.  Installing...");
             try {
                 install(plugin, pm);
             } catch (Exception e) {
-                Messenger.log(Level.SEVERE, "Failed to install TagAPI.  Disabling...");
-                return false;
-            } finally {
-                Messenger.log(Level.INFO, "TagAPI installed successfully.");
+                Messenger.log(Level.SEVERE, "Failed to install TagAPI.");
+                enabled = false;
+                return;
             }
+            Messenger.log(Level.INFO, "TagAPI installed successfully.");
         }
         enabled = true;
-        return true;
     }
 
     private static void install(BattleNight plugin, PluginManager pm) throws UnknownDependencyException, InvalidPluginException, InvalidDescriptionException {

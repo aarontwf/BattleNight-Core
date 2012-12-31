@@ -71,13 +71,9 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         PluginManager pm = getServer().getPluginManager();
 
-        if (!Nameplates.init(this)) {
-            pm.disablePlugin(this);
-            return;
-        }
+        Nameplates.init(this, pm);
 
         // Event Registration
-        PluginDescriptionFile pdfFile = getDescription();
         pm.registerEvents(new CheatListener(), this);
         pm.registerEvents(new CommandBlocker(), this);
         pm.registerEvents(new HealthListener(), this);
@@ -94,7 +90,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         getCommand("battlenight").setExecutor(new CommandManager());
 
         // Enable Message
-        Messenger.log(Level.INFO, "Version " + pdfFile.getVersion() + " enabled successfully.");
+        Messenger.log(Level.INFO, "Version " + getDescription().getVersion() + " enabled successfully.");
         Messenger.log(Level.INFO, "Made by LimeByte.");
     }
 
