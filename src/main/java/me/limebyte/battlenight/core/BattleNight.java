@@ -102,9 +102,15 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         }
         SignListener.cleanSigns();
 
-        if (getAPI().getBattle().isInProgress()) {
-            getAPI().getBattle().stop();
+        if (getAPI() != null) {
+            if (getAPI().getBattle() == null) Messenger.log(Level.WARNING, "Battle is null.");
+        } else {
+            Messenger.log(Level.WARNING, "API is null.");
         }
+
+        //        if (getAPI().getBattle().isInProgress()) {
+        //            getAPI().getBattle().stop();
+        //        }
 
         PluginDescriptionFile pdfFile = getDescription();
         Messenger.log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
