@@ -10,12 +10,16 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.UnknownDependencyException;
+import org.kitteh.tag.TagAPI;
 
 public class Nameplates {
+    private static boolean enabled = false;
+
     public static boolean init(BattleNight plugin) {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         if (pm.getPlugin("TagAPI") == null) {
@@ -29,6 +33,7 @@ public class Nameplates {
                 Messenger.log(Level.INFO, "TagAPI installed successfully.");
             }
         }
+        enabled = true;
         return true;
     }
 
@@ -59,4 +64,13 @@ public class Nameplates {
             e.printStackTrace();
         }
     }
+
+    public static void refresh(Player player) {
+        if (!enabled) return;
+        try {
+            TagAPI.refreshPlayer(player);
+        } catch (Exception e) {
+        }
+    }
+
 }

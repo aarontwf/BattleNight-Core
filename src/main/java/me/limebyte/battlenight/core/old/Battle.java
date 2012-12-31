@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.util.PlayerData;
+import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.ArrowUtil;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -19,7 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.kitteh.tag.TagAPI;
 
 public class Battle {
 
@@ -134,10 +134,7 @@ public class Battle {
             usersTeam.remove(player.getName());
         }
 
-        try {
-            TagAPI.refreshPlayer(player);
-        } catch (Exception e) {
-        }
+        Nameplates.refresh(player);
     }
 
     private void resetBattle() {

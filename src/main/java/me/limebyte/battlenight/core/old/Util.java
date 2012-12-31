@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.old;
 
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -12,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.kitteh.tag.TagAPI;
 
 public class Util {
 
@@ -79,11 +79,7 @@ public class Util {
         String name = player.getName();
         String pListName = ChatColor.GRAY + "[BN] " + name;
         player.setPlayerListName(pListName.length() < 16 ? pListName : pListName.substring(0, 16));
-
-        try {
-            TagAPI.refreshPlayer(player);
-        } catch (Exception e) {
-        }
+        Nameplates.refresh(player);
     }
 
 }

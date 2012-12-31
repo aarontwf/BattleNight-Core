@@ -8,10 +8,10 @@ import java.util.Queue;
 import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.old.Waypoint;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,22 +19,23 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.kitteh.tag.TagAPI;
 
 public class SafeTeleporter implements Listener {
 
-    public static Map<String, String> telePass = new HashMap<String, String>();
+    public static Set<String> telePass = new HashSet<String>();
     private static Queue<String> playerQueue = new LinkedList<String>();
-    private static Queue<Waypoint> waypointQueue = new LinkedList<Waypoint>();
+    private static Queue<Location> locationQueue = new LinkedList<Location>();
     private static int taskID = 0;
 
-    private static Map<String, Location> locationQueue = new HashMap<String, Location>();
-    private static Set<Chunk> keepLoaded = new HashSet<Chunk>();
+    private static Map<String, Location> teleporters = new HashMap<String, Location>();
 
     public static void queue(Player player, Waypoint waypoint) {
+        queue(player, waypoint.getLocation());
+    }
+
+    public static void queue(Player player, Location location) {
         playerQueue.add(player.getName());
-        waypointQueue.add(waypoint);
+        locationQueue.add(location);
     }
 
     public static void tp(Player player, Waypoint waypoint) {
@@ -42,12 +43,7 @@ public class SafeTeleporter implements Listener {
     }
 
     public static void tp(Player player, Location location) {
-        String name = player.getName();
-
-        //safeTP(player, waypoint);
-        telePass.put(name, "yes");
-        player.teleport(location, TeleportCause.PLUGIN);
-        telePass.remove(name);
+        safeTP(player, location);
     }
 
     public static void startTeleporting() {
@@ -57,7 +53,7 @@ public class SafeTeleporter implements Listener {
                 if (playerQueue.isEmpty()) {
                     stopTeleporting();
                 } else {
-                    tp(Bukkit.getPlayerExact(playerQueue.poll()), waypointQueue.poll());
+                    tp(Bukkit.getPlayerExact(playerQueue.poll()), locationQueue.poll());
                 }
             }
         }, 0L, 10L);
@@ -68,54 +64,33 @@ public class SafeTeleporter implements Listener {
         taskID = 0;
     }
 
-    @SuppressWarnings("unused")
-    private static void safeTP(final Player player, Waypoint waypoint) {
-        Location loc = waypoint.getLocation();
+    private static void safeTP(final Player player, Location location) {
+        Location loc = location;
         loc.setY(loc.getY() + 0.5);
-
-        Chunk chunk = loc.getChunk();
-        keepLoaded.add(chunk);
-        chunk.load();
 
         String name = player.getName();
 
-        telePass.put(name, "yes");
+        telePass.add(name);
         player.teleport(loc, TeleportCause.PLUGIN);
         telePass.remove(name);
 
-        locationQueue.put(name, loc);
+        teleporters.put(name, loc);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();
 
-        if (locationQueue.containsKey(name)) {
-            Location loc = locationQueue.get(name);
-            locationQueue.remove(name);
+        if (teleporters.containsKey(name)) {
+            Location loc = teleporters.get(name);
+            teleporters.remove(name);
 
-            telePass.put(name, "yes");
+            telePass.add(name);
             player.teleport(loc, TeleportCause.PLUGIN);
             telePass.remove(name);
 
-            try {
-                TagAPI.refreshPlayer(player);
-            } catch (Exception e) {
-            }
-        } else {
-            Chunk chunk = event.getTo().getChunk();
-
-            if (keepLoaded.contains(chunk)) {
-                keepLoaded.remove(chunk);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onChunkUnload(ChunkUnloadEvent event) {
-        if (keepLoaded.contains(event.getChunk())) {
-            event.setCancelled(true);
+            Nameplates.refresh(player);
         }
     }
 }

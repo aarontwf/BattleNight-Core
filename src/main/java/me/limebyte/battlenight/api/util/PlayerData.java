@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.old.Waypoint;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -19,7 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
-import org.kitteh.tag.TagAPI;
 
 public class PlayerData {
     private static Map<String, PlayerData> storage = new HashMap<String, PlayerData>();
@@ -161,11 +161,7 @@ public class PlayerData {
         player.setSleepingIgnored(data.sleepingIgnored);
         player.setSneaking(data.sneaking);
         player.setSprinting(data.sprinting);
-
-        try {
-            TagAPI.refreshPlayer(player);
-        } catch (Exception e) {
-        }
+        Nameplates.refresh(player);
 
         if (!keepInMemory) {
             storage.remove(name);
@@ -208,10 +204,7 @@ public class PlayerData {
         player.setSleepingIgnored(true);
         player.setSneaking(false);
         player.setSprinting(false);
-        try {
-            TagAPI.refreshPlayer(player);
-        } catch (Exception e) {
-        }
+        Nameplates.refresh(player);
     }
 
     public static Location getSavedLocation(Player player) {
