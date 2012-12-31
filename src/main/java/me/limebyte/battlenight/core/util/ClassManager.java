@@ -48,7 +48,6 @@ public class ClassManager {
             String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
             classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour))));
         }
-        Messenger.debug(Level.INFO, "Classes loaded!");
     }
 
     public static void saveClasses() {
@@ -58,7 +57,6 @@ public class ClassManager {
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
         }
         ConfigManager.save(configFile);
-        Messenger.debug(Level.INFO, "Classes saved!");
     }
 
     private static List<ItemStack> parseItems(String rawItems) {
@@ -188,8 +186,6 @@ public class ClassManager {
                     //TODO Log it
                 }
             }
-
-            Messenger.debug(Level.INFO, "Adding item: " + formatStack(stack) + ".");
 
             if (amount > 1) {
                 items.addAll(Arrays.asList(splitIntoStacks(stack, amount)));
@@ -362,14 +358,5 @@ public class ClassManager {
         }
 
         ConfigManager.save(configFile);
-    }
-
-    private static String formatStack(ItemStack stack) {
-        if (stack == null) {
-            stack = new ItemStack(0);
-        }
-        String itemName = stack.getType().toString().toLowerCase().replace('_', ' ');
-
-        return itemName.substring(0, 1).toUpperCase() + itemName.substring(1);
     }
 }
