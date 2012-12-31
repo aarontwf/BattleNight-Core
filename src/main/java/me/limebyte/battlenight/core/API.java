@@ -14,7 +14,7 @@ public class API implements BattleNightAPI {
 
     @Override
     public boolean setBattle(Battle battle) {
-        if (BattleNight.instance.battle.isInProgress()) return false;
+        if (BattleNight.instance.battle == null || BattleNight.instance.battle.isInProgress()) return false;
         BattleNight.instance.battle = battle;
         return true;
     }
