@@ -12,10 +12,10 @@ database: false
 softdepend: [TagAPI]
 
 commands:
-  bn:
+  battlenight:
     description: Base command for the BattleNight plug-in.
-    usage: |
-        /<command> help - Show the help menu
+    aliases: [bn, battle]
+    usage: Type /bn help to show the help menu.
         
 permissions:
     battlenight.user:

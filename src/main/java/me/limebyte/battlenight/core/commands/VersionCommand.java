@@ -2,9 +2,10 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
+import me.limebyte.battlenight.api.util.BattleNightCommand;
+import me.limebyte.battlenight.api.util.StandardPage;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.StandardPage;
+import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -22,14 +23,14 @@ public class VersionCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        PluginDescriptionFile pdf = BattleNight.getInstance().getDescription();
+        PluginDescriptionFile pdf = BattleNight.instance.getDescription();
 
         StandardPage page = new StandardPage(
                 "BattleNight Version Info",
                 "This server is running BattleNight version " + pdf.getVersion() + ".  " +
                         "For more information about Battlenight and this version, please visit:\n" +
                         ChatColor.BLUE + ChatColor.UNDERLINE + pdf.getWebsite());
-        Messaging.tell(sender, page);
+        Messenger.tell(sender, page);
         return true;
     }
 

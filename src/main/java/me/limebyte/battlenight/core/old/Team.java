@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.battle;
+package me.limebyte.battlenight.core.old;
 
 import java.util.Map.Entry;
 

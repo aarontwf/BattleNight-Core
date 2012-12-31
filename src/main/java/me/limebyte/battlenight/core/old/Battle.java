@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.battle;
+package me.limebyte.battlenight.core.old;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,13 +8,12 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.util.PlayerData;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
+import me.limebyte.battlenight.core.util.ArrowUtil;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
-import me.limebyte.battlenight.core.util.OldUtil;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,12 +28,14 @@ public class Battle {
     private boolean inLounge = false;
     private boolean inProgress = false;
     private boolean ending = false;
+    public boolean redTeamIronClicked = false;
+    public boolean blueTeamIronClicked = false;
 
     public final Map<String, Team> usersTeam = new HashMap<String, Team>();
     public final Set<String> spectators = new HashSet<String>();
 
     public void addPlayer(Player player) {
-        if (BattleNight.preparePlayer(player)) {
+        if (Util.preparePlayer(player)) {
             String name = player.getName();
             Team team;
 
@@ -49,13 +50,13 @@ public class Battle {
             }
 
             usersTeam.put(name, team);
-            Messaging.tell(player, Message.JOINED_TEAMED_BATTLE, team);
-            Messaging.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_TEAMED_BATTLE, player, team);
+            Messenger.tell(player, Message.JOINED_TEAMED_BATTLE, team);
+            Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_TEAMED_BATTLE, player, team);
 
-            BattleNight.setNames(player);
+            Util.setNames(player);
             inLounge = true;
         } else {
-            Messaging.tell(player, Message.INVENTORY_NOT_EMPTY);
+            Messenger.tell(player, Message.INVENTORY_NOT_EMPTY);
         }
     }
 
@@ -73,11 +74,11 @@ public class Battle {
             }
 
             if (sendMsg1) {
-                Messaging.tellEveryoneExcept(player, team.getColour() + name + ChatColor.WHITE + " " + msg1, true);
+                Messenger.tellEveryoneExcept(player, team.getColour() + name + ChatColor.WHITE + " " + msg1, true);
             }
 
             if (msg2 != null) {
-                Messaging.tell(player, msg2);
+                Messenger.tell(player, msg2);
             }
 
             // If red or blue won
@@ -89,13 +90,13 @@ public class Battle {
                 if (!inLounge) {
                     // If red won
                     if (redTeam > 0) {
-                        Messaging.tellEveryone(true, Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
+                        Messenger.tellEveryone(true, Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
                         // If blue won
                     } else if (blueTeam > 0) {
-                        Messaging.tellEveryone(true, Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
+                        Messenger.tellEveryone(true, Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
                         // If neither team won
                     } else {
-                        Messaging.tellEveryone(true, Message.DRAW);
+                        Messenger.tellEveryone(true, Message.DRAW);
                     }
                 }
 
@@ -117,7 +118,7 @@ public class Battle {
                 resetPlayer(player, true, null, false);
             }
         } else {
-            Messaging.log(Level.WARNING, "Failed to remove player '" + name + "' from the Battle as they are not in it.");
+            Messenger.log(Level.WARNING, "Failed to remove player '" + name + "' from the Battle as they are not in it.");
         }
     }
 
@@ -145,8 +146,8 @@ public class Battle {
         inProgress = false;
         inLounge = false;
         ending = false;
-        BattleNight.redTeamIronClicked = false;
-        BattleNight.blueTeamIronClicked = false;
+        redTeamIronClicked = false;
+        blueTeamIronClicked = false;
         spectators.clear();
         usersTeam.clear();
         redTeam = 0;
@@ -156,19 +157,19 @@ public class Battle {
     public void start() {
         inProgress = true;
         inLounge = false;
-        Messaging.tellEveryone(true, Message.BATTLE_STARTED);
-        BattleNight.teleportAllToSpawn();
+        Messenger.tellEveryone(true, Message.BATTLE_STARTED);
+        Util.teleportAllToSpawn();
         SignListener.cleanSigns();
     }
 
     public void stop() {
         if (!inLounge) {
             if (blueTeam > redTeam) {
-                Messaging.tellEveryone(true, Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
+                Messenger.tellEveryone(true, Message.TEAM_WON, Team.BLUE.getColour() + Team.BLUE.getName());
             } else if (redTeam > blueTeam) {
-                Messaging.tellEveryone(true, Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
+                Messenger.tellEveryone(true, Message.TEAM_WON, Team.RED.getColour() + Team.RED.getName());
             } else {
-                Messaging.tellEveryone(true, Message.DRAW);
+                Messenger.tellEveryone(true, Message.DRAW);
             }
         }
 
@@ -198,10 +199,10 @@ public class Battle {
 
     public void addSpectator(Player player, String type) {
         if (type.equals("death")) {
-            Messaging.tell(player, Message.WELCOME_SPECTATOR_DEATH);
+            Messenger.tell(player, Message.WELCOME_SPECTATOR_DEATH);
         } else {
             SafeTeleporter.tp(player, Waypoint.SPECTATOR);
-            Messaging.tell(player, Message.WELCOME_SPECTATOR);
+            Messenger.tell(player, Message.WELCOME_SPECTATOR);
         }
 
         if (!PlayerData.storageContains(player)) {
@@ -210,7 +211,7 @@ public class Battle {
 
         PlayerData.reset(player);
         player.setGameMode(GameMode.ADVENTURE);
-        OldUtil.equipArrows(player);
+        ArrowUtil.equipArrows(player);
         player.setAllowFlight(true);
 
         for (String n : usersTeam.keySet()) {
@@ -225,7 +226,7 @@ public class Battle {
     public void removeSpectator(Player player, Iterator<String> it) {
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
-        Messaging.tell(player, Message.GOODBYE_SPECTATOR);
+        Messenger.tell(player, Message.GOODBYE_SPECTATOR);
 
         if (it != null) {
             it.remove();

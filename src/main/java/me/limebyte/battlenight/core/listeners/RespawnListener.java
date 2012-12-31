@@ -2,8 +2,8 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.battle.Battle;
-import me.limebyte.battlenight.core.battle.Waypoint;
+import me.limebyte.battlenight.core.old.Battle;
+import me.limebyte.battlenight.core.old.Waypoint;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -41,7 +41,7 @@ public class RespawnListener implements Listener {
         }
 
         if (Metadata.getBoolean(player, "HandleRespawn")) {
-            BattleNight.getInstance().getAPI().getBattle().onPlayerRespawn(event);
+            BattleNight.instance.getAPI().getBattle().onPlayerRespawn(event);
             Metadata.set(player, "HandleRespawn", false);
         }
     }

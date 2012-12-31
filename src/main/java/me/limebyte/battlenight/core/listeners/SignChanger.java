@@ -2,10 +2,10 @@ package me.limebyte.battlenight.core.listeners;
 
 import java.util.HashMap;
 
-import me.limebyte.battlenight.core.util.BattleClass;
+import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.core.util.ClassManager;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,17 +21,17 @@ public class SignChanger implements Listener {
     public void onSignChange(SignChangeEvent e) {
         Player player = e.getPlayer();
         String title = e.getLine(0);
-        HashMap<String, BattleClass> classes = ClassManager.getClassNames();
+        HashMap<String, PlayerClass> classes = ClassManager.getClassNames();
 
         if (classes != null) {
             if (classes.containsKey(title)) {
                 if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
-                    Messaging.tell(player, Message.UNSUCCESSFUL_SIGN, title);
+                    Messenger.tell(player, Message.UNSUCCESSFUL_SIGN, title);
                     return;
                 }
 
                 e.setLine(1, LINE);
-                Messaging.tell(player, Message.SUCCESSFUL_SIGN, title);
+                Messenger.tell(player, Message.SUCCESSFUL_SIGN, title);
                 return;
             }
         }

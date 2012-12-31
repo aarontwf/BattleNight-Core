@@ -1,17 +1,16 @@
 package me.limebyte.battlenight.api;
 
-public class BattleNightAPI {
+import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.util.BattleNightCommand;
 
-    private Battle battle;
+public interface BattleNightAPI {
 
-    public Battle getBattle() {
-        return battle;
-    }
+    public Battle getBattle();
 
-    public boolean setBattle(Battle battle) {
-        if (this.battle.isInProgress()) return false;
-        this.battle = battle;
-        return true;
-    }
+    public boolean setBattle(Battle battle);
+
+    public abstract void registerCommand(BattleNightCommand command);
+
+    public abstract void unregisterCommand(BattleNightCommand command);
 
 }

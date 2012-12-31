@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.util;
 
 import java.util.List;
 
+import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.entity.Player;
@@ -11,11 +12,11 @@ import org.bukkit.metadata.MetadataValue;
 public class Metadata {
 
     public static void set(Player player, String key, Object value) {
-        player.setMetadata(key, new FixedMetadataValue(BattleNight.getInstance(), value));
+        player.setMetadata(key, new FixedMetadataValue(BattleNight.instance, value));
     }
 
     public static void remove(Player player, String key) {
-        player.removeMetadata(key, BattleNight.getInstance());
+        player.removeMetadata(key, BattleNight.instance);
     }
 
     public static boolean getBoolean(Player player, String key) {
@@ -36,7 +37,7 @@ public class Metadata {
         return null;
     }
 
-    public static BattleClass getBattleClass(Player player, String key) {
+    public static PlayerClass getBattleClass(Player player, String key) {
         String result = getString(player, key);
         if (result != null) return ClassManager.getClassNames().get(result);
         return null;
@@ -44,7 +45,7 @@ public class Metadata {
 
     private static MetadataValue getValue(Player player, String key) {
         List<MetadataValue> values = player.getMetadata(key);
-        String bnName = BattleNight.getInstance().getDescription().getName();
+        String bnName = BattleNight.instance.getDescription().getName();
 
         for (MetadataValue value : values) {
             String owner = value.getOwningPlugin().getDescription().getName();

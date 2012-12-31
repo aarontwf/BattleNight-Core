@@ -1,11 +1,12 @@
-package me.limebyte.battlenight.core.commands;
+package me.limebyte.battlenight.api.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.core.commands.CommandPermission;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -24,7 +25,7 @@ public abstract class BattleNightCommand {
     protected String usageMessage;
     private CommandPermission permission;
 
-    protected BattleNightCommand(String name) {
+    public BattleNightCommand(String name) {
         this.name = name;
         label = name.toLowerCase();
         aliases = new ArrayList<String>();
@@ -123,7 +124,7 @@ public abstract class BattleNightCommand {
      *            User to test
      * @return true if they can use it, otherwise false
      */
-    protected boolean testPermission(CommandSender sender) {
+    public boolean testPermission(CommandSender sender) {
         if (getPermission() == null) return true;
 
         if ((getPermission().getBukkitPerm() == null) || (getPermission().getBukkitPerm().length() == 0)) return true;
@@ -133,14 +134,14 @@ public abstract class BattleNightCommand {
 
             if (sender.hasPermission(permission)) return true;
             else {
-                Messaging.tell(sender, Message.NO_PERMISSION_COMMAND);
+                Messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
                 return false;
             }
         } else {
             if (getPermission().isOpPerm()) {
                 if (sender.isOp()) return true;
                 else {
-                    Messaging.tell(sender, Message.NO_PERMISSION_COMMAND);
+                    Messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
                     return false;
                 }
             } else return true;

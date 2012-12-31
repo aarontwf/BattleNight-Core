@@ -2,9 +2,10 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
+import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -25,8 +26,8 @@ public class KickCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            Messaging.tell(sender, Message.SPECIFY_PLAYER);
-            Messaging.tell(sender, Message.USAGE, getUsage());
+            Messenger.tell(sender, Message.SPECIFY_PLAYER);
+            Messenger.tell(sender, Message.USAGE, getUsage());
             return false;
         }
 
@@ -48,12 +49,12 @@ public class KickCommand extends BattleNightCommand {
 
                 return true;
             } else {
-                Messaging.tell(sender, Message.PLAYER_NOT_IN_BATTLE, args[0]);
+                Messenger.tell(sender, Message.PLAYER_NOT_IN_BATTLE, args[0]);
                 return false;
             }
 
         } else {
-            Messaging.tell(sender, Message.CANT_FIND_PLAYER, args[0]);
+            Messenger.tell(sender, Message.CANT_FIND_PLAYER, args[0]);
             return false;
         }
     }

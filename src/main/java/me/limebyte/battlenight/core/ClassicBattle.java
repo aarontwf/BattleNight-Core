@@ -1,6 +1,6 @@
 package me.limebyte.battlenight.core;
 
-import me.limebyte.battlenight.api.TeamedBattle;
+import me.limebyte.battlenight.api.battle.TeamedBattle;
 
 public class ClassicBattle extends TeamedBattle {
 

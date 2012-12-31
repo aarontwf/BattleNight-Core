@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.limebyte.battlenight.core.util.chat.ListPage;
-import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.api.util.BattleNightCommand;
+import me.limebyte.battlenight.api.util.ListPage;
+import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +25,7 @@ public class HelpCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         List<String> lines = new ArrayList<String>();
-        List<BattleNightCommand> commands = CommandMap.getCommands();
+        List<BattleNightCommand> commands = CommandManager.getCommands();
 
         for (BattleNightCommand cmd : commands) {
             if (cmd.testPermission(sender) && !(cmd instanceof DeprecatedCommand)) {
@@ -33,7 +34,7 @@ public class HelpCommand extends BattleNightCommand {
         }
 
         ListPage page = new ListPage("BattleNight Help Menu", lines);
-        Messaging.tell(sender, page);
+        Messenger.tell(sender, page);
         return true;
     }
 

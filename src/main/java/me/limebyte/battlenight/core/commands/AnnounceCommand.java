@@ -2,9 +2,10 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
+import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,17 +25,17 @@ public class AnnounceCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (!BattleNight.getBattle().isInProgress() && !BattleNight.getBattle().isInLounge()) {
-            Messaging.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
+            Messenger.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
             return false;
         }
 
         if (args.length < 1) {
-            Messaging.tell(sender, Message.SPECIFY_MESSAGE);
-            Messaging.tell(sender, Message.USAGE, getUsage());
+            Messenger.tell(sender, Message.SPECIFY_MESSAGE);
+            Messenger.tell(sender, Message.USAGE, getUsage());
             return false;
         }
 
-        Messaging.tellEveryone(ChatColor.translateAlternateColorCodes('&', createString(args, 0)), true);
+        Messenger.tellEveryone(ChatColor.translateAlternateColorCodes('&', createString(args, 0)), true);
         return true;
     }
 

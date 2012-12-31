@@ -1,10 +1,11 @@
-package me.limebyte.battlenight.core.util.chat;
+package me.limebyte.battlenight.core.util;
 
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.util.Page;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.battle.Team;
-import me.limebyte.battlenight.core.battle.Waypoint;
+import me.limebyte.battlenight.core.old.Team;
+import me.limebyte.battlenight.core.old.Waypoint;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -22,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
-public class Messaging {
+public class Messenger {
 
     public static final String PREFIX = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
 
@@ -69,7 +70,7 @@ public class Messaging {
     }
 
     public static void log(Level level, String message) {
-        BattleNight.getInstance().getLogger().log(level, message);
+        BattleNight.instance.getLogger().log(level, message);
     }
 
     public static void debug(Level level, String message) {

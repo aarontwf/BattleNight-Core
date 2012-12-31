@@ -1,16 +1,12 @@
 package me.limebyte.battlenight.core;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.util.PlayerData;
-import me.limebyte.battlenight.core.battle.Battle;
-import me.limebyte.battlenight.core.battle.Team;
-import me.limebyte.battlenight.core.battle.Waypoint;
-import me.limebyte.battlenight.core.commands.CommandMap;
+import me.limebyte.battlenight.api.BattleNightPlugin;
+import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.listeners.CheatListener;
@@ -24,55 +20,34 @@ import me.limebyte.battlenight.core.listeners.RespawnListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.ClassManager;
-import me.limebyte.battlenight.core.util.OldUtil;
+import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
-import me.limebyte.battlenight.core.util.chat.Messaging;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.kitteh.tag.TagAPI;
 
-public class BattleNight extends JavaPlugin {
+public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
     /** Variables **/
 
-    // Instance Variables
-    private static BattleNight instance;
+    public static BattleNight instance;
     private BattleNightAPI api;
-    protected static final SimpleUtil util = new SimpleUtil();
+    protected Battle battle;
 
-    private static Battle oldBattle;
-
-    public static final String BNTag = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
-
-    // HashMaps
-    public static final Map<String, String> BattleTelePass = new HashMap<String, String>();
-
-    // Other Variables
-    public static boolean redTeamIronClicked = false;
-    public static boolean blueTeamIronClicked = false;
+    private static me.limebyte.battlenight.core.old.Battle oldBattle;
 
     /** Events **/
 
     @Override
     public void onEnable() {
-        // Set instances
         instance = this;
-
-        api = new BattleNightAPI();
+        api = new API();
         api.setBattle(new ClassicBattle());
 
-        oldBattle = new Battle();
+        oldBattle = new me.limebyte.battlenight.core.old.Battle();
 
         ConfigManager.initConfigurations();
         ClassManager.reloadClasses();
@@ -87,12 +62,12 @@ public class BattleNight extends JavaPlugin {
 
         // Debugging
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
-            Messaging.debug(Level.INFO, "Permissions Enabled.");
+            Messenger.debug(Level.INFO, "Permissions Enabled.");
         } else {
-            Messaging.debug(Level.INFO, "Permissions Disabled, using Op.");
+            Messenger.debug(Level.INFO, "Permissions Disabled, using Op.");
         }
         String loadedClasses = ClassManager.getClassNames().keySet().toString();
-        Messaging.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
+        Messenger.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
 
         PluginManager pm = getServer().getPluginManager();
 
@@ -115,133 +90,35 @@ public class BattleNight extends JavaPlugin {
         pm.registerEvents(new SignChanger(), this);
         pm.registerEvents(new SignListener(), this);
 
+        // Commands
+        getCommand("battlenight").setExecutor(new CommandManager());
+
         // Enable Message
-        Messaging.log(Level.INFO, "Version " + pdfFile.getVersion() + " enabled successfully.");
-        Messaging.log(Level.INFO, "Made by LimeByte.");
+        Messenger.log(Level.INFO, "Version " + pdfFile.getVersion() + " enabled successfully.");
+        Messenger.log(Level.INFO, "Made by LimeByte.");
     }
 
-    // ////////////////////
-    // Plug-in Disable //
-    // ////////////////////
     @Override
     public void onDisable() {
         if (getBattle().isInProgress() || getBattle().isInLounge()) {
-            Messaging.log(Level.INFO, "Ending current Battle...");
+            Messenger.log(Level.INFO, "Ending current Battle...");
             oldBattle.stop();
         }
         SignListener.cleanSigns();
 
+        if (getAPI().getBattle().isInProgress()) {
+            getAPI().getBattle().stop();
+        }
+
         PluginDescriptionFile pdfFile = getDescription();
-        Messaging.log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
+        Messenger.log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
     }
 
-    /** Commands **/
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-        if (commandLabel.equalsIgnoreCase("bn")) {
-            if (args.length < 1) {
-                sender.sendMessage(BNTag + ChatColor.RED + "Incorrect usage.  Type \"" + CommandMap.getCommand("Help").getUsage() + "\" to show the help menu.");
-                return true;
-            } else return CommandMap.dispatch(sender, args);
-        }
-        return false;
-    }
-
-    /** Methods **/
-
-    public static boolean isSetup() {
-        for (Waypoint wp : Waypoint.values()) {
-            if (!wp.isSet()) return false;
-        }
-        return true;
-    }
-
-    public static int numSetupPoints() {
-        int set = 0;
-        for (Waypoint wp : Waypoint.values()) {
-            if (wp.isSet()) {
-                set++;
-            }
-        }
-        return set;
-    }
-
-    public static void teleportAllToSpawn() {
-        for (String name : getBattle().usersTeam.keySet()) {
-            if (Bukkit.getPlayer(name) != null) {
-                Player currentPlayer = Bukkit.getPlayer(name);
-                if (getBattle().usersTeam.get(name).equals(Team.RED)) {
-                    SafeTeleporter.tp(currentPlayer, Waypoint.RED_SPAWN);
-                }
-                if (getBattle().usersTeam.get(name).equals(Team.BLUE)) {
-                    SafeTeleporter.tp(currentPlayer, Waypoint.BLUE_SPAWN);
-                }
-            }
-        }
-
-        SafeTeleporter.startTeleporting();
-    }
-
-    public static boolean preparePlayer(Player player) {
-        String invType = ConfigManager.get(Config.MAIN).getString("InventoryType", "save");
-
-        if (invType.equalsIgnoreCase("prompt")) {
-            if (!util.inventoryEmpty(player.getInventory())) return false;
-        }
-
-        PlayerData.store(player);
-        PlayerData.reset(player);
-        return true;
-    }
-
-    public static void reset(Player p, boolean light) {
-        OldUtil.clearInventory(p);
-        for (PotionEffect effect : p.getActivePotionEffects()) {
-            p.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
-        }
-
-        if (!light) {
-            p.setHealth(p.getMaxHealth());
-            p.setFoodLevel(16);
-            p.setSaturation(1000);
-            p.setExhaustion(0);
-            p.setLevel(0);
-            p.setExp(0);
-            p.setGameMode(GameMode.SURVIVAL);
-            p.setAllowFlight(false);
-            p.setFlying(false);
-            p.setSleepingIgnored(true);
-
-            setNames(p);
-
-            p.setTicksLived(1);
-            p.setNoDamageTicks(0);
-            p.setRemainingAir(300);
-            p.setFallDistance(0.0f);
-            p.setFireTicks(-20);
-        }
-    }
-
-    public static void setNames(Player player) {
-        String name = player.getName();
-        String pListName = ChatColor.GRAY + "[BN] " + name;
-        player.setPlayerListName(pListName.length() < 16 ? pListName : pListName.substring(0, 16));
-
-        try {
-            TagAPI.refreshPlayer(player);
-        } catch (Exception e) {
-        }
-    }
-
-    public static BattleNight getInstance() {
-        return instance;
-    }
-
-    public static Battle getBattle() {
+    public static me.limebyte.battlenight.core.old.Battle getBattle() {
         return oldBattle;
     }
 
+    @Override
     public BattleNightAPI getAPI() {
         return api;
     }

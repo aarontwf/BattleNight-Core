@@ -1,8 +1,9 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
+import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -25,24 +26,24 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && !BattleNight.BattleTelePass.containsKey(player.getName())) {
+        if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && !SafeTeleporter.telePass.containsKey(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
                 case PLUGIN:
                     event.setCancelled(true);
-                    Messaging.tell(player, Message.NO_TELEPORTING);
+                    Messenger.tell(player, Message.NO_TELEPORTING);
                     break;
                 case ENDER_PEARL:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
                         event.setCancelled(true);
-                        Messaging.tell(player, Message.NO_TELEPORTING);
+                        Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", false)) {
                         event.setCancelled(true);
-                        Messaging.tell(player, Message.NO_TELEPORTING);
+                        Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 default:
@@ -57,7 +58,7 @@ public class CheatListener implements Listener {
         Player player = event.getPlayer();
         if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
             event.setCancelled(true);
-            Messaging.tell(player, Message.NO_CHEATING);
+            Messenger.tell(player, Message.NO_CHEATING);
         }
 
         if (BattleNight.getBattle().spectators.contains(player.getName())) {
@@ -77,7 +78,7 @@ public class CheatListener implements Listener {
             final Player thrower = (Player) projectile.getShooter();
             if (BattleNight.getBattle().usersTeam.containsKey(thrower.getName())) {
                 event.setCancelled(true);
-                Messaging.tell(thrower, Message.NO_CHEATING);
+                Messenger.tell(thrower, Message.NO_CHEATING);
             }
         }
     }

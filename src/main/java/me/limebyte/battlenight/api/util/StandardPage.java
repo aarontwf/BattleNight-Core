@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util.chat;
+package me.limebyte.battlenight.api.util;
 
 public class StandardPage extends Page {
 

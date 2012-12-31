@@ -1,9 +1,9 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.battle.Team;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.core.old.Team;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -32,18 +32,18 @@ public class InteractListener implements Listener {
                     Team team = BattleNight.getBattle().usersTeam.get(name);
 
                     if (team.isReady()) {
-                        Messaging.tellEveryone(false, Message.TEAM_IS_READY, team.getColour() + team.getName());
+                        Messenger.tellEveryone(false, Message.TEAM_IS_READY, team.getColour() + team.getName());
 
                         if (team.equals(Team.RED)) {
-                            BattleNight.redTeamIronClicked = true;
+                            BattleNight.getBattle().redTeamIronClicked = true;
 
-                            if (Team.BLUE.isReady() && BattleNight.blueTeamIronClicked) {
+                            if (Team.BLUE.isReady() && BattleNight.getBattle().blueTeamIronClicked) {
                                 BattleNight.getBattle().start();
                             }
                         } else if (team.equals(Team.BLUE)) {
-                            BattleNight.blueTeamIronClicked = true;
+                            BattleNight.getBattle().blueTeamIronClicked = true;
 
-                            if (Team.RED.isReady() && BattleNight.redTeamIronClicked) {
+                            if (Team.RED.isReady() && BattleNight.getBattle().redTeamIronClicked) {
                                 BattleNight.getBattle().start();
                             }
                         }
@@ -60,9 +60,9 @@ public class InteractListener implements Listener {
                 if (stack != null && stack.getItemMeta() != null) {
                     String itemName = stack.getItemMeta().getDisplayName();
                     if (itemName.contains("Previous Player")) {
-                        Messaging.tell(player, "Teleporting to previous player.");
+                        Messenger.tell(player, "Teleporting to previous player.");
                     } else if (itemName.contains("Next Player")) {
-                        Messaging.tell(player, "Teleporting to next player.");
+                        Messenger.tell(player, "Teleporting to next player.");
                     }
                 }
             }

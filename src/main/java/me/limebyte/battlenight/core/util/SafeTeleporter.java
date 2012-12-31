@@ -8,7 +8,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.battle.Waypoint;
+import me.limebyte.battlenight.core.old.Waypoint;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -24,6 +24,7 @@ import org.kitteh.tag.TagAPI;
 
 public class SafeTeleporter implements Listener {
 
+    public static Map<String, String> telePass = new HashMap<String, String>();
     private static Queue<String> playerQueue = new LinkedList<String>();
     private static Queue<Waypoint> waypointQueue = new LinkedList<Waypoint>();
     private static int taskID = 0;
@@ -44,13 +45,13 @@ public class SafeTeleporter implements Listener {
         String name = player.getName();
 
         //safeTP(player, waypoint);
-        BattleNight.BattleTelePass.put(name, "yes");
+        telePass.put(name, "yes");
         player.teleport(location, TeleportCause.PLUGIN);
-        BattleNight.BattleTelePass.remove(name);
+        telePass.remove(name);
     }
 
     public static void startTeleporting() {
-        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BattleNight.getInstance(), new Runnable() {
+        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BattleNight.instance, new Runnable() {
             @Override
             public void run() {
                 if (playerQueue.isEmpty()) {
@@ -78,9 +79,9 @@ public class SafeTeleporter implements Listener {
 
         String name = player.getName();
 
-        BattleNight.BattleTelePass.put(name, "yes");
+        telePass.put(name, "yes");
         player.teleport(loc, TeleportCause.PLUGIN);
-        BattleNight.BattleTelePass.remove(name);
+        telePass.remove(name);
 
         locationQueue.put(name, loc);
     }
@@ -94,9 +95,9 @@ public class SafeTeleporter implements Listener {
             Location loc = locationQueue.get(name);
             locationQueue.remove(name);
 
-            BattleNight.BattleTelePass.put(name, "yes");
+            telePass.put(name, "yes");
             player.teleport(loc, TeleportCause.PLUGIN);
-            BattleNight.BattleTelePass.remove(name);
+            telePass.remove(name);
 
             try {
                 TagAPI.refreshPlayer(player);

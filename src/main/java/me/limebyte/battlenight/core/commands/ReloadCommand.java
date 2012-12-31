@@ -3,10 +3,11 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.ClassManager;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 
 import org.bukkit.command.CommandSender;
@@ -25,18 +26,18 @@ public class ReloadCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        Messaging.tell(sender, Message.RELOADING);
+        Messenger.tell(sender, Message.RELOADING);
 
         try {
             BattleNight.getBattle().stop();
             ConfigManager.reloadAll();
             ConfigManager.saveAll();
             ClassManager.reloadClasses();
-            Messaging.tell(sender, Message.RELOAD_SUCCESSFUL);
+            Messenger.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;
         } catch (Exception e) {
-            Messaging.tell(sender, Message.RELOAD_FAILED);
-            Messaging.log(Level.SEVERE, e.getStackTrace().toString());
+            Messenger.tell(sender, Message.RELOAD_FAILED);
+            Messenger.log(Level.SEVERE, e.getStackTrace().toString());
             return false;
         }
     }

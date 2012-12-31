@@ -1,8 +1,9 @@
 package me.limebyte.battlenight.core.listeners;
 
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Metadata;
-import me.limebyte.battlenight.core.util.chat.Messaging;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,10 +26,10 @@ public class DeathListener implements Listener {
             Metadata.set(player, "respawn", true);
 
             if (!BattleNight.getBattle().isInLounge()) {
-                Messaging.killFeed(player, player.getKiller());
+                Messenger.killFeed(player, player.getKiller());
             }
 
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.getInstance(), new Runnable() {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
                 @Override
                 public void run() {
                     BattleNight.getBattle().removePlayer(player, true, null, null);
@@ -36,9 +37,10 @@ public class DeathListener implements Listener {
             }, 1L);
         }
 
-        if (BattleNight.getInstance().getAPI().getBattle().containsPlayer(player)) {
+        Battle battle = BattleNight.instance.getAPI().getBattle();
+        if (battle.containsPlayer(player)) {
             Metadata.set(player, "HandleRespawn", true);
-            BattleNight.getInstance().getAPI().getBattle().onPlayerDeath(event);
+            battle.onPlayerDeath(event);
         }
     }
 

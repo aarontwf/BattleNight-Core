@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api;
+package me.limebyte.battlenight.api.battle;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +23,7 @@ public abstract class Battle {
         return true;
     }
 
-    public boolean end() {
+    public boolean stop() {
         inProgress = false;
         onEnd();
         return true;

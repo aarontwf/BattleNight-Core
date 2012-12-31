@@ -9,7 +9,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-public class BattleClass {
+public class BattleClass implements me.limebyte.battlenight.api.battle.PlayerClass {
     private String name;
     private Permission permission;
     private List<ItemStack> items, armour;
@@ -29,22 +29,27 @@ public class BattleClass {
         }
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Permission getPermission() {
         return permission;
     }
 
+    @Override
     public List<ItemStack> getItems() {
         return items;
     }
 
+    @Override
     public List<ItemStack> getArmour() {
         return armour;
     }
 
+    @Override
     public void equip(Player player) {
         PlayerInventory inv = player.getInventory();
 

@@ -3,13 +3,16 @@ package me.limebyte.battlenight.core.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.api.util.BattleNightCommand;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class CommandMap {
-    private static final List<BattleNightCommand> commands = new ArrayList<BattleNightCommand>();
+public class CommandManager implements CommandExecutor {
+    private static List<BattleNightCommand> commands = new ArrayList<BattleNightCommand>();
 
     static {
         commands.add(new AnnounceCommand());
@@ -34,7 +37,13 @@ public class CommandMap {
         commands.add(new DeprecatedCommand("exit", "set exit..."));
     }
 
-    public static boolean dispatch(CommandSender sender, String[] args) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length < 1) {
+            Messenger.tell(sender, Message.INCORRECT_USAGE);
+            return false;
+        }
+
         for (BattleNightCommand command : commands) {
             if (command.labelMatches(args[0]) || command.aliasMatches(args[0])) {
                 command.perform(sender, args);
@@ -42,8 +51,16 @@ public class CommandMap {
             }
         }
 
-        Messaging.tell(sender, Message.INVALID_COMMAND);
+        Messenger.tell(sender, Message.INVALID_COMMAND);
         return false;
+    }
+
+    public static void registerCommand(BattleNightCommand command) {
+        commands.add(command);
+    }
+
+    public static void unResgisterCommand(BattleNightCommand command) {
+        commands.remove(command);
     }
 
     public static BattleNightCommand getCommand(String name) {

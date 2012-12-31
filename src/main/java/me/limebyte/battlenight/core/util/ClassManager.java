@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.core.util.chat.Messaging;
+import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -17,17 +17,17 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 public class ClassManager {
-    private static List<BattleClass> classes = new ArrayList<BattleClass>();
+    private static List<PlayerClass> classes = new ArrayList<PlayerClass>();
     private static final Config configFile = Config.CLASSES;
 
-    public static List<BattleClass> getClasses() {
+    public static List<PlayerClass> getClasses() {
         return classes;
     }
 
-    public static HashMap<String, BattleClass> getClassNames() {
-        HashMap<String, BattleClass> classList = new HashMap<String, BattleClass>();
+    public static HashMap<String, PlayerClass> getClassNames() {
+        HashMap<String, PlayerClass> classList = new HashMap<String, PlayerClass>();
 
-        for (BattleClass c : classes) {
+        for (PlayerClass c : classes) {
             classList.put(c.getName(), c);
         }
 
@@ -40,7 +40,7 @@ public class ClassManager {
     }
 
     public static void loadClasses() {
-        Messaging.debug(Level.INFO, "Loading classes...");
+        Messenger.debug(Level.INFO, "Loading classes...");
         ConfigManager.reload(configFile);
         for (String className : ConfigManager.get(configFile).getConfigurationSection("Classes").getKeys(false)) {
             fixOldFiles(className);
@@ -48,17 +48,17 @@ public class ClassManager {
             String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
             classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour))));
         }
-        Messaging.debug(Level.INFO, "Classes loaded!");
+        Messenger.debug(Level.INFO, "Classes loaded!");
     }
 
     public static void saveClasses() {
-        Messaging.debug(Level.INFO, "Saving classes...");
-        for (BattleClass c : classes) {
+        Messenger.debug(Level.INFO, "Saving classes...");
+        for (PlayerClass c : classes) {
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Armour", parseItems(c.getArmour()));
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
         }
         ConfigManager.save(configFile);
-        Messaging.debug(Level.INFO, "Classes saved!");
+        Messenger.debug(Level.INFO, "Classes saved!");
     }
 
     private static List<ItemStack> parseItems(String rawItems) {
@@ -96,7 +96,7 @@ public class ClassManager {
                 } else if (part3[0].equalsIgnoreCase("none")) {
                     id = Material.AIR.getId();
                 } else {
-                    Messaging.debug(Level.WARNING, "Skipping ID: " + part3[0]);
+                    Messenger.debug(Level.WARNING, "Skipping ID: " + part3[0]);
                     continue;
                 }
             }
@@ -189,7 +189,7 @@ public class ClassManager {
                 }
             }
 
-            Messaging.debug(Level.INFO, "Adding item: " + formatStack(stack) + ".");
+            Messenger.debug(Level.INFO, "Adding item: " + formatStack(stack) + ".");
 
             if (amount > 1) {
                 items.addAll(Arrays.asList(splitIntoStacks(stack, amount)));
@@ -296,7 +296,7 @@ public class ClassManager {
         return sorted;
     }
 
-    public static BattleClass getRandomClass() {
+    public static PlayerClass getRandomClass() {
         Random random = new Random();
         int classNum = random.nextInt(classes.size());
         return classes.get(classNum);

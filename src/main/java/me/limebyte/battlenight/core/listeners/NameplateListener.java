@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.battle.Team;
+import me.limebyte.battlenight.core.old.Team;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;

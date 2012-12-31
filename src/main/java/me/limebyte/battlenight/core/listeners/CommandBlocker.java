@@ -3,8 +3,8 @@ package me.limebyte.battlenight.core.listeners;
 import java.util.List;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -50,7 +50,7 @@ public class CommandBlocker implements Listener {
 
         // Its not listed so block it
         event.setCancelled(true);
-        Messaging.tell(player, Message.NO_COMMAND);
+        Messenger.tell(player, Message.NO_COMMAND);
         return;
     }
 

@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api;
+package me.limebyte.battlenight.api.battle;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

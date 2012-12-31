@@ -1,7 +1,8 @@
 package me.limebyte.battlenight.core.commands;
 
-import me.limebyte.battlenight.core.util.chat.Messaging;
-import me.limebyte.battlenight.core.util.chat.Messaging.Message;
+import me.limebyte.battlenight.api.util.BattleNightCommand;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 
 import org.bukkit.command.CommandSender;
 
@@ -20,7 +21,7 @@ public class DeprecatedCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        Messaging.tell(sender, Message.DEPRICATED_COMMAND, newLabel);
+        Messenger.tell(sender, Message.DEPRICATED_COMMAND, newLabel);
         return true;
     }
 
