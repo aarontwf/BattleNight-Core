@@ -6,11 +6,11 @@ public class Arena {
 
     private String name;
     private String displayName;
-    private Set<Waypoint> waypoints;
+    private Set<Waypoint> spawnPoints;
     private boolean enabled = true;
 
     public Arena(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public String getName() {
@@ -25,16 +25,16 @@ public class Arena {
         this.displayName = displayName;
     }
 
-    public Set<Waypoint> getWaypoints() {
-        return waypoints;
+    public Set<Waypoint> getSpawnPoints() {
+        return spawnPoints;
     }
 
-    public void addWaypoint(Waypoint waypoint) {
-        waypoints.add(waypoint);
+    public void addSpawnPoint(Waypoint waypoint) {
+        spawnPoints.add(waypoint);
     }
 
-    public void removeWaypoint(Waypoint waypoint) {
-        waypoints.remove(waypoint);
+    public void removeSpawnPoint(Waypoint waypoint) {
+        spawnPoints.remove(waypoint);
     }
 
     public void enable() {
@@ -49,8 +49,8 @@ public class Arena {
         return enabled;
     }
 
-    public boolean isSetup() {
-        return waypoints.size() >= 2;
+    public boolean isSetup(int minSpawnPoints) {
+        return spawnPoints.size() >= minSpawnPoints;
     }
 
 }

@@ -1,22 +1,30 @@
 package me.limebyte.battlenight.api.battle;
 
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class Waypoint {
 
     private String name;
-    private Location location;
+    private String arenaName;
     private static final String LOC_SEP = ", ";
 
-    public Waypoint(String name, Location location) {
+    private static Waypoint lounge = new Waypoint("lounge");
+    private static Waypoint exit = new Waypoint("exit");
+
+    public Waypoint(String name) {
         this.name = name;
-        this.location = location;
+        arenaName = "default";
     }
 
-    public Waypoint(String name, String location) {
-        this(name, parseLocation(location));
+    public Waypoint(String name, Arena arena) {
+        this.name = name;
+        arenaName = arena.getName();
     }
 
     public String getName() {
@@ -24,7 +32,19 @@ public class Waypoint {
     }
 
     public Location getLocation() {
-        return location;
+        FileConfiguration config = ConfigManager.get(Config.ARENAS);
+        return parseLocation(config.getString(arenaName + "." + name));
+    }
+
+    public void setLocation(Location location) {
+        ConfigManager.reload(Config.ARENAS);
+        FileConfiguration config = ConfigManager.get(Config.ARENAS);
+        config.set(arenaName + "." + name, parseLocation(location));
+        ConfigManager.save(Config.ARENAS);
+    }
+
+    public boolean isSet() {
+        return getLocation() != null;
     }
 
     public String getParsedLocation() {
@@ -53,6 +73,34 @@ public class Waypoint {
         float pitch = Float.parseFloat(coords[4]);
 
         return new Location(w, x, y, z, yaw, pitch);
+    }
+
+    /**
+     * @return the lounge
+     */
+    public static Waypoint getLounge() {
+        return lounge;
+    }
+
+    /**
+     * @param lounge
+     */
+    public static void setLounge(Waypoint lounge) {
+        Waypoint.lounge = lounge;
+    }
+
+    /**
+     * @return the exit
+     */
+    public static Waypoint getExit() {
+        return exit;
+    }
+
+    /**
+     * @param exit
+     */
+    public static void setExit(Waypoint exit) {
+        Waypoint.exit = exit;
     }
 
 }

@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.util.PlayerData;
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
+import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -38,13 +41,20 @@ public abstract class Battle {
     }
 
     public boolean addPlayer(Player player) {
+        if (!Waypoint.getLounge().isSet() || arena == null || !arena.isSetup(1)) {
+            Messenger.tell(player, Message.WAYPOINTS_UNSET);
+            return false;
+        }
+
         PlayerData.store(player);
         PlayerData.reset(player);
         players.add(player.getName());
+        SafeTeleporter.tp(player, Waypoint.getLounge().getLocation());
         return true;
     }
 
     public boolean removePlayer(Player player) {
+        PlayerData.reset(player);
         PlayerData.restore(player, true, false);
         players.remove(player.getName());
         return true;
