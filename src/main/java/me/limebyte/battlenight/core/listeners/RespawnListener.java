@@ -2,7 +2,7 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.old.Battle;
+import me.limebyte.battlenight.core.old.OldBattle;
 import me.limebyte.battlenight.core.old.Waypoint;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -20,7 +20,7 @@ public class RespawnListener implements Listener {
         Player player = event.getPlayer();
 
         if (Metadata.getBoolean(player, "respawn")) {
-            Battle battle = BattleNight.getBattle();
+            OldBattle battle = BattleNight.getBattle();
 
             if (battle.isInProgress() && !battle.isEnding()) {
                 // Player becomes a Spectator

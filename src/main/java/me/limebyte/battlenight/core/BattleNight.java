@@ -5,7 +5,6 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
-import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
@@ -19,6 +18,7 @@ import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.RespawnListener;
 import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
+import me.limebyte.battlenight.core.old.OldBattle;
 import me.limebyte.battlenight.core.util.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -35,9 +35,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
     public static BattleNight instance;
     private BattleNightAPI api;
-    protected Battle battle;
 
-    private static me.limebyte.battlenight.core.old.Battle oldBattle;
+    private static OldBattle oldBattle;
 
     /** Events **/
 
@@ -47,7 +46,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         api = new API();
         api.setBattle(new ClassicBattle());
 
-        oldBattle = new me.limebyte.battlenight.core.old.Battle();
+        oldBattle = new OldBattle();
 
         ConfigManager.initConfigurations();
         ClassManager.reloadClasses();
@@ -102,20 +101,20 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         }
         SignListener.cleanSigns();
 
-        if (getAPI().getBattle().isInProgress()) {
-            getAPI().getBattle().stop();
-        }
+        // Stop the current Battle
+        getAPI().getBattle().stop();
 
+        // Disable message
         PluginDescriptionFile pdfFile = getDescription();
         Messenger.log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
-    }
-
-    public static me.limebyte.battlenight.core.old.Battle getBattle() {
-        return oldBattle;
     }
 
     @Override
     public BattleNightAPI getAPI() {
         return api;
+    }
+
+    public static OldBattle getBattle() {
+        return oldBattle;
     }
 }

@@ -7,15 +7,17 @@ import me.limebyte.battlenight.core.commands.CommandManager;
 
 public class API implements BattleNightAPI {
 
+    private Battle battle;
+
     @Override
     public Battle getBattle() {
-        return BattleNight.instance.battle;
+        return battle;
     }
 
     @Override
     public boolean setBattle(Battle battle) {
-        if (BattleNight.instance.battle != null && BattleNight.instance.battle.isInProgress()) return false;
-        BattleNight.instance.battle = battle;
+        if (this.battle != null && this.battle.isInProgress()) return false;
+        this.battle = battle;
         return true;
     }
 

@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.old.Battle;
+import me.limebyte.battlenight.core.old.OldBattle;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +25,7 @@ public class DisconnectListener implements Listener {
     }
 
     private void removePlayer(Player player, String reason) {
-        Battle battle = BattleNight.getBattle();
+        OldBattle battle = BattleNight.getBattle();
         String name = player.getName();
 
         if (battle.usersTeam.containsKey(name)) {

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.old.Battle;
+import me.limebyte.battlenight.core.old.OldBattle;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 
@@ -26,7 +26,7 @@ public class LeaveCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
-            Battle battle = BattleNight.getBattle();
+            OldBattle battle = BattleNight.getBattle();
             Player player = (Player) sender;
 
             if (battle.usersTeam.containsKey(player.getName())) {

@@ -21,12 +21,14 @@ public abstract class Battle {
     private Set<String> spectators = new HashSet<String>();
 
     public boolean start() {
+        if (isInProgress()) return false;
         inProgress = true;
         onStart();
         return true;
     }
 
     public boolean stop() {
+        if (!isInProgress()) return false;
         inProgress = false;
         onEnd();
         return true;
