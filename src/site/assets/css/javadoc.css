@@ -1,61 +1,168 @@
+/*******************************************************************************
+BattleNight Theme for the API Javadoc
+by Aaron Wilson, @LimeByte
+*******************************************************************************/
+
+/*******************************************************************************
+MeyerWeb Reset
+*******************************************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a:focus {
+  outline: none;
+}
+
+/*******************************************************************************
+Theme Styles
+*******************************************************************************/
+
 body {
-	background-color:#f2f2f2;
+	background:#f2f2f2;
 	color:#373737;
+	
+	font-size: 16px;
+	font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 10px 0;
+  font-weight: 700;
+  color:#222;
+  font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+  letter-spacing: -1px;
 }
 
 h1 {
-	font-size:145%;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+h2 {
+  padding-bottom: 10px;
+  font-size: 32px;
+  background: url('../img/bg_hr.png') repeat-x bottom;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+h4 {
+  font-size: 21px;
+}
+
+h5 {
+  font-size: 18px;
+}
+
+h6 {
+  font-size: 16px;
+}
+
+a {
+  text-decoration: none;
+  color: #007edf;
+  text-shadow: none;
+
+  transition: color 0.5s ease;
+  transition: text-shadow 0.5s ease;
+  -webkit-transition: color 0.5s ease;
+  -webkit-transition: text-shadow 0.5s ease;
+     -moz-transition: color 0.5s ease;
+     -moz-transition: text-shadow 0.5s ease;
+      -ms-transition: color 0.5s ease;
+      -ms-transition: text-shadow 0.5s ease;
+       -o-transition: color 0.5s ease;
+       -o-transition: text-shadow 0.5s ease;
+}
+
+a:hover {
+  color: #0069ba;
+  text-shadow: #0090ff 0px 0px 2px;
 }
 
 .TableHeadingColor {
-	background:#ccf;
-	color:#222;
+	background: #ccf;
+	color: #222;
 }
 
 .TableSubHeadingColor {
-	background:#eef;
-	color:#222;
+	background: #eef;
+	color: #222;
 }
 
 .TableRowColor {
-	background:#fff;
-	color:#222;
+	background: #fff;
+	color: #222;
 }
 
 .FrameTitleFont {
-	color:#222;
-	font-family:Helvetica, Arial, sans-serif;
-	font-size:100%;
+	color: #222;
+	font-size: 100%;
 }
 
 .NavBarCell1 {
-	background-color:#eef;
-	color:#222;
+	background-color: #eef;
+	color: #222;
 }
 
 .NavBarCell1Rev {
-	background-color:#00008B;
-	color:#fff;
+	background-color: #00008B;
+	color: #fff;
 }
 
 .NavBarFont1 {
-	color:#222;
-	font-family:Arial, Helvetica, sans-serif;
+	color: #222;
 }
 
 .NavBarFont1Rev {
-	color:#fff;
-	font-family:Arial, Helvetica, sans-serif;
+	color: #fff;
 }
 
 .FrameHeadingFont,.FrameItemFont {
 	color:#222;
-	font-family:Helvetica, Arial, sans-serif;
 	font-size:90%;
 }
 
 .NavBarCell2,.NavBarCell3 {
 	background-color:#fff;
 	color:#222;
-	font-family:Arial, Helvetica, sans-serif;
 }
