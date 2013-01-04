@@ -32,6 +32,7 @@ public class Waypoint {
     }
 
     public Location getLocation() {
+        if (!isSet()) return null;
         FileConfiguration config = ConfigManager.get(Config.ARENAS);
         return parseLocation(config.getString(arenaName + "." + name));
     }
@@ -44,7 +45,8 @@ public class Waypoint {
     }
 
     public boolean isSet() {
-        return getLocation() != null;
+        FileConfiguration config = ConfigManager.get(Config.ARENAS);
+        return config.getString(arenaName + "." + name) != null;
     }
 
     public String getParsedLocation() {
