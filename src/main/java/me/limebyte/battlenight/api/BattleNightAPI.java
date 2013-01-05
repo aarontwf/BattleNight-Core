@@ -1,5 +1,6 @@
 package me.limebyte.battlenight.api;
 
+import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 
@@ -9,8 +10,12 @@ public interface BattleNightAPI {
 
     public boolean setBattle(Battle battle);
 
-    public abstract void registerCommand(BattleNightCommand command);
+    public void registerCommand(BattleNightCommand command);
 
-    public abstract void unregisterCommand(BattleNightCommand command);
+    public void unregisterCommand(BattleNightCommand command);
+
+    public void registerArena(Arena arena);
+
+    public void unregisterArena(Arena arena);
 
 }

@@ -38,11 +38,15 @@ public class Arena {
     }
 
     public void enable() {
-        enabled = true;
+        setEnabled(true);
     }
 
     public void disable() {
-        enabled = false;
+        setEnabled(false);
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public boolean isEnabled() {
