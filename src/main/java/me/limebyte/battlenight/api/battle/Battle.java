@@ -42,6 +42,13 @@ public abstract class Battle {
         return inProgress;
     }
 
+    /**
+     * Adds the specified {@link Player} to the battle. This will return false
+     * if it is unsuccessful.
+     * 
+     * @param player the Player to add
+     * @return true if successful
+     */
     public boolean addPlayer(Player player) {
         if (!Waypoint.getLounge().isSet() || arena == null || !arena.isSetup(1)) {
             Messenger.tell(player, Message.WAYPOINTS_UNSET);
@@ -55,7 +62,15 @@ public abstract class Battle {
         return true;
     }
 
+    /**
+     * Removes the specified {@link Player} to the battle. This will return
+     * false if it is unsuccessful.
+     * 
+     * @param player the Player to remove
+     * @return true if successful
+     */
     public boolean removePlayer(Player player) {
+        if (!containsPlayer(player)) return false;
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
         players.remove(player.getName());
