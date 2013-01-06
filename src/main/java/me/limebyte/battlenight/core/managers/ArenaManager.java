@@ -1,10 +1,11 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.managers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.battle.Arena;
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -12,30 +13,31 @@ import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 public class ArenaManager {
 
-    private static List<Arena> arenas = new ArrayList<Arena>();
+    private static List<Arena> arenas;
     private static final Config configFile = Config.ARENAS;
+
+    private static Waypoint lounge;
+    private static Waypoint exit;
 
     private ArenaManager() {
         // Private constructor for utility class
     }
 
+    @SuppressWarnings("unchecked")
     public static void loadArenas() {
         Messenger.debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
-        for (String arenaName : ConfigManager.get(configFile).getConfigurationSection("Arenas").getKeys(false)) {
-            Arena arena = new Arena(arenaName);
-            arena.setDisplayName(ConfigManager.get(configFile).getString("Arenas." + arenaName + ".DisplayName"));
-            arena.setEnabled(ConfigManager.get(configFile).getBoolean("Arenas." + arenaName + ".Enabled"));
-            register(arena);
-        }
+
+        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", new Waypoint("Lounge"));
+        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", new Waypoint("Exit"));
+        arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", new ArrayList<Arena>());
     }
 
     public static void saveArenas() {
         Messenger.debug(Level.INFO, "Saving arenas...");
-        for (Arena a : arenas) {
-            ConfigManager.get(configFile).set("Arenas." + a.getName() + ".DisplayName", a.getDisplayName());
-            ConfigManager.get(configFile).set("Arenas." + a.getName() + ".Enabled", a.isEnabled());
-        }
+        ConfigManager.get(configFile).set("Lounge", lounge);
+        ConfigManager.get(configFile).set("Exit", exit);
+        ConfigManager.get(configFile).set("Arenas", arenas);
         ConfigManager.save(configFile);
     }
 
@@ -53,6 +55,14 @@ public class ArenaManager {
 
     public static Arena getRandomArena() {
         return (Arena) Util.getRandom(arenas);
+    }
+
+    public static Waypoint getLounge() {
+        return lounge;
+    }
+
+    public static Waypoint getExit() {
+        return exit;
     }
 
 }

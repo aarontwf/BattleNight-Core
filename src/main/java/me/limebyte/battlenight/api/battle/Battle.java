@@ -3,6 +3,7 @@ package me.limebyte.battlenight.api.battle;
 import java.util.HashSet;
 import java.util.Set;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -14,6 +15,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public abstract class Battle {
 
+    public BattleNightAPI api;
     private Arena arena;
     private boolean inProgress = false;
 
@@ -50,7 +52,7 @@ public abstract class Battle {
      * @return true if successful
      */
     public boolean addPlayer(Player player) {
-        if (!Waypoint.getLounge().isSet() || arena == null || !arena.isSetup(1)) {
+        if (!api.getLoungeWaypoint().isSet() || arena == null || !arena.isSetup(1)) {
             Messenger.tell(player, Message.WAYPOINTS_UNSET);
             return false;
         }
@@ -58,7 +60,7 @@ public abstract class Battle {
         PlayerData.store(player);
         PlayerData.reset(player);
         players.add(player.getName());
-        SafeTeleporter.tp(player, Waypoint.getLounge().getLocation());
+        SafeTeleporter.tp(player, api.getExitWaypoint().getLocation());
         return true;
     }
 

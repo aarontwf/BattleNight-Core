@@ -1,30 +1,26 @@
 package me.limebyte.battlenight.api.battle;
 
-import me.limebyte.battlenight.core.util.config.ConfigManager;
-import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-public class Waypoint {
+public class Waypoint implements ConfigurationSerializable {
 
     private String name;
-    private String arenaName;
+    private Location location;
     private static final String LOC_SEP = ", ";
-
-    private static Waypoint lounge = new Waypoint("lounge");
-    private static Waypoint exit = new Waypoint("exit");
 
     public Waypoint(String name) {
         this.name = name;
-        arenaName = "default";
     }
 
-    public Waypoint(String name, Arena arena) {
-        this.name = name;
-        arenaName = arena.getName();
+    public Waypoint(Map<String, Object> map) {
+        name = (String) map.get("Name");
+        location = parseLocation((String) map.get("Location"));
     }
 
     public String getName() {
@@ -32,28 +28,19 @@ public class Waypoint {
     }
 
     public Location getLocation() {
-        if (!isSet()) return null;
-        FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        return parseLocation(config.getString(arenaName + "." + name));
+        return location;
     }
 
     public void setLocation(Location location) {
-        ConfigManager.reload(Config.ARENAS);
-        FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        config.set(arenaName + "." + name, parseLocation(location));
-        ConfigManager.save(Config.ARENAS);
+        this.location = location;
     }
 
     public boolean isSet() {
-        FileConfiguration config = ConfigManager.get(Config.ARENAS);
-        return config.getString(arenaName + "." + name) != null;
-    }
-
-    public String getParsedLocation() {
-        return parseLocation(getLocation());
+        return location != null;
     }
 
     public static final String parseLocation(Location loc) {
+        if (loc == null) return "unset";
         String w = loc.getWorld().getName();
         double x = loc.getBlockX() + 0.5;
         double y = loc.getBlockY();
@@ -64,6 +51,7 @@ public class Waypoint {
     }
 
     public static final Location parseLocation(String string) {
+        if (string.equals("unset")) return null;
         String[] parts = string.split("\\(");
         World w = Bukkit.getServer().getWorld(parts[0]);
 
@@ -77,32 +65,12 @@ public class Waypoint {
         return new Location(w, x, y, z, yaw, pitch);
     }
 
-    /**
-     * @return the lounge
-     */
-    public static Waypoint getLounge() {
-        return lounge;
-    }
-
-    /**
-     * @param lounge
-     */
-    public static void setLounge(Waypoint lounge) {
-        Waypoint.lounge = lounge;
-    }
-
-    /**
-     * @return the exit
-     */
-    public static Waypoint getExit() {
-        return exit;
-    }
-
-    /**
-     * @param exit
-     */
-    public static void setExit(Waypoint exit) {
-        Waypoint.exit = exit;
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("Name", name);
+        map.put("Location", parseLocation(location));
+        return map;
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.managers.ClassManager;
 
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;

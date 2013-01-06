@@ -3,7 +3,7 @@ package me.limebyte.battlenight.core.listeners;
 import java.util.HashMap;
 
 import me.limebyte.battlenight.api.battle.PlayerClass;
-import me.limebyte.battlenight.core.util.ClassManager;
+import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 

@@ -1,16 +1,29 @@
 package me.limebyte.battlenight.api.battle;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-public class Arena {
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+
+public class Arena implements ConfigurationSerializable {
 
     private String name;
     private String displayName;
-    private Set<Waypoint> spawnPoints;
+    private Set<Waypoint> spawnPoints = new HashSet<Waypoint>();
     private boolean enabled = true;
 
     public Arena(String name) {
         this.name = name.toLowerCase();
+    }
+
+    @SuppressWarnings("unchecked")
+    public Arena(Map<String, Object> map) {
+        name = (String) map.get("Name");
+        displayName = (String) map.get("DisplayName");
+        spawnPoints = (Set<Waypoint>) map.get("SpawnPoints");
+        enabled = (Boolean) map.get("Enabled");
     }
 
     public String getName() {
@@ -55,6 +68,16 @@ public class Arena {
 
     public boolean isSetup(int minSpawnPoints) {
         return spawnPoints.size() >= minSpawnPoints;
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("Name", name);
+        map.put("DisplayName", displayName);
+        map.put("SpawnPoints", spawnPoints);
+        map.put("Enabled", enabled);
+        return map;
     }
 
 }

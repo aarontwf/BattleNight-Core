@@ -2,6 +2,7 @@ package me.limebyte.battlenight.api;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 
 public interface BattleNightAPI {
@@ -17,5 +18,9 @@ public interface BattleNightAPI {
     public void registerArena(Arena arena);
 
     public void unregisterArena(Arena arena);
+
+    public Waypoint getLoungeWaypoint();
+
+    public Waypoint getExitWaypoint();
 
 }

@@ -7,7 +7,7 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.ClassManager;
+import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;

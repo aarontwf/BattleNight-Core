@@ -3,8 +3,10 @@ package me.limebyte.battlenight.core;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.commands.CommandManager;
+import me.limebyte.battlenight.core.managers.ArenaManager;
 
 public class API implements BattleNightAPI {
 
@@ -19,6 +21,7 @@ public class API implements BattleNightAPI {
     public boolean setBattle(Battle battle) {
         if (this.battle != null && this.battle.isInProgress()) return false;
         this.battle = battle;
+        this.battle.api = this;
         return true;
     }
 
@@ -43,4 +46,13 @@ public class API implements BattleNightAPI {
         ArenaManager.unregister(arena);
     }
 
+    @Override
+    public Waypoint getLoungeWaypoint() {
+        return ArenaManager.getLounge();
+    }
+
+    @Override
+    public Waypoint getExitWaypoint() {
+        return ArenaManager.getExit();
+    }
 }
