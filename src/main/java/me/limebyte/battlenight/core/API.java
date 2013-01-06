@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core;
 
+import java.util.List;
+
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
@@ -44,6 +46,16 @@ public class API implements BattleNightAPI {
     @Override
     public void unregisterArena(Arena arena) {
         ArenaManager.unregister(arena);
+    }
+
+    @Override
+    public List<Arena> getArenas() {
+        return ArenaManager.getArenas();
+    }
+
+    @Override
+    public Arena getRandomArena() {
+        return ArenaManager.getRandomArena();
     }
 
     @Override

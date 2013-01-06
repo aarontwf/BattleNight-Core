@@ -24,6 +24,10 @@ public abstract class Battle {
 
     public boolean start() {
         if (isInProgress()) return false;
+        if (getArena() == null) {
+            if (api.getArenas().isEmpty()) return false;
+            arena = api.getRandomArena();
+        }
         inProgress = true;
         onStart();
         return true;
