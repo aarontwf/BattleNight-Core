@@ -52,8 +52,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         oldBattle = new OldBattle();
 
-        ConfigManager.initConfigurations();
-
         // Metrics
         try {
             Metrics metrics = new Metrics(this);
@@ -87,6 +85,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         ConfigurationSerialization.registerClass(Waypoint.class);
         ClassManager.reloadClasses();
         ArenaManager.loadArenas();
+
+        ConfigManager.initConfigurations();
 
         // Debugging
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
