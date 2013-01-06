@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 
+@SerializableAs("Arena")
 public class Arena implements ConfigurationSerializable {
 
     private String name;
