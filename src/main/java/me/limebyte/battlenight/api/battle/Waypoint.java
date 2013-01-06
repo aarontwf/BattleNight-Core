@@ -18,11 +18,6 @@ public class Waypoint implements ConfigurationSerializable {
         this.name = name;
     }
 
-    public Waypoint(Map<String, Object> map) {
-        name = (String) map.get("Name");
-        location = parseLocation((String) map.get("Location"));
-    }
-
     public String getName() {
         return name;
     }
@@ -71,6 +66,12 @@ public class Waypoint implements ConfigurationSerializable {
         map.put("Name", name);
         map.put("Location", parseLocation(location));
         return map;
+    }
+
+    public static Waypoint deserialize(Map<String, Object> map) {
+        Waypoint waypoint = new Waypoint((String) map.get("Name"));
+        waypoint.setLocation(parseLocation((String) map.get("Location")));
+        return waypoint;
     }
 
 }

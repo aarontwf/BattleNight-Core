@@ -18,14 +18,6 @@ public class Arena implements ConfigurationSerializable {
         this.name = name.toLowerCase();
     }
 
-    @SuppressWarnings("unchecked")
-    public Arena(Map<String, Object> map) {
-        name = (String) map.get("Name");
-        displayName = (String) map.get("DisplayName");
-        spawnPoints = (Set<Waypoint>) map.get("SpawnPoints");
-        enabled = (Boolean) map.get("Enabled");
-    }
-
     public String getName() {
         return name;
     }
@@ -78,6 +70,16 @@ public class Arena implements ConfigurationSerializable {
         map.put("SpawnPoints", spawnPoints);
         map.put("Enabled", enabled);
         return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Arena deserialize(Map<String, Object> map) {
+        Arena arena = new Arena((String) map.get("Name"));
+        arena.displayName = (String) map.get("DisplayName");
+        arena.spawnPoints = (Set<Waypoint>) map.get("SpawnPoints");
+        arena.enabled = (Boolean) map.get("Enabled");
+
+        return arena;
     }
 
 }
