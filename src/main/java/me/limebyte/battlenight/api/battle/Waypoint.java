@@ -12,17 +12,8 @@ import org.bukkit.configuration.serialization.SerializableAs;
 @SerializableAs("Waypoint")
 public class Waypoint implements ConfigurationSerializable {
 
-    private WaypointType type;
     private Location location;
     private static final String LOC_SEP = ", ";
-
-    public Waypoint(WaypointType type) {
-        this.type = type;
-    }
-
-    public WaypointType getType() {
-        return type;
-    }
 
     public Location getLocation() {
         return location;
@@ -65,19 +56,14 @@ public class Waypoint implements ConfigurationSerializable {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("Type", type);
         map.put("Location", parseLocation(location));
         return map;
     }
 
     public static Waypoint deserialize(Map<String, Object> map) {
-        Waypoint waypoint = new Waypoint((WaypointType) map.get("Type"));
+        Waypoint waypoint = new Waypoint();
         waypoint.setLocation(parseLocation((String) map.get("Location")));
         return waypoint;
-    }
-
-    public enum WaypointType {
-        LOUNGE, EXIT, SPAWN;
     }
 
 }
