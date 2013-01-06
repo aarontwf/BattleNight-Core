@@ -62,15 +62,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
             // Failed to submit the stats :-(
         }
 
-        // Debugging
-        if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
-            Messenger.debug(Level.INFO, "Permissions Enabled.");
-        } else {
-            Messenger.debug(Level.INFO, "Permissions Disabled, using Op.");
-        }
-        String loadedClasses = ClassManager.getClassNames().keySet().toString();
-        Messenger.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
-
         PluginManager pm = getServer().getPluginManager();
 
         Nameplates.init(this, pm);
@@ -97,6 +88,15 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         ClassManager.reloadClasses();
         ArenaManager.loadArenas();
 
+        // Debugging
+        if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
+            Messenger.debug(Level.INFO, "Permissions Enabled.");
+        } else {
+            Messenger.debug(Level.INFO, "Permissions Disabled, using Op.");
+        }
+        String loadedClasses = ClassManager.getClassNames().keySet().toString();
+        Messenger.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
+
         // Enable Message
         Messenger.log(Level.INFO, "Version " + getDescription().getVersion() + " enabled successfully.");
         Messenger.log(Level.INFO, "Made by LimeByte.");
@@ -112,6 +112,9 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         // Stop the current Battle
         getAPI().getBattle().stop();
+
+        // Save arenas
+        ArenaManager.saveArenas();
 
         // Disable message
         PluginDescriptionFile pdfFile = getDescription();
