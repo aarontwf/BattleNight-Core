@@ -16,6 +16,7 @@ public class Arena implements ConfigurationSerializable {
 
     public Arena(String name) {
         this.name = name.toLowerCase();
+        this.displayName = name;
     }
 
     public String getName() {

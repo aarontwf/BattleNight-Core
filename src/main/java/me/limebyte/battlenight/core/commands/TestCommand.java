@@ -5,6 +5,7 @@ import java.util.Arrays;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.battle.Waypoint.WaypointType;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -76,7 +77,8 @@ public class TestCommand extends BattleNightCommand {
                 Messenger.tell(sender, "An Arena by that name does not exist!");
                 return false;
             }
-            Waypoint point = new Waypoint("spawnpoint");
+            Waypoint point = new Waypoint(WaypointType.SPAWN);
+            point.setLocation(((Player) sender).getLocation());
             arena.addSpawnPoint(point);
             Messenger.tell(sender, "Spawn point created.");
             return true;

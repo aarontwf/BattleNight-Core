@@ -6,6 +6,7 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.battle.Waypoint.WaypointType;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -28,8 +29,8 @@ public class ArenaManager {
         Messenger.debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
 
-        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", new Waypoint("Lounge"));
-        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", new Waypoint("Exit"));
+        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", new Waypoint(WaypointType.LOUNGE));
+        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", new Waypoint(WaypointType.EXIT));
         arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", new ArrayList<Arena>());
     }
 
