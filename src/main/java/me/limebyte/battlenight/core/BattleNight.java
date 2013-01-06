@@ -52,19 +52,31 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         oldBattle = new OldBattle();
 
-        // Metrics
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException e) {
-            // Failed to submit the stats :-(
+        // Register Serialization Classes
+        ConfigurationSerialization.registerClass(Arena.class);
+        ConfigurationSerialization.registerClass(Waypoint.class);
+
+        // Initialize Configuration
+        ConfigManager.initConfigurations();
+
+        // Setup Managers
+        ClassManager.reloadClasses();
+        ArenaManager.loadArenas();
+
+        // Debugging
+        if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
+            Messenger.debug(Level.INFO, "Permissions Enabled.");
+        } else {
+            Messenger.debug(Level.INFO, "Permissions Disabled, using Op.");
         }
+        String loadedClasses = ClassManager.getClassNames().keySet().toString();
+        Messenger.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
 
-        PluginManager pm = getServer().getPluginManager();
-
-        Nameplates.init(this, pm);
+        // Commands
+        getCommand("battlenight").setExecutor(new CommandManager());
 
         // Event Registration
+        PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new CheatListener(), this);
         pm.registerEvents(new CommandBlocker(), this);
         pm.registerEvents(new HealthListener(), this);
@@ -77,25 +89,14 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new SignChanger(), this);
         pm.registerEvents(new SignListener(), this);
 
-        // Commands
-        getCommand("battlenight").setExecutor(new CommandManager());
-
-        // Setup Managers
-        ConfigurationSerialization.registerClass(Arena.class);
-        ConfigurationSerialization.registerClass(Waypoint.class);
-        ClassManager.reloadClasses();
-        ArenaManager.loadArenas();
-
-        ConfigManager.initConfigurations();
-
-        // Debugging
-        if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
-            Messenger.debug(Level.INFO, "Permissions Enabled.");
-        } else {
-            Messenger.debug(Level.INFO, "Permissions Disabled, using Op.");
+        // Hooks
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            // Failed to submit the stats :-(
         }
-        String loadedClasses = ClassManager.getClassNames().keySet().toString();
-        Messenger.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
+        Nameplates.init(this, pm);
 
         // Enable Message
         Messenger.log(Level.INFO, "Version " + getDescription().getVersion() + " enabled successfully.");
