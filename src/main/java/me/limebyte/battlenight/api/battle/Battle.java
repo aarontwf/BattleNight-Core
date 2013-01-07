@@ -64,7 +64,7 @@ public abstract class Battle {
         PlayerData.store(player);
         PlayerData.reset(player);
         players.add(player.getName());
-        SafeTeleporter.tp(player, api.getExitWaypoint().getLocation());
+        SafeTeleporter.tp(player, api.getLoungeWaypoint().getLocation());
         return true;
     }
 
