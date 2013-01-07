@@ -4,8 +4,11 @@ import java.util.List;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
+
+import org.bukkit.entity.Player;
 
 public interface BattleNightAPI {
 
@@ -28,5 +31,7 @@ public interface BattleNightAPI {
     public Waypoint getLoungeWaypoint();
 
     public Waypoint getExitWaypoint();
+
+    public PlayerClass getPlayerClass(Player player);
 
 }

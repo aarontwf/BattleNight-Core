@@ -5,10 +5,14 @@ import java.util.List;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.managers.ArenaManager;
+import me.limebyte.battlenight.core.util.Metadata;
+
+import org.bukkit.entity.Player;
 
 public class API implements BattleNightAPI {
 
@@ -66,5 +70,10 @@ public class API implements BattleNightAPI {
     @Override
     public Waypoint getExitWaypoint() {
         return ArenaManager.getExit();
+    }
+
+    @Override
+    public PlayerClass getPlayerClass(Player player) {
+        return Metadata.getBattleClass(player);
     }
 }

@@ -48,7 +48,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     public void onEnable() {
         instance = this;
         api = new API();
-        api.setBattle(new ClassicBattle());
+        ClassicBattle battle = new ClassicBattle();
+        api.setBattle(battle);
 
         oldBattle = new OldBattle();
 
@@ -88,6 +89,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new SafeTeleporter(), this);
         pm.registerEvents(new SignChanger(), this);
         pm.registerEvents(new SignListener(), this);
+        pm.registerEvents(battle, this);
 
         // Hooks
         try {

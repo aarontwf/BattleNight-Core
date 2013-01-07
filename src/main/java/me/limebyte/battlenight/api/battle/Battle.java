@@ -10,8 +10,6 @@ import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
 public abstract class Battle {
 
@@ -123,14 +121,19 @@ public abstract class Battle {
         return true;
     }
 
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        // TODO Auto-generated method stub
-
+    public boolean respawn(Player player) {
+        if (!containsPlayer(player)) return false;
+        PlayerData.reset(player);
+        api.getPlayerClass(player).equip(player);
+        return true;
     }
 
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
-        // TODO Auto-generated method stub
-
+    public boolean toSpectator(Player player) {
+        if (!containsPlayer(player)) return false;
+        players.remove(player.getName());
+        spectators.add(player.getName());
+        PlayerData.reset(player);
+        return true;
     }
 
 }

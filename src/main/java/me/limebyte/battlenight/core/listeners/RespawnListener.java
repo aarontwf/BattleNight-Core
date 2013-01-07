@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.listeners;
 
+import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.event.BattleRespawnEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.old.OldBattle;
@@ -8,6 +10,7 @@ import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class RespawnListener implements Listener {
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
@@ -41,9 +45,17 @@ public class RespawnListener implements Listener {
         }
 
         if (Metadata.getBoolean(player, "HandleRespawn")) {
-            BattleNight.instance.getAPI().getBattle().onPlayerRespawn(event);
             Metadata.set(player, "HandleRespawn", false);
+            BattleRespawnEvent apiEvent = new BattleRespawnEvent(player);
+            Bukkit.getServer().getPluginManager().callEvent(apiEvent);
+
+            Battle battle = BattleNight.instance.getAPI().getBattle();
+            if (apiEvent.isCancelled()) {
+                battle.toSpectator(player);
+            } else {
+                battle.respawn(player);
+                event.setRespawnLocation(battle.getArena().getRandomSpawnPoint().getLocation());
+            }
         }
     }
-
 }

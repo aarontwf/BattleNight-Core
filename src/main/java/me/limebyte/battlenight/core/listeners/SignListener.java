@@ -50,7 +50,7 @@ public class SignListener implements Listener {
                     if (player.hasPermission(playerClass.getPermission())) {
                         addName(player, sign);
 
-                        if (Metadata.getBattleClass(player, "class") != playerClass) {
+                        if (Metadata.getBattleClass(player) != playerClass) {
                             Messenger.debug(Level.INFO, "Making particles...");
                             ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                         }

@@ -3,6 +3,7 @@ package me.limebyte.battlenight.api.battle;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -15,6 +16,7 @@ public class Arena implements ConfigurationSerializable {
     private String displayName;
     private Set<Waypoint> spawnPoints = new HashSet<Waypoint>();
     private boolean enabled = true;
+    private static final Random random = new Random();
 
     public Arena(String name) {
         this.name = name.toLowerCase();
@@ -35,6 +37,14 @@ public class Arena implements ConfigurationSerializable {
 
     public Set<Waypoint> getSpawnPoints() {
         return spawnPoints;
+    }
+
+    public Waypoint getSpawnPoint(int index) {
+        return (Waypoint) spawnPoints.toArray()[index];
+    }
+
+    public Waypoint getRandomSpawnPoint() {
+        return getSpawnPoint(random.nextInt(spawnPoints.size()));
     }
 
     public void addSpawnPoint(Waypoint waypoint) {

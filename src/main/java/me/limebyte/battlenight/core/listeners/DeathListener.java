@@ -40,7 +40,6 @@ public class DeathListener implements Listener {
         Battle battle = BattleNight.instance.getAPI().getBattle();
         if (battle.containsPlayer(player)) {
             Metadata.set(player, "HandleRespawn", true);
-            battle.onPlayerDeath(event);
         }
     }
 

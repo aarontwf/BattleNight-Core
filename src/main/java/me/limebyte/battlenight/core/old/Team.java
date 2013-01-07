@@ -10,8 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public enum Team {
-    RED("Red", ChatColor.RED),
-    BLUE("Blue", ChatColor.BLUE);
+    RED("Red", ChatColor.RED), BLUE("Blue", ChatColor.BLUE);
 
     private String name;
     private ChatColor colour;
@@ -43,7 +42,7 @@ public enum Team {
             if (player != null) {
                 if (entry.getValue() == this) {
                     members++;
-                    if (Metadata.getBattleClass(player, "class") != null) {
+                    if (Metadata.getBattleClass(player) != null) {
                         membersReady++;
                     }
                 }

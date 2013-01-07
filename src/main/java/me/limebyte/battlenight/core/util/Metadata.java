@@ -38,8 +38,8 @@ public class Metadata {
         return null;
     }
 
-    public static PlayerClass getBattleClass(Player player, String key) {
-        String result = getString(player, key);
+    public static PlayerClass getBattleClass(Player player) {
+        String result = getString(player, "class");
         if (result != null) return ClassManager.getClassNames().get(result);
         return null;
     }
