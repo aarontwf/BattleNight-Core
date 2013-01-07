@@ -34,13 +34,15 @@ public class TestCommand extends BattleNightCommand {
             return false;
         }
 
+        BattleNightAPI api = BattleNight.instance.getAPI();
+
         if (args[0].equalsIgnoreCase("join")) {
             if (isNotPlayer(sender)) return false;
-            BattleNight.instance.getAPI().getBattle().addPlayer((Player) sender);
+            api.getBattle().addPlayer((Player) sender);
             return true;
         } else if (args[0].equalsIgnoreCase("leave")) {
             if (isNotPlayer(sender)) return false;
-            BattleNight.instance.getAPI().getBattle().removePlayer((Player) sender);
+            api.getBattle().removePlayer((Player) sender);
             return true;
         }
 
@@ -51,7 +53,6 @@ public class TestCommand extends BattleNightCommand {
         }
 
         if (args[0].equalsIgnoreCase("create")) {
-            BattleNightAPI api = BattleNight.instance.getAPI();
             for (Arena arena : api.getArenas()) {
                 if (arena.getName().equals(args[1])) {
                     Messenger.tell(sender, "An Arena by that name already exists!");
@@ -63,7 +64,6 @@ public class TestCommand extends BattleNightCommand {
             return true;
         } else if (args[0].equalsIgnoreCase("addspawn")) {
             if (isNotPlayer(sender)) return false;
-            BattleNightAPI api = BattleNight.instance.getAPI();
             Arena arena = null;
 
             for (Arena a : api.getArenas()) {
@@ -80,6 +80,18 @@ public class TestCommand extends BattleNightCommand {
             point.setLocation(((Player) sender).getLocation());
             arena.addSpawnPoint(point);
             Messenger.tell(sender, "Spawn point created.");
+            return true;
+        } else if (args[0].equalsIgnoreCase("set")) {
+            if (isNotPlayer(sender)) return false;
+            if (args[1].equalsIgnoreCase("lounge")) {
+                api.getLoungeWaypoint().setLocation(((Player) sender).getLocation());
+            } else if (args[1].equalsIgnoreCase("exit")) {
+                api.getExitWaypoint().setLocation(((Player) sender).getLocation());
+            } else {
+                Messenger.tell(sender, Message.INVALID_WAYPOINT);
+                return false;
+            }
+            Messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, args[1]);
             return true;
         }
 
