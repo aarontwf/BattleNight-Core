@@ -95,6 +95,7 @@ public class TestCommand extends BattleNightCommand {
             return true;
         }
 
+        Messenger.tell(sender, Message.INVALID_COMMAND);
         return false;
     }
 

@@ -22,10 +22,6 @@ public abstract class Battle {
 
     public boolean start() {
         if (isInProgress()) return false;
-        if (getArena() == null) {
-            if (api.getArenas().isEmpty()) return false;
-            arena = api.getRandomArena();
-        }
         inProgress = true;
         onStart();
         return true;
@@ -54,7 +50,15 @@ public abstract class Battle {
      * @return true if successful
      */
     public boolean addPlayer(Player player) {
-        if (!api.getLoungeWaypoint().isSet() || arena == null || !arena.isSetup(1)) {
+        if (getArena() == null) {
+            if (api.getArenas().isEmpty()) {
+                Messenger.tell(player, Message.WAYPOINTS_UNSET);
+                return false;
+            }
+            arena = api.getRandomArena();
+        }
+
+        if (!api.getLoungeWaypoint().isSet() || !arena.isSetup(1)) {
             Messenger.tell(player, Message.WAYPOINTS_UNSET);
             return false;
         }
