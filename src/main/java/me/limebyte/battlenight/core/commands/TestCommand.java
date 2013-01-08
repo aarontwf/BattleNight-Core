@@ -67,7 +67,7 @@ public class TestCommand extends BattleNightCommand {
             Arena arena = null;
 
             for (Arena a : api.getArenas()) {
-                if (a.getName().equals(args[1])) {
+                if (a.getName().equalsIgnoreCase(args[1])) {
                     arena = a;
                 }
             }
