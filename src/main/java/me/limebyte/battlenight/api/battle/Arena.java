@@ -1,10 +1,10 @@
 package me.limebyte.battlenight.api.battle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -14,7 +14,7 @@ public class Arena implements ConfigurationSerializable {
 
     private String name;
     private String displayName;
-    private Set<Waypoint> spawnPoints = new HashSet<Waypoint>();
+    private List<Waypoint> spawnPoints = new ArrayList<Waypoint>();
     private boolean enabled = true;
     private static final Random random = new Random();
 
@@ -35,7 +35,7 @@ public class Arena implements ConfigurationSerializable {
         this.displayName = displayName;
     }
 
-    public Set<Waypoint> getSpawnPoints() {
+    public List<Waypoint> getSpawnPoints() {
         return spawnPoints;
     }
 
@@ -89,7 +89,7 @@ public class Arena implements ConfigurationSerializable {
     public static Arena deserialize(Map<String, Object> map) {
         Arena arena = new Arena((String) map.get("Name"));
         arena.displayName = (String) map.get("DisplayName");
-        arena.spawnPoints = (Set<Waypoint>) map.get("SpawnPoints");
+        arena.spawnPoints = (List<Waypoint>) map.get("SpawnPoints");
         arena.enabled = (Boolean) map.get("Enabled");
 
         return arena;
