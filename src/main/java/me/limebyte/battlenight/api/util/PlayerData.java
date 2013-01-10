@@ -148,8 +148,10 @@ public class PlayerData {
         player.setLevel(data.level);
         player.setPlayerListName(data.playerListName);
 
-        if (data.playerTimeRelative) {
-            player.setPlayerTime(data.location.getWorld().getTime() + data.playerTimeOffset, true);
+        if (!data.playerTimeRelative) {
+            player.setPlayerTime(data.playerTimeOffset, true);
+        } else {
+            player.resetPlayerTime();
         }
 
         player.setRemainingAir(data.remainingAir);
