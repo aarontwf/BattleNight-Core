@@ -13,14 +13,19 @@ import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 public class ArenaManager {
 
-    private static List<Arena> arenas;
+    private static List<Arena> arenas = new ArrayList<Arena>();
     private static final Config configFile = Config.ARENAS;
 
-    private static Waypoint lounge;
-    private static Waypoint exit;
+    private static Waypoint lounge = new Waypoint();
+    private static Waypoint exit = new Waypoint();
 
     private ArenaManager() {
         // Private constructor for utility class
+    }
+
+    public static void reloadArenas() {
+        loadArenas();
+        saveArenas();
     }
 
     @SuppressWarnings("unchecked")
@@ -28,9 +33,9 @@ public class ArenaManager {
         Messenger.debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
 
-        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", new Waypoint());
-        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", new Waypoint());
-        arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", new ArrayList<Arena>());
+        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
+        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", exit);
+        arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", arenas);
     }
 
     public static void saveArenas() {

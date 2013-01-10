@@ -20,6 +20,10 @@ public abstract class Battle {
     private Set<String> players = new HashSet<String>();
     private Set<String> spectators = new HashSet<String>();
 
+    public Battle() {
+
+    }
+
     public boolean start() {
         if (isInProgress()) return false;
         inProgress = true;
@@ -52,13 +56,18 @@ public abstract class Battle {
     public boolean addPlayer(Player player) {
         if (getArena() == null) {
             if (api.getArenas().isEmpty()) {
-                Messenger.tell(player, Message.WAYPOINTS_UNSET);
+                Messenger.tell(player, "No Arenas.");
                 return false;
             }
             arena = api.getRandomArena();
         }
 
-        if (!api.getLoungeWaypoint().isSet() || !arena.isSetup(1)) {
+        if (!arena.isSetup(1)) {
+            Messenger.tell(player, "No Spawn Points.");
+            return false;
+        }
+
+        if (!api.getLoungeWaypoint().isSet()) {
             Messenger.tell(player, Message.WAYPOINTS_UNSET);
             return false;
         }
