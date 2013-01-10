@@ -40,8 +40,8 @@ public class ArenaManager {
 
     public static void saveArenas() {
         Messenger.debug(Level.INFO, "Saving arenas...");
-        ConfigManager.get(configFile).set("Lounge", lounge);
-        ConfigManager.get(configFile).set("Exit", exit);
+        ConfigManager.get(configFile).set("Waypoint.Lounge", lounge);
+        ConfigManager.get(configFile).set("Waypoint.Exit", exit);
         ConfigManager.get(configFile).set("Arenas", arenas);
         ConfigManager.save(configFile);
     }
