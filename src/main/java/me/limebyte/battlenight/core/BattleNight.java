@@ -10,6 +10,7 @@ import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
+import me.limebyte.battlenight.core.listeners.APIEventListener;
 import me.limebyte.battlenight.core.listeners.CheatListener;
 import me.limebyte.battlenight.core.listeners.CommandBlocker;
 import me.limebyte.battlenight.core.listeners.DeathListener;
@@ -89,7 +90,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new SafeTeleporter(), this);
         pm.registerEvents(new SignChanger(), this);
         pm.registerEvents(new SignListener(), this);
-        pm.registerEvents(battle, this);
+        pm.registerEvents(new APIEventListener(), this);
 
         // Hooks
         try {

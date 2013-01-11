@@ -11,6 +11,7 @@ import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,16 +47,18 @@ public class RespawnListener implements Listener {
 
         if (Metadata.getBoolean(player, "HandleRespawn")) {
             Metadata.set(player, "HandleRespawn", false);
-            BattleRespawnEvent apiEvent = new BattleRespawnEvent(player);
-            Bukkit.getServer().getPluginManager().callEvent(apiEvent);
 
             Battle battle = BattleNight.instance.getAPI().getBattle();
+            BattleRespawnEvent apiEvent = new BattleRespawnEvent(battle, player);
+            Bukkit.getServer().getPluginManager().callEvent(apiEvent);
+
+            Location loc;
             if (apiEvent.isCancelled()) {
-                battle.toSpectator(player);
+                loc = battle.toSpectator(player);
             } else {
-                battle.respawn(player);
-                event.setRespawnLocation(battle.getArena().getRandomSpawnPoint().getLocation());
+                loc = battle.respawn(player);
             }
+            if (loc != null) event.setRespawnLocation(loc);
         }
     }
 }

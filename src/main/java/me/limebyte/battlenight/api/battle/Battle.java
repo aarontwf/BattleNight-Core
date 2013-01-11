@@ -4,11 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.event.BattleRespawnEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public abstract class Battle {
@@ -24,6 +27,12 @@ public abstract class Battle {
 
     }
 
+    public abstract void onStart();
+
+    public abstract void onEnd();
+
+    public abstract void onPlayerRespawn(BattleRespawnEvent event);
+
     public boolean start() {
         if (isInProgress()) return false;
         inProgress = true;
@@ -37,10 +46,6 @@ public abstract class Battle {
         onEnd();
         return true;
     }
-
-    public abstract void onStart();
-
-    public abstract void onEnd();
 
     public boolean isInProgress() {
         return inProgress;
@@ -134,19 +139,27 @@ public abstract class Battle {
         return true;
     }
 
-    public boolean respawn(Player player) {
-        if (!containsPlayer(player)) return false;
+    public Location respawn(Player player) {
+        if (!containsPlayer(player)) return null;
         PlayerData.reset(player);
         api.getPlayerClass(player).equip(player);
-        return true;
+        return arena.getRandomSpawnPoint().getLocation();
     }
 
-    public boolean toSpectator(Player player) {
-        if (!containsPlayer(player)) return false;
+    public Location toSpectator(Player player) {
+        if (!containsPlayer(player)) return null;
+        Location loc;
+
         players.remove(player.getName());
-        spectators.add(player.getName());
         PlayerData.reset(player);
-        return true;
-    }
 
+        if (isInProgress() && players.size() > 1) {
+            spectators.add(player.getName());
+            loc = Bukkit.getPlayerExact((String) players.toArray()[0]).getLocation();
+        } else {
+            loc = PlayerData.getSavedLocation(player);
+            PlayerData.restore(player, false, false);
+        }
+        return loc;
+    }
 }

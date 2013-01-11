@@ -4,9 +4,8 @@ import me.limebyte.battlenight.api.battle.TeamedBattle;
 import me.limebyte.battlenight.api.event.BattleRespawnEvent;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
-public class ClassicBattle extends TeamedBattle implements Listener {
+public class ClassicBattle extends TeamedBattle {
 
     @Override
     public void onStart() {
@@ -20,8 +19,9 @@ public class ClassicBattle extends TeamedBattle implements Listener {
 
     }
 
+    @Override
     @EventHandler
-    public void onBattleRespawn(BattleRespawnEvent event) {
+    public void onPlayerRespawn(BattleRespawnEvent event) {
         event.setCancelled(true);
     }
 }
