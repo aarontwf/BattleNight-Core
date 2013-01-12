@@ -12,14 +12,11 @@ import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.listeners.APIEventListener;
 import me.limebyte.battlenight.core.listeners.CheatListener;
-import me.limebyte.battlenight.core.listeners.CommandBlocker;
 import me.limebyte.battlenight.core.listeners.DeathListener;
 import me.limebyte.battlenight.core.listeners.DisconnectListener;
 import me.limebyte.battlenight.core.listeners.HealthListener;
 import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.NameplateListener;
-import me.limebyte.battlenight.core.listeners.RespawnListener;
-import me.limebyte.battlenight.core.listeners.SignChanger;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.managers.ClassManager;
@@ -80,15 +77,12 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         // Event Registration
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new CheatListener(), this);
-        pm.registerEvents(new CommandBlocker(), this);
         pm.registerEvents(new HealthListener(), this);
         pm.registerEvents(new DeathListener(), this);
         pm.registerEvents(new DisconnectListener(), this);
         pm.registerEvents(new NameplateListener(), this);
         pm.registerEvents(new InteractListener(), this);
-        pm.registerEvents(new RespawnListener(), this);
         pm.registerEvents(new SafeTeleporter(), this);
-        pm.registerEvents(new SignChanger(), this);
         pm.registerEvents(new SignListener(), this);
         pm.registerEvents(new APIEventListener(), this);
 

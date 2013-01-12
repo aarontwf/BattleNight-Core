@@ -23,13 +23,35 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 public class SignListener implements Listener {
 
+    private static final String LINE = "----------";
     public static Set<ClassSign> classSigns = new HashSet<ClassSign>();
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onSignChange(SignChangeEvent e) {
+        Player player = e.getPlayer();
+        String title = e.getLine(0);
+        HashMap<String, PlayerClass> classes = ClassManager.getClassNames();
+
+        if (classes != null) {
+            if (classes.containsKey(title)) {
+                if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
+                    Messenger.tell(player, Message.UNSUCCESSFUL_SIGN, title);
+                    return;
+                }
+
+                e.setLine(1, LINE);
+                Messenger.tell(player, Message.SUCCESSFUL_SIGN, title);
+                return;
+            }
+        }
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
