@@ -51,6 +51,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         oldBattle = new OldBattle();
 
+        PluginManager pm = getServer().getPluginManager();
+
         // Register Serialization Classes
         ConfigurationSerialization.registerClass(Arena.class);
         ConfigurationSerialization.registerClass(Waypoint.class);
@@ -74,8 +76,16 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         // Commands
         getCommand("battlenight").setExecutor(new CommandManager());
 
+        // Hooks
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            // Failed to submit the stats :-(
+        }
+        Nameplates.init(this, pm);
+
         // Event Registration
-        PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new CheatListener(), this);
         pm.registerEvents(new HealthListener(), this);
         pm.registerEvents(new DeathListener(), this);
@@ -85,15 +95,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new SafeTeleporter(), this);
         pm.registerEvents(new SignListener(), this);
         pm.registerEvents(new APIEventListener(), this);
-
-        // Hooks
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException e) {
-            // Failed to submit the stats :-(
-        }
-        Nameplates.init(this, pm);
 
         // Enable Message
         Messenger.log(Level.INFO, "Version " + getDescription().getVersion() + " enabled successfully.");
