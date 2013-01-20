@@ -8,6 +8,7 @@ import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
+import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.util.Metadata;
@@ -17,6 +18,10 @@ import org.bukkit.entity.Player;
 public class API implements BattleNightAPI {
 
     private Battle battle;
+
+    public API() {
+        PlayerData.api = this;
+    }
 
     @Override
     public Battle getBattle() {

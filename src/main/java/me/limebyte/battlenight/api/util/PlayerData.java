@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.core.hooks.Nameplates;
-import me.limebyte.battlenight.core.old.Waypoint;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -22,6 +22,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 public class PlayerData {
+    public static BattleNightAPI api;
     private static Map<String, PlayerData> storage = new HashMap<String, PlayerData>();
 
     private Set<String> vanishedPlayers = new HashSet<String>();
@@ -55,6 +56,10 @@ public class PlayerData {
     private boolean sleepingIgnored;
     private boolean sneaking;
     private boolean sprinting;
+
+    private PlayerData() {
+
+    }
 
     public static void store(Player player) {
         PlayerData data = new PlayerData();
@@ -106,8 +111,8 @@ public class PlayerData {
         PlayerData data = storage.get(name);
 
         if (teleport) {
-            if (ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false)) {
-                SafeTeleporter.tp(player, Waypoint.EXIT);
+            if (ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false) && api.getExitWaypoint().isSet()) {
+                SafeTeleporter.tp(player, api.getExitWaypoint().getLocation());
             } else {
                 SafeTeleporter.tp(player, data.location);
             }
