@@ -23,11 +23,6 @@ public class ArenaManager {
         // Private constructor for utility class
     }
 
-    public static void reloadArenas() {
-        loadArenas();
-        saveArenas();
-    }
-
     @SuppressWarnings("unchecked")
     public static void loadArenas() {
         Messenger.debug(Level.INFO, "Loading arenas...");

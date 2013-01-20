@@ -62,7 +62,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         // Setup Managers
         ClassManager.reloadClasses();
-        ArenaManager.reloadArenas();
+        ArenaManager.loadArenas();
 
         // Debugging
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {

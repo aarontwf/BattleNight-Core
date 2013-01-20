@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -33,6 +34,7 @@ public class ReloadCommand extends BattleNightCommand {
             ConfigManager.reloadAll();
             ConfigManager.saveAll();
             ClassManager.reloadClasses();
+            ArenaManager.saveArenas();
             Messenger.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;
         } catch (Exception e) {
