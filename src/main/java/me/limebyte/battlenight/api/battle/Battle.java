@@ -47,7 +47,24 @@ public abstract class Battle {
     }
 
     public boolean stop() {
-        if (!isInProgress()) return false;
+        for (String name : players) {
+            Player player = Bukkit.getPlayerExact(name);
+            if (player == null) continue;
+            PlayerData.reset(player);
+            PlayerData.restore(player, true, false);
+            api.setPlayerClass(player, null);
+        }
+        players.clear();
+
+        for (String name : spectators) {
+            Player player = Bukkit.getPlayerExact(name);
+            if (player == null) continue;
+            PlayerData.reset(player);
+            PlayerData.restore(player, true, false);
+            api.setPlayerClass(player, null);
+        }
+        spectators.clear();
+
         inProgress = false;
         onEnd();
         return true;
@@ -115,11 +132,15 @@ public abstract class Battle {
     }
 
     public boolean addSpectator(Player player) {
+        PlayerData.store(player);
+        PlayerData.reset(player);
         spectators.add(player.getName());
         return true;
     }
 
     public boolean removeSpectator(Player player) {
+        PlayerData.reset(player);
+        PlayerData.restore(player, true, false);
         spectators.remove(player.getName());
         return true;
     }
