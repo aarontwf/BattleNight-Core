@@ -40,7 +40,7 @@ public class Metadata {
 
     public static PlayerClass getBattleClass(Player player) {
         String result = getString(player, "class");
-        if (result.isEmpty()) return null;
+        if (result == null) return null;
         return ClassManager.getClassNames().get(result);
     }
 
