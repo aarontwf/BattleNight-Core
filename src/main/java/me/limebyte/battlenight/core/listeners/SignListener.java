@@ -66,21 +66,23 @@ public class SignListener implements Listener {
                 String title = sign.getLine(0);
                 HashMap<String, PlayerClass> classes = ClassManager.getClassNames();
 
-                if (classes.containsKey(title) && BattleNight.getBattle().usersTeam.containsKey(name)) {
-                    PlayerClass playerClass = classes.get(title);
+                if (BattleNight.getBattle().usersTeam.containsKey(name) || BattleNight.instance.getAPI().getBattle().containsPlayer(player)) {
+                    if (classes.containsKey(title)) {
+                        PlayerClass playerClass = classes.get(title);
 
-                    if (player.hasPermission(playerClass.getPermission())) {
-                        addName(player, sign);
+                        if (player.hasPermission(playerClass.getPermission())) {
+                            addName(player, sign);
 
-                        if (Metadata.getBattleClass(player) != playerClass) {
-                            Messenger.debug(Level.INFO, "Making particles...");
-                            ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
+                            if (Metadata.getBattleClass(player) != playerClass) {
+                                Messenger.debug(Level.INFO, "Making particles...");
+                                ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
+                            }
+
+                            reset(player);
+                            classes.get(title).equip(player);
+                        } else {
+                            Messenger.tell(player, Message.NO_PERMISSION_CLASS);
                         }
-
-                        reset(player);
-                        classes.get(title).equip(player);
-                    } else {
-                        Messenger.tell(player, Message.NO_PERMISSION_CLASS);
                     }
                 }
             }
