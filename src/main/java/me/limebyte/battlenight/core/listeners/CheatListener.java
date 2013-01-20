@@ -76,7 +76,7 @@ public class CheatListener implements Listener {
         if (event.isCancelled()) return;
 
         Player player = event.getPlayer();
-        if (!BattleNight.getBattle().usersTeam.containsKey(player.getName())) return;
+        if (!BattleNight.getBattle().usersTeam.containsKey(player.getName()) || !BattleNight.getBattle().spectators.contains(player.getName())) return;
         if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
         List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
