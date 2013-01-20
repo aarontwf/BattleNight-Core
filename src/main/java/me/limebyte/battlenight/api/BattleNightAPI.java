@@ -34,4 +34,6 @@ public interface BattleNightAPI {
 
     public PlayerClass getPlayerClass(Player player);
 
+    public void setPlayerClass(Player player, PlayerClass playerClass);
+
 }

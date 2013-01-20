@@ -40,8 +40,8 @@ public class Metadata {
 
     public static PlayerClass getBattleClass(Player player) {
         String result = getString(player, "class");
-        if (result != null) return ClassManager.getClassNames().get(result);
-        return null;
+        if (result.isEmpty()) return null;
+        return ClassManager.getClassNames().get(result);
     }
 
     private static MetadataValue getValue(Player player, String key) {

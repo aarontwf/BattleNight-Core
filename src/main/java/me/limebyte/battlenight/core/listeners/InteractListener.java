@@ -1,12 +1,15 @@
 package me.limebyte.battlenight.core.listeners;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.old.Team;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
+import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -49,6 +52,27 @@ public class InteractListener implements Listener {
                         }
                     } else {
                         player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
+                    }
+                }
+
+                BattleNightAPI api = BattleNight.instance.getAPI();
+
+                if (api.getBattle().containsPlayer(player)) {
+                    if (api.getPlayerClass(player) != null) {
+                        Metadata.set(player, "ready", true);
+
+                        boolean allReady = true;
+                        for (String name : api.getBattle().getPlayers()) {
+                            Player p = Bukkit.getPlayerExact(name);
+                            if (p == null) continue;
+                            if (!Metadata.getBoolean(p, "ready")) {
+                                allReady = false;
+                                break;
+                            }
+                        }
+                        if (allReady) api.getBattle().start();
+                    } else {
+                        Messenger.tell(player, "You have not picked a class.");
                     }
                 }
             }

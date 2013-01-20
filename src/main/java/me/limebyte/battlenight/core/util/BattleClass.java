@@ -2,6 +2,8 @@ package me.limebyte.battlenight.core.util;
 
 import java.util.List;
 
+import me.limebyte.battlenight.api.battle.PlayerClass;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +11,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-public class BattleClass implements me.limebyte.battlenight.api.battle.PlayerClass {
+public class BattleClass implements PlayerClass {
     private String name;
     private Permission permission;
     private List<ItemStack> items, armour;
@@ -66,5 +68,8 @@ public class BattleClass implements me.limebyte.battlenight.api.battle.PlayerCla
         inv.setChestplate(armour.get(1));
         inv.setLeggings(armour.get(2));
         inv.setBoots(armour.get(3));
+
+        // Save it
+        Metadata.set(player, "class", name);
     }
 }

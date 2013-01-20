@@ -35,6 +35,12 @@ public abstract class Battle {
 
     public boolean start() {
         if (isInProgress()) return false;
+        for (String name : players) {
+            Player player = Bukkit.getPlayerExact(name);
+            if (player == null) continue;
+            SafeTeleporter.tp(player, arena.getRandomSpawnPoint().getLocation());
+        }
+
         inProgress = true;
         onStart();
         return true;
@@ -95,6 +101,7 @@ public abstract class Battle {
         if (!containsPlayer(player)) return false;
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
+        api.setPlayerClass(player, null);
         players.remove(player.getName());
         return true;
     }
@@ -150,6 +157,7 @@ public abstract class Battle {
         if (!containsPlayer(player)) return null;
         Location loc;
 
+        api.setPlayerClass(player, null);
         players.remove(player.getName());
         PlayerData.reset(player);
 
@@ -159,6 +167,7 @@ public abstract class Battle {
         } else {
             loc = PlayerData.getSavedLocation(player);
             PlayerData.restore(player, false, false);
+            stop();
         }
         return loc;
     }

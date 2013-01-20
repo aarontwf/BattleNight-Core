@@ -77,7 +77,6 @@ public class SignListener implements Listener {
                             ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                         }
 
-                        Metadata.set(player, "class", playerClass.getName());
                         reset(player);
                         classes.get(title).equip(player);
                     } else {
