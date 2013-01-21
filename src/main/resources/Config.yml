@@ -11,6 +11,7 @@ Teleprtation:
     EnderPearls: true
     Portals: false
     Commands: true
+    Plugins: false
 Particles:
     ClassSelection: smoke
 Commands:

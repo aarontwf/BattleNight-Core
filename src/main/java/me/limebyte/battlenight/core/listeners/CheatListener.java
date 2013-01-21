@@ -1,7 +1,6 @@
 package me.limebyte.battlenight.core.listeners;
 
 import java.util.List;
-import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -35,19 +34,19 @@ public class CheatListener implements Listener {
         if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && !SafeTeleporter.telePass.contains(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
-                    Messenger.debug(Level.INFO, "Teleported " + player.getName() + " by Command");
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case PLUGIN:
-                    Messenger.debug(Level.INFO, "Teleported " + player.getName() + " by Plugin");
-                    event.setCancelled(true);
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Plugins", false)) {
+                        event.setCancelled(true);
+                        Messenger.tell(player, Message.NO_TELEPORTING);
+                    }
                     Messenger.tell(player, Message.NO_TELEPORTING);
                     break;
                 case ENDER_PEARL:
-                    Messenger.debug(Level.INFO, "Teleported " + player.getName() + " by Enderpearl");
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
@@ -55,18 +54,15 @@ public class CheatListener implements Listener {
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
-                    Messenger.debug(Level.INFO, "Teleported " + player.getName() + " by Portal");
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", false)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case UNKNOWN:
-                    Messenger.debug(Level.INFO, "Teleported " + player.getName() + " by Unknown");
                     event.setCancelled(true);
                     break;
                 default:
-                    Messenger.debug(Level.INFO, "Teleported " + player.getName() + " by Command");
                     event.setCancelled(true);
                     break;
             }
