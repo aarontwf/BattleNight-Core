@@ -44,7 +44,6 @@ public class CheatListener implements Listener {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
-                    Messenger.tell(player, Message.NO_TELEPORTING);
                     break;
                 case ENDER_PEARL:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
