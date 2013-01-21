@@ -12,6 +12,7 @@ Teleprtation:
     Portals: false
     Commands: true
     Plugins: false
+    Unknown: false
 Particles:
     ClassSelection: smoke
 Commands:

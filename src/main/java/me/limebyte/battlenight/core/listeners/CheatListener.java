@@ -59,7 +59,10 @@ public class CheatListener implements Listener {
                     }
                     break;
                 case UNKNOWN:
-                    event.setCancelled(true);
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", false)) {
+                        event.setCancelled(true);
+                        Messenger.tell(player, Message.NO_TELEPORTING);
+                    }
                     break;
                 default:
                     event.setCancelled(true);
