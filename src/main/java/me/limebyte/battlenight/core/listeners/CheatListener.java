@@ -34,6 +34,11 @@ public class CheatListener implements Listener {
         if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && !SafeTeleporter.telePass.contains(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
+                        event.setCancelled(true);
+                        Messenger.tell(player, Message.NO_TELEPORTING);
+                    }
+                    break;
                 case PLUGIN:
                     event.setCancelled(true);
                     Messenger.tell(player, Message.NO_TELEPORTING);

@@ -10,6 +10,7 @@ ExitWaypoint: false
 Teleprtation:
     EnderPearls: true
     Portals: false
+    Commands: true
 Particles:
     ClassSelection: smoke
 Commands:
