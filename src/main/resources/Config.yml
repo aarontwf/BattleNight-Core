@@ -7,7 +7,7 @@ InventoryType: save
 FriendlyFire: false
 StopHealthRegen: true
 ExitWaypoint: false
-Teleprtation:
+Teleportation:
     EnderPearls: true
     Portals: false
     Commands: true
