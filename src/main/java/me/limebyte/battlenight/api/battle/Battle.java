@@ -8,6 +8,7 @@ import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
+import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ public abstract class Battle {
     private Arena arena;
     private boolean inProgress = false;
     private int minPlayers = 2;
+    private int lives = -1;
 
     private Set<String> players = new HashSet<String>();
     private Set<String> spectators = new HashSet<String>();
@@ -28,11 +30,19 @@ public abstract class Battle {
 
     }
 
-    public abstract void onStart();
+    public void onStart() {
 
-    public abstract void onEnd();
+    }
 
-    public abstract void onPlayerDeath(BattleDeathEvent event);
+    public void onEnd() {
+
+    }
+
+    public void onPlayerDeath(BattleDeathEvent event) {
+        int lives = Metadata.getInt(event.getPlayer(), "lives");
+        Metadata.set(event.getPlayer(), "lives", --lives);
+        if (lives > 0) event.setCancelled(true);
+    }
 
     public boolean start() {
         if (isInProgress()) return false;
@@ -40,6 +50,7 @@ public abstract class Battle {
             Player player = Bukkit.getPlayerExact(name);
             if (player == null) continue;
             SafeTeleporter.tp(player, arena.getRandomSpawnPoint().getLocation());
+            Metadata.set(player, "lives", getLives());
         }
 
         inProgress = true;
@@ -54,6 +65,7 @@ public abstract class Battle {
             PlayerData.reset(player);
             PlayerData.restore(player, true, false);
             api.setPlayerClass(player, null);
+            Metadata.remove(player, "lives");
         }
         players.clear();
 
@@ -193,5 +205,13 @@ public abstract class Battle {
             stop();
         }
         return loc;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
     }
 }

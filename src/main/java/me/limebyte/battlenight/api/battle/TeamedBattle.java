@@ -4,7 +4,15 @@ import java.util.Set;
 
 public abstract class TeamedBattle extends Battle {
 
-    Set<Team> teams;
+    private Set<Team> teams;
+
+    public boolean addTeam(Team team) {
+        return teams.add(team);
+    }
+
+    public boolean removeTeam(Team team) {
+        return teams.remove(team);
+    }
 
     public Team getLeadingTeam() {
         return null;
@@ -15,9 +23,13 @@ public abstract class TeamedBattle extends Battle {
     }
 
     @Override
-    public abstract void onStart();
+    public void onStart() {
+
+    }
 
     @Override
-    public abstract void onEnd();
+    public void onEnd() {
+
+    }
 
 }
