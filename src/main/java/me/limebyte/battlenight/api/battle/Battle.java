@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.event.BattleRespawnEvent;
+import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -19,6 +19,7 @@ public abstract class Battle {
     public BattleNightAPI api;
     private Arena arena;
     private boolean inProgress = false;
+    private int minPlayers = 2;
 
     private Set<String> players = new HashSet<String>();
     private Set<String> spectators = new HashSet<String>();
@@ -31,7 +32,7 @@ public abstract class Battle {
 
     public abstract void onEnd();
 
-    public abstract void onPlayerRespawn(BattleRespawnEvent event);
+    public abstract void onPlayerDeath(BattleDeathEvent event);
 
     public boolean start() {
         if (isInProgress()) return false;
@@ -135,6 +136,7 @@ public abstract class Battle {
         PlayerData.store(player);
         PlayerData.reset(player);
         spectators.add(player.getName());
+        SafeTeleporter.tp(player, Bukkit.getPlayerExact((String) players.toArray()[0]).getLocation());
         return true;
     }
 
@@ -167,27 +169,27 @@ public abstract class Battle {
         return true;
     }
 
-    public Location respawn(Player player) {
-        if (!containsPlayer(player)) return null;
+    public void respawn(Player player) {
+        if (!containsPlayer(player)) return;
         PlayerData.reset(player);
         api.getPlayerClass(player).equip(player);
-        return arena.getRandomSpawnPoint().getLocation();
+        SafeTeleporter.tp(player, arena.getRandomSpawnPoint().getLocation());
     }
 
-    public Location toSpectator(Player player) {
+    public Location toSpectator(Player player, boolean death) {
         if (!containsPlayer(player)) return null;
         Location loc;
 
         api.setPlayerClass(player, null);
         players.remove(player.getName());
-        PlayerData.reset(player);
+        if (!death) PlayerData.reset(player);
 
-        if (isInProgress() && players.size() > 1) {
+        if (isInProgress() && players.size() >= minPlayers) {
             spectators.add(player.getName());
             loc = Bukkit.getPlayerExact((String) players.toArray()[0]).getLocation();
         } else {
             loc = PlayerData.getSavedLocation(player);
-            PlayerData.restore(player, false, false);
+            if (!death) PlayerData.restore(player, true, false);
             stop();
         }
         return loc;

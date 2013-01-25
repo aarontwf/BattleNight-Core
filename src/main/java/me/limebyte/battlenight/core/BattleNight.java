@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
 import me.limebyte.battlenight.api.battle.Arena;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
@@ -46,7 +47,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     public void onEnable() {
         instance = this;
         api = new API();
-        ClassicBattle battle = new ClassicBattle();
+        Battle battle = new FFABattle();
         api.setBattle(battle);
 
         oldBattle = new OldBattle();
