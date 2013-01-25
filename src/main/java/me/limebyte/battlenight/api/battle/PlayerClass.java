@@ -1,5 +1,6 @@
 package me.limebyte.battlenight.api.battle;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -15,6 +16,8 @@ public interface PlayerClass {
     public List<ItemStack> getItems();
 
     public List<ItemStack> getArmour();
+
+    public HashMap<String, Boolean> getPermissions();
 
     public void equip(Player player);
 

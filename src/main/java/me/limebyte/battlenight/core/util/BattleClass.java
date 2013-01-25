@@ -1,27 +1,33 @@
 package me.limebyte.battlenight.core.util;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.limebyte.battlenight.api.battle.PlayerClass;
+import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionDefault;
 
 public class BattleClass implements PlayerClass {
     private String name;
     private Permission permission;
     private List<ItemStack> items, armour;
+    private HashMap<String, Boolean> permissions;
 
     private static final int LAST_INV_SLOT = 35;
 
-    public BattleClass(String name, List<ItemStack> items, List<ItemStack> armour) {
+    public BattleClass(String name, List<ItemStack> items, List<ItemStack> armour, HashMap<String, Boolean> permissions) {
         this.name = name;
         this.items = items;
         this.armour = armour;
+        this.permissions = permissions;
 
         String perm = "battlenight.class." + name.toLowerCase();
         permission = new Permission(perm, "Permission for the class: " + name + ".", PermissionDefault.TRUE);
@@ -52,8 +58,16 @@ public class BattleClass implements PlayerClass {
     }
 
     @Override
+    public HashMap<String, Boolean> getPermissions() {
+        return permissions;
+    }
+
+    @Override
     public void equip(Player player) {
         PlayerInventory inv = player.getInventory();
+
+        // Set it
+        Metadata.set(player, "class", name);
 
         // Main Inventory
         for (int i = 0; i < items.size(); i++) {
@@ -69,7 +83,10 @@ public class BattleClass implements PlayerClass {
         inv.setLeggings(armour.get(2));
         inv.setBoots(armour.get(3));
 
-        // Save it
-        Metadata.set(player, "class", name);
+        // Permissions
+        PermissionAttachment perms = player.addAttachment(BattleNight.instance);
+        for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+            perms.setPermission(entry.getKey(), entry.getValue());
+        }
     }
 }

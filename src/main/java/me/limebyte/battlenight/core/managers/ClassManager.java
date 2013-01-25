@@ -15,6 +15,7 @@ import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,7 +49,8 @@ public class ClassManager {
             fixOldFiles(className);
             String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour", "");
             String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
-            classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour))));
+            ConfigurationSection permissions = ConfigManager.get(configFile).getConfigurationSection("Classes." + className + ".Permissions");
+            classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour)), parsePermissions(permissions)));
         }
     }
 
@@ -57,6 +59,7 @@ public class ClassManager {
         for (PlayerClass c : classes) {
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Armour", parseItems(c.getArmour()));
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
+            ConfigManager.get(configFile).createSection("Classes." + c.getName() + ".Permissions", c.getPermissions());
         }
         ConfigManager.save(configFile);
     }
@@ -148,8 +151,7 @@ public class ClassManager {
                             lvl = Integer.parseInt(splitEnchantment[1]);
                         } catch (NumberFormatException ex) {
                         }
-                    }
-                    else {
+                    } else {
                         lvl = enc.getStartLevel();
                     }
 
@@ -185,7 +187,7 @@ public class ClassManager {
                 try {
                     stack.addEnchantments(enchantments);
                 } catch (Exception ex) {
-                    //TODO Log it
+                    // TODO Log it
                 }
             }
 
@@ -207,8 +209,7 @@ public class ClassManager {
 
             if (item == null) {
                 rawItems += ", none";
-            }
-            else {
+            } else {
                 int id = item.getTypeId();
                 int data = item.getDurability();
                 int amount = item.getAmount();
@@ -301,26 +302,9 @@ public class ClassManager {
     }
 
     private enum ArmourType {
-        HELMET(Material.LEATHER_HELMET,
-                Material.CHAINMAIL_HELMET,
-                Material.IRON_HELMET,
-                Material.GOLD_HELMET,
-                Material.DIAMOND_HELMET,
-                Material.WOOL),
-        CHESTPLATE(Material.LEATHER_CHESTPLATE,
-                Material.CHAINMAIL_CHESTPLATE,
-                Material.IRON_CHESTPLATE,
-                Material.GOLD_CHESTPLATE,
-                Material.DIAMOND_CHESTPLATE),
-        LEGGINGS(Material.LEATHER_LEGGINGS,
-                Material.CHAINMAIL_LEGGINGS,
-                Material.IRON_LEGGINGS,
-                Material.GOLD_LEGGINGS,
-                Material.DIAMOND_LEGGINGS),
-        BOOTS(Material.LEATHER_BOOTS,
-                Material.CHAINMAIL_BOOTS,
-                Material.IRON_BOOTS,
-                Material.GOLD_BOOTS,
+        HELMET(Material.LEATHER_HELMET, Material.CHAINMAIL_HELMET, Material.IRON_HELMET, Material.GOLD_HELMET, Material.DIAMOND_HELMET, Material.WOOL), CHESTPLATE(Material.LEATHER_CHESTPLATE,
+                Material.CHAINMAIL_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLD_CHESTPLATE, Material.DIAMOND_CHESTPLATE), LEGGINGS(Material.LEATHER_LEGGINGS, Material.CHAINMAIL_LEGGINGS,
+                Material.IRON_LEGGINGS, Material.GOLD_LEGGINGS, Material.DIAMOND_LEGGINGS), BOOTS(Material.LEATHER_BOOTS, Material.CHAINMAIL_BOOTS, Material.IRON_BOOTS, Material.GOLD_BOOTS,
                 Material.DIAMOND_BOOTS);
 
         private Material[] materials;
@@ -360,5 +344,17 @@ public class ClassManager {
         }
 
         ConfigManager.save(configFile);
+    }
+
+    private static HashMap<String, Boolean> parsePermissions(ConfigurationSection permissions) {
+        HashMap<String, Boolean> map = new HashMap<String, Boolean>();
+
+        if (permissions != null) {
+            for (Map.Entry<String, Object> entry : permissions.getValues(false).entrySet()) {
+                map.put(entry.getKey(), (Boolean) entry.getValue());
+            }
+        }
+
+        return map;
     }
 }
