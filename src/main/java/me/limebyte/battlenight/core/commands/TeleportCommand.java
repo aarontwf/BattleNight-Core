@@ -20,7 +20,7 @@ public class TeleportCommand extends BattleNightCommand {
 
         setLabel("tp");
         setDescription("Teleport to a waypoint.");
-        setUsage("/bn tp <waypoint>");
+        setUsage("/bn tp <waypoint>\n/bn tp <arena> [spawn]");
         setPermission(CommandPermission.ADMIN);
         setAliases(Arrays.asList("teleport", "goto"));
     }
@@ -48,6 +48,8 @@ public class TeleportCommand extends BattleNightCommand {
             } else if (args[0].equalsIgnoreCase("exit")) {
                 waypoint = ArenaManager.getExit();
             }
+
+            // TODO Arenas
 
             if (waypoint == null) {
                 Messenger.tell(sender, Message.INVALID_WAYPOINT);

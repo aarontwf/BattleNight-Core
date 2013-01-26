@@ -21,7 +21,9 @@ public class CommandManager implements CommandExecutor {
     }
 
     static {
+        commands.add(new AddCommand());
         commands.add(new AnnounceCommand());
+        commands.add(new CreateCommand());
         commands.add(new EndCommand());
         commands.add(new HelpCommand());
         commands.add(new JoinCommand());
@@ -34,13 +36,6 @@ public class CommandManager implements CommandExecutor {
         commands.add(new VersionCommand());
         commands.add(new WatchCommand());
         commands.add(new WaypointsCommand());
-
-        commands.add(new DeprecatedCommand("redlounge", "set redlounge..."));
-        commands.add(new DeprecatedCommand("redspawn", "set redspawn..."));
-        commands.add(new DeprecatedCommand("bluelounge", "set bluelounge..."));
-        commands.add(new DeprecatedCommand("bluespawn", "set bluespawn..."));
-        commands.add(new DeprecatedCommand("spectator", "set spectator..."));
-        commands.add(new DeprecatedCommand("exit", "set exit..."));
     }
 
     @Override
