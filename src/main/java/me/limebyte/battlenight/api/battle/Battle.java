@@ -46,10 +46,18 @@ public abstract class Battle {
 
     public boolean start() {
         if (isInProgress()) return false;
+
+        int wpIndex = 0;
+        Waypoint[] waypoints = (Waypoint[]) arena.getSpawnPoints().toArray();
+
         for (String name : players) {
             Player player = Bukkit.getPlayerExact(name);
             if (player == null) continue;
-            SafeTeleporter.tp(player, arena.getRandomSpawnPoint().getLocation());
+
+            if (wpIndex >= waypoints.length) wpIndex = 0;
+            SafeTeleporter.tp(player, waypoints[wpIndex].getLocation());
+            wpIndex++;
+
             Metadata.set(player, "lives", getLives());
         }
 
