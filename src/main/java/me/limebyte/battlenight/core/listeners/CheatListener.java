@@ -2,7 +2,7 @@ package me.limebyte.battlenight.core.listeners;
 
 import java.util.List;
 
-import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -24,6 +24,12 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class CheatListener implements Listener {
 
+    private BattleNightAPI api;
+
+    public CheatListener(BattleNightAPI api) {
+        this.api = api;
+    }
+
     // //////////////////
     // General Events //
     // //////////////////
@@ -31,7 +37,7 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && !SafeTeleporter.telePass.contains(player.getName())) {
+        if (api.getBattle().containsPlayer(player) && !SafeTeleporter.telePass.contains(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
@@ -74,12 +80,12 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
+        if (api.getBattle().containsPlayer(player)) {
             event.setCancelled(true);
             Messenger.tell(player, Message.NO_CHEATING);
         }
 
-        if (BattleNight.getBattle().spectators.contains(player.getName())) {
+        if (api.getBattle().containsSpectator(player)) {
             event.setCancelled(true);
         }
     }
@@ -89,7 +95,7 @@ public class CheatListener implements Listener {
         if (event.isCancelled()) return;
 
         Player player = event.getPlayer();
-        if (!BattleNight.getBattle().usersTeam.containsKey(player.getName()) || !BattleNight.getBattle().spectators.contains(player.getName())) return;
+        if (!api.getBattle().containsPlayer(player) || !api.getBattle().containsSpectator(player)) return;
         if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
         List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
@@ -127,11 +133,11 @@ public class CheatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        if (!BattleNight.getBattle().isInLounge()) return;
-        final Projectile projectile = event.getEntity();
+        if (api.getBattle().isInProgress()) return;
+        Projectile projectile = event.getEntity();
         if (projectile.getShooter() instanceof Player) {
-            final Player thrower = (Player) projectile.getShooter();
-            if (BattleNight.getBattle().usersTeam.containsKey(thrower.getName())) {
+            Player thrower = (Player) projectile.getShooter();
+            if (api.getBattle().containsPlayer(thrower)) {
                 event.setCancelled(true);
                 Messenger.tell(thrower, Message.NO_CHEATING);
             }
@@ -142,8 +148,7 @@ public class CheatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        String name = event.getPlayer().getName();
-        if (BattleNight.getBattle().spectators.contains(name)) {
+        if (api.getBattle().containsPlayer((Player) event.getPlayer())) {
             event.setCancelled(true);
         }
     }

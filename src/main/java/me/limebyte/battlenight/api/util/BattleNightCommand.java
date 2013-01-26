@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -24,6 +25,7 @@ public abstract class BattleNightCommand {
     protected String description = "";
     protected String usageMessage;
     private CommandPermission permission;
+    public BattleNightAPI api;
 
     public BattleNightCommand(String name) {
         this.name = name;
@@ -48,12 +50,9 @@ public abstract class BattleNightCommand {
     /**
      * Executes the command, returning its success
      * 
-     * @param sender
-     *            Source object which is executing this command
-     * @param commandLabel
-     *            The alias of the command used
-     * @param args
-     *            All arguments passed to the command, split via ' '
+     * @param sender Source object which is executing this command
+     * @param commandLabel The alias of the command used
+     * @param args All arguments passed to the command, split via ' '
      * @return true if the command was successful, otherwise false
      */
     public boolean perform(CommandSender sender, String[] args) {
@@ -86,8 +85,7 @@ public abstract class BattleNightCommand {
      * label change will only take effect after its been re-registered e.g.
      * after a /bn reload
      * 
-     * @param name
-     *            The command's name
+     * @param name The command's name
      * @return returns true if the name change happened instantly or false if it
      *         was scheduled for re-registration
      */
@@ -108,8 +106,7 @@ public abstract class BattleNightCommand {
     /**
      * Sets the permission required by users to be able to perform this command
      * 
-     * @param permission
-     *            Permission name or null
+     * @param permission Permission name or null
      */
     public void setPermission(CommandPermission permission) {
         this.permission = permission;
@@ -120,8 +117,7 @@ public abstract class BattleNightCommand {
      * command. If they do not have permission, they will be informed that they
      * cannot do this.
      * 
-     * @param target
-     *            User to test
+     * @param target User to test
      * @return true if they can use it, otherwise false
      */
     public boolean testPermission(CommandSender sender) {
@@ -132,14 +128,16 @@ public abstract class BattleNightCommand {
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false) && sender instanceof Player) {
             String permission = getPermission().getBukkitPerm();
 
-            if (sender.hasPermission(permission)) return true;
+            if (sender.hasPermission(permission))
+                return true;
             else {
                 Messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
                 return false;
             }
         } else {
             if (getPermission().isOpPerm()) {
-                if (sender.isOp()) return true;
+                if (sender.isOp())
+                    return true;
                 else {
                     Messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
                     return false;
@@ -178,8 +176,7 @@ public abstract class BattleNightCommand {
     /**
      * Sets the list of aliases to request on registration for this command
      * 
-     * @param aliases
-     *            Aliases to register to this command
+     * @param aliases Aliases to register to this command
      * @return This command object, for linking
      */
     public BattleNightCommand setAliases(List<String> aliases) {
@@ -196,8 +193,7 @@ public abstract class BattleNightCommand {
     /**
      * Sets a brief description of this command
      * 
-     * @param description
-     *            New command description
+     * @param description New command description
      * @return This command object, for linking
      */
     public BattleNightCommand setDescription(String description) {
@@ -208,8 +204,7 @@ public abstract class BattleNightCommand {
     /**
      * Sets the example usage of this command
      * 
-     * @param usage
-     *            New example usage
+     * @param usage New example usage
      * @return This command object, for linking
      */
     public BattleNightCommand setUsage(String usage) {

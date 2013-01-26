@@ -3,10 +3,9 @@ package me.limebyte.battlenight.core.listeners;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.PlayerClass;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -32,6 +31,12 @@ public class SignListener implements Listener {
 
     private static final String LINE = "----------";
     public static Set<ClassSign> classSigns = new HashSet<ClassSign>();
+
+    private BattleNightAPI api;
+
+    public SignListener(BattleNightAPI api) {
+        this.api = api;
+    }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent e) {
@@ -62,11 +67,10 @@ public class SignListener implements Listener {
 
             if (block.getState() instanceof Sign) {
                 Sign sign = (Sign) block.getState();
-                String name = player.getName();
                 String title = sign.getLine(0);
                 HashMap<String, PlayerClass> classes = ClassManager.getClassNames();
 
-                if (BattleNight.getBattle().usersTeam.containsKey(name) || BattleNight.instance.getAPI().getBattle().containsPlayer(player)) {
+                if (api.getBattle().containsPlayer(player)) {
                     if (classes.containsKey(title)) {
                         PlayerClass playerClass = classes.get(title);
 
@@ -74,7 +78,6 @@ public class SignListener implements Listener {
                             addName(player, sign);
 
                             if (Metadata.getBattleClass(player) != playerClass) {
-                                Messenger.debug(Level.INFO, "Making particles...");
                                 ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                             }
 

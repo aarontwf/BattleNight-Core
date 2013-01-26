@@ -2,8 +2,8 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 
@@ -24,7 +24,8 @@ public class AnnounceCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        if (!BattleNight.getBattle().isInProgress() && !BattleNight.getBattle().isInLounge()) {
+        Battle battle = api.getBattle();
+        if (!battle.isInProgress()) {
             Messenger.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
             return false;
         }

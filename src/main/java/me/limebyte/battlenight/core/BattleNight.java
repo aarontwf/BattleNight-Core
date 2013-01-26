@@ -21,7 +21,6 @@ import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.managers.ClassManager;
-import me.limebyte.battlenight.core.old.OldBattle;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -39,8 +38,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     public static BattleNight instance;
     private BattleNightAPI api;
 
-    private static OldBattle oldBattle;
-
     /** Events **/
 
     @Override
@@ -49,8 +46,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         api = new API();
         Battle battle = new FFABattle();
         api.setBattle(battle);
-
-        oldBattle = new OldBattle();
 
         PluginManager pm = getServer().getPluginManager();
 
@@ -75,7 +70,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         Messenger.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
 
         // Commands
-        getCommand("battlenight").setExecutor(new CommandManager());
+        getCommand("battlenight").setExecutor(new CommandManager(api));
 
         // Hooks
         try {
@@ -87,14 +82,14 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         Nameplates.init(this, pm);
 
         // Event Registration
-        pm.registerEvents(new CheatListener(), this);
-        pm.registerEvents(new HealthListener(), this);
-        pm.registerEvents(new DeathListener(), this);
-        pm.registerEvents(new DisconnectListener(), this);
-        pm.registerEvents(new NameplateListener(), this);
-        pm.registerEvents(new InteractListener(), this);
+        pm.registerEvents(new CheatListener(api), this);
+        pm.registerEvents(new HealthListener(api), this);
+        pm.registerEvents(new DeathListener(api), this);
+        pm.registerEvents(new DisconnectListener(api), this);
+        pm.registerEvents(new NameplateListener(api), this);
+        pm.registerEvents(new InteractListener(api), this);
         pm.registerEvents(new SafeTeleporter(), this);
-        pm.registerEvents(new SignListener(), this);
+        pm.registerEvents(new SignListener(api), this);
         pm.registerEvents(new APIEventListener(), this);
 
         // Enable Message
@@ -104,10 +99,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
     @Override
     public void onDisable() {
-        if (getBattle().isInProgress() || getBattle().isInLounge()) {
-            Messenger.log(Level.INFO, "Ending current Battle...");
-            oldBattle.stop();
-        }
         SignListener.cleanSigns();
 
         // Stop the current Battle
@@ -124,9 +115,5 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     @Override
     public BattleNightAPI getAPI() {
         return api;
-    }
-
-    public static OldBattle getBattle() {
-        return oldBattle;
     }
 }

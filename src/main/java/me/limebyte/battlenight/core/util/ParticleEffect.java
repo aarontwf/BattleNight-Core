@@ -26,7 +26,6 @@ public class ParticleEffect {
     }
 
     public static void classSelect(Player player, String type) {
-        Messenger.debug(Level.INFO, "Particle type equals " + type + ".");
         if (type.equalsIgnoreCase("ender")) {
             for (double h = 0.0; h < 1.8; h += 0.2) {
                 Location loc = player.getLocation();
@@ -51,15 +50,7 @@ public class ParticleEffect {
     }
 
     private enum Direction {
-        SOUTH_EAST(0),
-        SOUTH(1),
-        SOUTH_WEST(2),
-        EAST(3),
-        UP(4),
-        WEST(5),
-        NORTH_EAST(6),
-        NORTH(7),
-        NORTH_WEST(8);
+        SOUTH_EAST(0), SOUTH(1), SOUTH_WEST(2), EAST(3), UP(4), WEST(5), NORTH_EAST(6), NORTH(7), NORTH_WEST(8);
 
         private int value;
 

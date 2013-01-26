@@ -3,7 +3,6 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.util.BattleNightCommand;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 
@@ -34,17 +33,21 @@ public class KickCommand extends BattleNightCommand {
         Player player = Bukkit.getPlayerExact(args[0]);
 
         if (player != null) {
-            if (BattleNight.getBattle().usersTeam.containsKey(player.getName())) {
+            if (api.getBattle().containsPlayer(player)) {
                 String reason = null;
 
                 if (args.length > 1) {
                     reason = createString(args, 1);
                 }
 
+                api.getBattle().removePlayer(player);
+
                 if (reason != null) {
-                    BattleNight.getBattle().removePlayer(player, false, "has been kicked from the Battle for " + reason + ".", "You have been kicked from the Battle for " + reason + ".");
+                    Messenger.tell(sender, "You have been kicked from the Battle for " + reason + ".");
+                    Messenger.tellEveryoneExcept(player, player.getName() + " has been kicked from the Battle for " + reason + ".", true);
                 } else {
-                    BattleNight.getBattle().removePlayer(player, false, "has been kicked from the Battle.", "You have been kicked from the current Battle.");
+                    Messenger.tell(sender, "You have been kicked from the Battle.");
+                    Messenger.tellEveryoneExcept(player, player.getName() + " has been kicked from the Battle.", true);
                 }
 
                 return true;

@@ -12,4 +12,14 @@ public class ClassicBattle extends TeamedBattle {
         addTeam(new Team("Red", ChatColor.RED));
         addTeam(new Team("Blue", ChatColor.BLUE));
     }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onEnd() {
+
+    }
 }

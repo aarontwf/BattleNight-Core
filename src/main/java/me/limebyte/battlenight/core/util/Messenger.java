@@ -2,10 +2,12 @@ package me.limebyte.battlenight.core.util;
 
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Team;
+import me.limebyte.battlenight.api.battle.TeamedBattle;
 import me.limebyte.battlenight.api.util.Page;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.old.Team;
-import me.limebyte.battlenight.core.old.Waypoint;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -26,6 +28,11 @@ import org.bukkit.inventory.ItemStack;
 public class Messenger {
 
     public static final String PREFIX = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
+    private static BattleNightAPI api;
+
+    public static void init(BattleNightAPI api) {
+        Messenger.api = api;
+    }
 
     /** Strings **/
 
@@ -35,7 +42,7 @@ public class Messenger {
 
     public static void tellEveryone(String message, boolean spectators) {
         if (spectators) {
-            for (String name : BattleNight.getBattle().spectators) {
+            for (String name : api.getBattle().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null) {
                     tell(p, message);
@@ -43,7 +50,7 @@ public class Messenger {
             }
         }
 
-        for (String name : BattleNight.getBattle().usersTeam.keySet()) {
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
                 tell(p, message);
@@ -53,7 +60,7 @@ public class Messenger {
 
     public static void tellEveryoneExcept(Player player, String message, boolean spectators) {
         if (spectators) {
-            for (String name : BattleNight.getBattle().spectators) {
+            for (String name : api.getBattle().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null && player != p) {
                     tell(p, message);
@@ -61,7 +68,7 @@ public class Messenger {
             }
         }
 
-        for (String name : BattleNight.getBattle().usersTeam.keySet()) {
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) {
                 tell(p, message);
@@ -102,7 +109,7 @@ public class Messenger {
 
     public static void tellEveryone(Page page, boolean spectators) {
         if (spectators) {
-            for (String name : BattleNight.getBattle().spectators) {
+            for (String name : api.getBattle().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null) {
                     tell(p, page);
@@ -110,7 +117,7 @@ public class Messenger {
             }
         }
 
-        for (String name : BattleNight.getBattle().usersTeam.keySet()) {
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
                 tell(p, page);
@@ -120,7 +127,7 @@ public class Messenger {
 
     public static void tellEveryoneExcept(Player player, Page page, boolean spectators) {
         if (spectators) {
-            for (String name : BattleNight.getBattle().spectators) {
+            for (String name : api.getBattle().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null && player != p) {
                     tell(p, page);
@@ -128,7 +135,7 @@ public class Messenger {
             }
         }
 
-        for (String name : BattleNight.getBattle().usersTeam.keySet()) {
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) {
                 tell(p, page);
@@ -173,15 +180,22 @@ public class Messenger {
     }
 
     private static String describeObject(Object obj) {
-        if (obj instanceof ComplexEntityPart) return describeObject(((ComplexEntityPart) obj).getParent());
-        else if (obj instanceof Item) return describeMaterial(((Item) obj).getItemStack().getType());
-        else if (obj instanceof ItemStack) return describeMaterial(((ItemStack) obj).getType());
-        else if (obj instanceof Entity) return describeEntity((Entity) obj);
-        else if (obj instanceof Block) return describeMaterial(((Block) obj).getType());
-        else if (obj instanceof Material) return describeMaterial((Material) obj);
-        else if (obj instanceof Waypoint) return ((Waypoint) obj).getDisplayName();
-        else if (obj instanceof Location) return describeLocation((Location) obj);
-        else if (obj instanceof World) return ((World) obj).getName();
+        if (obj instanceof ComplexEntityPart)
+            return describeObject(((ComplexEntityPart) obj).getParent());
+        else if (obj instanceof Item)
+            return describeMaterial(((Item) obj).getItemStack().getType());
+        else if (obj instanceof ItemStack)
+            return describeMaterial(((ItemStack) obj).getType());
+        else if (obj instanceof Entity)
+            return describeEntity((Entity) obj);
+        else if (obj instanceof Block)
+            return describeMaterial(((Block) obj).getType());
+        else if (obj instanceof Material)
+            return describeMaterial((Material) obj);
+        else if (obj instanceof Location)
+            return describeLocation((Location) obj);
+        else if (obj instanceof World)
+            return ((World) obj).getName();
         else if (obj instanceof Team) return ((Team) obj).getColour() + ((Team) obj).getName();
 
         return obj.toString();
@@ -205,16 +219,21 @@ public class Messenger {
 
     private static String getColouredName(Player player) {
         String name = player.getName();
+        Battle battle = api.getBattle();
 
-        if (BattleNight.getBattle().usersTeam.containsKey(name)) {
-            Team team = BattleNight.getBattle().usersTeam.get(name);
-            return team.getColour() + name;
-        } else return ChatColor.DARK_GRAY + name;
+        if (battle.getPlayers().contains(name)) {
+            ChatColor teamColour = ChatColor.GRAY;
+            if (battle instanceof TeamedBattle) {
+                teamColour = ((TeamedBattle) battle).getTeam(player).getColour();
+            }
+            return teamColour + name;
+        } else {
+            return ChatColor.DARK_GRAY + name;
+        }
     }
 
     public enum Message {
         INVENTORY_NOT_EMPTY(ChatColor.RED + "You must have an empty inventory to join the Battle."),
-
         JOINED_TEAMED_BATTLE("Welcome! You are on team $1" + ChatColor.WHITE + "."),
         PLAYER_JOINED_TEAMED_BATTLE("$1 has joined team $2" + ChatColor.WHITE + "."),
 
@@ -226,6 +245,7 @@ public class Messenger {
         SPECIFY_PLAYER(ChatColor.RED + "Please specify a player."),
         SPECIFY_WAYPOINT(ChatColor.RED + "Please specify a waypoint."),
         SPECIFY_COORDINATE(ChatColor.RED + "Please specify a coordinate."),
+        SPECIFY_ARENA(ChatColor.RED + "Please specify an arena name."),
         SPECIFY_TEST(ChatColor.RED + "Please specify a test."),
 
         USAGE("Usage: $1"),

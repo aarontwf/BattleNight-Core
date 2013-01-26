@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -13,6 +14,11 @@ import org.bukkit.command.CommandSender;
 
 public class CommandManager implements CommandExecutor {
     private static List<BattleNightCommand> commands = new ArrayList<BattleNightCommand>();
+    private static BattleNightAPI api;
+
+    public CommandManager(BattleNightAPI api) {
+        CommandManager.api = api;
+    }
 
     static {
         commands.add(new AnnounceCommand());
@@ -56,6 +62,7 @@ public class CommandManager implements CommandExecutor {
     }
 
     public static void registerCommand(BattleNightCommand command) {
+        command.api = api;
         commands.add(command);
     }
 

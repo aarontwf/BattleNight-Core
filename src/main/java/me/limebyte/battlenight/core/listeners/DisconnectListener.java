@@ -1,39 +1,38 @@
 package me.limebyte.battlenight.core.listeners;
 
-import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.old.OldBattle;
+import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class DisconnectListener implements Listener {
 
+    private BattleNightAPI api;
+
+    public DisconnectListener(BattleNightAPI api) {
+        this.api = api;
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        removePlayer(player, "disconnected");
+        removePlayer(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerKick(PlayerKickEvent event) {
-        Player player = event.getPlayer();
-        removePlayer(player, "kicked");
+        removePlayer(event);
     }
 
-    private void removePlayer(Player player, String reason) {
-        OldBattle battle = BattleNight.getBattle();
-        String name = player.getName();
-
-        if (battle.usersTeam.containsKey(name)) {
-            battle.removePlayer(player, false, "has been removed from the Battle as they " + reason + " from the server.", null);
-        }
-
-        if (battle.spectators.contains(name)) {
-            battle.removeSpectator(player, null);
-        }
+    private void removePlayer(PlayerEvent event) {
+        Player player = event.getPlayer();
+        Battle battle = api.getBattle();
+        battle.removePlayer(player);
+        battle.removeSpectator(player);
     }
 }

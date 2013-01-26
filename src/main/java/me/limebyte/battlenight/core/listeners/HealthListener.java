@@ -1,6 +1,8 @@
 package me.limebyte.battlenight.core.listeners;
 
-import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.TeamedBattle;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -18,13 +20,19 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class HealthListener implements Listener {
 
+    private BattleNightAPI api;
+
+    public HealthListener(BattleNightAPI api) {
+        this.api = api;
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
-        if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
-
         Player player = (Player) event.getEntity();
-        if (!BattleNight.getBattle().usersTeam.containsKey(player.getName())) return;
+
+        if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
+        if (!api.getBattle().containsPlayer(player)) return;
 
         RegainReason reason = event.getRegainReason();
         if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {
@@ -39,19 +47,21 @@ public class HealthListener implements Listener {
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+            Battle battle = api.getBattle();
+            String name = player.getName();
 
-            if (BattleNight.getBattle().spectators.contains(player.getName())) {
+            if (battle.getSpectators().contains(name)) {
                 event.setCancelled(true);
             }
 
-            if (!BattleNight.getBattle().usersTeam.containsKey(player.getName())) return;
+            if (!battle.containsPlayer(player)) return;
 
-            subEvent.setCancelled(!canBeDamaged(player, subEvent));
+            subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));
 
         }
     }
 
-    private boolean canBeDamaged(Player damaged, EntityDamageByEntityEvent event) {
+    private boolean canBeDamaged(Player damaged, Battle battle, EntityDamageByEntityEvent event) {
         Entity eDamager = event.getDamager();
         Player damager;
 
@@ -68,23 +78,22 @@ public class HealthListener implements Listener {
             } else return true;
         }
 
-        if (BattleNight.getBattle().usersTeam.containsKey(damager.getName())) {
-            if (BattleNight.getBattle().isInLounge())
-                return false;
-            if (areEnemies(damager, damaged) || damager == damaged) return true;
-            else return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
+        if (battle.containsPlayer(damager)) {
+            if (!battle.isInProgress()) return false;
+            if (damager == damaged) return true;
+
+            if (battle instanceof TeamedBattle) {
+                if (((TeamedBattle) battle).areEnemies(damager, damaged)) return true;
+            }
+
+            return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
         }
 
         return true;
     }
 
-    private boolean areEnemies(Player player1, Player player2) {
-        if (BattleNight.getBattle().usersTeam.get(player1.getName()) != BattleNight.getBattle().usersTeam.get(player2.getName())) return true;
-        else return false;
-    }
-
     private boolean checkCrashBug(Player damaged, EntityDamageByEntityEvent event) {
-        //if (event.getDamage() >= damaged.getHealth()) return true;
+        // if (event.getDamage() >= damaged.getHealth()) return true;
         return false;
     }
 

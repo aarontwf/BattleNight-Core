@@ -1,16 +1,13 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.old.Team;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,56 +18,37 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class InteractListener implements Listener {
+
+    private BattleNightAPI api;
+
+    public InteractListener(BattleNightAPI api) {
+        this.api = api;
+    }
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Action action = event.getAction();
         Player player = event.getPlayer();
+        Battle battle = api.getBattle();
 
         if (action.equals(Action.LEFT_CLICK_BLOCK)) {
             Block block = event.getClickedBlock();
 
             if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
-                if (BattleNight.getBattle().usersTeam.containsKey(player.getName()) && BattleNight.getBattle().isInLounge()) {
-                    String name = player.getName();
-                    Team team = BattleNight.getBattle().usersTeam.get(name);
-
-                    if (team.isReady()) {
-                        Messenger.tellEveryone(false, Message.TEAM_IS_READY, team.getColour() + team.getName());
-
-                        if (team.equals(Team.RED)) {
-                            BattleNight.getBattle().redTeamIronClicked = true;
-
-                            if (Team.BLUE.isReady() && BattleNight.getBattle().blueTeamIronClicked) {
-                                BattleNight.getBattle().start();
-                            }
-                        } else if (team.equals(Team.BLUE)) {
-                            BattleNight.getBattle().blueTeamIronClicked = true;
-
-                            if (Team.RED.isReady() && BattleNight.getBattle().redTeamIronClicked) {
-                                BattleNight.getBattle().start();
-                            }
-                        }
-                    } else {
-                        player.sendMessage(ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE + "Your team have not all picked a class!");
-                    }
-                }
-
-                BattleNightAPI api = BattleNight.instance.getAPI();
-
-                if (api.getBattle().containsPlayer(player)) {
+                if (battle.containsPlayer(player)) {
                     if (api.getPlayerClass(player) != null) {
                         Metadata.set(player, "ready", true);
 
                         boolean allReady = true;
-                        for (String name : api.getBattle().getPlayers()) {
-                            Player p = Bukkit.getPlayerExact(name);
+                        for (String n : battle.getPlayers()) {
+                            Player p = Bukkit.getPlayerExact(n);
                             if (p == null) continue;
                             if (!Metadata.getBoolean(p, "ready")) {
                                 allReady = false;
                                 break;
                             }
                         }
-                        if (allReady) api.getBattle().start();
+                        if (allReady) battle.start();
                     } else {
                         Messenger.tell(player, "You have not picked a class.");
                     }
@@ -79,7 +57,7 @@ public class InteractListener implements Listener {
         }
 
         if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK)) {
-            if (BattleNight.getBattle().spectators.contains(player.getName())) {
+            if (battle.containsSpectator(player)) {
                 ItemStack stack = player.getItemInHand();
                 if (stack != null && stack.getItemMeta() != null) {
                     String itemName = stack.getItemMeta().getDisplayName();

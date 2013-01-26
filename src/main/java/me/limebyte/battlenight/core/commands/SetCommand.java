@@ -1,7 +1,8 @@
 package me.limebyte.battlenight.core.commands;
 
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
-import me.limebyte.battlenight.core.old.Waypoint;
+import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 
@@ -18,7 +19,7 @@ public class SetCommand extends BattleNightCommand {
 
         setLabel("set");
         setDescription("Sets a BattleNight waypoint.");
-        setUsage("/bn set <waypoint> [x] [y] [z]\n/bn set <waypoint> [x] [y] [z] [world]");
+        setUsage("/bn set <waypoint> [x] [y] [z] [world]");
         setPermission(CommandPermission.ADMIN);
     }
 
@@ -31,11 +32,10 @@ public class SetCommand extends BattleNightCommand {
         } else {
             Waypoint waypoint = null;
 
-            for (Waypoint wp : Waypoint.values()) {
-                if (args[0].equalsIgnoreCase(wp.getName())) {
-                    waypoint = wp;
-                    break;
-                }
+            if (args[0].equalsIgnoreCase("lounge")) {
+                waypoint = ArenaManager.getLounge();
+            } else if (args[0].equalsIgnoreCase("exit")) {
+                waypoint = ArenaManager.getExit();
             }
 
             if (waypoint != null) {
