@@ -14,6 +14,7 @@ import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -228,7 +229,11 @@ public abstract class Battle {
         int lives = Metadata.getInt(player, "lives");
         Metadata.set(player, "lives", --lives);
         if (lives > 0) {
-            Messenger.tell(player, "You have " + lives + " lives remaining.");
+            if (lives == 1) {
+                Messenger.tell(player, ChatColor.RED + "Last life!");
+            } else {
+                Messenger.tell(player, "You have " + lives + " lives remaining.");
+            }
             event.setCancelled(true);
         }
     }
