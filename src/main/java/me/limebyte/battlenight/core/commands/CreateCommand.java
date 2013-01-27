@@ -34,7 +34,7 @@ public class CreateCommand extends BattleNightCommand {
                     return false;
                 }
             }
-            api.registerArena(new Arena(args[1]));
+            api.registerArena(new Arena(args[0]));
             Messenger.tell(sender, "Arena " + args[0] + " created.");
             return true;
         }
