@@ -95,7 +95,7 @@ public class Messenger {
             reason = getColouredName(killer);
         } else {
             DamageCause cause = (player.getLastDamageCause() != null) ? player.getLastDamageCause().getCause() : DamageCause.SUICIDE;
-            reason = cause.toString().toLowerCase().replace('_', ' ');
+            reason = ChatColor.GRAY + cause.toString().toLowerCase().replace('_', ' ');
         }
 
         tellEveryone(true, Message.KILLED, getColouredName(player), reason);
@@ -222,7 +222,7 @@ public class Messenger {
         Battle battle = api.getBattle();
 
         if (battle.getPlayers().contains(name)) {
-            ChatColor teamColour = ChatColor.GRAY;
+            ChatColor teamColour = ChatColor.WHITE;
             if (battle instanceof TeamedBattle) {
                 teamColour = ((TeamedBattle) battle).getTeam(player).getColour();
             }
