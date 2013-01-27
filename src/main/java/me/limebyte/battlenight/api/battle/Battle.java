@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
+import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
@@ -84,6 +85,7 @@ public abstract class Battle {
             api.setPlayerClass(player, null);
         }
         spectators.clear();
+        SignListener.cleanSigns();
 
         inProgress = false;
         onEnd();
