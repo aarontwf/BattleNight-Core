@@ -33,7 +33,7 @@ public class AddCommand extends BattleNightCommand {
             Arena arena = null;
 
             for (Arena a : api.getArenas()) {
-                if (a.getName().equalsIgnoreCase(args[1])) {
+                if (a.getName().equalsIgnoreCase(args[0])) {
                     arena = a;
                 }
             }
