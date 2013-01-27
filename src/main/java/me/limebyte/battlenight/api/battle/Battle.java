@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.api.battle;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -48,14 +49,14 @@ public abstract class Battle {
         if (isInProgress()) return false;
 
         int wpIndex = 0;
-        Waypoint[] waypoints = (Waypoint[]) arena.getSpawnPoints().toArray();
+        List<Waypoint> waypoints = arena.getSpawnPoints();
 
         for (String name : players) {
             Player player = Bukkit.getPlayerExact(name);
             if (player == null) continue;
 
-            if (wpIndex >= waypoints.length) wpIndex = 0;
-            SafeTeleporter.tp(player, waypoints[wpIndex].getLocation());
+            if (wpIndex >= waypoints.size()) wpIndex = 0;
+            SafeTeleporter.tp(player, waypoints.get(wpIndex).getLocation());
             wpIndex++;
 
             Metadata.set(player, "lives", getLives());
