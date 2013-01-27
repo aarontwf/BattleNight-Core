@@ -39,6 +39,11 @@ public class InteractListener implements Listener {
                     if (api.getPlayerClass(player) != null) {
                         Metadata.set(player, "ready", true);
 
+                        if (battle.getPlayers().size() < 2) {
+                            Messenger.tell(player, "Not enough players!");
+                            return;
+                        }
+
                         boolean allReady = true;
                         for (String n : battle.getPlayers()) {
                             Player p = Bukkit.getPlayerExact(n);
