@@ -78,6 +78,8 @@ public class HealthListener implements Listener {
             } else return true;
         }
 
+        if (battle.containsSpectator(damager)) return false;
+
         if (battle.containsPlayer(damager)) {
             if (!battle.isInProgress()) return false;
             if (damager == damaged) return true;

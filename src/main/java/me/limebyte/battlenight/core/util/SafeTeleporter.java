@@ -39,11 +39,11 @@ public class SafeTeleporter implements Listener {
     }
 
     public static void tp(Player player, Waypoint waypoint) {
-        tp(player, waypoint.getLocation());
+        tp(player, waypoint.getLocation().clone());
     }
 
     public static void tp(Player player, Location location) {
-        safeTP(player, location);
+        safeTP(player, location.clone());
     }
 
     public static void startTeleporting() {

@@ -15,6 +15,7 @@ import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -154,6 +155,13 @@ public abstract class Battle {
         PlayerData.store(player);
         PlayerData.reset(player);
         spectators.add(player.getName());
+        player.setGameMode(GameMode.ADVENTURE);
+        player.setAllowFlight(true);
+        for (String n : players) {
+            if (Bukkit.getPlayerExact(n) != null) {
+                Bukkit.getPlayerExact(n).hidePlayer(player);
+            }
+        }
         SafeTeleporter.tp(player, Bukkit.getPlayerExact((String) players.toArray()[0]).getLocation());
         return true;
     }
@@ -206,6 +214,14 @@ public abstract class Battle {
 
         if (isInProgress() && players.size() >= minPlayers) {
             spectators.add(player.getName());
+            player.setGameMode(GameMode.ADVENTURE);
+            player.setAllowFlight(true);
+            for (String n : players) {
+                if (Bukkit.getPlayerExact(n) != null) {
+                    Bukkit.getPlayerExact(n).hidePlayer(player);
+                }
+            }
+
             loc = Bukkit.getPlayerExact((String) players.toArray()[0]).getLocation();
         } else {
             loc = PlayerData.getSavedLocation(player);
