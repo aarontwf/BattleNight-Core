@@ -18,24 +18,22 @@ public class CommandManager implements CommandExecutor {
 
     public CommandManager(BattleNightAPI api) {
         CommandManager.api = api;
-    }
 
-    static {
-        commands.add(new AddCommand());
-        commands.add(new AnnounceCommand());
-        commands.add(new CreateCommand());
-        commands.add(new EndCommand());
-        commands.add(new HelpCommand());
-        commands.add(new JoinCommand());
-        commands.add(new KickCommand());
-        commands.add(new LeaveCommand());
-        commands.add(new ReloadCommand());
-        commands.add(new SetCommand());
-        commands.add(new TeleportCommand());
-        commands.add(new TestCommand());
-        commands.add(new VersionCommand());
-        commands.add(new WatchCommand());
-        commands.add(new WaypointsCommand());
+        registerCommand(new AddCommand());
+        registerCommand(new AnnounceCommand());
+        registerCommand(new CreateCommand());
+        registerCommand(new EndCommand());
+        registerCommand(new HelpCommand());
+        registerCommand(new JoinCommand());
+        registerCommand(new KickCommand());
+        registerCommand(new LeaveCommand());
+        registerCommand(new ReloadCommand());
+        registerCommand(new SetCommand());
+        registerCommand(new TeleportCommand());
+        registerCommand(new TestCommand());
+        registerCommand(new VersionCommand());
+        registerCommand(new WatchCommand());
+        registerCommand(new WaypointsCommand());
     }
 
     @Override
