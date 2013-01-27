@@ -7,6 +7,7 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
+import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -34,6 +35,10 @@ public class DeathListener implements Listener {
         if (battle.containsPlayer(player)) {
             event.getDrops().clear();
             event.setDeathMessage("");
+
+            if (battle.isInProgress()) {
+                Messenger.killFeed(player, player.getKiller());
+            }
 
             BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);
             Bukkit.getServer().getPluginManager().callEvent(apiEvent);
