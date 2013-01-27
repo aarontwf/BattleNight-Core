@@ -39,7 +39,7 @@ public class InteractListener implements Listener {
                     if (api.getPlayerClass(player) != null) {
                         if (!Metadata.getBoolean(player, "ready")) {
                             Metadata.set(player, "ready", true);
-                            Messenger.tellEveryone(player.getDisplayName() + " is ready!", true);
+                            Messenger.tellEveryone(player.getName() + " is ready!", true);
                         }
 
                         if (battle.getPlayers().size() < 2) return;

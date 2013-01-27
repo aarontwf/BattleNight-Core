@@ -40,9 +40,7 @@ public abstract class Battle {
     }
 
     public void onPlayerDeath(BattleDeathEvent event) {
-        int lives = Metadata.getInt(event.getPlayer(), "lives");
-        Metadata.set(event.getPlayer(), "lives", --lives);
-        if (lives > 0) event.setCancelled(true);
+
     }
 
     public boolean start() {
