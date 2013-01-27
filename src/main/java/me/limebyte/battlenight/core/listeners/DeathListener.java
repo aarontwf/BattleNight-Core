@@ -7,6 +7,7 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
+import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Bukkit;
@@ -29,25 +30,31 @@ public class DeathListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        Battle battle = api.getBattle();
+        final Player player = event.getEntity();
+        final Battle battle = api.getBattle();
 
         if (battle.containsPlayer(player)) {
             event.getDrops().clear();
             event.setDeathMessage("");
 
-            if (battle.isInProgress()) {
-                Messenger.killFeed(player, player.getKiller());
-            }
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
+                @Override
+                public void run() {
+                    if (battle.isInProgress()) {
+                        Messenger.killFeed(player, player.getKiller());
+                    }
 
-            BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);
-            Bukkit.getServer().getPluginManager().callEvent(apiEvent);
+                    BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);
+                    Bukkit.getServer().getPluginManager().callEvent(apiEvent);
 
-            if (!apiEvent.isCancelled()) {
-                apiEvent.setRespawnLocation(battle.toSpectator(player, true));
-            }
+                    if (!apiEvent.isCancelled()) {
+                        apiEvent.setRespawnLocation(battle.toSpectator(player, true));
+                    }
 
-            queue.put(player.getName(), apiEvent);
+                    queue.put(player.getName(), apiEvent);
+                }
+            }, 1L);
+
         }
     }
 
