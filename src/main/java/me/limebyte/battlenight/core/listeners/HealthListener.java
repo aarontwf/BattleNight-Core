@@ -84,9 +84,10 @@ public class HealthListener implements Listener {
 
             if (battle instanceof TeamedBattle) {
                 if (((TeamedBattle) battle).areEnemies(damager, damaged)) return true;
+                return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
             }
 
-            return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
+            return true;
         }
 
         return true;

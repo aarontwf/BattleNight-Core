@@ -37,13 +37,12 @@ public class InteractListener implements Listener {
             if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
                 if (battle.containsPlayer(player)) {
                     if (api.getPlayerClass(player) != null) {
-                        Metadata.set(player, "ready", true);
-
-                        if (battle.getPlayers().size() < 2) {
-                            Messenger.tell(player, "Not enough players!");
-                            return;
+                        if (!Metadata.getBoolean(player, "ready")) {
+                            Metadata.set(player, "ready", true);
+                            Messenger.tellEveryone(player.getDisplayName() + " is ready!", true);
                         }
 
+                        if (battle.getPlayers().size() < 2) return;
                         boolean allReady = true;
                         for (String n : battle.getPlayers()) {
                             Player p = Bukkit.getPlayerExact(n);

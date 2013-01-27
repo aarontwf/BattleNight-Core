@@ -75,6 +75,7 @@ public abstract class Battle {
             PlayerData.restore(player, true, false);
             api.setPlayerClass(player, null);
             Metadata.remove(player, "lives");
+            Metadata.remove(player, "ready");
         }
         players.clear();
 
