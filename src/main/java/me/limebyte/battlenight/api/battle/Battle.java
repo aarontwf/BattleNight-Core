@@ -209,6 +209,7 @@ public abstract class Battle {
         } else {
             loc = PlayerData.getSavedLocation(player);
             if (!death) PlayerData.restore(player, true, false);
+            Messenger.tellEveryone(((String) players.toArray()[0]) + " won the battle!", true);
             stop();
         }
         return loc;
