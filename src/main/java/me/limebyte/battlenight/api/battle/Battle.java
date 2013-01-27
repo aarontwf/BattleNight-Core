@@ -40,10 +40,6 @@ public abstract class Battle {
 
     }
 
-    public void onPlayerDeath(BattleDeathEvent event) {
-
-    }
-
     public boolean start() {
         if (isInProgress()) return false;
 
@@ -224,5 +220,15 @@ public abstract class Battle {
 
     public void setLives(int lives) {
         this.lives = lives;
+    }
+
+    public void onPlayerDeath(BattleDeathEvent event) {
+        Player player = event.getPlayer();
+        int lives = Metadata.getInt(player, "lives");
+        Metadata.set(player, "lives", --lives);
+        if (lives > 0) {
+            Messenger.debug(Level.INFO, "Lives greater than 0.  Respawning.");
+            event.setCancelled(true);
+        }
     }
 }

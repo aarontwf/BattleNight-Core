@@ -1,7 +1,6 @@
 package me.limebyte.battlenight.api.event;
 
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.core.util.Metadata;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -20,10 +19,6 @@ public class BattleDeathEvent extends PlayerEvent implements Cancellable {
         super(player);
         this.battle = battle;
         this.respawnLocation = battle.getArena().getRandomSpawnPoint().getLocation();
-
-        int lives = Metadata.getInt(player, "lives");
-        Metadata.set(player, "lives", --lives);
-        if (lives > 0) setCancelled(true);
     }
 
     public Battle getBattle() {

@@ -38,7 +38,7 @@ public class DeathListener implements Listener {
             BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);
             Bukkit.getServer().getPluginManager().callEvent(apiEvent);
 
-            if (apiEvent.isCancelled()) {
+            if (!apiEvent.isCancelled()) {
                 apiEvent.setRespawnLocation(battle.toSpectator(player, true));
             }
 
