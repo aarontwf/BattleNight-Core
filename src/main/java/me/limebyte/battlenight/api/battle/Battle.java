@@ -228,7 +228,7 @@ public abstract class Battle {
         int lives = Metadata.getInt(player, "lives");
         Metadata.set(player, "lives", --lives);
         if (lives > 0) {
-            Messenger.debug(Level.INFO, "Lives greater than 0.  Respawning.");
+            Messenger.tell(player, "You have " + lives + " lives remaining.");
             event.setCancelled(true);
         }
     }
