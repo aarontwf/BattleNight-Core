@@ -3,6 +3,7 @@ package me.limebyte.battlenight.api.battle;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
@@ -191,6 +192,7 @@ public abstract class Battle {
 
     public void respawn(Player player) {
         if (!containsPlayer(player)) return;
+        Messenger.debug(Level.INFO, "To respawn " + player.getName());
         PlayerData.reset(player);
         api.getPlayerClass(player).equip(player);
         SafeTeleporter.tp(player, arena.getRandomSpawnPoint().getLocation());
@@ -198,6 +200,7 @@ public abstract class Battle {
 
     public Location toSpectator(Player player, boolean death) {
         if (!containsPlayer(player)) return null;
+        Messenger.debug(Level.INFO, "To spectator " + player.getName());
         Location loc;
 
         api.setPlayerClass(player, null);

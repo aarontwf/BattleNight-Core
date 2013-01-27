@@ -47,6 +47,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         Battle battle = new FFABattle();
         api.setBattle(battle);
 
+        Messenger.init(api);
+
         PluginManager pm = getServer().getPluginManager();
 
         // Register Serialization Classes
