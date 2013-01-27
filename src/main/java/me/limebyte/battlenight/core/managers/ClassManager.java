@@ -351,7 +351,7 @@ public class ClassManager {
 
         if (permissions != null) {
             for (Map.Entry<String, Object> entry : permissions.getValues(false).entrySet()) {
-                map.put(entry.getKey(), (Boolean) entry.getValue());
+                map.put(entry.getKey(), Boolean.parseBoolean(entry.getValue().toString()));
             }
         }
 
