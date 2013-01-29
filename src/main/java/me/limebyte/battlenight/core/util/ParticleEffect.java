@@ -21,7 +21,7 @@ public class ParticleEffect {
             loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_PARTICLE_COUNT) * 1.8);
             loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
-            loc.getWorld().playEffect(loc, effect, Direction.UP);
+            loc.getWorld().playEffect(loc, effect, Direction.UP.getValue());
         }
     }
 
