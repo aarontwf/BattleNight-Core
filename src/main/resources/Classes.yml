@@ -28,7 +28,7 @@ Classes:
             some.other.permission.node: true
     Archer:
         Armour: 302e(4~2), 303e(4~2), 304e(4~2), 305e(4~2)
-        Items: 261e(49~2/48~1), 368x8, none, none, none, none, none, 262x64, 262x64
+        Items: 261e(49~1/48~1), 368x4, none, none, none, none, none, 262x64, 262x64
         Permissions:
             some.permission.node: false
             some.other.permission.node: true
@@ -39,8 +39,8 @@ Classes:
             some.permission.node: false
             some.other.permission.node: true
     Magician:
-        Armour: 306, 307, 308, 309
-        Items: 272, 368x4, none, none, none, 373:16386, 373:16396, 373:16388, 373:16458
+        Armour: 306, 307, 308, 309e(2~4)
+        Items: 272, 368x16, none, none, none, 373:16386, 373:16396, 373:16388, 373:16458
         Permissions:
             some.permission.node: false
             some.other.permission.node: true
