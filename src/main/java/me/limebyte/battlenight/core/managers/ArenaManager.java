@@ -54,7 +54,7 @@ public class ArenaManager {
     }
 
     public static Arena getRandomArena() {
-        return (Arena) Util.getRandom(arenas);
+        return arenas.get(Util.random.nextInt(arenas.size()));
     }
 
     public static Waypoint getLounge() {

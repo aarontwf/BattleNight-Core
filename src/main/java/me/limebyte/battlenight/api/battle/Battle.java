@@ -2,6 +2,7 @@ package me.limebyte.battlenight.api.battle;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -27,6 +28,7 @@ public abstract class Battle {
     private boolean inProgress = false;
     private int minPlayers = 2;
     private int lives = -1;
+    private static Random rand = new Random();
 
     private Set<String> players = new HashSet<String>();
     private Set<String> spectators = new HashSet<String>();
@@ -46,16 +48,17 @@ public abstract class Battle {
     public boolean start() {
         if (isInProgress()) return false;
 
-        int wpIndex = 0;
         List<Waypoint> waypoints = arena.getSpawnPoints();
+        List<Waypoint> free = waypoints;
 
         for (String name : players) {
             Player player = Bukkit.getPlayerExact(name);
             if (player == null) continue;
 
-            if (wpIndex >= waypoints.size()) wpIndex = 0;
-            SafeTeleporter.tp(player, waypoints.get(wpIndex).getLocation());
-            wpIndex++;
+            if (free.isEmpty()) free = waypoints;
+            int id = rand.nextInt(free.size());
+            SafeTeleporter.tp(player, free.get(id).getLocation());
+            free.remove(id);
 
             Metadata.set(player, "lives", getLives());
         }
@@ -143,6 +146,8 @@ public abstract class Battle {
         PlayerData.restore(player, true, false);
         api.setPlayerClass(player, null);
         players.remove(player.getName());
+        Metadata.remove(player, "lives");
+        Metadata.remove(player, "ready");
         return true;
     }
 
@@ -214,6 +219,8 @@ public abstract class Battle {
         api.setPlayerClass(player, null);
         players.remove(player.getName());
         if (!death) PlayerData.reset(player);
+        Metadata.remove(player, "lives");
+        Metadata.remove(player, "ready");
 
         if (isInProgress() && players.size() >= minPlayers) {
             spectators.add(player.getName());

@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.core.hooks.Nameplates;
+import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -87,7 +89,7 @@ public class PlayerData {
         data.invItems = player.getInventory().getContents();
         data.invArmour = player.getInventory().getArmorContents();
         data.level = player.getLevel();
-        data.location = player.getLocation();
+        data.location = player.getLocation().clone();
         data.playerListName = player.getPlayerListName();
         data.playerTimeOffset = player.getPlayerTimeOffset();
         data.remainingAir = player.getRemainingAir();
@@ -106,7 +108,10 @@ public class PlayerData {
 
     public static boolean restore(Player player, boolean teleport, boolean keepInMemory) {
         String name = player.getName();
-        if (!storage.containsKey(name)) return false;
+        if (!storage.containsKey(name)) {
+            Messenger.debug(Level.SEVERE, "Failed to restore " + name + "!");
+            return false;
+        }
 
         PlayerData data = storage.get(name);
 
