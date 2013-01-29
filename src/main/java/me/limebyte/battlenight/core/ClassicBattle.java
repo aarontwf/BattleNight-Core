@@ -14,12 +14,12 @@ public class ClassicBattle extends TeamedBattle {
     }
 
     @Override
-    public void onStart() {
-
+    public boolean onStart() {
+        return true;
     }
 
     @Override
-    public void onEnd() {
-
+    public boolean onStop() {
+        return true;
     }
 }

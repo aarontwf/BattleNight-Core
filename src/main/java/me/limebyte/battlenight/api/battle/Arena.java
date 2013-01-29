@@ -16,7 +16,7 @@ public class Arena implements ConfigurationSerializable {
     private String displayName;
     private List<Waypoint> spawnPoints = new ArrayList<Waypoint>();
     private boolean enabled = true;
-    private static final Random random = new Random();
+    private final Random RANDOM = new Random();
 
     public Arena(String name) {
         this.name = name.toLowerCase();
@@ -39,12 +39,8 @@ public class Arena implements ConfigurationSerializable {
         return spawnPoints;
     }
 
-    public Waypoint getSpawnPoint(int index) {
-        return (Waypoint) spawnPoints.toArray()[index];
-    }
-
     public Waypoint getRandomSpawnPoint() {
-        return getSpawnPoint(random.nextInt(spawnPoints.size()));
+        return getSpawnPoints().get(RANDOM.nextInt(getSpawnPoints().size()));
     }
 
     public void addSpawnPoint(Waypoint waypoint) {

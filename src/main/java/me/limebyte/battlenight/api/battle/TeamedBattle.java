@@ -1,14 +1,16 @@
 package me.limebyte.battlenight.api.battle;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.limebyte.battlenight.core.util.Metadata;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public abstract class TeamedBattle extends Battle {
 
-    private Set<Team> teams;
+    private List<Team> teams = new ArrayList<Team>();
 
     public boolean addTeam(Team team) {
         String name = team.getName();
@@ -22,19 +24,36 @@ public abstract class TeamedBattle extends Battle {
         return teams.remove(team);
     }
 
-    public Team getLeadingTeam() {
-        return null;
+    public List<Team> getLeadingTeams() {
+        if (teams.size() == 0) return null;
+
+        List<Team> leading = new ArrayList<Team>();
+        for (Team team : teams) {
+            if (leading.isEmpty()) {
+                leading.add(team);
+                continue;
+            }
+
+            int leadingKills = leading.get(0).getKills();
+
+            if (leadingKills == team.getKills()) {
+                leading.add(team);
+                continue;
+            }
+
+            if (leadingKills < team.getKills()) {
+                leading.clear();
+                leading.add(team);
+                continue;
+            }
+        }
+
+        return leading;
     }
 
-    public Set<Team> getTeams() {
+    public List<Team> getTeams() {
         return teams;
     }
-
-    @Override
-    public abstract void onStart();
-
-    @Override
-    public abstract void onEnd();
 
     @Override
     public boolean addPlayer(Player player) {
@@ -93,4 +112,9 @@ public abstract class TeamedBattle extends Battle {
         return (!getTeam(player1).getName().equals(getTeam(player2).getName()));
     }
 
+    @Override
+    public Location toSpectator(Player player, boolean death) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

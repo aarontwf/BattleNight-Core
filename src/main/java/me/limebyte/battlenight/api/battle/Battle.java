@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.api.battle;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -24,80 +25,90 @@ import org.bukkit.entity.Player;
 public abstract class Battle {
 
     public BattleNightAPI api;
+    public static final int INFINITE_LIVES = -1;
+
     private Arena arena;
     private boolean inProgress = false;
     private int minPlayers = 2;
-    private int lives = -1;
-    private static Random rand = new Random();
+    private int maxPlayers = Integer.MAX_VALUE;
+    private int lives = INFINITE_LIVES;
 
     private Set<String> players = new HashSet<String>();
     private Set<String> spectators = new HashSet<String>();
 
-    public Battle() {
+    Battle() {
 
     }
 
-    public void onStart() {
-
-    }
-
-    public void onEnd() {
-
-    }
+    /* --------------- */
+    /* General Methods */
+    /* --------------- */
 
     public boolean start() {
         if (isInProgress()) return false;
+        if (getPlayers().size() < getMinPlayers()) return false;
+        if (getPlayers().size() > getMaxPlayers()) return false;
+        if (getArena() == null || !getArena().isSetup(1) || !getArena().isEnabled()) return false;
+        if (!onStart()) return false;
 
-        List<Waypoint> waypoints = arena.getSpawnPoints();
-        List<Waypoint> free = waypoints;
+        Iterator<String> it = getPlayers().iterator();
+        while (it.hasNext()) {
+            Player player = toPlayer(it.next());
+            if (player == null) {
+                it.remove();
+                continue;
+            }
 
-        for (String name : players) {
-            Player player = Bukkit.getPlayerExact(name);
-            if (player == null) continue;
-
-            if (free.isEmpty()) free = waypoints;
-            int id = rand.nextInt(free.size());
-            SafeTeleporter.tp(player, free.get(id).getLocation());
-            free.remove(id);
-
+            Metadata.remove(player, "ready");
             Metadata.set(player, "lives", getLives());
+            Metadata.set(player, "kills", 0);
+            Metadata.set(player, "deaths", 0);
         }
 
+        teleportAllToSpawn();
         SignListener.cleanSigns();
-
         inProgress = true;
-        onStart();
         return true;
     }
 
     public boolean stop() {
-        for (String name : players) {
-            Player player = Bukkit.getPlayerExact(name);
-            if (player == null) continue;
+        if (!isInProgress()) return false;
+        if (!onStop()) return false;
+
+        Iterator<String> pIt = getPlayers().iterator();
+        while (pIt.hasNext()) {
+            Player player = toPlayer(pIt.next());
+            if (player == null) {
+                pIt.remove();
+                continue;
+            }
+
             PlayerData.reset(player);
             PlayerData.restore(player, true, false);
             api.setPlayerClass(player, null);
             Metadata.remove(player, "lives");
-            Metadata.remove(player, "ready");
+            Metadata.remove(player, "kills");
+            Metadata.remove(player, "deaths");
         }
-        players.clear();
 
-        for (String name : spectators) {
-            Player player = Bukkit.getPlayerExact(name);
-            if (player == null) continue;
+        Iterator<String> sIt = getSpectators().iterator();
+        while (sIt.hasNext()) {
+            Player player = toPlayer(sIt.next());
+            if (player == null) {
+                sIt.remove();
+                continue;
+            }
+
             PlayerData.reset(player);
             PlayerData.restore(player, true, false);
             api.setPlayerClass(player, null);
+            Metadata.remove(player, "lives");
+            Metadata.remove(player, "kills");
+            Metadata.remove(player, "deaths");
         }
-        spectators.clear();
 
         inProgress = false;
-        onEnd();
         return true;
-    }
-
-    public boolean isInProgress() {
-        return inProgress;
     }
 
     /**
@@ -113,10 +124,10 @@ public abstract class Battle {
                 Messenger.tell(player, "No Arenas.");
                 return false;
             }
-            arena = api.getRandomArena();
+            setArena(api.getRandomArena());
         }
 
-        if (!arena.isSetup(1)) {
+        if (!getArena().isSetup(1)) {
             Messenger.tell(player, "No Spawn Points.");
             return false;
         }
@@ -128,7 +139,7 @@ public abstract class Battle {
 
         PlayerData.store(player);
         PlayerData.reset(player);
-        players.add(player.getName());
+        getPlayers().add(player.getName());
         SafeTeleporter.tp(player, api.getLoungeWaypoint().getLocation());
         return true;
     }
@@ -145,115 +156,207 @@ public abstract class Battle {
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
         api.setPlayerClass(player, null);
-        players.remove(player.getName());
+        getPlayers().remove(player.getName());
         Metadata.remove(player, "lives");
         Metadata.remove(player, "ready");
         return true;
     }
 
-    public boolean containsPlayer(Player player) {
-        return players.contains(player.getName());
-    }
-
-    public Set<String> getPlayers() {
-        return players;
-    }
-
     public boolean addSpectator(Player player) {
         PlayerData.store(player);
         PlayerData.reset(player);
-        spectators.add(player.getName());
+        getSpectators().add(player.getName());
         player.setGameMode(GameMode.ADVENTURE);
         player.setAllowFlight(true);
-        for (String n : players) {
+        for (String n : getPlayers()) {
             if (Bukkit.getPlayerExact(n) != null) {
                 Bukkit.getPlayerExact(n).hidePlayer(player);
             }
         }
-        SafeTeleporter.tp(player, Bukkit.getPlayerExact((String) players.toArray()[0]).getLocation());
+        SafeTeleporter.tp(player, Bukkit.getPlayerExact((String) getPlayers().toArray()[0]).getLocation());
         return true;
     }
 
     public boolean removeSpectator(Player player) {
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
-        spectators.remove(player.getName());
-        return true;
-    }
-
-    public boolean containsSpectator(Player player) {
-        return spectators.contains(player.getName());
-    }
-
-    public Set<String> getSpectators() {
-        return spectators;
-    }
-
-    public Player getLeadingPlayer() {
-        return null;
-    }
-
-    public Arena getArena() {
-        return arena;
-    }
-
-    public boolean setArena(Arena arena) {
-        if (isInProgress()) return false;
-        this.arena = arena;
+        getSpectators().remove(player.getName());
         return true;
     }
 
     public void respawn(Player player) {
         if (!containsPlayer(player)) return;
-        Messenger.debug(Level.INFO, "To respawn " + player.getName());
+        Messenger.debug(Level.INFO, "Respawning " + player.getName() + "...");
         PlayerData.reset(player);
         api.getPlayerClass(player).equip(player);
-        SafeTeleporter.tp(player, arena.getRandomSpawnPoint().getLocation());
+        SafeTeleporter.tp(player, getArena().getRandomSpawnPoint().getLocation());
     }
 
-    public Location toSpectator(Player player, boolean death) {
-        if (!containsPlayer(player)) return null;
-        Messenger.debug(Level.INFO, "To spectator " + player.getName());
-        Location loc;
+    public abstract Location toSpectator(Player player, boolean death);
 
-        api.setPlayerClass(player, null);
-        players.remove(player.getName());
-        if (!death) PlayerData.reset(player);
-        Metadata.remove(player, "lives");
-        Metadata.remove(player, "ready");
+    /* --------------- */
+    /* Utility Methods */
+    /* --------------- */
 
-        if (isInProgress() && players.size() >= minPlayers) {
-            spectators.add(player.getName());
-            player.setGameMode(GameMode.ADVENTURE);
-            player.setAllowFlight(true);
-            for (String n : players) {
-                if (Bukkit.getPlayerExact(n) != null) {
-                    Bukkit.getPlayerExact(n).hidePlayer(player);
-                }
-            }
+    private Player toPlayer(String name) {
+        Player player = Bukkit.getPlayerExact(name);
+        return player;
+    }
 
-            loc = Bukkit.getPlayerExact((String) players.toArray()[0]).getLocation();
-        } else {
-            loc = PlayerData.getSavedLocation(player);
-            if (!death) PlayerData.restore(player, true, false);
-            Messenger.tellEveryone(((String) players.toArray()[0]) + " won the battle!", true);
-            stop();
+    protected void teleportAllToSpawn() {
+        List<Waypoint> waypoints = getArena().getSpawnPoints();
+        List<Waypoint> free = waypoints;
+        Random random = new Random();
+
+        for (String name : getPlayers()) {
+            Player player = Bukkit.getPlayerExact(name);
+            if (player == null || !player.isOnline()) continue;
+
+            if (free.isEmpty()) free = waypoints;
+
+            int id = random.nextInt(free.size());
+            SafeTeleporter.tp(player, free.get(id).getLocation());
+            free.remove(id);
         }
-        return loc;
     }
 
+    /* ------------------- */
+    /* Getters and Setters */
+    /* ------------------- */
+
+    /**
+     * Returns the {@link Arena} that is set for this battle.
+     * 
+     * @return the arena
+     * @see Arena
+     */
+    public Arena getArena() {
+        return arena;
+    }
+
+    /**
+     * Sets the {@link Arena} that will be used for this battle. The arena will
+     * not be set if this battle is in progress.
+     * 
+     * @param arena the arena to set
+     * @see Arena
+     */
+    public void setArena(Arena arena) {
+        if (isInProgress()) return;
+        this.arena = arena;
+    }
+
+    /**
+     * Returns the minimum amount of players the battle requires before it can
+     * be started.
+     * 
+     * @return the minPlayers
+     */
+    public int getMinPlayers() {
+        return minPlayers;
+    }
+
+    /**
+     * Sets the minimum amount of players the battle requires before it can be
+     * started. This cannot be set below one.
+     * 
+     * @param minPlayers the minPlayers to set
+     */
+    public void setMinPlayers(int minPlayers) {
+        if (getMinPlayers() < 1) return;
+        this.minPlayers = minPlayers;
+    }
+
+    /**
+     * Returns the maximum amount of players the battle can have. By default
+     * this is set to {@link Integer.MAX_VALUE}.
+     * 
+     * @return the maxPlayers
+     */
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    /**
+     * Sets the maximum amount of players the battle can have. Setting this
+     * value will prevent players from joining if the battle is full. This
+     * cannot be set to a value that is less than the minimum.
+     * 
+     * @param maxPlayers the maxPlayers to set
+     */
+    public void setMaxPlayers(int maxPlayers) {
+        if (maxPlayers < getMinPlayers()) return;
+        this.maxPlayers = maxPlayers;
+    }
+
+    /**
+     * @return the lives
+     */
     public int getLives() {
         return lives;
     }
 
+    /**
+     * @param lives the lives to set
+     */
     public void setLives(int lives) {
         this.lives = lives;
     }
 
+    /**
+     * @return the inProgress
+     */
+    public boolean isInProgress() {
+        return inProgress;
+    }
+
+    /**
+     * @return the players
+     */
+    public Set<String> getPlayers() {
+        return players;
+    }
+
+    public boolean containsPlayer(Player player) {
+        return getPlayers().contains(player.getName());
+    }
+
+    /**
+     * @return the spectators
+     */
+    public Set<String> getSpectators() {
+        return spectators;
+    }
+
+    public boolean containsSpectator(Player player) {
+        return getSpectators().contains(player.getName());
+    }
+
+    /* ------ */
+    /* Events */
+    /* ------ */
+
+    public abstract boolean onStart();
+
+    public abstract boolean onStop();
+
     public void onPlayerDeath(BattleDeathEvent event) {
         Player player = event.getPlayer();
+        Player killer = player.getKiller();
+
+        if (killer != null) {
+            Metadata.set(player, "kills", Metadata.getInt(killer, "kills") + 1);
+            Messenger.tell(player, "You were killed by " + ChatColor.RED + killer.getName() + ChatColor.RESET + "!");
+        } else {
+            Messenger.tell(player, "You were killed!");
+        }
+
+        int deaths = Metadata.getInt(player, "deaths");
         int lives = Metadata.getInt(player, "lives");
+
+        Metadata.set(player, "deaths", ++deaths);
         Metadata.set(player, "lives", --lives);
+
         if (lives > 0) {
             if (lives == 1) {
                 Messenger.tell(player, ChatColor.RED + "Last life!");
@@ -263,4 +366,5 @@ public abstract class Battle {
             event.setCancelled(true);
         }
     }
+
 }

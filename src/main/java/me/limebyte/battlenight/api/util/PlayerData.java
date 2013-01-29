@@ -140,6 +140,8 @@ public class PlayerData {
 
         if (data.bedSpawnLocation != null) {
             player.setBedSpawnLocation(data.bedSpawnLocation);
+        } else {
+            player.setBedSpawnLocation(player.getWorld().getSpawnLocation(), true);
         }
 
         player.setCompassTarget(data.compassTarget);
