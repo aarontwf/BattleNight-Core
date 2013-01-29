@@ -60,6 +60,8 @@ public abstract class Battle {
             Metadata.set(player, "lives", getLives());
         }
 
+        SignListener.cleanSigns();
+
         inProgress = true;
         onStart();
         return true;
@@ -85,7 +87,6 @@ public abstract class Battle {
             api.setPlayerClass(player, null);
         }
         spectators.clear();
-        SignListener.cleanSigns();
 
         inProgress = false;
         onEnd();
