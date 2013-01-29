@@ -10,43 +10,43 @@ public class ParticleEffect {
 
     private final static int SPIRAL_PARTICLE_COUNT = 30;
 
-    private static void spiral(Player player) {
+    private static void spiral(Location location, Effect effect) {
         for (double i = 0; i < SPIRAL_PARTICLE_COUNT; i++) {
             double deg = i / SPIRAL_PARTICLE_COUNT * 360;
             double diffX = Math.rint(10 * (Math.sin(deg))) / 10;
             double diffZ = Math.rint(10 * (Math.cos(deg))) / 10;
 
-            Location loc = player.getLocation();
+            Location loc = location.clone();
             loc.setX(loc.getBlockX() + 0.5 + diffX);
             loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_PARTICLE_COUNT) * 1.8);
             loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
-            playSmokeEffect(loc, Direction.UP);
+            loc.getWorld().playEffect(loc, effect, Direction.UP);
         }
     }
 
     public static void classSelect(Player player, String type) {
         if (type.equalsIgnoreCase("ender")) {
-            for (double h = 0.0; h < 1.8; h += 0.2) {
-                Location loc = player.getLocation();
-                loc.setY(loc.getY() + h);
-                playEnderEffect(loc, Direction.UP);
-                playEnderEffect(loc, Direction.UP);
-            }
+            playEnderEffect(player.getLocation(), Direction.UP);
         } else if (type.equalsIgnoreCase("smoke")) {
-            spiral(player);
+            playSmokeEffect(player.getLocation());
         } else {
             Messenger.debug(Level.INFO, "Invalid or no particle type.");
             return;
         }
     }
 
-    private static void playSmokeEffect(Location location, Direction direction) {
-        location.getWorld().playEffect(location, Effect.SMOKE, direction.getValue());
+    private static void playSmokeEffect(Location location) {
+        spiral(location, Effect.SMOKE);
     }
 
     private static void playEnderEffect(Location location, Direction direction) {
-        location.getWorld().playEffect(location, Effect.ENDER_SIGNAL, direction.getValue());
+        Location loc;
+        for (double h = 0.0; h < 1.8; h += 0.2) {
+            loc = location.clone().add(0, h, 0);
+            loc.getWorld().playEffect(location, Effect.ENDER_SIGNAL, direction.getValue());
+            loc.getWorld().playEffect(location, Effect.ENDER_SIGNAL, direction.getValue());
+        }
     }
 
     private enum Direction {
