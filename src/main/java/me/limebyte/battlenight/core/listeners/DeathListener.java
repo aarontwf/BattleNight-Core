@@ -7,7 +7,6 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Bukkit;
@@ -37,23 +36,18 @@ public class DeathListener implements Listener {
             event.getDrops().clear();
             event.setDeathMessage("");
 
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
-                @Override
-                public void run() {
-                    if (battle.isInProgress()) {
-                        Messenger.killFeed(player, player.getKiller());
-                    }
+            if (battle.isInProgress()) {
+                Messenger.killFeed(player, player.getKiller());
+            }
 
-                    BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);
-                    Bukkit.getServer().getPluginManager().callEvent(apiEvent);
+            BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);
+            Bukkit.getServer().getPluginManager().callEvent(apiEvent);
 
-                    if (!apiEvent.isCancelled()) {
-                        apiEvent.setRespawnLocation(battle.toSpectator(player, true));
-                    }
+            if (!apiEvent.isCancelled()) {
+                apiEvent.setRespawnLocation(battle.toSpectator(player, true));
+            }
 
-                    queue.put(player.getName(), apiEvent);
-                }
-            }, 1L);
+            queue.put(player.getName(), apiEvent);
 
         }
     }

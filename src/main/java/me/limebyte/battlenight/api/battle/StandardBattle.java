@@ -3,6 +3,7 @@ package me.limebyte.battlenight.api.battle;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.util.PlayerData;
+import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Metadata;
 
@@ -18,7 +19,7 @@ public abstract class StandardBattle extends Battle {
         Messenger.debug(Level.INFO, "To spectator " + player.getName());
         Location loc;
 
-        if (shouldEnd()) {
+        if (isInProgress() && getPlayers().size() - 1 < getMinPlayers()) {
             Messenger.tellEveryone(getWinMessage(), true);
         }
 
@@ -31,7 +32,12 @@ public abstract class StandardBattle extends Battle {
         if (shouldEnd()) {
             loc = PlayerData.getSavedLocation(player);
             if (!death) PlayerData.restore(player, true, false);
-            stop();
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
+                @Override
+                public void run() {
+                    stop();
+                }
+            }, 1L);
         } else {
             getSpectators().add(player.getName());
             player.setGameMode(GameMode.ADVENTURE);
