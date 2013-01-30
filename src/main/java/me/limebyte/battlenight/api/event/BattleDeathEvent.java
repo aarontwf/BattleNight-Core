@@ -30,7 +30,6 @@ public class BattleDeathEvent extends PlayerEvent implements Cancellable {
     }
 
     public void setRespawnLocation(Location respawnLocation) {
-        // player.setBedSpawnLocation(respawnLocation, true);
         this.respawnLocation = respawnLocation;
     }
 

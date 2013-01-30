@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.listeners;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
@@ -36,12 +37,16 @@ public class DeathListener implements Listener {
             event.getDrops().clear();
             event.setDeathMessage("");
 
+            Messenger.debug(Level.INFO, "PlayerDeathEvent for " + player.getName());
+
             if (battle.isInProgress()) {
                 Messenger.killFeed(player, player.getKiller());
             }
 
             BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);
             Bukkit.getServer().getPluginManager().callEvent(apiEvent);
+
+            Messenger.debug(Level.INFO, "BattleDeathEvent in Death for " + player.getName() + " canceled=" + apiEvent.isCancelled());
 
             if (!apiEvent.isCancelled()) {
                 apiEvent.setRespawnLocation(battle.toSpectator(player, true));
@@ -58,8 +63,11 @@ public class DeathListener implements Listener {
         String name = player.getName();
 
         if (queue.containsKey(name)) {
+            Messenger.debug(Level.INFO, "PlayerRespawnEvent for " + player.getName());
             BattleDeathEvent apiEvent = queue.get(name);
             queue.remove(name);
+
+            Messenger.debug(Level.INFO, "BattleDeathEvent in Respawn for " + player.getName() + " canceled=" + apiEvent.isCancelled());
 
             if (apiEvent.isCancelled()) {
                 apiEvent.getBattle().respawn(player);
