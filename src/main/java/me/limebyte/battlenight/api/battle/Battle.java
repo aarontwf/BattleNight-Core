@@ -1,5 +1,6 @@
 package me.limebyte.battlenight.api.battle;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -89,6 +90,7 @@ public abstract class Battle {
             Metadata.remove(player, "lives");
             Metadata.remove(player, "kills");
             Metadata.remove(player, "deaths");
+            pIt.remove();
         }
 
         Iterator<String> sIt = getSpectators().iterator();
@@ -105,6 +107,7 @@ public abstract class Battle {
             Metadata.remove(player, "lives");
             Metadata.remove(player, "kills");
             Metadata.remove(player, "deaths");
+            sIt.remove();
         }
 
         inProgress = false;
@@ -158,7 +161,10 @@ public abstract class Battle {
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
         Metadata.remove(player, "lives");
-        Metadata.remove(player, "ready");
+        Metadata.remove(player, "kills");
+        Metadata.remove(player, "deaths");
+
+        if (shouldEnd()) stop();
         return true;
     }
 
@@ -218,6 +224,10 @@ public abstract class Battle {
             SafeTeleporter.tp(player, free.get(id).getLocation());
             free.remove(id);
         }
+    }
+
+    public boolean shouldEnd() {
+        return isInProgress() && getPlayers().size() < getMinPlayers();
     }
 
     /* ------------------- */
@@ -319,6 +329,57 @@ public abstract class Battle {
 
     public boolean containsPlayer(Player player) {
         return getPlayers().contains(player.getName());
+    }
+
+    public List<String> getLeadingPlayers() {
+        if (getPlayers().size() == 0) return null;
+
+        List<String> leading = new ArrayList<String>();
+        Iterator<String> it = getPlayers().iterator();
+        while (it.hasNext()) {
+            String name = it.next();
+            Player player = toPlayer(name);
+            if (player == null) {
+                it.remove();
+                continue;
+            }
+
+            if (leading.isEmpty()) {
+                leading.add(name);
+                continue;
+            }
+
+            int kills = Metadata.getInt(player, "kills");
+            int leadingKills = Metadata.getInt(toPlayer(leading.get(0)), "kills");
+
+            if (leadingKills == kills) {
+                leading.add(name);
+                continue;
+            }
+
+            if (leadingKills < kills) {
+                leading.clear();
+                leading.add(name);
+                continue;
+            }
+        }
+
+        return leading;
+    }
+
+    public String getWinMessage() {
+        String message;
+        List<String> leading = getLeadingPlayers();
+
+        if (leading.isEmpty() || leading.size() == players.size()) {
+            message = "Draw!";
+        } else if (leading.size() == 1) {
+            message = leading.get(0) + " won the battle!";
+        } else {
+            message = leading.toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1") + " won the battle!";
+        }
+
+        return message;
     }
 
     /**
