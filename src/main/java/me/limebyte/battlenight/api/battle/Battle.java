@@ -110,6 +110,7 @@ public abstract class Battle {
             sIt.remove();
         }
 
+        arena = null;
         inProgress = false;
         return true;
     }
