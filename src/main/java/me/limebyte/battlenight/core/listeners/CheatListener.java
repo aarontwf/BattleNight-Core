@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.listeners;
 import java.util.List;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -16,8 +17,11 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -90,6 +94,21 @@ public class CheatListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (api.getBattle().containsPlayer(player)) {
+            if (event.getCursor() != null && event.getSlotType() == SlotType.OUTSIDE) {
+                event.setCancelled(true);
+                Messenger.tell(player, Message.NO_CHEATING);
+            }
+        }
+
+        if (api.getBattle().containsSpectator(player)) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled()) return;
@@ -130,6 +149,19 @@ public class CheatListener implements Listener {
     // //////////////////
     // Lounge Events //
     // //////////////////
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityShootBow(EntityShootBowEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        Battle battle = api.getBattle();
+
+        if (battle.isInProgress()) return;
+        if (battle.containsPlayer(player)) {
+            event.setCancelled(true);
+            Messenger.tell(player, Message.NO_CHEATING);
+        }
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
