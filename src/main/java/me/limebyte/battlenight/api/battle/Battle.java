@@ -73,7 +73,6 @@ public abstract class Battle {
     }
 
     public boolean stop() {
-        if (!isInProgress()) return false;
         if (!onStop()) return false;
 
         Iterator<String> pIt = getPlayers().iterator();
