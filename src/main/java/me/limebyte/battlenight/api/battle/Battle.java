@@ -161,6 +161,7 @@ public abstract class Battle {
         PlayerData.restore(player, true, false);
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
+        Metadata.remove(player, "ready");
         Metadata.remove(player, "lives");
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");

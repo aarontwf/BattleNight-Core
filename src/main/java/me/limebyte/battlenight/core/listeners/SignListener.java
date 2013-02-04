@@ -82,7 +82,7 @@ public class SignListener implements Listener {
                             }
 
                             reset(player);
-                            classes.get(title).equip(player);
+                            api.setPlayerClass(player, classes.get(title));
                         } else {
                             Messenger.tell(player, Message.NO_PERMISSION_CLASS);
                         }
