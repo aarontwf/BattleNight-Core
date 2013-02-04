@@ -218,7 +218,7 @@ public abstract class Battle {
             Player player = Bukkit.getPlayerExact(name);
             if (player == null || !player.isOnline()) continue;
 
-            if (free.isEmpty()) free = waypoints;
+            if (free.size() <= 0) free = waypoints;
 
             int id = random.nextInt(free.size());
             SafeTeleporter.tp(player, free.get(id).getLocation());
