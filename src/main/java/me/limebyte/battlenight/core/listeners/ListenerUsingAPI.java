@@ -12,7 +12,7 @@ public class ListenerUsingAPI implements Listener {
         this.api = api;
     }
 
-    protected BattleNightAPI getApi() {
+    protected BattleNightAPI getAPI() {
         return api;
     }
 

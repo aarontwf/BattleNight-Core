@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -26,12 +25,10 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class CheatListener implements Listener {
-
-    private BattleNightAPI api;
+public class CheatListener extends ListenerUsingAPI {
 
     public CheatListener(BattleNightAPI api) {
-        this.api = api;
+        super(api);
     }
 
     // //////////////////
@@ -41,7 +38,7 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        if (api.getBattle().containsPlayer(player) && !SafeTeleporter.telePass.contains(player.getName())) {
+        if (getAPI().getBattle().containsPlayer(player) && !SafeTeleporter.telePass.contains(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
@@ -84,12 +81,13 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        if (api.getBattle().containsPlayer(player)) {
+        Battle battle = getAPI().getBattle();
+        if (battle.containsPlayer(player)) {
             event.setCancelled(true);
             Messenger.tell(player, Message.NO_CHEATING);
         }
 
-        if (api.getBattle().containsSpectator(player)) {
+        if (battle.containsSpectator(player)) {
             event.setCancelled(true);
         }
     }
@@ -97,14 +95,15 @@ public class CheatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (api.getBattle().containsPlayer(player)) {
+        Battle battle = getAPI().getBattle();
+        if (battle.containsPlayer(player)) {
             if (event.getCursor() != null && event.getSlotType() == SlotType.OUTSIDE) {
                 event.setCancelled(true);
                 Messenger.tell(player, Message.NO_CHEATING);
             }
         }
 
-        if (api.getBattle().containsSpectator(player)) {
+        if (battle.containsSpectator(player)) {
             event.setCancelled(true);
         }
     }
@@ -114,7 +113,8 @@ public class CheatListener implements Listener {
         if (event.isCancelled()) return;
 
         Player player = event.getPlayer();
-        if (!api.getBattle().containsPlayer(player) || !api.getBattle().containsSpectator(player)) return;
+        Battle battle = getAPI().getBattle();
+        if (!battle.containsPlayer(player) || !battle.containsSpectator(player)) return;
         if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
         List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
@@ -154,7 +154,7 @@ public class CheatListener implements Listener {
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        Battle battle = api.getBattle();
+        Battle battle = getAPI().getBattle();
 
         if (battle.isInProgress()) return;
         if (battle.containsPlayer(player)) {
@@ -165,11 +165,12 @@ public class CheatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        if (api.getBattle().isInProgress()) return;
+        Battle battle = getAPI().getBattle();
+        if (battle.isInProgress()) return;
         Projectile projectile = event.getEntity();
         if (projectile.getShooter() instanceof Player) {
             Player thrower = (Player) projectile.getShooter();
-            if (api.getBattle().containsPlayer(thrower)) {
+            if (battle.containsPlayer(thrower)) {
                 event.setCancelled(true);
                 Messenger.tell(thrower, Message.NO_CHEATING);
             }
@@ -180,7 +181,7 @@ public class CheatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (api.getBattle().containsPlayer((Player) event.getPlayer())) {
+        if (getAPI().getBattle().containsPlayer((Player) event.getPlayer())) {
             event.setCancelled(true);
         }
     }
