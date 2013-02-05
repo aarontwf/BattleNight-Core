@@ -376,11 +376,11 @@ public abstract class Battle {
         List<String> leading = getLeadingPlayers();
 
         if (leading.isEmpty() || leading.size() == players.size()) {
-            message = "Draw!";
+            message = Message.DRAW.getMessage();
         } else if (leading.size() == 1) {
-            message = leading.get(0) + " won the battle!";
+            message = Messenger.format(Message.PLAYER_WON, leading.get(0));
         } else {
-            message = leading.toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1") + " won the battle!";
+            message = Messenger.format(Message.PLAYER_WON, leading.toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1"));
         }
 
         return message;

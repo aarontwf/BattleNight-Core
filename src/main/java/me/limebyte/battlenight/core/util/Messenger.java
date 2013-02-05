@@ -169,7 +169,7 @@ public class Messenger {
         tellEveryoneExcept(player, format(message, args), spectators);
     }
 
-    private static String format(Message message, Object[] args) {
+    public static String format(Message message, Object... args) {
         String msg = message.getMessage();
 
         for (int i = 0; i < args.length; i++) {
@@ -289,6 +289,7 @@ public class Messenger {
 
         KILLED("$1 " + ChatColor.GRAY + "was killed by" + ChatColor.WHITE + " $2" + ChatColor.GRAY + "."),
 
+        PLAYER_WON(ChatColor.GOLD + "$1 won the Battle!"),
         TEAM_WON("$1 Team won the Battle!"),
         DRAW(ChatColor.DARK_PURPLE + "Draw!"),
 
