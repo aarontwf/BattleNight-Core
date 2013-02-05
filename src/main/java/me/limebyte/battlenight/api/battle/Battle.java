@@ -187,6 +187,7 @@ public abstract class Battle {
     }
 
     public boolean removeSpectator(Player player) {
+        if (!containsSpectator(player)) return false;
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
         getSpectators().remove(player.getName());

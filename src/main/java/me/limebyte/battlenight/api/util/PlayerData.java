@@ -114,9 +114,10 @@ public class PlayerData {
         }
 
         PlayerData data = storage.get(name);
+        boolean exit = ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false);
 
         if (teleport) {
-            if (ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false) && api.getExitWaypoint().isSet()) {
+            if (exit && api.getExitWaypoint().isSet()) {
                 SafeTeleporter.tp(player, api.getExitWaypoint().getLocation());
             } else {
                 SafeTeleporter.tp(player, data.location);
