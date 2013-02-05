@@ -3,6 +3,8 @@ package me.limebyte.battlenight.api.battle;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
 
 import org.bukkit.Location;
@@ -17,6 +19,7 @@ public abstract class TeamedBattle extends Battle {
         for (Team t : teams) {
             if (t.getName().equals(name)) return false;
         }
+        team.setLives(getLives());
         return teams.add(team);
     }
 
@@ -116,5 +119,21 @@ public abstract class TeamedBattle extends Battle {
     public Location toSpectator(Player player, boolean death) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    protected String getWinMessage() {
+        String message;
+        List<Team> leading = getLeadingTeams();
+
+        if (leading.isEmpty() || leading.size() == getTeams().size()) {
+            message = Message.DRAW.getMessage();
+        } else if (leading.size() == 1) {
+            message = Messenger.format(Message.TEAM_WON, leading.get(0).getName());
+        } else {
+            message = Messenger.format(Message.TEAM_WON, leading);
+        }
+
+        return message;
     }
 }

@@ -1,10 +1,12 @@
 package me.limebyte.battlenight.api.battle;
 
+import java.util.List;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
 
 import org.bukkit.Bukkit;
@@ -51,5 +53,21 @@ public abstract class StandardBattle extends Battle {
             loc = Bukkit.getPlayerExact((String) getPlayers().toArray()[0]).getLocation();
         }
         return loc;
+    }
+
+    @Override
+    protected String getWinMessage() {
+        String message;
+        List<String> leading = getLeadingPlayers();
+
+        if (leading.isEmpty() || leading.size() == getPlayers().size()) {
+            message = Message.DRAW.getMessage();
+        } else if (leading.size() == 1) {
+            message = Messenger.format(Message.PLAYER_WON, leading.get(0));
+        } else {
+            message = Messenger.format(Message.PLAYER_WON, leading);
+        }
+
+        return message;
     }
 }

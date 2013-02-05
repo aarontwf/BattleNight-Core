@@ -8,6 +8,7 @@ public class Team {
     private String displayName;
     private ChatColor colour;
     private boolean ready = false;
+    private int lives = Battle.INFINITE_LIVES;
     private int kills = 0;
     private int size = 0;
 
@@ -49,6 +50,14 @@ public class Team {
         this.ready = ready;
     }
 
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
     public int getKills() {
         return kills;
     }
@@ -71,6 +80,11 @@ public class Team {
 
     protected void decrementSize() {
         size--;
+    }
+
+    @Override
+    public String toString() {
+        return colour + name;
     }
 
 }

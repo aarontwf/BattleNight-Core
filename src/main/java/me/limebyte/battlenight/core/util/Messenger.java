@@ -1,5 +1,6 @@
 package me.limebyte.battlenight.core.util;
 
+import java.util.List;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -180,24 +181,27 @@ public class Messenger {
     }
 
     private static String describeObject(Object obj) {
-        if (obj instanceof ComplexEntityPart)
+        if (obj instanceof ComplexEntityPart) {
             return describeObject(((ComplexEntityPart) obj).getParent());
-        else if (obj instanceof Item)
+        } else if (obj instanceof Item) {
             return describeMaterial(((Item) obj).getItemStack().getType());
-        else if (obj instanceof ItemStack)
+        } else if (obj instanceof ItemStack) {
             return describeMaterial(((ItemStack) obj).getType());
-        else if (obj instanceof Entity)
+        } else if (obj instanceof Entity) {
             return describeEntity((Entity) obj);
-        else if (obj instanceof Block)
+        } else if (obj instanceof Block) {
             return describeMaterial(((Block) obj).getType());
-        else if (obj instanceof Material)
+        } else if (obj instanceof Material) {
             return describeMaterial((Material) obj);
-        else if (obj instanceof Location)
+        } else if (obj instanceof Location) {
             return describeLocation((Location) obj);
-        else if (obj instanceof World)
+        } else if (obj instanceof World) {
             return ((World) obj).getName();
-        else if (obj instanceof Team) return ((Team) obj).getColour() + ((Team) obj).getName();
-
+        } else if (obj instanceof Team) {
+            return ((Team) obj).getColour() + ((Team) obj).getName();
+        } else if (obj instanceof List<?>) {
+            return ((List<?>) obj).toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1");
+        }
         return obj.toString();
     }
 

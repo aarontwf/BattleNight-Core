@@ -371,20 +371,7 @@ public abstract class Battle {
         return leading;
     }
 
-    public String getWinMessage() {
-        String message;
-        List<String> leading = getLeadingPlayers();
-
-        if (leading.isEmpty() || leading.size() == players.size()) {
-            message = Message.DRAW.getMessage();
-        } else if (leading.size() == 1) {
-            message = Messenger.format(Message.PLAYER_WON, leading.get(0));
-        } else {
-            message = Messenger.format(Message.PLAYER_WON, leading.toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1"));
-        }
-
-        return message;
-    }
+    protected abstract String getWinMessage();
 
     /**
      * @return the spectators
