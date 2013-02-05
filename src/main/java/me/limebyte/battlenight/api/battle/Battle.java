@@ -122,6 +122,8 @@ public abstract class Battle {
      * @return true if successful
      */
     public boolean addPlayer(Player player) {
+        if (isInProgress()) return false;
+
         if (getArena() == null) {
             if (api.getArenas().isEmpty()) {
                 Messenger.tell(player, "No Arenas.");
