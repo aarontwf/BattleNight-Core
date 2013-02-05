@@ -30,7 +30,8 @@ public class BlockListener extends ListenerUsingAPI {
 
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event) {
-        if (!shouldPrevent(event.getPlayer())) return;
+        Player player = event.getPlayer();
+        if (player == null || !shouldPrevent(player)) return;
         event.setCancelled(true);
     }
 
