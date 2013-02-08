@@ -1,6 +1,5 @@
 package me.limebyte.battlenight.api.battle;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
+import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -29,17 +29,14 @@ public abstract class Battle {
     public static final int INFINITE_LIVES = -1;
 
     private Arena arena;
-    private boolean inProgress = false;
+    protected boolean inProgress = false;
     private int minPlayers = 2;
     private int maxPlayers = Integer.MAX_VALUE;
     private int lives = INFINITE_LIVES;
 
     private Set<String> players = new HashSet<String>();
     private Set<String> spectators = new HashSet<String>();
-
-    Battle() {
-
-    }
+    private Set<String> leadingPlayers = new HashSet<String>();
 
     /* --------------- */
     /* General Methods */
@@ -61,10 +58,12 @@ public abstract class Battle {
             }
 
             Metadata.remove(player, "ready");
-            Metadata.set(player, "lives", getLives());
+            setLives(player, getBattleLives());
             Metadata.set(player, "kills", 0);
             Metadata.set(player, "deaths", 0);
         }
+
+        leadingPlayers = players;
 
         teleportAllToSpawn();
         SignListener.cleanSigns();
@@ -86,7 +85,6 @@ public abstract class Battle {
             PlayerData.reset(player);
             PlayerData.restore(player, true, false);
             api.setPlayerClass(player, null);
-            Metadata.remove(player, "lives");
             Metadata.remove(player, "kills");
             Metadata.remove(player, "deaths");
             pIt.remove();
@@ -103,12 +101,12 @@ public abstract class Battle {
             PlayerData.reset(player);
             PlayerData.restore(player, true, false);
             api.setPlayerClass(player, null);
-            Metadata.remove(player, "lives");
             Metadata.remove(player, "kills");
             Metadata.remove(player, "deaths");
             sIt.remove();
         }
 
+        leadingPlayers.clear();
         arena = null;
         inProgress = false;
         return true;
@@ -163,7 +161,6 @@ public abstract class Battle {
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
         Metadata.remove(player, "ready");
-        Metadata.remove(player, "lives");
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
 
@@ -202,13 +199,50 @@ public abstract class Battle {
         SafeTeleporter.tp(player, getArena().getRandomSpawnPoint().getLocation());
     }
 
-    public abstract Location toSpectator(Player player, boolean death);
+    public Location toSpectator(Player player, boolean death) {
+        if (!containsPlayer(player)) return null;
+        Messenger.debug(Level.INFO, "To spectator " + player.getName());
+        Location loc;
+
+        api.setPlayerClass(player, null);
+        getPlayers().remove(player.getName());
+        if (!death) PlayerData.reset(player);
+        Metadata.remove(player, "ready");
+
+        if (shouldEnd()) {
+            loc = PlayerData.getSavedLocation(player);
+            if (!death) PlayerData.restore(player, true, false);
+
+            String winMessage = getWinMessage();
+            Messenger.tell(player, winMessage);
+            Messenger.tellEveryone(winMessage, true);
+
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
+                @Override
+                public void run() {
+                    stop();
+                }
+            }, 1L);
+        } else {
+            getSpectators().add(player.getName());
+            player.setGameMode(GameMode.ADVENTURE);
+            player.setAllowFlight(true);
+            for (String n : getPlayers()) {
+                if (Bukkit.getPlayerExact(n) != null) {
+                    Bukkit.getPlayerExact(n).hidePlayer(player);
+                }
+            }
+
+            loc = Bukkit.getPlayerExact((String) getPlayers().toArray()[0]).getLocation();
+        }
+        return loc;
+    }
 
     /* --------------- */
     /* Utility Methods */
     /* --------------- */
 
-    private Player toPlayer(String name) {
+    protected Player toPlayer(String name) {
         Player player = Bukkit.getPlayerExact(name);
         return player;
     }
@@ -219,7 +253,7 @@ public abstract class Battle {
         Random random = new Random();
 
         for (String name : getPlayers()) {
-            Player player = Bukkit.getPlayerExact(name);
+            Player player = toPlayer(name);
             if (player == null || !player.isOnline()) continue;
 
             if (free.size() <= 0) free = waypoints;
@@ -231,7 +265,7 @@ public abstract class Battle {
     }
 
     public boolean shouldEnd() {
-        return isInProgress() && getPlayers().size() < getMinPlayers();
+        return isInProgress() && getPlayers().size() < 2;
     }
 
     /* ------------------- */
@@ -306,14 +340,14 @@ public abstract class Battle {
     /**
      * @return the lives
      */
-    public int getLives() {
+    public int getBattleLives() {
         return lives;
     }
 
     /**
      * @param lives the lives to set
      */
-    public void setLives(int lives) {
+    public void setBattleLives(int lives) {
         this.lives = lives;
     }
 
@@ -335,43 +369,44 @@ public abstract class Battle {
         return getPlayers().contains(player.getName());
     }
 
-    public List<String> getLeadingPlayers() {
-        if (getPlayers().size() == 0) return null;
-
-        List<String> leading = new ArrayList<String>();
-        Iterator<String> it = getPlayers().iterator();
-        while (it.hasNext()) {
-            String name = it.next();
-            Player player = toPlayer(name);
-            if (player == null) {
-                it.remove();
-                continue;
-            }
-
-            if (leading.isEmpty()) {
-                leading.add(name);
-                continue;
-            }
-
-            int kills = Metadata.getInt(player, "kills");
-            int leadingKills = Metadata.getInt(toPlayer(leading.get(0)), "kills");
-
-            if (leadingKills == kills) {
-                leading.add(name);
-                continue;
-            }
-
-            if (leadingKills < kills) {
-                leading.clear();
-                leading.add(name);
-                continue;
-            }
-        }
-
-        return leading;
+    public Set<String> getLeadingPlayers() {
+        return leadingPlayers;
     }
 
-    protected abstract String getWinMessage();
+    public int getLives(Player player) {
+        return Metadata.getInt(player, "lives");
+    }
+
+    public void setLives(Player player, int lives) {
+        if (lives < 0) return;
+        if (lives > Integer.MAX_VALUE) return;
+        if (lives == INFINITE_LIVES) return;
+
+        Metadata.set(player, "lives", lives);
+    }
+
+    public void incrementLives(Player player) {
+        setLives(player, getLives(player) + 1);
+    }
+
+    public void decrementLives(Player player) {
+        setLives(player, getLives(player) - 1);
+    }
+
+    protected String getWinMessage() {
+        String message;
+        Set<String> leading = getLeadingPlayers();
+
+        if (leading.isEmpty() || leading.size() == getPlayers().size()) {
+            message = Message.DRAW.getMessage();
+        } else if (leading.size() == 1) {
+            message = Messenger.format(Message.PLAYER_WON, leading.toArray()[0]);
+        } else {
+            message = Messenger.format(Message.PLAYER_WON, leading);
+        }
+
+        return message;
+    }
 
     /**
      * @return the spectators
@@ -396,18 +431,13 @@ public abstract class Battle {
         Player player = event.getPlayer();
         Player killer = player.getKiller();
 
-        if (killer != null) {
-            Metadata.set(player, "kills", Metadata.getInt(killer, "kills") + 1);
-            Messenger.tell(player, "You were killed by " + ChatColor.RED + killer.getName() + ChatColor.RESET + "!");
-        } else {
-            Messenger.tell(player, "You were killed!");
-        }
+        if (killer != null) addKill(player);
 
         int deaths = Metadata.getInt(player, "deaths");
-        int lives = Metadata.getInt(player, "lives");
-
         Metadata.set(player, "deaths", ++deaths);
-        Metadata.set(player, "lives", --lives);
+
+        decrementLives(player);
+        int lives = getLives(player);
 
         if (lives > 0) {
             if (lives == 1) {
@@ -419,4 +449,18 @@ public abstract class Battle {
         }
     }
 
+    protected void addKill(Player player) {
+        int kills = Metadata.getInt(player, "kills");
+        int leadingKills = 0;
+
+        Player leader = toPlayer(leadingPlayers.iterator().next());
+        if (leader != null) leadingKills = Metadata.getInt(leader, "kills");
+
+        Metadata.set(player, "kills", ++kills);
+
+        if (leadingKills > kills) return;
+        if (leadingKills < kills) leadingPlayers.clear();
+
+        leadingPlayers.add(player.getName());
+    }
 }

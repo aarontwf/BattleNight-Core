@@ -55,6 +55,10 @@ public class Team {
     }
 
     public void setLives(int lives) {
+        if (lives < 0) return;
+        if (lives > Integer.MAX_VALUE) return;
+        if (lives == Battle.INFINITE_LIVES) return;
+
         this.lives = lives;
     }
 
@@ -85,6 +89,13 @@ public class Team {
     @Override
     public String toString() {
         return colour + name;
+    }
+
+    protected void reset(Battle battle) {
+        ready = false;
+        lives = battle.getBattleLives();
+        kills = 0;
+        size = 0;
     }
 
 }

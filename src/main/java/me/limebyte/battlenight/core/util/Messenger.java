@@ -99,7 +99,8 @@ public class Messenger {
             reason = ChatColor.GRAY + cause.toString().toLowerCase().replace('_', ' ');
         }
 
-        tellEveryone(true, Message.KILLED, getColouredName(player), reason);
+        tell(player, Message.YOU_WERE_KILLED, reason);
+        tellEveryoneExcept(player, true, Message.PLAYER_WAS_KILLED, getColouredName(player), reason);
     }
 
     /** Pages **/
@@ -187,6 +188,8 @@ public class Messenger {
             return describeMaterial(((Item) obj).getItemStack().getType());
         } else if (obj instanceof ItemStack) {
             return describeMaterial(((ItemStack) obj).getType());
+        } else if (obj instanceof Player) {
+            return getColouredName((Player) obj);
         } else if (obj instanceof Entity) {
             return describeEntity((Entity) obj);
         } else if (obj instanceof Block) {
@@ -291,7 +294,8 @@ public class Messenger {
         BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
         BATTLE_ENDED("The Battle has ended."),
 
-        KILLED("$1 " + ChatColor.GRAY + "was killed by" + ChatColor.WHITE + " $2" + ChatColor.GRAY + "."),
+        YOU_WERE_KILLED(ChatColor.GRAY + "You were killed by $1" + ChatColor.GRAY + "!"),
+        PLAYER_WAS_KILLED("$1 " + ChatColor.GRAY + "was killed by" + ChatColor.WHITE + " $2" + ChatColor.GRAY + "."),
 
         PLAYER_WON(ChatColor.GOLD + "$1 won the Battle!"),
         TEAM_WON("$1 Team won the Battle!"),

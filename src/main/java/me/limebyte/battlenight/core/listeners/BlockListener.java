@@ -31,7 +31,7 @@ public class BlockListener extends ListenerUsingAPI {
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event) {
         Player player = event.getPlayer();
-        if (player == null || !shouldPrevent(player)) return;
+        if (!shouldPrevent(player)) return;
         event.setCancelled(true);
     }
 
@@ -42,6 +42,7 @@ public class BlockListener extends ListenerUsingAPI {
     }
 
     private boolean shouldPrevent(Player player) {
+        if (player == null) return false;
         Battle battle = getAPI().getBattle();
         if (battle.containsPlayer(player) && !battle.isInProgress()) return true;
         if (battle.containsSpectator(player)) return true;

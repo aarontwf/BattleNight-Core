@@ -5,12 +5,12 @@ import me.limebyte.battlenight.api.battle.TeamedBattle;
 
 import org.bukkit.ChatColor;
 
-public class ClassicBattle extends TeamedBattle {
+public class TDMBattle extends TeamedBattle {
 
-    public ClassicBattle() {
-        setLives(1);
-        addTeam(new Team("Red", ChatColor.RED));
-        addTeam(new Team("Blue", ChatColor.BLUE));
+    public TDMBattle() {
+        setBattleLives(30);
+        addTeam(new Team("A", ChatColor.AQUA));
+        addTeam(new Team("B", ChatColor.GREEN));
     }
 
     @Override
@@ -22,4 +22,5 @@ public class ClassicBattle extends TeamedBattle {
     public boolean onStop() {
         return true;
     }
+
 }

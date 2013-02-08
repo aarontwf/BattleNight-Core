@@ -1,8 +1,10 @@
 package me.limebyte.battlenight.api.battle;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
@@ -14,17 +16,25 @@ public abstract class TeamedBattle extends Battle {
 
     private List<Team> teams = new ArrayList<Team>();
 
+    public TeamedBattle() {
+
+    }
+
     public boolean addTeam(Team team) {
         String name = team.getName();
         for (Team t : teams) {
             if (t.getName().equals(name)) return false;
         }
-        team.setLives(getLives());
-        return teams.add(team);
+        team.setLives(getBattleLives());
+        if (!teams.add(team)) return false;
+        setMinPlayers(teams.size());
+        return true;
     }
 
     public boolean removeTeam(Team team) {
-        return teams.remove(team);
+        if (!teams.remove(team)) return false;
+        setMinPlayers(teams.size());
+        return true;
     }
 
     public List<Team> getLeadingTeams() {
@@ -117,8 +127,9 @@ public abstract class TeamedBattle extends Battle {
 
     @Override
     public Location toSpectator(Player player, boolean death) {
-        // TODO Auto-generated method stub
-        return null;
+        if (!containsPlayer(player)) return null;
+        setTeam(player, null);
+        return super.toSpectator(player, death);
     }
 
     @Override
@@ -135,5 +146,83 @@ public abstract class TeamedBattle extends Battle {
         }
 
         return message;
+    }
+
+    @Override
+    public int getLives(Player player) {
+        Team team = getTeam(player);
+        if (team != null) return team.getLives();
+        return 0;
+    }
+
+    @Override
+    public void setLives(Player player, int lives) {
+        Team team = getTeam(player);
+        if (team != null) team.setLives(lives);
+    }
+
+    @Override
+    public boolean shouldEnd() {
+        if (!isInProgress()) return false;
+        for (Team team : getTeams()) {
+            if (team.getSize() < 1) return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected void addKill(Player player) {
+        super.addKill(player);
+
+        Team team = getTeam(player);
+        if (team != null) team.addKill();
+    }
+
+    @Override
+    public boolean stop() {
+        if (!onStop()) return false;
+
+        Iterator<String> pIt = getPlayers().iterator();
+        while (pIt.hasNext()) {
+            Player player = toPlayer(pIt.next());
+            if (player == null) {
+                pIt.remove();
+                continue;
+            }
+
+            PlayerData.reset(player);
+            PlayerData.restore(player, true, false);
+            api.setPlayerClass(player, null);
+            Metadata.remove(player, "kills");
+            Metadata.remove(player, "deaths");
+            setTeam(player, null);
+            pIt.remove();
+        }
+
+        Iterator<String> sIt = getSpectators().iterator();
+        while (sIt.hasNext()) {
+            Player player = toPlayer(sIt.next());
+            if (player == null) {
+                sIt.remove();
+                continue;
+            }
+
+            PlayerData.reset(player);
+            PlayerData.restore(player, true, false);
+            api.setPlayerClass(player, null);
+            Metadata.remove(player, "kills");
+            Metadata.remove(player, "deaths");
+            sIt.remove();
+        }
+
+        for (Team team : teams) {
+            if (team == null) continue;
+            team.reset(this);
+        }
+
+        getLeadingPlayers().clear();
+        setArena(null);
+        inProgress = false;
+        return true;
     }
 }

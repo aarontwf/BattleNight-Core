@@ -1,11 +1,11 @@
 package me.limebyte.battlenight.core;
 
-import me.limebyte.battlenight.api.battle.StandardBattle;
+import me.limebyte.battlenight.api.battle.Battle;
 
-public class FFABattle extends StandardBattle {
+public class FFABattle extends Battle {
 
     public FFABattle() {
-        setLives(5);
+        setBattleLives(5);
     }
 
     @Override
