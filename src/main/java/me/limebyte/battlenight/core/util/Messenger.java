@@ -201,7 +201,7 @@ public class Messenger {
         } else if (obj instanceof World) {
             return ((World) obj).getName();
         } else if (obj instanceof Team) {
-            return ((Team) obj).getColour() + ((Team) obj).getName();
+            return ((Team) obj).getColour() + ((Team) obj).getDisplayName();
         } else if (obj instanceof List<?>) {
             return ((List<?>) obj).toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1");
         }
@@ -240,70 +240,73 @@ public class Messenger {
     }
 
     public enum Message {
-        INVENTORY_NOT_EMPTY(ChatColor.RED + "You must have an empty inventory to join the Battle."),
-        JOINED_TEAMED_BATTLE("Welcome! You are on team $1" + ChatColor.WHITE + "."),
-        PLAYER_JOINED_TEAMED_BATTLE("$1 has joined team $2" + ChatColor.WHITE + "."),
+        // Battle Messages
+        BATTLE_IN_PROGRESS(ChatColor.RED + "A Battle is already in progress!"),
+        BATTLE_NOT_IN_PROGRESS(ChatColor.RED + "A Battle is not in progress!"),
+        ALREADY_IN_BATTLE(ChatColor.RED + "You have already joined a Battle!"),
+        NOT_IN_BATTLE(ChatColor.RED + "You are not in a Battle!"),
+        NO_CHEATING(ChatColor.RED + "Not so fast!  No cheating."),
+        NO_TELEPORTING(ChatColor.RED + "You are not permitted to teleport while in a Battle."),
+        NO_COMMAND(ChatColor.RED + "You are not permitted to perform this command while in a Battle."),
+        ALREADY_SPECTATING(ChatColor.RED + "You are already watching a Battle!"),
+        WELCOME_SPECTATOR("Welcome!  You are now watching the current Battle"),
+        WELCOME_SPECTATOR_DEATH("You have been taken to the Spectator Area to watch the rest of the Battle.  To leave, type '/bn leave'."),
+        GOODBYE_SPECTATOR("You are no longer watching a Battle."),
+        CANT_SPECTATE("You must leave the Battle before spectating."),
+        WAYPOINTS_UNSET(ChatColor.RED + "All waypoints must be set up first."),
+        NO_ARENAS(ChatColor.RED + "No Arenas!"),
+        JOINED_BATTLE("Welcome!"),
+        PLAYER_JOINED_BATTLE("$1" + ChatColor.GRAY + " has joined the Battle."),
+        BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
+        BATTLE_ENDED("The Battle has ended."),
 
+        // Teamed Battle Messages
+        TEAM_IS_READY("$1" + ChatColor.WHITE + " Team is ready!"),
+        JOINED_TEAM("You are on team $1" + ChatColor.WHITE + "."),
+        PLAYER_JOINED_TEAM("$1" + ChatColor.GRAY + " has joined team $2" + ChatColor.GRAY + "."),
+
+        // Lounge Messages
+        NO_PERMISSION_CLASS(ChatColor.RED + "You do not have permission to use this class."),
+        NO_CLASS(ChatColor.RED + "You have not selected a class!"),
+        PLAYER_IS_READY("$1" + ChatColor.GRAY + " is ready!"),
+
+        // Kill Messages
+        YOU_WERE_KILLED(ChatColor.GRAY + "You were killed by $1" + ChatColor.GRAY + "!"),
+        PLAYER_WAS_KILLED("$1 " + ChatColor.GRAY + "was killed by" + ChatColor.WHITE + " $2" + ChatColor.GRAY + "."),
+
+        // Win Messages
+        PLAYER_WON(ChatColor.GOLD + "$1 won the Battle!"),
+        TEAM_WON("$1 Team won the Battle!"),
+        DRAW(ChatColor.DARK_PURPLE + "Draw!"),
+
+        // Class Sign Creation Messages
         SUCCESSFUL_SIGN(ChatColor.GREEN + "Successfully created sign for $1!"),
         UNSUCCESSFUL_SIGN(ChatColor.RED + "Error creating sign for $1!  Leave last 3 lines blank."),
-        NO_PERMISSION_CLASS(ChatColor.RED + "You do not have permission to use this class."),
 
+        // Command Messages
+        USAGE("Usage: $1"),
+        NO_PERMISSION_COMMAND(ChatColor.RED + "You do not have permission to use this $1."),
+        PLAYER_ONLY(ChatColor.RED + "This command can only be performed by a player!"),
         SPECIFY_MESSAGE(ChatColor.RED + "Please specify a message."),
         SPECIFY_PLAYER(ChatColor.RED + "Please specify a player."),
         SPECIFY_WAYPOINT(ChatColor.RED + "Please specify a waypoint."),
         SPECIFY_COORDINATE(ChatColor.RED + "Please specify a coordinate."),
         SPECIFY_ARENA(ChatColor.RED + "Please specify an arena name."),
         SPECIFY_TEST(ChatColor.RED + "Please specify a test."),
-
-        USAGE("Usage: $1"),
-        NO_PERMISSION_COMMAND(ChatColor.RED + "You do not have permission to use this $1."),
-        PLAYER_ONLY(ChatColor.RED + "This command can only be performed by a player!"),
-
         INVALID_COMMAND(ChatColor.RED + "Invalid Command.  Type '/bn help' for help."),
         INVALID_WAYPOINT(ChatColor.RED + "Invalid Waypoint.  Type \"/bn waypoints\" for a list."),
-
         WAYPOINT_SET(ChatColor.GREEN + "$1 Waypoint set to $2 in world $3."),
         WAYPOINT_SET_CURRENT_LOC(ChatColor.GREEN + "$1 Waypoint set to your current location."),
         WAYPOINT_SET_THIS_WORLD(ChatColor.GREEN + "$1 Waypoint set to $2 in this world."),
         WAYPOINT_UNSET(ChatColor.RED + "$1 Waypoint is not set."),
-
         INCORRECT_USAGE(ChatColor.RED + "Incorrect usage."),
         DEPRICATED_COMMAND(ChatColor.RED + "This command is deprecated, please use \"/bn $1\" instead."),
-        WAYPOINTS_UNSET(ChatColor.RED + "All waypoints must be set up first."),
-        ALREADY_IN_BATTLE(ChatColor.RED + "You have already joined a Battle!"),
-        NOT_IN_BATTLE(ChatColor.RED + "You are not in a Battle."),
-        PLAYER_NOT_IN_BATTLE(ChatColor.RED + "Player \"$1\" is not in the Battle."),
-        NO_CHEATING(ChatColor.RED + "Not so fast!  No cheating."),
-        NO_TELEPORTING(ChatColor.RED + "You are not permitted to teleport while in a Battle."),
-        NO_COMMAND(ChatColor.RED + "You are not permitted to perform this command while in a Battle."),
-        ALREADY_SPECTATING(ChatColor.RED + "You are already watching a Battle!"),
-
-        WELCOME_SPECTATOR("Welcome!  You are now watching the current Battle"),
-        WELCOME_SPECTATOR_DEATH("You have been taken to the Spectator Area to watch the rest of the Battle.  To leave, type '/bn leave'."),
-        GOODBYE_SPECTATOR("You are no longer watching a Battle."),
-        CANT_SPECTATE("You must leave the Battle before spectating."),
-
         CANT_FIND_PLAYER(ChatColor.RED + "Can't find player \"$1\"."),
         CANT_FIND_WORLD(ChatColor.RED + "Can't find world \"$1\"."),
-
-        BATTLE_IN_PROGRESS(ChatColor.RED + "A game is already in progress."),
-        BATTLE_NOT_IN_PROGRESS(ChatColor.RED + "A Battle is not currently in progress."),
-
-        TEAM_IS_READY("$1" + ChatColor.WHITE + " Team is ready!"),
-
-        BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
-        BATTLE_ENDED("The Battle has ended."),
-
-        YOU_WERE_KILLED(ChatColor.GRAY + "You were killed by $1" + ChatColor.GRAY + "!"),
-        PLAYER_WAS_KILLED("$1 " + ChatColor.GRAY + "was killed by" + ChatColor.WHITE + " $2" + ChatColor.GRAY + "."),
-
-        PLAYER_WON(ChatColor.GOLD + "$1 won the Battle!"),
-        TEAM_WON("$1 Team won the Battle!"),
-        DRAW(ChatColor.DARK_PURPLE + "Draw!"),
-
         RELOADING("Reloading BattleNight..."),
         RELOAD_SUCCESSFUL(ChatColor.GREEN + "Reloaded successfully."),
-        RELOAD_FAILED(ChatColor.RED + "Reload failed.  See console for error log.");
+        RELOAD_FAILED(ChatColor.RED + "Reload failed.  See console for error log."),
+        PLAYER_NOT_IN_BATTLE(ChatColor.RED + "Player \"$1\" is not in the Battle.");
 
         private String message;
 

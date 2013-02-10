@@ -71,7 +71,13 @@ public abstract class TeamedBattle extends Battle {
     @Override
     public boolean addPlayer(Player player) {
         if (!assignTeam(player)) return false;
-        return super.addPlayer(player);
+        boolean worked = super.addPlayer(player);
+        if (worked) {
+            Team team = getTeam(player);
+            Messenger.tell(player, Message.JOINED_TEAM, team);
+            Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_TEAM, player, team);
+        }
+        return worked;
     }
 
     @Override

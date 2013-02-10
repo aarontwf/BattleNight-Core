@@ -2,12 +2,12 @@ package me.limebyte.battlenight.core.managers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -18,6 +18,8 @@ public class ArenaManager {
 
     private static Waypoint lounge = new Waypoint();
     private static Waypoint exit = new Waypoint();
+
+    private final static Random RANDOM = new Random();
 
     private ArenaManager() {
         // Private constructor for utility class
@@ -53,8 +55,17 @@ public class ArenaManager {
         return arenas;
     }
 
+    public static List<Arena> getEnabledArenas() {
+        List<Arena> enabled = new ArrayList<Arena>();
+        for (Arena arena : arenas) {
+            if (arena.isEnabled()) enabled.add(arena);
+        }
+        return enabled;
+    }
+
     public static Arena getRandomArena() {
-        return arenas.get(Util.random.nextInt(arenas.size()));
+        List<Arena> enabled = getEnabledArenas();
+        return (enabled.get(RANDOM.nextInt(enabled.size())));
     }
 
     public static Waypoint getLounge() {

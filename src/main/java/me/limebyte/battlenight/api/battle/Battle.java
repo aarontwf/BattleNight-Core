@@ -70,6 +70,8 @@ public abstract class Battle {
         teleportAllToSpawn();
         SignListener.cleanSigns();
         inProgress = true;
+
+        Messenger.tellEveryone(true, Message.BATTLE_STARTED);
         return true;
     }
 
@@ -126,14 +128,14 @@ public abstract class Battle {
 
         if (getArena() == null) {
             if (api.getArenas().isEmpty()) {
-                Messenger.tell(player, "No Arenas.");
+                Messenger.tell(player, Message.NO_ARENAS);
                 return false;
             }
             setArena(api.getRandomArena());
         }
 
         if (!getArena().isSetup(1)) {
-            Messenger.tell(player, "No Spawn Points.");
+            Messenger.tell(player, Message.WAYPOINTS_UNSET);
             return false;
         }
 
@@ -146,6 +148,8 @@ public abstract class Battle {
         PlayerData.reset(player);
         getPlayers().add(player.getName());
         SafeTeleporter.tp(player, api.getLoungeWaypoint().getLocation());
+        Messenger.tell(player, Message.JOINED_BATTLE);
+        Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_BATTLE, player);
         return true;
     }
 
