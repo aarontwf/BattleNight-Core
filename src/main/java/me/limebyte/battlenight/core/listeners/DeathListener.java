@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class DeathListener implements Listener {
 
-    private Map<String, BattleDeathEvent> queue = new HashMap<String, BattleDeathEvent>();
+    protected static Map<String, BattleDeathEvent> queue = new HashMap<String, BattleDeathEvent>();
 
     private BattleNightAPI api;
 
@@ -67,7 +67,7 @@ public class DeathListener implements Listener {
             BattleDeathEvent apiEvent = queue.get(name);
             queue.remove(name);
 
-            Messenger.debug(Level.INFO, "BattleDeathEvent in Respawn for " + player.getName() + " canceled=" + apiEvent.isCancelled());
+            Messenger.debug(Level.INFO, "BattleDeathEvent in Respawn for " + name + " canceled=" + apiEvent.isCancelled());
 
             if (apiEvent.isCancelled()) {
                 apiEvent.getBattle().respawn(player);
