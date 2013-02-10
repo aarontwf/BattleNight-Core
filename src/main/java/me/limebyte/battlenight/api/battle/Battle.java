@@ -35,7 +35,7 @@ public abstract class Battle {
     private int maxPlayers = Integer.MAX_VALUE;
     private int lives = INFINITE_LIVES;
 
-    private Set<String> players = new HashSet<String>();
+    private HashSet<String> players = new HashSet<String>();
     private Set<String> spectators = new HashSet<String>();
     private Set<String> leadingPlayers = new HashSet<String>();
 
@@ -43,6 +43,7 @@ public abstract class Battle {
     /* General Methods */
     /* --------------- */
 
+    @SuppressWarnings("unchecked")
     public boolean start() {
         if (isInProgress()) return false;
         if (getPlayers().size() < getMinPlayers()) return false;
@@ -64,7 +65,7 @@ public abstract class Battle {
             Metadata.set(player, "deaths", 0);
         }
 
-        leadingPlayers = players;
+        leadingPlayers = (HashSet<String>) players.clone();
 
         teleportAllToSpawn();
         SignListener.cleanSigns();
