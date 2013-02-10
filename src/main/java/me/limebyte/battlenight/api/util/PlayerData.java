@@ -30,7 +30,6 @@ public class PlayerData {
     private Set<String> vanishedPlayers = new HashSet<String>();
     private Collection<PotionEffect> potionEffects;
     private boolean allowFlight;
-    private Location bedSpawnLocation;
     private Location compassTarget;
     private String displayName;
     private ItemStack[] enderItems;
@@ -74,7 +73,6 @@ public class PlayerData {
 
         data.potionEffects = player.getActivePotionEffects();
         data.allowFlight = player.getAllowFlight();
-        data.bedSpawnLocation = player.getBedSpawnLocation();
         data.compassTarget = player.getCompassTarget();
         data.displayName = player.getDisplayName();
         data.enderItems = player.getEnderChest().getContents();
@@ -138,12 +136,6 @@ public class PlayerData {
 
         player.addPotionEffects(data.potionEffects);
         player.setAllowFlight(data.allowFlight);
-
-        if (data.bedSpawnLocation != null) {
-            player.setBedSpawnLocation(data.bedSpawnLocation);
-        } else {
-            player.setBedSpawnLocation(player.getWorld().getSpawnLocation(), true);
-        }
 
         player.setCompassTarget(data.compassTarget);
         player.setDisplayName(data.displayName);
