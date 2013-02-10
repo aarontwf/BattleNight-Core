@@ -359,7 +359,7 @@ public abstract class Battle {
     }
 
     /**
-     * @return the inProgress
+     * @return if in progress
      */
     public boolean isInProgress() {
         return inProgress;

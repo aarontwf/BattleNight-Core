@@ -5,7 +5,7 @@ import me.limebyte.battlenight.api.battle.Battle;
 public class FFABattle extends Battle {
 
     public FFABattle() {
-        setBattleLives(5);
+        setBattleLives(8);
     }
 
     @Override
