@@ -35,7 +35,7 @@ public class InteractListener implements Listener {
             Block block = event.getClickedBlock();
 
             if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
-                if (battle.containsPlayer(player)) {
+                if (battle.containsPlayer(player) && !battle.isInProgress()) {
                     if (api.getPlayerClass(player) != null) {
                         if (!Metadata.getBoolean(player, "ready")) {
                             Metadata.set(player, "ready", true);
