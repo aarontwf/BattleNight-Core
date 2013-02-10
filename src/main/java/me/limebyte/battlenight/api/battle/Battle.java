@@ -1,5 +1,6 @@
 package me.limebyte.battlenight.api.battle;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -248,7 +249,8 @@ public abstract class Battle {
     }
 
     protected void teleportAllToSpawn() {
-        List<Waypoint> waypoints = getArena().getSpawnPoints();
+        @SuppressWarnings("unchecked")
+        List<Waypoint> waypoints = (ArrayList<Waypoint>) getArena().getSpawnPoints().clone();
         List<Waypoint> free = waypoints;
         Random random = new Random();
 

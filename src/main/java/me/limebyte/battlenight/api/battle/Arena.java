@@ -2,7 +2,6 @@ package me.limebyte.battlenight.api.battle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -14,7 +13,7 @@ public class Arena implements ConfigurationSerializable {
 
     private String name;
     private String displayName;
-    private List<Waypoint> spawnPoints = new ArrayList<Waypoint>();
+    private ArrayList<Waypoint> spawnPoints = new ArrayList<Waypoint>();
     private boolean enabled = true;
     private final Random RANDOM = new Random();
 
@@ -35,7 +34,7 @@ public class Arena implements ConfigurationSerializable {
         this.displayName = displayName;
     }
 
-    public List<Waypoint> getSpawnPoints() {
+    public ArrayList<Waypoint> getSpawnPoints() {
         return spawnPoints;
     }
 
@@ -85,7 +84,7 @@ public class Arena implements ConfigurationSerializable {
     public static Arena deserialize(Map<String, Object> map) {
         Arena arena = new Arena((String) map.get("Name"));
         arena.displayName = (String) map.get("DisplayName");
-        arena.spawnPoints = (List<Waypoint>) map.get("SpawnPoints");
+        arena.spawnPoints = (ArrayList<Waypoint>) map.get("SpawnPoints");
         arena.enabled = (Boolean) map.get("Enabled");
 
         return arena;
