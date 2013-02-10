@@ -45,7 +45,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     public void onEnable() {
         instance = this;
         api = new API();
-        Battle battle = new FFABattle();
+        Battle battle = new TDMBattle();
         api.setBattle(battle);
 
         Messenger.init(api);
