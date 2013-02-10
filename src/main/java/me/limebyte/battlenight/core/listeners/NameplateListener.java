@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Team;
 import me.limebyte.battlenight.api.battle.TeamedBattle;
 
 import org.bukkit.ChatColor;
@@ -28,7 +29,8 @@ public class NameplateListener implements Listener {
         if (battle.containsPlayer(player)) {
             ChatColor teamColour = ChatColor.GRAY;
             if (battle instanceof TeamedBattle) {
-                teamColour = ((TeamedBattle) battle).getTeam(player).getColour();
+                Team team = ((TeamedBattle) battle).getTeam(player);
+                if (team != null) teamColour = team.getColour();
             }
             event.setTag(teamColour + tag);
         } else if (battle.containsSpectator(player)) {
