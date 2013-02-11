@@ -21,6 +21,7 @@ public class CommandManager implements CommandExecutor {
 
         registerCommand(new AddCommand());
         registerCommand(new AnnounceCommand());
+        registerCommand(new ArenasCommand());
         registerCommand(new CreateCommand());
         registerCommand(new EndCommand());
         registerCommand(new HelpCommand());
