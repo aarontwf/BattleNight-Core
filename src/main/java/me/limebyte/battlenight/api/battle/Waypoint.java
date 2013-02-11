@@ -16,7 +16,7 @@ public class Waypoint implements ConfigurationSerializable {
     private static final String LOC_SEP = ", ";
 
     public Location getLocation() {
-        return location;
+        return location.clone();
     }
 
     public void setLocation(Location location) {

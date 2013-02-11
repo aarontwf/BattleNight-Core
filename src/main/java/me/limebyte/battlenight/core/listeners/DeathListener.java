@@ -30,8 +30,8 @@ public class DeathListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        final Player player = event.getEntity();
-        final Battle battle = api.getBattle();
+        Player player = event.getEntity();
+        Battle battle = api.getBattle();
 
         if (battle.containsPlayer(player)) {
             event.getDrops().clear();
