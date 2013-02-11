@@ -3,12 +3,14 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.command.CommandSender;
 
@@ -33,7 +35,14 @@ public class ReloadCommand extends BattleNightCommand {
             ConfigManager.reloadAll();
             ConfigManager.saveAll();
             ClassManager.reloadClasses();
-            ArenaManager.saveArenas();
+            ArenaManager.reloadArenas();
+
+            // Battle setting
+            BattleManager battleManager = api.getBattleManager();
+            String battle = ConfigManager.get(Config.MAIN).getString("BattleType", "TDM");
+            if (battleManager.getBattle(battle) == null) battle = "TDM";
+            battleManager.setActiveBattle(battle);
+
             Messenger.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;
         } catch (Exception e) {

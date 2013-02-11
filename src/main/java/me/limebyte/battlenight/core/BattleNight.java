@@ -6,8 +6,8 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
 import me.limebyte.battlenight.api.battle.Arena;
-import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
@@ -45,8 +45,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     public void onEnable() {
         instance = this;
         api = new API();
-        Battle battle = new FFABattle();
-        api.setBattle(battle);
 
         Messenger.init(api);
 
@@ -95,6 +93,12 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new SafeTeleporter(), this);
         pm.registerEvents(new SignListener(api), this);
         pm.registerEvents(new APIEventListener(), this);
+
+        // Battle setting
+        BattleManager battleManager = api.getBattleManager();
+        String battle = ConfigManager.get(Config.MAIN).getString("BattleType", "TDM");
+        if (battleManager.getBattle(battle) == null) battle = "TDM";
+        battleManager.setActiveBattle(battle);
 
         // Enable Message
         Messenger.log(Level.INFO, "Version " + getDescription().getVersion() + " enabled successfully.");

@@ -7,34 +7,34 @@ import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.managers.ArenaManager;
+import me.limebyte.battlenight.core.managers.CoreBattleManager;
 import me.limebyte.battlenight.core.util.Metadata;
 
 import org.bukkit.entity.Player;
 
 public class API implements BattleNightAPI {
 
-    private Battle battle;
+    private BattleManager battleManager;
 
     public API() {
+        battleManager = new CoreBattleManager(this);
         PlayerData.api = this;
     }
 
     @Override
     public Battle getBattle() {
-        return battle;
+        return battleManager.getActiveBattle();
     }
 
     @Override
-    public boolean setBattle(Battle battle) {
-        if (this.battle != null && this.battle.isInProgress()) return false;
-        this.battle = battle;
-        this.battle.api = this;
-        return true;
+    public BattleManager getBattleManager() {
+        return battleManager;
     }
 
     @Override

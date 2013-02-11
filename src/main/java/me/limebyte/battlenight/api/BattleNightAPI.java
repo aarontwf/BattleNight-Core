@@ -6,6 +6,7 @@ import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.PlayerClass;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 
 import org.bukkit.entity.Player;
@@ -14,7 +15,7 @@ public interface BattleNightAPI {
 
     public Battle getBattle();
 
-    public boolean setBattle(Battle battle);
+    public BattleManager getBattleManager();
 
     public void registerCommand(BattleNightCommand command);
 

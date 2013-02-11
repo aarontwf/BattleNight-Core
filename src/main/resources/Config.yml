@@ -1,6 +1,7 @@
 # BattleNight Version: ${project.version}
 # Main Configuration File
 
+BattleType: TDM
 UsePermissions: false
 ReadyBlock: 42
 InventoryType: save
