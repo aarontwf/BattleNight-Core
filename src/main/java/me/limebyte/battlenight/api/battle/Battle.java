@@ -148,7 +148,7 @@ public abstract class Battle {
         PlayerData.reset(player);
         getPlayers().add(player.getName());
         SafeTeleporter.tp(player, api.getLoungeWaypoint().getLocation());
-        Messenger.tell(player, Message.JOINED_BATTLE);
+        Messenger.tell(player, Message.JOINED_BATTLE, arena);
         Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_BATTLE, player);
         return true;
     }

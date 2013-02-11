@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Team;
 import me.limebyte.battlenight.api.battle.TeamedBattle;
@@ -204,6 +205,8 @@ public class Messenger {
             return ((Team) obj).getColour() + ((Team) obj).getDisplayName();
         } else if (obj instanceof List<?>) {
             return ((List<?>) obj).toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1");
+        } else if (obj instanceof Arena) {
+            return ((Arena) obj).getDisplayName();
         }
         return obj.toString();
     }
@@ -255,7 +258,7 @@ public class Messenger {
         CANT_SPECTATE("You must leave the Battle before spectating."),
         WAYPOINTS_UNSET(ChatColor.RED + "All waypoints must be set up first."),
         NO_ARENAS(ChatColor.RED + "No Arenas!"),
-        JOINED_BATTLE("Welcome!"),
+        JOINED_BATTLE("Welcome!  Arena: $1."),
         PLAYER_JOINED_BATTLE("$1" + ChatColor.GRAY + " has joined the Battle."),
         BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
         BATTLE_ENDED("The Battle has ended."),
