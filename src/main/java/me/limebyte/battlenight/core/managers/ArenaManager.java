@@ -43,11 +43,6 @@ public class ArenaManager {
         ConfigManager.save(configFile);
     }
 
-    public static void reloadArenas() {
-        loadArenas();
-        saveArenas();
-    }
-
     public static void register(Arena arena) {
         arenas.add(arena);
     }

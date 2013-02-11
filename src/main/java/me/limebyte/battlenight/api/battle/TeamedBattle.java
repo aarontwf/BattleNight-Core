@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -230,5 +232,34 @@ public abstract class TeamedBattle extends Battle {
         setArena(null);
         inProgress = false;
         return true;
+    }
+
+    @Override
+    public void onPlayerDeath(BattleDeathEvent event) {
+        Player player = event.getPlayer();
+        Player killer = player.getKiller();
+
+        if (killer != null) addKill(player);
+
+        int deaths = Metadata.getInt(player, "deaths");
+        Metadata.set(player, "deaths", ++deaths);
+
+        decrementLives(player);
+        int lives = getLives(player);
+
+        if (lives > 0) {
+            String message = "Your team has " + lives + " lives remaining.";
+            if (lives == 1) message = ChatColor.RED + "Last life!";
+            Team team = getTeam(player);
+
+            for (String name : getPlayers()) {
+                Player p = toPlayer(name);
+                if (p == null) continue;
+                if (getTeam(p) != team) continue;
+                Messenger.tell(p, message);
+            }
+
+            event.setCancelled(true);
+        }
     }
 }

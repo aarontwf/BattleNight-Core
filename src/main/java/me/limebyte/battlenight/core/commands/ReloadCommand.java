@@ -35,7 +35,7 @@ public class ReloadCommand extends BattleNightCommand {
             ConfigManager.reloadAll();
             ConfigManager.saveAll();
             ClassManager.reloadClasses();
-            ArenaManager.reloadArenas();
+            ArenaManager.saveArenas();
 
             // Battle setting
             BattleManager battleManager = api.getBattleManager();
