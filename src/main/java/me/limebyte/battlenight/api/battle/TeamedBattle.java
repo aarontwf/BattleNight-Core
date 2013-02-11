@@ -50,17 +50,9 @@ public abstract class TeamedBattle extends Battle {
             }
 
             int leadingKills = leading.get(0).getKills();
+            if (leadingKills < team.getKills()) leading.clear();
 
-            if (leadingKills == team.getKills()) {
-                leading.add(team);
-                continue;
-            }
-
-            if (leadingKills < team.getKills()) {
-                leading.clear();
-                leading.add(team);
-                continue;
-            }
+            leading.add(team);
         }
 
         return leading;
@@ -148,7 +140,7 @@ public abstract class TeamedBattle extends Battle {
         if (leading.isEmpty() || leading.size() == getTeams().size()) {
             message = Message.DRAW.getMessage();
         } else if (leading.size() == 1) {
-            message = Messenger.format(Message.TEAM_WON, leading.get(0).getName());
+            message = Messenger.format(Message.TEAM_WON, leading.get(0));
         } else {
             message = Messenger.format(Message.TEAM_WON, leading);
         }
@@ -239,7 +231,7 @@ public abstract class TeamedBattle extends Battle {
         Player player = event.getPlayer();
         Player killer = player.getKiller();
 
-        if (killer != null) addKill(player);
+        if (killer != null) addKill(killer);
 
         int deaths = Metadata.getInt(player, "deaths");
         Metadata.set(player, "deaths", ++deaths);
