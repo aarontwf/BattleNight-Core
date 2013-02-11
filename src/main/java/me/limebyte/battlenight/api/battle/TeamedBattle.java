@@ -231,7 +231,7 @@ public abstract class TeamedBattle extends Battle {
         Player player = event.getPlayer();
         Player killer = player.getKiller();
 
-        if (killer != null) addKill(killer);
+        if (killer != null && areEnemies(player, killer)) addKill(killer);
 
         int deaths = Metadata.getInt(player, "deaths");
         Metadata.set(player, "deaths", ++deaths);
