@@ -1,5 +1,6 @@
 package me.limebyte.battlenight.core.commands;
 
+import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.managers.ArenaManager;
@@ -19,7 +20,7 @@ public class SetCommand extends BattleNightCommand {
 
         setLabel("set");
         setDescription("Sets a BattleNight waypoint.");
-        setUsage("/bn set <waypoint> [x] [y] [z] [world]");
+        setUsage("/bn set <waypoint> [x] [y] [z] [world]\n/bn set <arena> [x] [y] [z] [world]");
         setPermission(CommandPermission.ADMIN);
     }
 
@@ -30,12 +31,26 @@ public class SetCommand extends BattleNightCommand {
             Messenger.tell(sender, Message.USAGE, getUsage());
             return false;
         } else {
+            Arena arena = null;
             Waypoint waypoint = null;
 
             if (args[0].equalsIgnoreCase("lounge")) {
                 waypoint = ArenaManager.getLounge();
             } else if (args[0].equalsIgnoreCase("exit")) {
                 waypoint = ArenaManager.getExit();
+            } else {
+                for (Arena a : api.getArenas()) {
+                    if (a.getName().equalsIgnoreCase(args[0])) {
+                        arena = a;
+                    }
+                }
+
+                if (arena == null) {
+                    Messenger.tell(sender, "An Arena by that name does not exist!");
+                    return false;
+                }
+
+                waypoint = new Waypoint();
             }
 
             if (waypoint != null) {
@@ -44,7 +59,6 @@ public class SetCommand extends BattleNightCommand {
                         Player player = (Player) sender;
                         waypoint.setLocation(player.getLocation());
                         Messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, waypoint);
-                        return true;
                     } else {
                         Messenger.tell(sender, Message.SPECIFY_COORDINATE);
                         Messenger.tell(sender, Message.USAGE, getUsage());
@@ -55,13 +69,11 @@ public class SetCommand extends BattleNightCommand {
                     Location loc = parseArgsToLocation(args, player.getWorld());
                     waypoint.setLocation(loc);
                     Messenger.tell(sender, Message.WAYPOINT_SET_THIS_WORLD, waypoint, loc);
-                    return true;
                 } else if (args.length == 5) {
                     if (Bukkit.getWorld(args[4]) != null) {
                         Location loc = parseArgsToLocation(args);
                         waypoint.setLocation(loc);
                         Messenger.tell(sender, Message.WAYPOINT_SET, waypoint, loc, loc.getWorld());
-                        return true;
                     } else {
                         Messenger.tell(sender, Message.CANT_FIND_WORLD, args[4]);
                         return false;
@@ -71,6 +83,9 @@ public class SetCommand extends BattleNightCommand {
                     Messenger.tell(sender, Message.USAGE, getUsage());
                     return false;
                 }
+
+                if (arena != null) arena.addSpawnPoint(waypoint);
+                return true;
             } else {
                 Messenger.tell(sender, Message.INVALID_WAYPOINT);
                 return false;
