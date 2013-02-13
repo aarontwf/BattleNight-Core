@@ -19,7 +19,6 @@ public class CommandManager implements CommandExecutor {
     public CommandManager(BattleNightAPI api) {
         CommandManager.api = api;
 
-        registerCommand(new AddCommand());
         registerCommand(new AnnounceCommand());
         registerCommand(new ArenasCommand());
         registerCommand(new EndCommand());

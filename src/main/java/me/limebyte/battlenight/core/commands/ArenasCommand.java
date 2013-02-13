@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import me.limebyte.battlenight.api.battle.Arena;
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.api.util.ListPage;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -12,6 +13,7 @@ import me.limebyte.battlenight.core.util.Messenger.Message;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class ArenasCommand extends BattleNightCommand {
 
@@ -20,7 +22,7 @@ public class ArenasCommand extends BattleNightCommand {
 
         setLabel("arenas");
         setDescription("Displays the BattleNight arenas.");
-        setUsage("/bn arenas <action>");
+        setUsage("/bn arenas <action> [arena]");
         setPermission(CommandPermission.ADMIN);
     }
 
@@ -38,7 +40,7 @@ public class ArenasCommand extends BattleNightCommand {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("add")) {
+        if (args[0].equalsIgnoreCase("create")) {
             if (args.length < 2) {
                 Messenger.tell(sender, Message.SPECIFY_ARENA);
                 return false;
@@ -56,7 +58,7 @@ public class ArenasCommand extends BattleNightCommand {
             return false;
         }
 
-        if (args[0].equalsIgnoreCase("remove")) {
+        if (args[0].equalsIgnoreCase("delete")) {
             if (args.length < 2) {
                 Messenger.tell(sender, Message.SPECIFY_ARENA);
                 return false;
@@ -72,6 +74,31 @@ public class ArenasCommand extends BattleNightCommand {
             }
 
             return false;
+        }
+
+        if (args[0].equalsIgnoreCase("addspawn")) {
+            if (args.length < 2) {
+                Messenger.tell(sender, Message.SPECIFY_ARENA);
+                return false;
+            }
+
+            Arena arena = null;
+            for (Arena a : api.getArenas()) {
+                if (a.getName().equalsIgnoreCase(args[0])) {
+                    arena = a;
+                }
+            }
+
+            if (arena == null) {
+                Messenger.tell(sender, "An Arena by that name does not exist!");
+                return false;
+            }
+
+            Waypoint point = new Waypoint();
+            point.setLocation(((Player) sender).getLocation());
+            arena.addSpawnPoint(point);
+            Messenger.tell(sender, "Spawn point created.");
+            return true;
         }
 
         if (args[0].equalsIgnoreCase("enable")) {
@@ -119,7 +146,9 @@ public class ArenasCommand extends BattleNightCommand {
             return false;
         }
 
-        return true;
+        Messenger.tell(sender, Message.INVALID_COMMAND);
+        Messenger.tell(sender, Message.USAGE, getUsage());
+        return false;
     }
 
     private void sendArenasList(CommandSender sender, List<Arena> arenas) {
