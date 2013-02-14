@@ -47,13 +47,13 @@ public class ArenasCommand extends BattleNightCommand {
             }
 
             for (Arena arena : arenas) {
-                if (arena.getName().equalsIgnoreCase(args[0])) {
+                if (arena.getName().equalsIgnoreCase(args[1])) {
                     Messenger.tell(sender, Message.ARENA_EXISTS);
                     return false;
                 }
             }
             api.registerArena(new Arena(args[0]));
-            Messenger.tell(sender, Message.ARENA_CREATED, args[0]);
+            Messenger.tell(sender, Message.ARENA_CREATED, args[1]);
 
             return false;
         }
@@ -69,6 +69,7 @@ public class ArenasCommand extends BattleNightCommand {
                 Arena arena = it.next();
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     it.remove();
+                    Messenger.tell(sender, Message.ARENA_DELETED, args[1]);
                     return true;
                 }
             }

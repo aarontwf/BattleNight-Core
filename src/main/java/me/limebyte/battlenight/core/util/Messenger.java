@@ -304,6 +304,7 @@ public class Messenger {
         WAYPOINT_UNSET(ChatColor.RED + "$1 Waypoint is not set."),
         ARENA_EXISTS(ChatColor.RED + "An Arena by that name already exists!"),
         ARENA_CREATED(ChatColor.GREEN + "Arena $1 created."),
+        ARENA_DELETED(ChatColor.GREEN + "Arena $1 deleted."),
         INCORRECT_USAGE(ChatColor.RED + "Incorrect usage."),
         DEPRICATED_COMMAND(ChatColor.RED + "This command is deprecated, please use \"/bn $1\" instead."),
         CANT_FIND_PLAYER(ChatColor.RED + "Can't find player \"$1\"."),
