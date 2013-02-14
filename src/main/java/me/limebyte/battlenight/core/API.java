@@ -93,4 +93,9 @@ public class API implements BattleNightAPI {
             SignListener.cleanSigns(player);
         }
     }
+
+    @Override
+    public List<Arena> getEnabledArenas() {
+        return ArenaManager.getEnabledArenas();
+    }
 }

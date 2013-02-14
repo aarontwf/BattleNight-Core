@@ -127,7 +127,7 @@ public abstract class Battle {
         if (isInProgress()) return false;
 
         if (getArena() == null) {
-            if (api.getArenas().isEmpty()) {
+            if (api.getEnabledArenas().isEmpty()) {
                 Messenger.tell(player, Message.NO_ARENAS);
                 return false;
             }

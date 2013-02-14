@@ -27,6 +27,8 @@ public interface BattleNightAPI {
 
     public List<Arena> getArenas();
 
+    public List<Arena> getEnabledArenas();
+
     public Arena getRandomArena();
 
     public Waypoint getLoungeWaypoint();
