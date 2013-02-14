@@ -52,7 +52,7 @@ public class ArenasCommand extends BattleNightCommand {
                     return false;
                 }
             }
-            api.registerArena(new Arena(args[0]));
+            api.registerArena(new Arena(args[1]));
             Messenger.tell(sender, Message.ARENA_CREATED, args[1]);
 
             return false;
