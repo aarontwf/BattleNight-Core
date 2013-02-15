@@ -132,7 +132,7 @@ public class ArenasCommand extends BattleNightCommand {
             return false;
         }
 
-        if (args[0].equalsIgnoreCase("rename")) {
+        if (args[0].equalsIgnoreCase("name")) {
             if (args.length < 3) {
                 Messenger.tell(sender, Message.SPECIFY_ARENA);
                 return false;
@@ -140,7 +140,7 @@ public class ArenasCommand extends BattleNightCommand {
 
             for (Arena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
-                    arena.setDisplayName(args[2]);
+                    arena.setDisplayName(createString(args, 2));
                     return true;
                 }
             }
