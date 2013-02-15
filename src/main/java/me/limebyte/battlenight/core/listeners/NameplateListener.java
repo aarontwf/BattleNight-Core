@@ -27,7 +27,7 @@ public class NameplateListener implements Listener {
         Battle battle = api.getBattle();
 
         if (battle.containsPlayer(player)) {
-            ChatColor teamColour = ChatColor.GRAY;
+            ChatColor teamColour = ChatColor.RED;
             if (battle instanceof TeamedBattle) {
                 Team team = ((TeamedBattle) battle).getTeam(player);
                 if (team != null) teamColour = team.getColour();

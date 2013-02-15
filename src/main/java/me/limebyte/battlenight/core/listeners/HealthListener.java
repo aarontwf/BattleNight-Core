@@ -48,10 +48,9 @@ public class HealthListener implements Listener {
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             Battle battle = api.getBattle();
-            if (!battle.containsPlayer(player)) return;
 
+            if (!battle.containsPlayer(player) && !battle.containsSpectator(player)) return;
             subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));
-
         }
     }
 

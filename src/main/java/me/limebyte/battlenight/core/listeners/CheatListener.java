@@ -23,6 +23,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class CheatListener extends ListenerUsingAPI {
@@ -181,7 +182,14 @@ public class CheatListener extends ListenerUsingAPI {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (getAPI().getBattle().containsPlayer((Player) event.getPlayer())) {
+        if (getAPI().getBattle().containsSpectator((Player) event.getPlayer())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (getAPI().getBattle().containsSpectator((Player) event.getPlayer())) {
             event.setCancelled(true);
         }
     }
