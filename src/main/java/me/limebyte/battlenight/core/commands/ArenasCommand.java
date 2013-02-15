@@ -87,7 +87,7 @@ public class ArenasCommand extends BattleNightCommand {
 
             Arena arena = null;
             for (Arena a : arenas) {
-                if (a.getName().equalsIgnoreCase(args[0])) {
+                if (a.getName().equalsIgnoreCase(args[1])) {
                     arena = a;
                 }
             }
