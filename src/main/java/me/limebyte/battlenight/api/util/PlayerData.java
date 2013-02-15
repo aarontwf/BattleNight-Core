@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -112,11 +113,11 @@ public class PlayerData {
         }
 
         PlayerData data = storage.get(name);
-        boolean exit = ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false);
 
         if (teleport) {
-            if (exit && api.getExitWaypoint().isSet()) {
-                SafeTeleporter.tp(player, api.getExitWaypoint().getLocation());
+            Waypoint wp = api.getArenaManager().getExit();
+            if (ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false) && wp.isSet()) {
+                SafeTeleporter.tp(player, wp.getLocation());
             } else {
                 SafeTeleporter.tp(player, data.location);
             }

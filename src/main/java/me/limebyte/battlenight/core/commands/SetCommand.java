@@ -2,8 +2,8 @@ package me.limebyte.battlenight.core.commands;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
-import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 
@@ -33,13 +33,14 @@ public class SetCommand extends BattleNightCommand {
         } else {
             Arena arena = null;
             Waypoint waypoint = null;
+            ArenaManager manager = api.getArenaManager();
 
             if (args[0].equalsIgnoreCase("lounge")) {
-                waypoint = ArenaManager.getLounge();
+                waypoint = manager.getLounge();
             } else if (args[0].equalsIgnoreCase("exit")) {
-                waypoint = ArenaManager.getExit();
+                waypoint = manager.getExit();
             } else {
-                for (Arena a : api.getArenas()) {
+                for (Arena a : manager.getArenas()) {
                     if (a.getName().equalsIgnoreCase(args[0])) {
                         arena = a;
                     }

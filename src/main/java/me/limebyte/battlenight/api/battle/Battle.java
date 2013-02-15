@@ -10,6 +10,7 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
+import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
@@ -126,12 +127,13 @@ public abstract class Battle {
     public boolean addPlayer(Player player) {
         if (isInProgress()) return false;
 
+        ArenaManager arenaManager = api.getArenaManager();
         if (getArena() == null) {
-            if (api.getEnabledArenas().isEmpty()) {
+            if (arenaManager.getEnabledArenas().isEmpty()) {
                 Messenger.tell(player, Message.NO_ARENAS);
                 return false;
             }
-            setArena(api.getRandomArena());
+            setArena(arenaManager.getRandomArena());
         }
 
         if (!getArena().isSetup(1)) {
@@ -139,7 +141,7 @@ public abstract class Battle {
             return false;
         }
 
-        if (!api.getLoungeWaypoint().isSet()) {
+        if (!arenaManager.getLounge().isSet()) {
             Messenger.tell(player, Message.WAYPOINTS_UNSET);
             return false;
         }
@@ -147,7 +149,7 @@ public abstract class Battle {
         PlayerData.store(player);
         PlayerData.reset(player);
         getPlayers().add(player.getName());
-        SafeTeleporter.tp(player, api.getLoungeWaypoint().getLocation());
+        SafeTeleporter.tp(player, arenaManager.getLounge().getLocation());
         Messenger.tell(player, Message.JOINED_BATTLE, arena);
         Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_BATTLE, player);
         if (!arena.getTexturePack().isEmpty()) player.setTexturePack(arena.getTexturePack());

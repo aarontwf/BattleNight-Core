@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.api.util.ListPage;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -28,7 +29,8 @@ public class ArenasCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        List<Arena> arenas = api.getArenas();
+        ArenaManager manager = api.getArenaManager();
+        List<Arena> arenas = manager.getArenas();
 
         if (args.length < 1) {
             sendArenasList(sender, arenas);
@@ -52,7 +54,7 @@ public class ArenasCommand extends BattleNightCommand {
                     return false;
                 }
             }
-            api.registerArena(new Arena(args[1]));
+            manager.register(new Arena(args[1]));
             Messenger.tell(sender, Message.ARENA_CREATED, args[1]);
 
             return false;
@@ -84,7 +86,7 @@ public class ArenasCommand extends BattleNightCommand {
             }
 
             Arena arena = null;
-            for (Arena a : api.getArenas()) {
+            for (Arena a : arenas) {
                 if (a.getName().equalsIgnoreCase(args[0])) {
                     arena = a;
                 }

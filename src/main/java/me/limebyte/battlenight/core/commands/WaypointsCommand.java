@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.api.util.ListPage;
-import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.ChatColor;
@@ -28,8 +28,9 @@ public class WaypointsCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         List<String> lines = new ArrayList<String>();
-        Waypoint w1 = ArenaManager.getLounge();
-        Waypoint w2 = ArenaManager.getExit();
+        ArenaManager manager = api.getArenaManager();
+        Waypoint w1 = manager.getLounge();
+        Waypoint w2 = manager.getExit();
 
         lines.add(ChatColor.WHITE + "Setup points: " + numSetup(w1, w2));
         lines.add(getWaypointColour(w1) + "Lounge" + ChatColor.WHITE + " (/bn set lounge...)");

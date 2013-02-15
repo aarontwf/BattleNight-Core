@@ -5,7 +5,6 @@ import java.util.Arrays;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
-import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -44,9 +43,9 @@ public class TeleportCommand extends BattleNightCommand {
 
             Waypoint waypoint = null;
             if (args[0].equalsIgnoreCase("lounge")) {
-                waypoint = ArenaManager.getLounge();
+                waypoint = api.getArenaManager().getLounge();
             } else if (args[0].equalsIgnoreCase("exit")) {
-                waypoint = ArenaManager.getExit();
+                waypoint = api.getArenaManager().getExit();
             }
 
             // TODO Arenas

@@ -20,7 +20,6 @@ import me.limebyte.battlenight.core.listeners.HealthListener;
 import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
-import me.limebyte.battlenight.core.managers.ArenaManager;
 import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -59,7 +58,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         // Setup Managers
         ClassManager.reloadClasses();
-        ArenaManager.loadArenas();
 
         // Debugging
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
@@ -113,7 +111,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         getAPI().getBattle().stop();
 
         // Save arenas
-        ArenaManager.saveArenas();
+        api.getArenaManager().saveArenas();
 
         // Disable message
         PluginDescriptionFile pdfFile = getDescription();

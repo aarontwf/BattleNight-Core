@@ -7,26 +7,27 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
-public class ArenaManager {
+public class CoreArenaManager implements ArenaManager {
 
-    private static List<Arena> arenas = new ArrayList<Arena>();
+    private List<Arena> arenas = new ArrayList<Arena>();
     private static final Config configFile = Config.ARENAS;
 
-    private static Waypoint lounge = new Waypoint();
-    private static Waypoint exit = new Waypoint();
+    private Waypoint lounge = new Waypoint();
+    private Waypoint exit = new Waypoint();
 
-    private final static Random RANDOM = new Random();
+    private final Random RANDOM = new Random();
 
-    private ArenaManager() {
-        // Private constructor for utility class
+    public CoreArenaManager() {
+        loadArenas();
     }
 
     @SuppressWarnings("unchecked")
-    public static void loadArenas() {
+    public void loadArenas() {
         Messenger.debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
 
@@ -35,7 +36,7 @@ public class ArenaManager {
         arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", arenas);
     }
 
-    public static void saveArenas() {
+    public void saveArenas() {
         Messenger.debug(Level.INFO, "Saving arenas...");
         ConfigManager.get(configFile).set("Waypoint.Lounge", lounge);
         ConfigManager.get(configFile).set("Waypoint.Exit", exit);
@@ -43,19 +44,19 @@ public class ArenaManager {
         ConfigManager.save(configFile);
     }
 
-    public static void register(Arena arena) {
+    public void register(Arena arena) {
         arenas.add(arena);
     }
 
-    public static void unregister(Arena arena) {
+    public void deregister(Arena arena) {
         arenas.remove(arena);
     }
 
-    public static List<Arena> getArenas() {
+    public List<Arena> getArenas() {
         return arenas;
     }
 
-    public static List<Arena> getEnabledArenas() {
+    public List<Arena> getEnabledArenas() {
         List<Arena> enabled = new ArrayList<Arena>();
         for (Arena arena : arenas) {
             if (arena.isEnabled()) enabled.add(arena);
@@ -63,16 +64,16 @@ public class ArenaManager {
         return enabled;
     }
 
-    public static Arena getRandomArena() {
+    public Arena getRandomArena() {
         List<Arena> enabled = getEnabledArenas();
         return (enabled.get(RANDOM.nextInt(enabled.size())));
     }
 
-    public static Waypoint getLounge() {
+    public Waypoint getLounge() {
         return lounge;
     }
 
-    public static Waypoint getExit() {
+    public Waypoint getExit() {
         return exit;
     }
 
