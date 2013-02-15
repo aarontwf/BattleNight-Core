@@ -86,17 +86,23 @@ public class Arena implements ConfigurationSerializable {
         map.put("DisplayName", displayName);
         map.put("SpawnPoints", spawnPoints);
         map.put("Enabled", enabled);
+        map.put("TexturePack", texturePack);
         return map;
     }
 
     @SuppressWarnings("unchecked")
     public static Arena deserialize(Map<String, Object> map) {
+        Object displayName = map.get("DisplayName");
+        Object spawnPoints = map.get("SpawnPoints");
+        Object enabled = map.get("Enabled");
+        Object texturePack = map.get("TexturePack");
+
         Arena arena = new Arena((String) map.get("Name"));
-        arena.displayName = (String) map.get("DisplayName");
-        arena.spawnPoints = (ArrayList<Waypoint>) map.get("SpawnPoints");
-        arena.enabled = (Boolean) map.get("Enabled");
+        if (displayName != null) arena.displayName = (String) displayName;
+        if (spawnPoints != null) arena.spawnPoints = (ArrayList<Waypoint>) spawnPoints;
+        if (enabled != null) arena.enabled = (Boolean) enabled;
+        if (texturePack != null) arena.texturePack = (String) texturePack;
 
         return arena;
     }
-
 }
