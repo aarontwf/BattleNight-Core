@@ -150,6 +150,7 @@ public abstract class Battle {
         SafeTeleporter.tp(player, api.getLoungeWaypoint().getLocation());
         Messenger.tell(player, Message.JOINED_BATTLE, arena);
         Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_BATTLE, player);
+        if (!arena.getTexturePack().isEmpty()) player.setTexturePack(arena.getTexturePack());
         return true;
     }
 

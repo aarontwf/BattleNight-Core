@@ -15,6 +15,7 @@ public class Arena implements ConfigurationSerializable {
     private String displayName;
     private ArrayList<Waypoint> spawnPoints = new ArrayList<Waypoint>();
     private boolean enabled = true;
+    private String texturePack = "";
     private final Random RANDOM = new Random();
 
     public Arena(String name) {
@@ -64,6 +65,14 @@ public class Arena implements ConfigurationSerializable {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public String getTexturePack() {
+        return texturePack;
+    }
+
+    public void setTexturePack(String texturePack) {
+        this.texturePack = texturePack;
     }
 
     public boolean isSetup(int minSpawnPoints) {

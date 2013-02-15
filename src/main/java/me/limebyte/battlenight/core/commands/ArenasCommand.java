@@ -147,6 +147,21 @@ public class ArenasCommand extends BattleNightCommand {
             return false;
         }
 
+        if (args[0].equalsIgnoreCase("texturepack")) {
+            if (args.length < 3) {
+                Messenger.tell(sender, Message.SPECIFY_ARENA);
+                return false;
+            }
+
+            for (Arena arena : arenas) {
+                if (arena.getName().equalsIgnoreCase(args[1])) {
+                    arena.setTexturePack(args[2]);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         Messenger.tell(sender, Message.INVALID_COMMAND);
         Messenger.tell(sender, Message.USAGE, getUsage());
         return false;

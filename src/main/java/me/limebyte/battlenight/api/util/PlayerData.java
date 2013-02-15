@@ -212,6 +212,8 @@ public class PlayerData {
         player.setSneaking(false);
         player.setSprinting(false);
         Nameplates.refresh(player);
+
+        // TODO if (DEFAULT !=null) player.setTexturePack(DEFAULT);
     }
 
     public static Location getSavedLocation(Player player) {
