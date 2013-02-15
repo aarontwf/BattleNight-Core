@@ -43,15 +43,16 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        // Register Serialization Classes
+        ConfigurationSerialization.registerClass(Arena.class);
+        ConfigurationSerialization.registerClass(Waypoint.class);
+
         api = new API();
 
         Messenger.init(api);
 
         PluginManager pm = getServer().getPluginManager();
-
-        // Register Serialization Classes
-        ConfigurationSerialization.registerClass(Arena.class);
-        ConfigurationSerialization.registerClass(Waypoint.class);
 
         // Initialize Configuration
         ConfigManager.initConfigurations();
