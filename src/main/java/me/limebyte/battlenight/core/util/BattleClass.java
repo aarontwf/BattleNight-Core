@@ -23,11 +23,11 @@ public class BattleClass implements PlayerClass {
 
     private static final int LAST_INV_SLOT = 35;
 
-    public BattleClass(String name, List<ItemStack> items, List<ItemStack> armour, HashMap<String, Boolean> permissions) {
+    public BattleClass(String name, List<ItemStack> items, List<ItemStack> armour) {
         this.name = name;
         this.items = items;
         this.armour = armour;
-        this.permissions = permissions;
+        this.permissions = new HashMap<String, Boolean>();
 
         String perm = "battlenight.class." + name.toLowerCase();
         permission = new Permission(perm, "Permission for the class: " + name + ".", PermissionDefault.TRUE);

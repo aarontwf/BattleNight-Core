@@ -15,7 +15,6 @@ import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -50,8 +49,7 @@ public class ClassManager {
             fixOldFiles(className);
             String armour = ConfigManager.get(configFile).getString("Classes;" + className + ";Armour", "");
             String items = ConfigManager.get(configFile).getString("Classes;" + className + ";Items", "");
-            ConfigurationSection permissions = ConfigManager.get(configFile).getConfigurationSection("Classes;" + className + ";Permissions");
-            classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour)), parsePermissions(permissions)));
+            classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour))));
         }
     }
 
@@ -60,7 +58,6 @@ public class ClassManager {
         for (PlayerClass c : classes) {
             ConfigManager.get(configFile).set("Classes;" + c.getName() + ";Armour", parseItems(c.getArmour()));
             ConfigManager.get(configFile).set("Classes;" + c.getName() + ";Items", parseItems(c.getItems()));
-            ConfigManager.get(configFile).createSection("Classes;" + c.getName() + ";Permissions", c.getPermissions());
         }
         ConfigManager.save(configFile);
     }
@@ -345,17 +342,5 @@ public class ClassManager {
         }
 
         ConfigManager.save(configFile);
-    }
-
-    private static HashMap<String, Boolean> parsePermissions(ConfigurationSection permissions) {
-        HashMap<String, Boolean> map = new HashMap<String, Boolean>();
-
-        if (permissions != null) {
-            for (Map.Entry<String, Object> entry : permissions.getValues(false).entrySet()) {
-                map.put(entry.getKey(), Boolean.parseBoolean(entry.getValue().toString()));
-            }
-        }
-
-        return map;
     }
 }
