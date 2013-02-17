@@ -51,7 +51,6 @@ public class Configuration {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfig.setDefaults(defConfig);
             fileConfig.options().indent(4);
-            fileConfig.options().pathSeparator(';');
             fileConfig.options().copyDefaults(!file.exists() || copyDefaults);
         }
     }

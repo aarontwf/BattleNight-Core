@@ -31,15 +31,15 @@ public class CoreArenaManager implements ArenaManager {
         Messenger.debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
 
-        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint;Lounge", lounge);
-        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint;Exit", exit);
+        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
+        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", exit);
         arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", arenas);
     }
 
     public void saveArenas() {
         Messenger.debug(Level.INFO, "Saving arenas...");
-        ConfigManager.get(configFile).set("Waypoint;Lounge", lounge);
-        ConfigManager.get(configFile).set("Waypoint;Exit", exit);
+        ConfigManager.get(configFile).set("Waypoint.Lounge", lounge);
+        ConfigManager.get(configFile).set("Waypoint.Exit", exit);
         ConfigManager.get(configFile).set("Arenas", arenas);
         ConfigManager.save(configFile);
     }
