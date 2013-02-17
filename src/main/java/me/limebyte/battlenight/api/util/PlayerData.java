@@ -147,7 +147,10 @@ public class PlayerData {
         player.setFireTicks(data.fireTicks);
         player.setFlySpeed(data.flySpeed);
         player.setFoodLevel(data.foodLevel);
-        player.setGameMode(GameMode.getByValue(data.gameMode));
+
+        GameMode gamemode = GameMode.getByValue(data.gameMode);
+        if (player.getGameMode() != gamemode) player.setGameMode(gamemode);
+
         player.setHealth(data.health);
         player.getInventory().setContents(data.invItems);
         player.getInventory().setArmorContents(data.invArmour);
@@ -196,7 +199,7 @@ public class PlayerData {
         player.setFallDistance(0);
         player.setFireTicks(0);
         player.setFoodLevel(20);
-        player.setGameMode(GameMode.SURVIVAL);
+        if (player.getGameMode() != GameMode.SURVIVAL) player.setGameMode(GameMode.SURVIVAL);
         player.setHealth(player.getMaxHealth());
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
