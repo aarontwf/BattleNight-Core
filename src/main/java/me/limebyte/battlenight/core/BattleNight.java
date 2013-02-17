@@ -23,6 +23,7 @@ import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
+import me.limebyte.battlenight.core.util.UpdateChecker;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -99,8 +100,12 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         if (battleManager.getBattle(battle) == null) battle = "TDM";
         battleManager.setActiveBattle(battle);
 
+        // Update check
+        PluginDescriptionFile pdf = getDescription();
+        new UpdateChecker(pdf).check();
+
         // Enable Message
-        Messenger.log(Level.INFO, "Version " + getDescription().getVersion() + " enabled successfully.");
+        Messenger.log(Level.INFO, "Version " + pdf.getVersion() + " enabled successfully.");
         Messenger.log(Level.INFO, "Made by LimeByte.");
     }
 
