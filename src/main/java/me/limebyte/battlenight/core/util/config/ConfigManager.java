@@ -9,7 +9,6 @@ public class ConfigManager {
     private static Configuration classesConfig = new Configuration("Classes.yml", false);
     private static Configuration metricsConfig = new Configuration("Metrics.yml");
     private static Configuration arenasConfig = new Configuration("Arenas.dat", DATA_DIRECTORY);
-    private static Configuration playersConfig = new Configuration("Players.dat", DATA_DIRECTORY);
 
     public static void initConfigurations() {
         reloadAll();
@@ -41,11 +40,7 @@ public class ConfigManager {
     }
 
     public enum Config {
-        MAIN(mainConfig),
-        CLASSES(classesConfig),
-        METRICS(metricsConfig),
-        ARENAS(arenasConfig),
-        PLAYERS(playersConfig);
+        MAIN(mainConfig), CLASSES(classesConfig), METRICS(metricsConfig), ARENAS(arenasConfig);
 
         private Configuration config;
 
