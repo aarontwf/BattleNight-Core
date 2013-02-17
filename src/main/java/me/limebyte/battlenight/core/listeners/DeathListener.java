@@ -14,24 +14,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-public class DeathListener implements Listener {
+public class DeathListener extends APIRelatedListener {
 
     protected static Map<String, BattleDeathEvent> queue = new HashMap<String, BattleDeathEvent>();
 
-    private BattleNightAPI api;
-
     public DeathListener(BattleNightAPI api) {
-        this.api = api;
+        super(api);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        Battle battle = api.getBattle();
+        Battle battle = getAPI().getBattle();
 
         if (battle.containsPlayer(player)) {
             event.getDrops().clear();

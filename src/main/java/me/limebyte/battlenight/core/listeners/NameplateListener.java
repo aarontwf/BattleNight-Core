@@ -9,22 +9,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
-public class NameplateListener implements Listener {
-
-    private BattleNightAPI api;
+public class NameplateListener extends APIRelatedListener {
 
     public NameplateListener(BattleNightAPI api) {
-        this.api = api;
+        super(api);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onNameplate(PlayerReceiveNameTagEvent event) {
         Player player = event.getNamedPlayer();
         String tag = ChatColor.stripColor(event.getTag());
-        Battle battle = api.getBattle();
+        Battle battle = getAPI().getBattle();
 
         if (battle.containsPlayer(player)) {
             ChatColor teamColour = ChatColor.RED;

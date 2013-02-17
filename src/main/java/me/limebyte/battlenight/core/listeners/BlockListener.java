@@ -10,7 +10,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class BlockListener extends ListenerUsingAPI {
+public class BlockListener extends APIRelatedListener {
 
     public BlockListener(BattleNightAPI api) {
         super(api);

@@ -20,22 +20,19 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
-public class SignListener implements Listener {
+public class SignListener extends APIRelatedListener {
 
     private static final String LINE = "----------";
     public static Set<ClassSign> classSigns = new HashSet<ClassSign>();
 
-    private BattleNightAPI api;
-
     public SignListener(BattleNightAPI api) {
-        this.api = api;
+        super(api);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -70,7 +67,7 @@ public class SignListener implements Listener {
                 String title = sign.getLine(0);
                 HashMap<String, PlayerClass> classes = ClassManager.getClassNames();
 
-                if (api.getBattle().containsPlayer(player)) {
+                if (getAPI().getBattle().containsPlayer(player)) {
                     if (classes.containsKey(title)) {
                         PlayerClass playerClass = classes.get(title);
 
@@ -82,7 +79,7 @@ public class SignListener implements Listener {
                             }
 
                             reset(player);
-                            api.setPlayerClass(player, classes.get(title));
+                            getAPI().setPlayerClass(player, classes.get(title));
                         } else {
                             Messenger.tell(player, Message.NO_PERMISSION_CLASS);
                         }

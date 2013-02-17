@@ -26,7 +26,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class CheatListener extends ListenerUsingAPI {
+public class CheatListener extends APIRelatedListener {
 
     public CheatListener(BattleNightAPI api) {
         super(api);

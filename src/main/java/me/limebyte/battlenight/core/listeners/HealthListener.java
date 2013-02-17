@@ -12,18 +12,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
-public class HealthListener implements Listener {
-
-    private BattleNightAPI api;
+public class HealthListener extends APIRelatedListener {
 
     public HealthListener(BattleNightAPI api) {
-        this.api = api;
+        super(api);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -32,7 +29,7 @@ public class HealthListener implements Listener {
         Player player = (Player) event.getEntity();
 
         if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
-        if (!api.getBattle().containsPlayer(player)) return;
+        if (!getAPI().getBattle().containsPlayer(player)) return;
 
         RegainReason reason = event.getRegainReason();
         if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {
@@ -47,7 +44,7 @@ public class HealthListener implements Listener {
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            Battle battle = api.getBattle();
+            Battle battle = getAPI().getBattle();
 
             if (!battle.containsPlayer(player) && !battle.containsSpectator(player)) return;
             subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));

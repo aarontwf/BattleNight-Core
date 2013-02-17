@@ -13,31 +13,28 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class InteractListener implements Listener {
-
-    private BattleNightAPI api;
+public class InteractListener extends APIRelatedListener {
 
     public InteractListener(BattleNightAPI api) {
-        this.api = api;
+        super(api);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Action action = event.getAction();
         Player player = event.getPlayer();
-        Battle battle = api.getBattle();
+        Battle battle = getAPI().getBattle();
 
         if (action.equals(Action.LEFT_CLICK_BLOCK)) {
             Block block = event.getClickedBlock();
 
             if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
                 if (battle.containsPlayer(player) && !battle.isInProgress()) {
-                    if (api.getPlayerClass(player) != null) {
+                    if (getAPI().getPlayerClass(player) != null) {
                         if (!Metadata.getBoolean(player, "ready")) {
                             Metadata.set(player, "ready", true);
                             Messenger.tellEveryone(true, Message.PLAYER_IS_READY, player);

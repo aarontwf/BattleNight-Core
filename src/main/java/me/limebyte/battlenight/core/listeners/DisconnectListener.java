@@ -8,17 +8,14 @@ import me.limebyte.battlenight.api.util.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class DisconnectListener implements Listener {
-
-    private BattleNightAPI api;
+public class DisconnectListener extends APIRelatedListener {
 
     public DisconnectListener(BattleNightAPI api) {
-        this.api = api;
+        super(api);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -49,7 +46,7 @@ public class DisconnectListener implements Listener {
                 PlayerData.restore(player, true, false);
             }
         } else {
-            battle = api.getBattle();
+            battle = getAPI().getBattle();
             battle.removePlayer(player);
             battle.removeSpectator(player);
         }
