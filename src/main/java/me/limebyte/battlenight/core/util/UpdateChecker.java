@@ -9,7 +9,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 public class UpdateChecker {
 
-    private static final String UPDATE_URL = "https://raw.github.com/BattleNight/BattleNight-Core/master/update.txt";
+    private static final String UPDATE_URL = "https://raw.github.com/BattleNight/BattleNight-Core/master/version.txt";
     private String version;
 
     public UpdateChecker(PluginDescriptionFile pdf) {
