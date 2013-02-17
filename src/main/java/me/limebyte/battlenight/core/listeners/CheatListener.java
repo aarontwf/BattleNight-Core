@@ -42,32 +42,32 @@ public class CheatListener extends ListenerUsingAPI {
         if (getAPI().getBattle().containsPlayer(player) && !SafeTeleporter.telePass.contains(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation;Commands", false)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case PLUGIN:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Plugins", false)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation;Plugins", false)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case ENDER_PEARL:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation;EnderPearls", true)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", false)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation;Portals", false)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case UNKNOWN:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", false)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation;Unknown", false)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
@@ -116,9 +116,9 @@ public class CheatListener extends ListenerUsingAPI {
         Player player = event.getPlayer();
         Battle battle = getAPI().getBattle();
         if (!battle.containsPlayer(player) || !battle.containsSpectator(player)) return;
-        if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
+        if (!ConfigManager.get(Config.MAIN).getBoolean("Commands;Block", true)) return;
 
-        List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
+        List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands;Whitelist");
         whitelist.add("bn");
 
         String[] cmdArg = event.getMessage().split(" ");

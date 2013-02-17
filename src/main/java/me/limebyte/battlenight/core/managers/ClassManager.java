@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ClassManager {
     private static List<PlayerClass> classes = new ArrayList<PlayerClass>();
+
     private static final Config configFile = Config.CLASSES;
 
     public static List<PlayerClass> getClasses() {
@@ -47,9 +48,9 @@ public class ClassManager {
         ConfigManager.reload(configFile);
         for (String className : ConfigManager.get(configFile).getConfigurationSection("Classes").getKeys(false)) {
             fixOldFiles(className);
-            String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour", "");
-            String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
-            ConfigurationSection permissions = ConfigManager.get(configFile).getConfigurationSection("Classes." + className + ".Permissions");
+            String armour = ConfigManager.get(configFile).getString("Classes;" + className + ";Armour", "");
+            String items = ConfigManager.get(configFile).getString("Classes;" + className + ";Items", "");
+            ConfigurationSection permissions = ConfigManager.get(configFile).getConfigurationSection("Classes;" + className + ";Permissions");
             classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour)), parsePermissions(permissions)));
         }
     }
@@ -57,9 +58,9 @@ public class ClassManager {
     public static void saveClasses() {
         Messenger.debug(Level.INFO, "Saving classes...");
         for (PlayerClass c : classes) {
-            ConfigManager.get(configFile).set("Classes." + c.getName() + ".Armour", parseItems(c.getArmour()));
-            ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
-            ConfigManager.get(configFile).createSection("Classes." + c.getName() + ".Permissions", c.getPermissions());
+            ConfigManager.get(configFile).set("Classes;" + c.getName() + ";Armour", parseItems(c.getArmour()));
+            ConfigManager.get(configFile).set("Classes;" + c.getName() + ";Items", parseItems(c.getItems()));
+            ConfigManager.get(configFile).createSection("Classes;" + c.getName() + ";Permissions", c.getPermissions());
         }
         ConfigManager.save(configFile);
     }
@@ -326,15 +327,15 @@ public class ClassManager {
 
     private static void fixOldFiles(String className) {
         // Armour
-        String armor = ConfigManager.get(configFile).getString("Classes." + className + ".Armor");
-        String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour");
+        String armor = ConfigManager.get(configFile).getString("Classes;" + className + ";Armor");
+        String armour = ConfigManager.get(configFile).getString("Classes;" + className + ";Armour");
         if (armor != null) {
             if (armour == null) {
-                ConfigManager.get(configFile).set("Classes." + className + ".Armour", armor);
+                ConfigManager.get(configFile).set("Classes;" + className + ";Armour", armor);
             } else {
-                ConfigManager.get(configFile).set("Classes." + className + ".Armour", "none, none, none, none");
+                ConfigManager.get(configFile).set("Classes;" + className + ";Armour", "none, none, none, none");
             }
-            ConfigManager.get(configFile).set("Classes." + className + ".Armor", null);
+            ConfigManager.get(configFile).set("Classes;" + className + ";Armor", null);
         }
 
         // DummyItem
