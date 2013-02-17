@@ -1,6 +1,5 @@
 package me.limebyte.battlenight.core.commands;
 
-import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
@@ -20,7 +19,7 @@ public class SetCommand extends BattleNightCommand {
 
         setLabel("set");
         setDescription("Sets a BattleNight waypoint.");
-        setUsage("/bn set <waypoint> [x] [y] [z] [world]\n/bn set <arena> [x] [y] [z] [world]");
+        setUsage("/bn set <waypoint> [x] [y] [z] [world]");
         setPermission(CommandPermission.ADMIN);
     }
 
@@ -31,7 +30,6 @@ public class SetCommand extends BattleNightCommand {
             Messenger.tell(sender, Message.USAGE, getUsage());
             return false;
         } else {
-            Arena arena = null;
             Waypoint waypoint = null;
             ArenaManager manager = api.getArenaManager();
 
@@ -39,19 +37,6 @@ public class SetCommand extends BattleNightCommand {
                 waypoint = manager.getLounge();
             } else if (args[0].equalsIgnoreCase("exit")) {
                 waypoint = manager.getExit();
-            } else {
-                for (Arena a : manager.getArenas()) {
-                    if (a.getName().equalsIgnoreCase(args[0])) {
-                        arena = a;
-                    }
-                }
-
-                if (arena == null) {
-                    Messenger.tell(sender, "An Arena by that name does not exist!");
-                    return false;
-                }
-
-                waypoint = new Waypoint();
             }
 
             if (waypoint != null) {
@@ -84,8 +69,6 @@ public class SetCommand extends BattleNightCommand {
                     Messenger.tell(sender, Message.USAGE, getUsage());
                     return false;
                 }
-
-                if (arena != null) arena.addSpawnPoint(waypoint);
                 return true;
             } else {
                 Messenger.tell(sender, Message.INVALID_WAYPOINT);

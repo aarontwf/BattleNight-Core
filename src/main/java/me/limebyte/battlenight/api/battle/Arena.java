@@ -43,8 +43,9 @@ public class Arena implements ConfigurationSerializable {
         return getSpawnPoints().get(RANDOM.nextInt(getSpawnPoints().size()));
     }
 
-    public void addSpawnPoint(Waypoint waypoint) {
+    public int addSpawnPoint(Waypoint waypoint) {
         spawnPoints.add(waypoint);
+        return spawnPoints.size() - 1;
     }
 
     public void removeSpawnPoint(Waypoint waypoint) {

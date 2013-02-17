@@ -4,7 +4,6 @@
 BattleType: TDM
 UsePermissions: false
 ReadyBlock: 42
-InventoryType: save
 FriendlyFire: false
 StopHealthRegen: true
 ExitWaypoint: false

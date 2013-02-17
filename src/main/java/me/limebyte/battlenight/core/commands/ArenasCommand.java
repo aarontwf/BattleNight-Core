@@ -99,8 +99,41 @@ public class ArenasCommand extends BattleNightCommand {
 
             Waypoint point = new Waypoint();
             point.setLocation(((Player) sender).getLocation());
-            arena.addSpawnPoint(point);
-            Messenger.tell(sender, "Spawn point created.");
+            int index = arena.addSpawnPoint(point);
+            Messenger.tell(sender, "Spawn point " + index + " created.");
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("removespawn")) {
+            if (args.length < 2) {
+                Messenger.tell(sender, Message.SPECIFY_ARENA);
+                return false;
+            } else if (args.length < 3) {
+                Messenger.tell(sender, "Invalid Spawn Point.");
+                return false;
+            }
+
+            Arena arena = null;
+            for (Arena a : arenas) {
+                if (a.getName().equalsIgnoreCase(args[1])) {
+                    arena = a;
+                }
+            }
+
+            if (arena == null) {
+                Messenger.tell(sender, "An Arena by that name does not exist!");
+                return false;
+            }
+
+            int index = Integer.parseInt(args[2]);
+            ArrayList<Waypoint> spawns = arena.getSpawnPoints();
+            if (spawns.size() < index + 1) {
+                Messenger.tell(sender, "Invalid Spawn Point.");
+                return false;
+            }
+
+            spawns.remove(index);
+            Messenger.tell(sender, "Spawn point " + index + " removed.");
             return true;
         }
 
