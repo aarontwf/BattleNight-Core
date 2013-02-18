@@ -236,11 +236,14 @@ public abstract class Battle {
             getSpectators().add(player.getName());
             player.setGameMode(GameMode.ADVENTURE);
             player.setAllowFlight(true);
+
             for (String n : getPlayers()) {
                 if (Bukkit.getPlayerExact(n) != null) {
                     Bukkit.getPlayerExact(n).hidePlayer(player);
                 }
             }
+
+            Messenger.tellEveryone(player.getDisplayName() + " is now a spectator.", true);
 
             loc = Bukkit.getPlayerExact((String) getPlayers().toArray()[0]).getLocation();
         }
