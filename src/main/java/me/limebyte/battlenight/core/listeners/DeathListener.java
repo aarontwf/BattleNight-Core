@@ -58,6 +58,7 @@ public class DeathListener extends APIRelatedListener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();
+        Battle battle = getAPI().getBattle();
 
         if (queue.containsKey(name)) {
             Messenger.debug(Level.INFO, "PlayerRespawnEvent for " + player.getName());
@@ -73,6 +74,9 @@ public class DeathListener extends APIRelatedListener {
             }
 
             event.setRespawnLocation(apiEvent.getRespawnLocation());
+        } else if (battle.containsSpectator(player)) {
+            event.setRespawnLocation(PlayerData.getSavedLocation(player));
+            battle.removeSpectator(player);
         }
     }
 
