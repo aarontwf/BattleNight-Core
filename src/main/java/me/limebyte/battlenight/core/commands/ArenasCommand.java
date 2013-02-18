@@ -98,14 +98,14 @@ public class ArenasCommand extends BattleNightCommand {
             }
 
             if (arena == null) {
-                Messenger.tell(sender, "An Arena by that name does not exist!");
+                Messenger.tell(sender, Message.INVALID_ARENA);
                 return false;
             }
 
             Waypoint point = new Waypoint();
             point.setLocation(((Player) sender).getLocation());
             int index = arena.addSpawnPoint(point);
-            Messenger.tell(sender, "Spawn point " + index + " created.");
+            Messenger.tell(sender, Message.SPAWN_CREATED, index, arena);
             return true;
         }
 
@@ -126,7 +126,7 @@ public class ArenasCommand extends BattleNightCommand {
             }
 
             if (arena == null) {
-                Messenger.tell(sender, "An Arena by that name does not exist!");
+                Messenger.tell(sender, Message.INVALID_ARENA);
                 return false;
             }
 
@@ -138,7 +138,7 @@ public class ArenasCommand extends BattleNightCommand {
             }
 
             spawns.remove(index);
-            Messenger.tell(sender, "Spawn point " + index + " removed.");
+            Messenger.tell(sender, Message.SPAWN_REMOVED, index, arena);
             return true;
         }
 
@@ -151,9 +151,11 @@ public class ArenasCommand extends BattleNightCommand {
             for (Arena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     arena.enable();
+                    Messenger.tell(sender, Message.ARENA_ENABLED, arena);
                     return true;
                 }
             }
+            Messenger.tell(sender, Message.INVALID_ARENA);
             return false;
         }
 
@@ -166,9 +168,11 @@ public class ArenasCommand extends BattleNightCommand {
             for (Arena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     arena.disable();
+                    Messenger.tell(sender, Message.ARENA_DISABLED, arena);
                     return true;
                 }
             }
+            Messenger.tell(sender, Message.INVALID_ARENA);
             return false;
         }
 

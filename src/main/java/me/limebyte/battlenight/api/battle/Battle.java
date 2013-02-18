@@ -407,7 +407,7 @@ public abstract class Battle {
         String message;
         Set<String> leading = getLeadingPlayers();
 
-        if (leading.isEmpty() || leading.size() == getPlayers().size()) {
+        if (leading.isEmpty()) {
             message = Message.DRAW.getMessage();
         } else if (leading.size() == 1) {
             message = Messenger.format(Message.PLAYER_WON, leading.toArray()[0]);
@@ -441,7 +441,7 @@ public abstract class Battle {
         Player player = event.getPlayer();
         Player killer = player.getKiller();
 
-        if (killer != null) addKill(player);
+        if (killer != null && killer != player) addKill(player);
 
         int deaths = Metadata.getInt(player, "deaths");
         Metadata.set(player, "deaths", ++deaths);
@@ -460,13 +460,13 @@ public abstract class Battle {
     }
 
     protected void addKill(Player player) {
-        int kills = Metadata.getInt(player, "kills");
+        int kills = Metadata.getInt(player, "kills") + 1;
         int leadingKills = 0;
 
         Player leader = toPlayer(leadingPlayers.iterator().next());
         if (leader != null) leadingKills = Metadata.getInt(leader, "kills");
 
-        Metadata.set(player, "kills", ++kills);
+        Metadata.set(player, "kills", kills);
 
         if (leadingKills > kills) return;
         if (leadingKills < kills) leadingPlayers.clear();
