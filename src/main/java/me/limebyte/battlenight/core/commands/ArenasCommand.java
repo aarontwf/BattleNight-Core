@@ -80,6 +80,11 @@ public class ArenasCommand extends BattleNightCommand {
         }
 
         if (args[0].equalsIgnoreCase("addspawn")) {
+            if (!(sender instanceof Player)) {
+                Messenger.tell(sender, Message.PLAYER_ONLY);
+                return false;
+            }
+
             if (args.length < 2) {
                 Messenger.tell(sender, Message.SPECIFY_ARENA);
                 return false;
