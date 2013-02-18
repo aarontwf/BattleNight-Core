@@ -138,6 +138,7 @@ public abstract class Battle {
 
         if (!getArena().isSetup(1)) {
             Messenger.tell(player, Message.WAYPOINTS_UNSET);
+            setArena(null);
             return false;
         }
 
@@ -444,7 +445,7 @@ public abstract class Battle {
         Player player = event.getPlayer();
         Player killer = player.getKiller();
 
-        if (killer != null && killer != player) addKill(player);
+        if (killer != null && killer != player) addKill(killer);
 
         int deaths = Metadata.getInt(player, "deaths");
         Metadata.set(player, "deaths", ++deaths);
