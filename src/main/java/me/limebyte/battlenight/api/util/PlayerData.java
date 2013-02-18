@@ -182,8 +182,10 @@ public class PlayerData {
 
     public static void reset(Player player) {
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (!player.canSee(p) && !api.getBattle().containsSpectator(player)) {
+            if (!player.canSee(p) && !api.getBattle().containsSpectator(p)) {
                 player.showPlayer(p);
+            } else if (api.getBattle().containsSpectator(p)) {
+                player.hidePlayer(player);
             }
         }
 
