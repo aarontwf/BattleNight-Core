@@ -13,14 +13,16 @@ import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 public class NameplateListener extends APIRelatedListener {
 
+    private static final String SPECTATOR_TAG = ChatColor.DARK_GRAY + "[Spectator]";
+
     public NameplateListener(BattleNightAPI api) {
         super(api);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onNameplate(PlayerReceiveNameTagEvent event) {
+    public void onPlayerReceiveNameTag(PlayerReceiveNameTagEvent event) {
         Player player = event.getNamedPlayer();
-        String tag = ChatColor.stripColor(event.getTag());
+        String tag = player.getName();
         Battle battle = getAPI().getBattle();
 
         if (battle.containsPlayer(player)) {
@@ -31,7 +33,7 @@ public class NameplateListener extends APIRelatedListener {
             }
             event.setTag(teamColour + tag);
         } else if (battle.containsSpectator(player)) {
-            event.setTag(ChatColor.DARK_GRAY + tag);
+            event.setTag(SPECTATOR_TAG);
         } else if (!event.isModified()) {
             event.setTag(tag);
         }

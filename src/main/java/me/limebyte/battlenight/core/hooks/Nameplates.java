@@ -31,6 +31,8 @@ public class Nameplates {
                 return;
             }
             Messenger.log(Level.INFO, "TagAPI installed successfully.");
+        } else {
+            update(pm);
         }
         enabled = true;
     }
@@ -39,6 +41,10 @@ public class Nameplates {
         File tagAPI = new File(plugin.getDataFolder().getParent(), "TagAPI.jar");
         copyResource("TagAPI.jar", tagAPI);
         load(tagAPI);
+    }
+
+    private static void update(PluginManager pm) {
+        // TODO
     }
 
     private static void load(File file) throws UnknownDependencyException, InvalidPluginException, InvalidDescriptionException {
