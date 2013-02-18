@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
-import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Bukkit;
@@ -68,9 +67,6 @@ public class DeathListener extends APIRelatedListener {
 
             if (apiEvent.isCancelled()) {
                 apiEvent.getBattle().respawn(player);
-            } else {
-                PlayerData.reset(player);
-                PlayerData.restore(player, false, false);
             }
 
             event.setRespawnLocation(apiEvent.getRespawnLocation());
