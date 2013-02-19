@@ -125,7 +125,15 @@ public abstract class Battle {
      * @return true if successful
      */
     public boolean addPlayer(Player player) {
-        if (isInProgress()) return false;
+        if (isInProgress()) {
+            Messenger.tell(player, Message.BATTLE_IN_PROGRESS);
+            return false;
+        }
+
+        if (containsPlayer(player)) {
+            Messenger.tell(player, Message.ALREADY_IN_BATTLE);
+            return false;
+        }
 
         ArenaManager arenaManager = api.getArenaManager();
         if (getArena() == null) {
