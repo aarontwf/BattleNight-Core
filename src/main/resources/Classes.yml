@@ -5,48 +5,24 @@ Classes:
     Scout:
         Armour: none, none, none, 309e(2~4)
         Items: 268e(19~2), 373:8262, none, none, none, none, 373:8226, 373:8226, 373:8226
-        Permissions:
-            some.permission.node: false
-            some.other.permission.node: true
     Pyro:
         Armour: 298e(1~4), 299e(1~4), 300e(1~4), 301e(1~4)
         Items: 268e(20~2), 259, none, 46x2, none, none, none, none, 373:8195
-        Permissions:
-            some.permission.node: false
-            some.other.permission.node: true
     Tank:
         Armour: 310e(3~3), 311e(3~3), 312e(3~3), 313e(3~3)
-        Items: '272'
-        Permissions:
-            some.permission.node: false
-            some.other.permission.node: true
+        Items: '268'
     Swordsman:
         Armour: none, none, none, none
         Items: 276e(16~1)
-        Permissions:
-            some.permission.node: false
-            some.other.permission.node: true
     Archer:
         Armour: 302e(4~2), 303e(4~2), 304e(4~2), 305e(4~2)
-        Items: 261e(49~1/48~1), 368x4, none, none, none, none, none, 262x64, 262x64
-        Permissions:
-            some.permission.node: false
-            some.other.permission.node: true
+        Items: 261e(49~1), 368x4, none, none, none, none, none, none, 262x64
     Medic:
         Armour: 298e(0~2), none, none, none
         Items: 283e(19~2), 322x4, none, none, none, none, 373:16389, 373:16389, 373:16385
-        Permissions:
-            some.permission.node: false
-            some.other.permission.node: true
     Magician:
         Armour: 306, 307, 308, 309e(2~4)
         Items: 272, 368x16, none, none, none, 373:16386, 373:16396, 373:16388, 373:16458
-        Permissions:
-            some.permission.node: false
-            some.other.permission.node: true
     Spy:
         Armour: 306e(5~3), none, none, none
         Items: 267, none, none, none, none, none, none, 373:8258, 373:8206
-        Permissions:
-            some.permission.node: false
-            some.other.permission.node: true

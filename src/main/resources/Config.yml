@@ -10,7 +10,7 @@ ExitWaypoint: false
 Teleportation:
     EnderPearls: true
     Portals: false
-    Commands: true
+    Commands: false
     Plugins: false
     Unknown: false
 Particles:

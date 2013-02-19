@@ -22,7 +22,7 @@ public class ArenasCommand extends BattleNightCommand {
         super("Arenas");
 
         setLabel("arenas");
-        setDescription("Displays the BattleNight arenas.");
+        setDescription("Various arena related commands.");
         setUsage("/bn arenas <action> [arena]");
         setPermission(CommandPermission.ADMIN);
     }
