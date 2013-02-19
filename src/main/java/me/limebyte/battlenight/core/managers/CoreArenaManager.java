@@ -52,10 +52,12 @@ public class CoreArenaManager implements ArenaManager {
         arenas.remove(arena);
     }
 
+    @Override
     public List<Arena> getArenas() {
         return arenas;
     }
 
+    @Override
     public List<Arena> getEnabledArenas() {
         List<Arena> enabled = new ArrayList<Arena>();
         for (Arena arena : arenas) {
@@ -64,11 +66,22 @@ public class CoreArenaManager implements ArenaManager {
         return enabled;
     }
 
+    @Override
+    public List<Arena> getSetupArenas(int minSpawns) {
+        List<Arena> setup = new ArrayList<Arena>();
+        for (Arena arena : arenas) {
+            if (arena.isSetup(minSpawns)) setup.add(arena);
+        }
+        return setup;
+    }
+
+    @Override
     public Arena getRandomArena() {
         List<Arena> enabled = getEnabledArenas();
         return (enabled.get(RANDOM.nextInt(enabled.size())));
     }
 
+    @Override
     public Waypoint getLounge() {
         return lounge;
     }
