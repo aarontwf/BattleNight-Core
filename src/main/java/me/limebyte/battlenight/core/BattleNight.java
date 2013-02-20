@@ -102,7 +102,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         // Update check
         PluginDescriptionFile pdf = getDescription();
-        new UpdateChecker(pdf).check();
+        if (ConfigManager.get(Config.MAIN).getBoolean("UpdateCheck", true)) new UpdateChecker(pdf).check();
 
         // Enable Message
         Messenger.log(Level.INFO, "Version " + pdf.getVersion() + " enabled successfully.");

@@ -23,4 +23,5 @@ Commands:
     - toggledownfall
     - stop
     - reload
+UpdateCheck: true
 Debug: false
