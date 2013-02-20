@@ -1,14 +1,17 @@
 package me.limebyte.battlenight.api.battle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
+import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -252,6 +255,28 @@ public abstract class TeamedBattle extends Battle {
             }
 
             event.setCancelled(true);
+        }
+    }
+
+    protected void teleportAllToSpawn() {
+        @SuppressWarnings("unchecked")
+        List<Waypoint> waypoints = (ArrayList<Waypoint>) getArena().getSpawnPoints().clone();
+        List<Waypoint> free = waypoints;
+        Random random = new Random();
+
+        HashMap<String, Waypoint> spawns = new HashMap<String, Waypoint>();
+
+        for (Team team : getTeams()) {
+            if (free.size() <= 0) free = waypoints;
+            int id = random.nextInt(free.size());
+            spawns.put(team.getName(), free.get(id));
+            free.remove(id);
+        }
+
+        for (String name : getPlayers()) {
+            Player player = toPlayer(name);
+            if (player == null || !player.isOnline()) continue;
+            SafeTeleporter.tp(player, spawns.get(Metadata.getString(player, "team")).getLocation());
         }
     }
 }
