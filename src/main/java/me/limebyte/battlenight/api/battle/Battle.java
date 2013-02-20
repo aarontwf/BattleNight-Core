@@ -136,23 +136,18 @@ public abstract class Battle {
         }
 
         ArenaManager arenaManager = api.getArenaManager();
-        if (getArena() == null) {
-            if (arenaManager.getEnabledArenas().isEmpty()) {
-                Messenger.tell(player, Message.NO_ARENAS);
-                return false;
-            }
-            setArena(arenaManager.getRandomArena());
-        }
-
-        if (!getArena().isSetup(1)) {
-            Messenger.tell(player, Message.WAYPOINTS_UNSET);
-            setArena(null);
-            return false;
-        }
 
         if (!arenaManager.getLounge().isSet()) {
             Messenger.tell(player, Message.WAYPOINTS_UNSET);
             return false;
+        }
+
+        if (getArena() == null) {
+            if (arenaManager.getReadyArenas(1).isEmpty()) {
+                Messenger.tell(player, Message.NO_ARENAS);
+                return false;
+            }
+            setArena(arenaManager.getRandomArena(1));
         }
 
         PlayerData.store(player);

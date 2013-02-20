@@ -21,7 +21,9 @@ public interface ArenaManager {
 
     public List<Arena> getSetupArenas(int minSpawns);
 
-    public Arena getRandomArena();
+    public List<Arena> getReadyArenas(int minSpawns);
+
+    public Arena getRandomArena(int minSpawns);
 
     public Waypoint getLounge();
 

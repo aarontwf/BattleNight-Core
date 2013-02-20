@@ -76,9 +76,18 @@ public class CoreArenaManager implements ArenaManager {
     }
 
     @Override
-    public Arena getRandomArena() {
-        List<Arena> enabled = getEnabledArenas();
-        return (enabled.get(RANDOM.nextInt(enabled.size())));
+    public List<Arena> getReadyArenas(int minSpawns) {
+        List<Arena> ready = new ArrayList<Arena>();
+        for (Arena arena : arenas) {
+            if (arena.isSetup(minSpawns) && arena.isEnabled()) ready.add(arena);
+        }
+        return ready;
+    }
+
+    @Override
+    public Arena getRandomArena(int minSpawns) {
+        List<Arena> ready = getReadyArenas(minSpawns);
+        return (ready.get(RANDOM.nextInt(ready.size())));
     }
 
     @Override
