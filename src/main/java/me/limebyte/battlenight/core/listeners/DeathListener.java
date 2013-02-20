@@ -32,12 +32,12 @@ public class DeathListener extends APIRelatedListener {
 
         if (battle.containsPlayer(player)) {
             event.getDrops().clear();
-            event.setDeathMessage("");
 
             Messenger.debug(Level.INFO, "PlayerDeathEvent for " + player.getName());
 
             if (battle.isInProgress()) {
-                Messenger.killFeed(player, player.getKiller());
+                Messenger.killFeed(player, player.getKiller(), event.getDeathMessage());
+                event.setDeathMessage("");
             }
 
             BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);

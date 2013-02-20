@@ -24,7 +24,6 @@ import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
 public class Messenger {
@@ -90,18 +89,10 @@ public class Messenger {
 
     /** Kill feed **/
 
-    public static void killFeed(Player player, Player killer) {
-        String reason;
-
-        if (killer != null) {
-            reason = getColouredName(killer);
-        } else {
-            DamageCause cause = (player.getLastDamageCause() != null) ? player.getLastDamageCause().getCause() : DamageCause.SUICIDE;
-            reason = ChatColor.GRAY + cause.toString().toLowerCase().replace('_', ' ');
-        }
-
-        tell(player, Message.YOU_WERE_KILLED, reason);
-        tellEveryoneExcept(player, true, Message.PLAYER_WAS_KILLED, getColouredName(player), reason);
+    public static void killFeed(Player player, Player killer, String deathMessage) {
+        deathMessage.replaceAll(player.getName(), getColouredName(player));
+        if (killer != null) deathMessage.replaceAll(killer.getName(), getColouredName(killer));
+        tellEveryone(deathMessage, true);
     }
 
     /** Pages **/
