@@ -241,7 +241,7 @@ public class ClassManager {
         ItemStack[] items;
 
         if (item != null) {
-            final int maxSize = item.getMaxStackSize();
+            final int maxSize = 64; // item.getMaxStackSize();
             final int fullStacks = (int) Math.floor(amount / maxSize);
             final int finalStackAmount = amount % maxSize;
 

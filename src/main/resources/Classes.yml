@@ -4,7 +4,7 @@
 Classes:
     Scout:
         Armour: none, none, none, 309e(2~4)
-        Items: 268e(19~2), 373:8262, none, none, none, none, 373:8226, 373:8226, 373:8226
+        Items: 268e(19~2), 373:8262, none, none, none, none, none, none, 373:8226x3
     Pyro:
         Armour: 298e(1~4), 299e(1~4), 300e(1~4), 301e(1~4)
         Items: 268e(20~2), 259, none, 46x2, none, none, none, none, 373:8195
@@ -22,7 +22,7 @@ Classes:
         Items: 283e(19~2), 322x4, none, none, none, none, 373:16389, 373:16389, 373:16385
     Magician:
         Armour: 306, 307, 308, 309e(2~4)
-        Items: 272, 368x16, none, none, none, 373:16386, 373:16396, 373:16388, 373:16458
+        Items: 272, 368x16, none, none, none, 373:16386, 373:16396x3, 373:16388, 373:16458
     Spy:
         Armour: 306e(5~3), none, none, none
         Items: 267, none, none, none, none, none, none, 373:8258, 373:8206
