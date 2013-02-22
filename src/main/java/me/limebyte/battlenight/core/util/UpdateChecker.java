@@ -47,7 +47,7 @@ public class UpdateChecker {
 
         for (int i = 0; i < 3; i++) {
             int ver = Integer.parseInt(verInts[i]);
-            int test = Integer.parseInt(verInts[i]);
+            int test = Integer.parseInt(testInts[i]);
 
             if (test > ver) return true;
         }
