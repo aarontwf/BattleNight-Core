@@ -9,8 +9,8 @@ public class TDMBattle extends TeamedBattle {
 
     public TDMBattle() {
         setBattleLives(20);
-        addTeam(new Team("A", ChatColor.AQUA));
-        addTeam(new Team("B", ChatColor.GREEN));
+        addTeam(new Team("Red", ChatColor.RED));
+        addTeam(new Team("Blue", ChatColor.BLUE));
     }
 
     @Override
