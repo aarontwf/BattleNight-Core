@@ -124,9 +124,8 @@ public class CheatListener extends APIRelatedListener {
         String[] cmdArg = event.getMessage().split(" ");
         String cmdString = cmdArg[0].trim().substring(1).toLowerCase();
 
-        try {
-            Command command = Bukkit.getServer().getPluginCommand(cmdString);
-
+        Command command = Bukkit.getServer().getPluginCommand(cmdString);
+        if (command != null) {
             // Check if the command is listed
             if (whitelist.contains(command.getLabel().toLowerCase())) return;
 
@@ -136,9 +135,9 @@ public class CheatListener extends APIRelatedListener {
                     if (whitelist.contains(alias.toLowerCase())) return;
                 }
             }
-        } catch (NullPointerException e) {
+        } else {
             // Check if the command is listed
-            if (whitelist.contains(cmdString)) return;
+            if (whitelist.contains(cmdString.toLowerCase())) return;
         }
 
         // Its not listed so block it

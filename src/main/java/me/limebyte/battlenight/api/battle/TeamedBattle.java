@@ -52,8 +52,12 @@ public abstract class TeamedBattle extends Battle {
                 continue;
             }
 
-            int leadingKills = leading.get(0).getKills();
-            if (leadingKills < team.getKills()) leading.clear();
+            Team inLead = leading.get(0);
+            double leadKD = inLead.getKD();
+            double teamKD = team.getKD();
+
+            if (leadKD > teamKD) continue;
+            if (leadKD < teamKD) leading.clear();
 
             leading.add(team);
         }
@@ -233,8 +237,10 @@ public abstract class TeamedBattle extends Battle {
     public void onPlayerDeath(BattleDeathEvent event) {
         Player player = event.getPlayer();
         Player killer = player.getKiller();
+        Team team = getTeam(player);
 
         if (killer != null && areEnemies(player, killer)) addKill(killer);
+        if (team != null) team.addDeath();
 
         int deaths = Metadata.getInt(player, "deaths");
         Metadata.set(player, "deaths", ++deaths);
@@ -245,7 +251,6 @@ public abstract class TeamedBattle extends Battle {
         if (lives > 0) {
             String message = "Your team has " + lives + " lives remaining.";
             if (lives == 1) message = ChatColor.RED + "Last life!";
-            Team team = getTeam(player);
 
             for (String name : getPlayers()) {
                 Player p = toPlayer(name);

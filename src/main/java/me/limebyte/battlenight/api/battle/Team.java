@@ -10,6 +10,7 @@ public class Team {
     private boolean ready = false;
     private int lives = Battle.INFINITE_LIVES;
     private int kills = 0;
+    private int deaths = 0;
     private int size = 0;
 
     public Team(String name) {
@@ -74,6 +75,30 @@ public class Team {
         kills++;
     }
 
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
+    }
+
+    public void addDeath() {
+        deaths++;
+    }
+
+    public double getKD() {
+        if (kills > deaths) {
+            if (deaths == 0) return kills;
+            return kills / deaths;
+        }
+        if (kills < deaths) {
+            if (kills == 0) return -deaths;
+            return 0 - (kills / deaths);
+        }
+        return 0;
+    }
+
     public int getSize() {
         return size;
     }
@@ -95,6 +120,7 @@ public class Team {
         ready = false;
         lives = battle.getBattleLives();
         kills = 0;
+        deaths = 0;
         size = 0;
     }
 
