@@ -34,11 +34,15 @@ public abstract class Battle {
     protected boolean inProgress = false;
     private int minPlayers = 2;
     private int maxPlayers = Integer.MAX_VALUE;
-    private int lives = INFINITE_LIVES;
+    private int lives;
 
     private HashSet<String> players = new HashSet<String>();
     private Set<String> spectators = new HashSet<String>();
     private Set<String> leadingPlayers = new HashSet<String>();
+
+    public Battle(int lives) {
+        this.lives = lives;
+    }
 
     /* --------------- */
     /* General Methods */

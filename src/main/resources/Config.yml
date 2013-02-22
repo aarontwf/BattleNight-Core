@@ -1,7 +1,9 @@
 # BattleNight Version: ${project.version}
 # Main Configuration File
 
-BattleType: TDM
+Battle:
+    Type: TDM
+    Lives: 8
 UsePermissions: false
 ReadyBlock: 42
 FriendlyFire: false

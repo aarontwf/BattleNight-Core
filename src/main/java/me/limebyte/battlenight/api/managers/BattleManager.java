@@ -18,4 +18,6 @@ public interface BattleManager {
 
     public boolean setActiveBattle(String id) throws IllegalStateException;
 
+    public void reload();
+
 }

@@ -9,7 +9,6 @@ import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
-import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 import org.bukkit.command.CommandSender;
 
@@ -38,9 +37,7 @@ public class ReloadCommand extends BattleNightCommand {
 
             // Battle setting
             BattleManager battleManager = api.getBattleManager();
-            String battle = ConfigManager.get(Config.MAIN).getString("BattleType", "TDM");
-            if (battleManager.getBattle(battle) == null) battle = "TDM";
-            battleManager.setActiveBattle(battle);
+            battleManager.reload();
 
             Messenger.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;

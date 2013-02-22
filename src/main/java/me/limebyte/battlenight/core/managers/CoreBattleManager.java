@@ -10,6 +10,8 @@ import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.core.FFABattle;
 import me.limebyte.battlenight.core.TDMBattle;
+import me.limebyte.battlenight.core.util.config.ConfigManager;
+import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
 public class CoreBattleManager implements BattleManager {
 
@@ -21,8 +23,9 @@ public class CoreBattleManager implements BattleManager {
         this.api = api;
 
         // Defaults
-        registerBattle(new TDMBattle(), "TDM");
-        registerBattle(new FFABattle(), "FFA");
+        int lives = ConfigManager.get(Config.MAIN).getInt("Battle.Lives", 8);
+        registerBattle(new TDMBattle(lives), "TDM");
+        registerBattle(new FFABattle(lives), "FFA");
     }
 
     @Override
@@ -64,6 +67,16 @@ public class CoreBattleManager implements BattleManager {
 
         activeBattle = id;
         return true;
+    }
+
+    public void reload() {
+        String battle = ConfigManager.get(Config.MAIN).getString("Battle.Type", "TDM");
+        if (getBattle(battle) == null) battle = "TDM";
+        setActiveBattle(battle);
+
+        for (Battle b : battles.values()) {
+            b.setBattleLives(ConfigManager.get(Config.MAIN).getInt("Battle.Lives", 8));
+        }
     }
 
 }

@@ -7,8 +7,8 @@ import org.bukkit.ChatColor;
 
 public class TDMBattle extends TeamedBattle {
 
-    public TDMBattle() {
-        setBattleLives(20);
+    public TDMBattle(int lives) {
+        super(lives);
         addTeam(new Team("Red", ChatColor.RED));
         addTeam(new Team("Blue", ChatColor.BLUE));
     }

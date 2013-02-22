@@ -96,9 +96,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         // Battle setting
         BattleManager battleManager = api.getBattleManager();
-        String battle = ConfigManager.get(Config.MAIN).getString("BattleType", "TDM");
-        if (battleManager.getBattle(battle) == null) battle = "TDM";
-        battleManager.setActiveBattle(battle);
+        battleManager.reload();
 
         // Update check
         PluginDescriptionFile pdf = getDescription();
