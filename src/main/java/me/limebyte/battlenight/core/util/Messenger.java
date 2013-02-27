@@ -233,8 +233,10 @@ public class Messenger {
             if (battle instanceof TeamedBattle) {
                 teamColour = ((TeamedBattle) battle).getTeam(player).getColour();
             }
+            Messenger.debug(Level.INFO, "Coloured name is " + teamColour);
             return teamColour + name;
         } else {
+            Messenger.debug(Level.INFO, "Coloured name is " + ChatColor.DARK_GRAY + name);
             return ChatColor.DARK_GRAY + name;
         }
     }
