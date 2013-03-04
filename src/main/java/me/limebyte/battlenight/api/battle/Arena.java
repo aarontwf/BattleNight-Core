@@ -106,4 +106,9 @@ public class Arena implements ConfigurationSerializable {
 
         return arena;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

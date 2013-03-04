@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.SpectatorManager;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -182,9 +183,10 @@ public class PlayerData {
 
     public static void reset(Player player) {
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (!player.canSee(p) && !api.getBattle().containsSpectator(p)) {
+            SpectatorManager manager = api.getSpectatorManager();
+            if (!player.canSee(p) && !manager.getSpectators().contains(p.getName())) {
                 player.showPlayer(p);
-            } else if (api.getBattle().containsSpectator(p)) {
+            } else if (manager.getSpectators().contains(p.getName())) {
                 player.hidePlayer(player);
             }
         }

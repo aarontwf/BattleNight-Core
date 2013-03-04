@@ -8,7 +8,6 @@ public class Team {
     private String displayName;
     private ChatColor colour;
     private boolean ready = false;
-    private int lives = Battle.INFINITE_LIVES;
     private int kills = 0;
     private int deaths = 0;
     private int size = 0;
@@ -49,18 +48,6 @@ public class Team {
 
     public void setReady(boolean ready) {
         this.ready = ready;
-    }
-
-    public int getLives() {
-        return lives;
-    }
-
-    public void setLives(int lives) {
-        if (lives < 0) return;
-        if (lives > Integer.MAX_VALUE) return;
-        if (lives == Battle.INFINITE_LIVES) return;
-
-        this.lives = lives;
     }
 
     public int getKills() {
@@ -118,7 +105,6 @@ public class Team {
 
     protected void reset(Battle battle) {
         ready = false;
-        lives = battle.getBattleLives();
         kills = 0;
         deaths = 0;
         size = 0;

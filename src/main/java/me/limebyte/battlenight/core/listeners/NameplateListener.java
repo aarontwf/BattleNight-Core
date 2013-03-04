@@ -32,7 +32,7 @@ public class NameplateListener extends APIRelatedListener {
                 if (team != null) teamColour = team.getColour();
             }
             event.setTag(teamColour + tag);
-        } else if (battle.containsSpectator(player)) {
+        } else if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
             event.setTag(SPECTATOR_TAG);
         } else if (!event.isModified()) {
             event.setTag(tag);

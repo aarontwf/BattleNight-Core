@@ -15,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class InteractListener extends APIRelatedListener {
 
@@ -53,20 +52,6 @@ public class InteractListener extends APIRelatedListener {
                         if (allReady) battle.start();
                     } else {
                         Messenger.tell(player, Message.NO_CLASS);
-                    }
-                }
-            }
-        }
-
-        if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK)) {
-            if (battle.containsSpectator(player)) {
-                ItemStack stack = player.getItemInHand();
-                if (stack != null && stack.getItemMeta() != null) {
-                    String itemName = stack.getItemMeta().getDisplayName();
-                    if (itemName.contains("Previous Player")) {
-                        Messenger.tell(player, "Teleporting to previous player.");
-                    } else if (itemName.contains("Next Player")) {
-                        Messenger.tell(player, "Teleporting to next player.");
                     }
                 }
             }

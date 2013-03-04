@@ -48,7 +48,7 @@ public class DisconnectListener extends APIRelatedListener {
         } else {
             battle = getAPI().getBattle();
             battle.removePlayer(player);
-            battle.removeSpectator(player);
+            getAPI().getSpectatorManager().removeSpectator(player);
         }
     }
 }

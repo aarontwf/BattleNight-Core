@@ -20,7 +20,8 @@ public class CoreArenaManager implements ArenaManager {
     private Waypoint lounge = new Waypoint();
     private Waypoint exit = new Waypoint();
 
-    private final Random RANDOM = new Random();
+    private static Arena lastArena;
+    private static Random random = new Random();
 
     public CoreArenaManager() {
         loadArenas();
@@ -77,17 +78,22 @@ public class CoreArenaManager implements ArenaManager {
 
     @Override
     public List<Arena> getReadyArenas(int minSpawns) {
-        List<Arena> ready = new ArrayList<Arena>();
+        List<Arena> ready = arenas;
         for (Arena arena : arenas) {
-            if (arena.isSetup(minSpawns) && arena.isEnabled()) ready.add(arena);
+            if (!arena.isSetup(minSpawns) || !arena.isEnabled()) ready.remove(arena);
         }
+        Messenger.debug(Level.INFO, "Ready arenas: " + ready.toString());
         return ready;
     }
 
     @Override
     public Arena getRandomArena(int minSpawns) {
         List<Arena> ready = getReadyArenas(minSpawns);
-        return (ready.get(RANDOM.nextInt(ready.size())));
+        if (ready.size() > 1) ready.remove(lastArena);
+
+        Arena arena = ready.get(random.nextInt(ready.size()));
+        lastArena = arena;
+        return arena;
     }
 
     @Override

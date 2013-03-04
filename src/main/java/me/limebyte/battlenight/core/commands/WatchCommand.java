@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.SpectatorManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -28,12 +29,14 @@ public class WatchCommand extends BattleNightCommand {
             Player player = (Player) sender;
             Battle battle = api.getBattle();
 
+            SpectatorManager spectatorManager = api.getSpectatorManager();
+
             if (!battle.isInProgress()) {
                 Messenger.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
                 return false;
             }
 
-            if (battle.containsSpectator(player)) {
+            if (spectatorManager.getSpectators().contains(player.getName())) {
                 Messenger.tell(sender, Message.ALREADY_SPECTATING);
                 return false;
             }
@@ -43,7 +46,7 @@ public class WatchCommand extends BattleNightCommand {
                 return false;
             }
 
-            battle.addSpectator(player);
+            spectatorManager.addSpectator(player, true);
             return true;
         } else {
             Messenger.tell(sender, Message.PLAYER_ONLY);

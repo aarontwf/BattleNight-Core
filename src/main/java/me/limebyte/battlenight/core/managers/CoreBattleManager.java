@@ -23,9 +23,9 @@ public class CoreBattleManager implements BattleManager {
         this.api = api;
 
         // Defaults
-        int lives = ConfigManager.get(Config.MAIN).getInt("Battle.Lives", 8);
-        registerBattle(new TDMBattle(lives), "TDM");
-        registerBattle(new FFABattle(lives), "FFA");
+        int time = ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300);
+        registerBattle(new TDMBattle(time), "TDM");
+        registerBattle(new FFABattle(time), "FFA");
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CoreBattleManager implements BattleManager {
         setActiveBattle(battle);
 
         for (Battle b : battles.values()) {
-            b.setBattleLives(ConfigManager.get(Config.MAIN).getInt("Battle.Lives", 8));
+            b.getTimer().setTime(ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300));
         }
     }
 

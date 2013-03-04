@@ -5,6 +5,7 @@ import java.util.Map;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.SpectatorManager;
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -53,7 +54,7 @@ public class DeathListener extends APIRelatedListener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();
-        Battle battle = getAPI().getBattle();
+        SpectatorManager spectatorManager = getAPI().getSpectatorManager();
 
         if (queue.containsKey(name)) {
             BattleDeathEvent apiEvent = queue.get(name);
@@ -61,14 +62,14 @@ public class DeathListener extends APIRelatedListener {
 
             if (apiEvent.isCancelled()) {
                 apiEvent.getBattle().respawn(player);
-            } else if (!apiEvent.isCancelled() && !apiEvent.getBattle().containsSpectator(player)) {
+            } else if (!apiEvent.isCancelled() && !spectatorManager.getSpectators().contains(player.getName())) {
                 PlayerData.restore(player, true, false);
             }
 
             event.setRespawnLocation(apiEvent.getRespawnLocation());
-        } else if (battle.containsSpectator(player)) {
+        } else if (spectatorManager.getSpectators().contains(player.getName())) {
             event.setRespawnLocation(PlayerData.getSavedLocation(player));
-            battle.removeSpectator(player);
+            spectatorManager.removeSpectator(player);
         }
     }
 

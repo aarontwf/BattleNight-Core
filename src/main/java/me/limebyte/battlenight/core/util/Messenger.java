@@ -43,7 +43,7 @@ public class Messenger {
 
     public static void tellEveryone(String message, boolean spectators) {
         if (spectators) {
-            for (String name : api.getBattle().getSpectators()) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null) {
                     tell(p, message);
@@ -61,7 +61,7 @@ public class Messenger {
 
     public static void tellEveryoneExcept(Player player, String message, boolean spectators) {
         if (spectators) {
-            for (String name : api.getBattle().getSpectators()) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null && player != p) {
                     tell(p, message);
@@ -109,7 +109,7 @@ public class Messenger {
 
     public static void tellEveryone(Page page, boolean spectators) {
         if (spectators) {
-            for (String name : api.getBattle().getSpectators()) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null) {
                     tell(p, page);
@@ -127,7 +127,7 @@ public class Messenger {
 
     public static void tellEveryoneExcept(Player player, Page page, boolean spectators) {
         if (spectators) {
-            for (String name : api.getBattle().getSpectators()) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null && player != p) {
                     tell(p, page);
@@ -233,7 +233,7 @@ public class Messenger {
             if (battle instanceof TeamedBattle) {
                 teamColour = ((TeamedBattle) battle).getTeam(player).getColour();
             }
-            Messenger.debug(Level.INFO, "Coloured name is " + teamColour);
+            Messenger.debug(Level.INFO, "Coloured name is " + teamColour + name);
             return teamColour + name;
         } else {
             Messenger.debug(Level.INFO, "Coloured name is " + ChatColor.DARK_GRAY + name);

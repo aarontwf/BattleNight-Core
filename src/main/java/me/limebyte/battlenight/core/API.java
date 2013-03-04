@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.PlayerClass;
+import me.limebyte.battlenight.api.battle.SpectatorManager;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
@@ -11,18 +12,21 @@ import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.managers.CoreArenaManager;
 import me.limebyte.battlenight.core.managers.CoreBattleManager;
+import me.limebyte.battlenight.core.managers.CoreSpectatorManager;
 import me.limebyte.battlenight.core.util.Metadata;
 
 import org.bukkit.entity.Player;
 
 public class API implements BattleNightAPI {
 
-    private BattleManager battleManager;
     private ArenaManager arenaManager;
+    private BattleManager battleManager;
+    private SpectatorManager spectatorManager;
 
     public API() {
-        battleManager = new CoreBattleManager(this);
         arenaManager = new CoreArenaManager();
+        battleManager = new CoreBattleManager(this);
+        spectatorManager = new CoreSpectatorManager(this);
         PlayerData.api = this;
     }
 
@@ -32,13 +36,18 @@ public class API implements BattleNightAPI {
     }
 
     @Override
+    public ArenaManager getArenaManager() {
+        return arenaManager;
+    }
+
+    @Override
     public BattleManager getBattleManager() {
         return battleManager;
     }
 
     @Override
-    public ArenaManager getArenaManager() {
-        return arenaManager;
+    public SpectatorManager getSpectatorManager() {
+        return spectatorManager;
     }
 
     @Override

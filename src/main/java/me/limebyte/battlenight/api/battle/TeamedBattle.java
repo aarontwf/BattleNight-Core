@@ -13,7 +13,6 @@ import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -30,7 +29,6 @@ public abstract class TeamedBattle extends Battle {
         for (Team t : teams) {
             if (t.getName().equals(name)) return false;
         }
-        team.setLives(getBattleLives());
         if (!teams.add(team)) return false;
         setMinPlayers(teams.size());
         return true;
@@ -156,19 +154,6 @@ public abstract class TeamedBattle extends Battle {
     }
 
     @Override
-    public int getLives(Player player) {
-        Team team = getTeam(player);
-        if (team != null) return team.getLives();
-        return 0;
-    }
-
-    @Override
-    public void setLives(Player player, int lives) {
-        Team team = getTeam(player);
-        if (team != null) team.setLives(lives);
-    }
-
-    @Override
     public boolean shouldEnd() {
         if (!isInProgress()) return false;
         for (Team team : getTeams()) {
@@ -202,24 +187,16 @@ public abstract class TeamedBattle extends Battle {
             api.setPlayerClass(player, null);
             Metadata.remove(player, "kills");
             Metadata.remove(player, "deaths");
+            api.getSpectatorManager().removeTarget(player);
             setTeam(player, null);
             pIt.remove();
         }
 
-        Iterator<String> sIt = getSpectators().iterator();
-        while (sIt.hasNext()) {
-            Player player = toPlayer(sIt.next());
-            if (player == null) {
-                sIt.remove();
-                continue;
-            }
-
-            PlayerData.reset(player);
-            PlayerData.restore(player, true, false);
-            api.setPlayerClass(player, null);
-            Metadata.remove(player, "kills");
-            Metadata.remove(player, "deaths");
-            sIt.remove();
+        SpectatorManager spectatorManager = api.getSpectatorManager();
+        for (String name : spectatorManager.getSpectators()) {
+            Player player = toPlayer(name);
+            if (player == null) continue;
+            spectatorManager.removeSpectator(player);
         }
 
         for (Team team : teams) {
@@ -245,22 +222,7 @@ public abstract class TeamedBattle extends Battle {
         int deaths = Metadata.getInt(player, "deaths");
         Metadata.set(player, "deaths", ++deaths);
 
-        decrementLives(player);
-        int lives = getLives(player);
-
-        if (lives > 0) {
-            String message = "Your team has " + lives + " lives remaining.";
-            if (lives == 1) message = ChatColor.RED + "Last life!";
-
-            for (String name : getPlayers()) {
-                Player p = toPlayer(name);
-                if (p == null) continue;
-                if (getTeam(p) != team) continue;
-                Messenger.tell(p, message);
-            }
-
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     protected void teleportAllToSpawn() {

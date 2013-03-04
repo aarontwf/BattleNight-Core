@@ -88,7 +88,7 @@ public class CheatListener extends APIRelatedListener {
             Messenger.tell(player, Message.NO_CHEATING);
         }
 
-        if (battle.containsSpectator(player)) {
+        if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
             event.setCancelled(true);
         }
     }
@@ -104,7 +104,7 @@ public class CheatListener extends APIRelatedListener {
             }
         }
 
-        if (battle.containsSpectator(player)) {
+        if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
             event.setCancelled(true);
         }
     }
@@ -115,7 +115,7 @@ public class CheatListener extends APIRelatedListener {
 
         Player player = event.getPlayer();
         Battle battle = getAPI().getBattle();
-        if (!battle.containsPlayer(player) || !battle.containsSpectator(player)) return;
+        if (!battle.containsPlayer(player) || !getAPI().getSpectatorManager().getSpectators().contains(player.getName())) return;
         if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
         List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
@@ -181,14 +181,14 @@ public class CheatListener extends APIRelatedListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (getAPI().getBattle().containsSpectator((Player) event.getPlayer())) {
+        if (getAPI().getSpectatorManager().getSpectators().contains(event.getPlayer().getName())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (getAPI().getBattle().containsSpectator((Player) event.getPlayer())) {
+        if (getAPI().getSpectatorManager().getSpectators().contains(event.getPlayer().getName())) {
             event.setCancelled(true);
         }
     }

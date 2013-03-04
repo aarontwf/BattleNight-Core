@@ -3,7 +3,7 @@
 
 Battle:
     Type: TDM
-    Lives: 8
+    Duration: 300
 UsePermissions: false
 ReadyBlock: 42
 FriendlyFire: false

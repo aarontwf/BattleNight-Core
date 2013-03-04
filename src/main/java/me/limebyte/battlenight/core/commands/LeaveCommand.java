@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.SpectatorManager;
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -28,10 +29,13 @@ public class LeaveCommand extends BattleNightCommand {
             Battle battle = api.getBattle();
             Player player = (Player) sender;
 
+            SpectatorManager spectators = api.getSpectatorManager();
+
             if (battle.containsPlayer(player)) {
                 return battle.removePlayer(player);
-            } else if (battle.containsSpectator(player)) {
-                return battle.removeSpectator(player);
+            } else if (spectators.getSpectators().contains(player.getName())) {
+                spectators.removeSpectator(player);
+                return true;
             } else {
                 Messenger.tell(sender, Message.NOT_IN_BATTLE);
                 return false;
