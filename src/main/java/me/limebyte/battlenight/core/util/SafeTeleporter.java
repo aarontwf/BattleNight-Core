@@ -66,7 +66,7 @@ public class SafeTeleporter implements Listener {
 
     private static void safeTP(final Player player, Location location) {
         Location loc = location;
-        loc.setY(loc.getY() + 0.5);
+        loc.setY(loc.getY() + 1);
 
         String name = player.getName();
 
