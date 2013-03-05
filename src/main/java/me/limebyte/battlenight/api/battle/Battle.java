@@ -85,7 +85,7 @@ public abstract class Battle {
 
         if (timer.isRunning()) timer.stop();
 
-        Messenger.tellEveryone(getWinMessage(), true);
+        if (inProgress) Messenger.tellEveryone(getWinMessage(), true);
 
         Iterator<String> pIt = getPlayers().iterator();
         while (pIt.hasNext()) {
@@ -250,7 +250,8 @@ public abstract class Battle {
     }
 
     public boolean shouldEnd() {
-        return isInProgress() && getPlayers().size() < 2;
+        int constraint = inProgress ? 2 : 1;
+        return getPlayers().size() < constraint;
     }
 
     /* ------------------- */
