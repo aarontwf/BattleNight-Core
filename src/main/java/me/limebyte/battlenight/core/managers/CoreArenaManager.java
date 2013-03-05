@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core.managers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -60,27 +61,33 @@ public class CoreArenaManager implements ArenaManager {
 
     @Override
     public List<Arena> getEnabledArenas() {
-        List<Arena> enabled = new ArrayList<Arena>();
-        for (Arena arena : arenas) {
-            if (arena.isEnabled()) enabled.add(arena);
+        List<Arena> enabled = new ArrayList<Arena>(arenas);
+        Iterator<Arena> it = enabled.iterator();
+        while (it.hasNext()) {
+            Arena arena = it.next();
+            if (!arena.isEnabled()) it.remove();
         }
         return enabled;
     }
 
     @Override
     public List<Arena> getSetupArenas(int minSpawns) {
-        List<Arena> setup = new ArrayList<Arena>();
-        for (Arena arena : arenas) {
-            if (arena.isSetup(minSpawns)) setup.add(arena);
+        List<Arena> setup = new ArrayList<Arena>(arenas);
+        Iterator<Arena> it = setup.iterator();
+        while (it.hasNext()) {
+            Arena arena = it.next();
+            if (!arena.isSetup(minSpawns)) it.remove();
         }
         return setup;
     }
 
     @Override
     public List<Arena> getReadyArenas(int minSpawns) {
-        List<Arena> ready = arenas;
-        for (Arena arena : arenas) {
-            if (!arena.isSetup(minSpawns) || !arena.isEnabled()) ready.remove(arena);
+        List<Arena> ready = new ArrayList<Arena>(arenas);
+        Iterator<Arena> it = ready.iterator();
+        while (it.hasNext()) {
+            Arena arena = it.next();
+            if (!arena.isSetup(minSpawns) || !arena.isEnabled()) it.remove();
         }
         Messenger.debug(Level.INFO, "Ready arenas: " + ready.toString());
         return ready;
