@@ -91,6 +91,7 @@ public class Messenger {
     /** Kill feed **/
 
     public static void killFeed(Player player, Player killer, String deathMessage) {
+        deathMessage = ChatColor.GRAY + deathMessage;
         deathMessage.replaceAll(player.getName(), getColouredName(player));
         deathMessage.replaceAll(player.getDisplayName(), getColouredName(player));
 

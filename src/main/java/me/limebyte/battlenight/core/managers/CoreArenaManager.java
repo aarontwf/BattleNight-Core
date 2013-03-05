@@ -89,7 +89,6 @@ public class CoreArenaManager implements ArenaManager {
             Arena arena = it.next();
             if (!arena.isSetup(minSpawns) || !arena.isEnabled()) it.remove();
         }
-        Messenger.debug(Level.INFO, "Ready arenas: " + ready.toString());
         return ready;
     }
 
