@@ -85,6 +85,8 @@ public abstract class Battle {
 
         if (timer.isRunning()) timer.stop();
 
+        Messenger.tellEveryone(getWinMessage(), true);
+
         Iterator<String> pIt = getPlayers().iterator();
         while (pIt.hasNext()) {
             Player player = toPlayer(pIt.next());
