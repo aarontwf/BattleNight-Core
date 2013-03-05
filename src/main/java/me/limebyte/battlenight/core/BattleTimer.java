@@ -20,7 +20,7 @@ public class BattleTimer extends Timer {
     @Override
     public void onTimeChange(long time) {
         if (time <= COUNTDOWN_START) {
-            Messenger.playSound(Sound.NOTE_PLING, 13, true);
+            Messenger.playSound(Sound.NOTE_PLING, 6, true);
             Messenger.tellEveryone("" + ChatColor.RED + time + "!", true);
         } else if (time == MINUTE) {
             Messenger.tellEveryone(ChatColor.RED + "1 minute remaining!", true);
