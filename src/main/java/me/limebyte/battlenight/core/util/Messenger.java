@@ -92,12 +92,12 @@ public class Messenger {
 
     public static void killFeed(Player player, Player killer, String deathMessage) {
         deathMessage = ChatColor.GRAY + deathMessage;
-        deathMessage.replaceAll(player.getName(), getColouredName(player));
-        deathMessage.replaceAll(player.getDisplayName(), getColouredName(player));
+        deathMessage = deathMessage.replaceAll(player.getName(), getColouredName(player));
+        deathMessage = deathMessage.replaceAll(player.getDisplayName(), getColouredName(player));
 
         if (killer != null) {
-            deathMessage.replaceAll(killer.getName(), getColouredName(killer));
-            deathMessage.replaceAll(killer.getDisplayName(), getColouredName(killer));
+            deathMessage = deathMessage.replaceAll(killer.getName(), getColouredName(killer));
+            deathMessage = deathMessage.replaceAll(killer.getDisplayName(), getColouredName(killer));
         }
 
         tellEveryone(deathMessage, true);
