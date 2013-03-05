@@ -22,20 +22,20 @@ public class BattleTimer extends Timer {
     @Override
     public void onTimeChange(long time) {
         if (time <= COUNTDOWN_START) {
+            Messenger.playSound(Sound.NOTE_PLING, 13, true);
             Messenger.tellEveryone("" + ChatColor.RED + time + "!", true);
             Player player = Bukkit.getPlayerExact("limebyte");
             if (player != null) player.getWorld().playSound(player.getLocation(), Sound.NOTE_PLING, 20, 10);
         } else if (time == MINUTE) {
-            Messenger.tellEveryone("" + ChatColor.RED + time + " minute remaining!", true);
+            Messenger.tellEveryone(ChatColor.RED + "1 minute remaining!", true);
         } else if (time % MINUTE == 0) {
-            Messenger.tellEveryone("" + time + " minutes remaining.", true);
+            Messenger.tellEveryone(time / MINUTE + " minutes remaining.", true);
         }
     }
 
     @Override
     public void onTimerEnd() {
-        Player player = Bukkit.getPlayerExact("limebyte");
-        if (player != null) player.getWorld().playSound(player.getLocation(), Sound.NOTE_PLING, 20, 6);
+        Messenger.playSound(Sound.NOTE_PLING, 1, true);
         battle.stop();
     }
 

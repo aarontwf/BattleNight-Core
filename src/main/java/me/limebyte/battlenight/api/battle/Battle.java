@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 public abstract class Battle {
 
     public BattleNightAPI api;
-    public static final int INFINITE_LIVES = -1;
 
     private Arena arena;
     protected boolean inProgress = false;

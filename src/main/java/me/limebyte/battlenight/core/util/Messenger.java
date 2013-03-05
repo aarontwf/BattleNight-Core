@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -139,6 +140,22 @@ public class Messenger {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) {
                 tell(p, page);
+            }
+        }
+    }
+
+    /** Sounds **/
+
+    public static void playSound(Sound sound, float pitch, boolean spectators) {
+        for (String name : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null) p.playSound(p.getLocation(), sound, 20f, pitch);
+        }
+
+        if (spectators) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null) p.playSound(p.getLocation(), sound, 20f, pitch);
             }
         }
     }
