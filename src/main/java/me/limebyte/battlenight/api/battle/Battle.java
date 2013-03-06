@@ -29,16 +29,17 @@ public abstract class Battle {
     public BattleNightAPI api;
 
     private Arena arena;
+    private BattleTimer timer;
+
     protected boolean inProgress = false;
     private int minPlayers = 2;
     private int maxPlayers = Integer.MAX_VALUE;
-    private BattleTimer timer = new BattleTimer(this, 300);
 
     private HashSet<String> players = new HashSet<String>();
     private Set<String> leadingPlayers = new HashSet<String>();
 
-    public Battle(int time) {
-        timer.setTime(time);
+    public Battle(int duration) {
+        timer = new BattleTimer(this, duration);
     }
 
     /* --------------- */

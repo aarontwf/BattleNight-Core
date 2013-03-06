@@ -13,6 +13,8 @@ import me.limebyte.battlenight.core.TDMBattle;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 public class CoreBattleManager implements BattleManager {
 
     private BattleNightAPI api;
@@ -23,7 +25,7 @@ public class CoreBattleManager implements BattleManager {
         this.api = api;
 
         // Defaults
-        int time = ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300);
+        int time = getTime(ConfigManager.get(Config.MAIN), "Battle.Duration", 300);
         registerBattle(new TDMBattle(time), "TDM");
         registerBattle(new FFABattle(time), "FFA");
     }
@@ -77,6 +79,16 @@ public class CoreBattleManager implements BattleManager {
         for (Battle b : battles.values()) {
             b.getTimer().setTime(ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300));
         }
+    }
+
+    public int getTime(FileConfiguration fileConfig, String path, int def) {
+        String[] time = fileConfig.getString(path).split(":");
+        if (time.length < 2) return def;
+
+        int mins = Integer.parseInt(time[0]);
+        int secs = Integer.parseInt(time[1]);
+
+        return mins * 60 + secs;
     }
 
 }

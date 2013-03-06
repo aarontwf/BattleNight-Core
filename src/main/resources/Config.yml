@@ -3,7 +3,7 @@
 
 Battle:
     Type: TDM
-    Duration: 300
+    Duration: 5:00
 UsePermissions: false
 ReadyBlock: 42
 FriendlyFire: false
