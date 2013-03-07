@@ -25,7 +25,7 @@ public class CoreBattleManager implements BattleManager {
         this.api = api;
 
         // Defaults
-        int time = getTime(ConfigManager.get(Config.MAIN), "Battle.Duration", 300);
+        int time = getTime(ConfigManager.get(Config.MAIN), "Battle.Duration");
         registerBattle(new TDMBattle(time), "TDM");
         registerBattle(new FFABattle(time), "FFA");
     }
@@ -77,14 +77,12 @@ public class CoreBattleManager implements BattleManager {
         setActiveBattle(battle);
 
         for (Battle b : battles.values()) {
-            b.getTimer().setTime(ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300));
+            b.getTimer().setTime(getTime(ConfigManager.get(Config.MAIN), "Battle.Duration"));
         }
     }
 
-    public int getTime(FileConfiguration fileConfig, String path, int def) {
-        String[] time = fileConfig.getString(path).split(":");
-        if (time.length < 2) return def;
-
+    public int getTime(FileConfiguration fileConfig, String path) {
+        String[] time = fileConfig.getString(path, "5:00").split(":");
         int mins = Integer.parseInt(time[0]);
         int secs = Integer.parseInt(time[1]);
 
