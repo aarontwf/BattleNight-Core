@@ -22,6 +22,10 @@ public class Note {
         return tick;
     }
 
+    public float getPitch() {
+        return pitch;
+    }
+
     public static float convertPitch(int pitch) {
         switch (pitch) {
             case 0:

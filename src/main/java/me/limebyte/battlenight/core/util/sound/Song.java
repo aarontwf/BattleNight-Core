@@ -23,7 +23,7 @@ public class Song {
 
     public void addNote(Note note) {
         this.notes.add(note);
-        if (note.getTick() > duration) duration = note.getTick();
+        if (note.getTick() > duration && note.getPitch() != 0) duration = note.getTick();
     }
 
     public void play(final Player player) {
