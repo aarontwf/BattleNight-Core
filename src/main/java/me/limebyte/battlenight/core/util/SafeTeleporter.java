@@ -65,6 +65,8 @@ public class SafeTeleporter implements Listener {
     }
 
     private static void safeTP(final Player player, Location location) {
+        if (player.hasMetadata("NPC")) return;
+
         Location loc = location;
         loc.setY(loc.getY() + 1);
 
