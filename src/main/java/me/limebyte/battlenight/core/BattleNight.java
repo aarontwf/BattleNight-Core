@@ -7,7 +7,6 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
-import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
@@ -93,10 +92,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new SafeTeleporter(), this);
         pm.registerEvents(new SignListener(api), this);
         pm.registerEvents(new APIEventListener(), this);
-
-        // Battle setting
-        BattleManager battleManager = api.getBattleManager();
-        battleManager.reload();
 
         // Update check
         PluginDescriptionFile pdf = getDescription();

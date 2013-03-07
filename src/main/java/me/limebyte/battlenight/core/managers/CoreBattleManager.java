@@ -15,8 +15,6 @@ import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 public class CoreBattleManager implements BattleManager {
 
     private BattleNightAPI api;
@@ -27,9 +25,11 @@ public class CoreBattleManager implements BattleManager {
         this.api = api;
 
         // Defaults
-        int time = getTime(ConfigManager.get(Config.MAIN), "Battle.Duration");
+        int time = getDuration();
         registerBattle(new TDMBattle(time), "TDM");
         registerBattle(new FFABattle(time), "FFA");
+
+        reload();
     }
 
     @Override
@@ -79,11 +79,11 @@ public class CoreBattleManager implements BattleManager {
         setActiveBattle(battle);
 
         for (Battle b : battles.values()) {
-            b.getTimer().setTime(getTime(ConfigManager.get(Config.MAIN), "Battle.Duration"));
+            b.getTimer().setTime(getDuration());
         }
     }
 
-    public int getTime(FileConfiguration fileConfig, String path) {
+    public int getDuration() {
         String value = ConfigManager.get(Config.MAIN).getString("Battle.Duration", "5:00");
         String[] time = value.split(":");
 

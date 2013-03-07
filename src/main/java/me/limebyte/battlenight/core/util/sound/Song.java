@@ -28,7 +28,7 @@ public class Song {
 
     public void play(final Player player) {
         stop(player);
-        BukkitTask task = new MusicPlayer(player).runTaskTimer(BattleNight.instance, 1L, 2L);
+        BukkitTask task = new MusicPlayer(player).runTaskTimer(BattleNight.instance, 0L, 2L);
         listeners.put(player.getName(), task.getTaskId());
     }
 
@@ -42,6 +42,10 @@ public class Song {
 
     public boolean isListening(Player player) {
         return listeners.containsKey(player.getName());
+    }
+
+    public long getDuration() {
+        return duration / 10;
     }
 
     class MusicPlayer extends BukkitRunnable {

@@ -12,6 +12,7 @@ import me.limebyte.battlenight.api.util.Page;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import me.limebyte.battlenight.core.util.sound.Song;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -157,6 +158,20 @@ public class Messenger {
             for (String name : api.getSpectatorManager().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
                 if (p != null) p.playSound(p.getLocation(), sound, 20f, pitch);
+            }
+        }
+    }
+
+    public static void playSong(Song song, boolean spectators) {
+        for (String name : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null) song.play(p);
+        }
+
+        if (spectators) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null) song.play(p);
             }
         }
     }

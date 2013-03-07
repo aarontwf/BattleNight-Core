@@ -22,7 +22,7 @@ public class Note {
         return tick;
     }
 
-    private static float convertPitch(int pitch) {
+    public static float convertPitch(int pitch) {
         switch (pitch) {
             case 0:
                 return 0.5F;
