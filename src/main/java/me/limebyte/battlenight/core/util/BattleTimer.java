@@ -1,7 +1,6 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.util;
 
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;

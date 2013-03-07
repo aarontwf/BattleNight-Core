@@ -13,10 +13,10 @@ import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.BattleTimer;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
+import me.limebyte.battlenight.core.util.BattleTimer;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 

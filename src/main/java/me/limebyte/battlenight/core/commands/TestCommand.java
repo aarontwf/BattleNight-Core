@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.api.util.BattleNightCommand;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Song;
-import me.limebyte.battlenight.core.SongLoader;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
+import me.limebyte.battlenight.core.util.sound.Song;
+import me.limebyte.battlenight.core.util.sound.SongLoader;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -38,7 +38,8 @@ public class TestCommand extends BattleNightCommand {
 
             SongLoader loader = new SongLoader(BattleNight.instance);
             Song song = loader.load("battle-end");
-            song.play(BattleNight.instance, (Player) sender);
+            song.play((Player) sender);
+            return true;
         }
 
         // Commands with 2 arguments
@@ -51,7 +52,6 @@ public class TestCommand extends BattleNightCommand {
         return false;
     }
 
-    @SuppressWarnings("unused")
     private boolean isNotPlayer(CommandSender sender) {
         if (!(sender instanceof Player)) {
             Messenger.tell(sender, Message.PLAYER_ONLY);

@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.util.sound;
 
 import java.io.File;
 import java.io.FileInputStream;

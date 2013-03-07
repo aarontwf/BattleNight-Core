@@ -1,4 +1,6 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.util;
+
+import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;

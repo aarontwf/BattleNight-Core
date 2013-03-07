@@ -1,11 +1,12 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.util.sound;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.limebyte.battlenight.core.BattleNight;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -25,7 +26,7 @@ public class Song {
         if (note.getTick() > duration) duration = note.getTick();
     }
 
-    public void play(final Plugin plugin, final Player player) {
+    public void play(final Player player) {
         stop(player);
         BukkitTask task = new MusicPlayer(player).runTaskTimer(BattleNight.instance, 1L, 2L);
         listeners.put(player.getName(), task.getTaskId());

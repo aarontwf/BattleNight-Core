@@ -1,6 +1,5 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.util.sound;
 
-import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -12,20 +11,19 @@ public class Note {
     public Note(Sound sound, int pitch, long tick) {
         this.sound = sound;
         this.tick = tick;
-        this.pitch = pitchToFloat(pitch);
+        this.pitch = convertPitch(pitch);
     }
 
     public void play(Player player) {
-        Location location = player.getEyeLocation();
-        player.playSound(location, sound, 1.0F, pitch);
+        player.playSound(player.getLocation(), sound, 1.0F, pitch);
     }
 
     public long getTick() {
         return tick;
     }
 
-    private static float pitchToFloat(int paramInt) {
-        switch (paramInt) {
+    private static float convertPitch(int pitch) {
+        switch (pitch) {
             case 0:
                 return 0.5F;
             case 1:
