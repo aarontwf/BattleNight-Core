@@ -75,7 +75,15 @@
 		<resources>
 			<resource>
 				<targetPath>.</targetPath>
-				<directory>${basedir}/src/main/resources/</directory>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>*.yml</include>
+				</includes>
+			</resource>
+			<resource>
+				<targetPath>.</targetPath>
+				<directory>${basedir}/src/main/resources/configuration</directory>
 				<filtering>true</filtering>
 				<includes>
 					<include>*.yml</include>
@@ -84,10 +92,18 @@
 			</resource>
 			<resource>
 				<targetPath>.</targetPath>
-				<directory>${basedir}/src/main/resources/</directory>
+				<directory>${basedir}/src/main/resources/jars</directory>
 				<filtering>false</filtering>
 				<includes>
 					<include>*.jar</include>
+				</includes>
+			</resource>
+			<resource>
+				<targetPath>music</targetPath>
+				<directory>${basedir}/src/main/resources/music</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>*.nbs</include>
 				</includes>
 			</resource>
 		</resources>
