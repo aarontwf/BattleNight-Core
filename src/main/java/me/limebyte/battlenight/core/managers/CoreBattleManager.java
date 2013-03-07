@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.core.FFABattle;
 import me.limebyte.battlenight.core.TDMBattle;
+import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -82,11 +84,17 @@ public class CoreBattleManager implements BattleManager {
     }
 
     public int getTime(FileConfiguration fileConfig, String path) {
-        String[] time = fileConfig.getString(path, "5:00").split(":");
+        String value = ConfigManager.get(Config.MAIN).getString("Battle.Duration", "5:00");
+        String[] time = value.split(":");
+
+        if (time.length < 2) {
+            Messenger.log(Level.WARNING, "Invalid battle duration: " + value);
+            return 300;
+        }
+
         int mins = Integer.parseInt(time[0]);
         int secs = Integer.parseInt(time[1]);
 
         return mins * 60 + secs;
     }
-
 }
