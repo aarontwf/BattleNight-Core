@@ -27,7 +27,6 @@ public abstract class Timer {
     public void stop() {
         Bukkit.getScheduler().cancelTask(taskID);
         running = false;
-        onTimerEnd();
         timeRemaining = time;
     }
 
@@ -57,6 +56,7 @@ public abstract class Timer {
             timeRemaining--;
 
             if (timeRemaining <= 0) {
+                onTimerEnd();
                 stop();
                 return;
             }

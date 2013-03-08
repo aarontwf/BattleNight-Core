@@ -33,16 +33,13 @@ public class MusicManager {
 
     public Song load(String name) {
         File file = new File(this.file + "/" + name + ".nbs");
-        if (!file.exists()) {
-            try {
-                loadDefault(name, file);
-            } catch (IOException e) {
-                Messenger.log(Level.WARNING, "Failed to load song \"" + name + "\"from the jar.");
-            }
+        try {
+            loadDefault(name, file);
+        } catch (IOException e) {
+            Messenger.log(Level.WARNING, "Failed to load song \"" + name + "\"from the jar.");
         }
 
         File customFile = new File(this.customFile + "/" + name + ".nbs");
-        if (!customFile.exists()) file = new File(this.file + "/" + name + ".nbs");
 
         if (customFile.exists()) {
             Messenger.debug(Level.INFO, "Using custom " + name + " music.");
