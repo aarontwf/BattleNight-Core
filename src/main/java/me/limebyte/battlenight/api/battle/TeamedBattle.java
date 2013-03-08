@@ -20,8 +20,8 @@ public abstract class TeamedBattle extends Battle {
 
     private List<Team> teams = new ArrayList<Team>();
 
-    public TeamedBattle(int lives) {
-        super(lives);
+    public TeamedBattle(int duration, int minPlayers, int maxPlayers) {
+        super(duration, minPlayers, maxPlayers);
     }
 
     public boolean addTeam(Team team) {

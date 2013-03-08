@@ -14,9 +14,9 @@ import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
+import me.limebyte.battlenight.core.util.BattleTimer;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
-import me.limebyte.battlenight.core.util.BattleTimer;
 import me.limebyte.battlenight.core.util.Metadata;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 
@@ -28,18 +28,20 @@ public abstract class Battle {
 
     public BattleNightAPI api;
 
-    private Arena arena;
     private BattleTimer timer;
+    private int minPlayers;
+    private int maxPlayers;
 
+    private Arena arena;
     protected boolean inProgress = false;
-    private int minPlayers = 2;
-    private int maxPlayers = Integer.MAX_VALUE;
 
     private HashSet<String> players = new HashSet<String>();
     private Set<String> leadingPlayers = new HashSet<String>();
 
-    public Battle(int duration) {
+    public Battle(int duration, int minPlayers, int maxPlayers) {
         timer = new BattleTimer(this, duration);
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
     }
 
     /* --------------- */
@@ -49,9 +51,13 @@ public abstract class Battle {
     @SuppressWarnings("unchecked")
     public boolean start() {
         if (isInProgress()) return false;
-        if (getPlayers().size() < getMinPlayers()) return false;
-        if (getPlayers().size() > getMaxPlayers()) return false;
         if (getArena() == null || !getArena().isSetup(1) || !getArena().isEnabled()) return false;
+
+        if (getPlayers().size() < getMinPlayers()) {
+            Messenger.tellEveryone(true, Message.NOT_ENOUGH_PLAYERS, getMinPlayers() - getPlayers().size());
+            return false;
+        }
+
         if (!onStart()) return false;
 
         Iterator<String> it = getPlayers().iterator();
@@ -133,6 +139,11 @@ public abstract class Battle {
 
         if (containsPlayer(player)) {
             Messenger.tell(player, Message.ALREADY_IN_BATTLE);
+            return false;
+        }
+
+        if (getPlayers().size() + 1 > getMaxPlayers()) {
+            Messenger.tell(player, Message.BATTLE_FULL);
             return false;
         }
 

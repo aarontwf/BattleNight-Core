@@ -294,6 +294,8 @@ public class Messenger {
         PLAYER_JOINED_BATTLE("$1" + ChatColor.GRAY + " has joined the Battle."),
         BATTLE_STARTED(ChatColor.GREEN + "Let the Battle begin!"),
         BATTLE_ENDED("The Battle has ended."),
+        BATTLE_FULL(ChatColor.RED + "The battle is full!"),
+        NOT_ENOUGH_PLAYERS(ChatColor.RED + "You need $1 more players to start the battle!"),
 
         // Teamed Battle Messages
         TEAM_IS_READY("$1" + ChatColor.WHITE + " Team is ready!"),

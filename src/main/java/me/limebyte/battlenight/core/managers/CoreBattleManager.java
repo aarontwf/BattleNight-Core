@@ -22,12 +22,16 @@ public class CoreBattleManager implements BattleManager {
     public CoreBattleManager(BattleNightAPI api) {
         this.api = api;
 
-        // Defaults
+        String battle = getSetBattle();
         int time = getDuration();
-        registerBattle(new TDMBattle(time), "TDM");
-        registerBattle(new FFABattle(time), "FFA");
+        int minPlayers = getMinPlayers();
+        int maxPlayers = getMaxPlayers();
 
-        reload();
+        registerBattle(new TDMBattle(time, minPlayers, maxPlayers), "TDM");
+        registerBattle(new FFABattle(time, minPlayers, maxPlayers), "FFA");
+
+        if (getBattle(battle) == null) battle = "TDM";
+        setActiveBattle(battle);
     }
 
     @Override
@@ -72,16 +76,38 @@ public class CoreBattleManager implements BattleManager {
     }
 
     public void reload() {
-        String battle = ConfigManager.get(Config.MAIN).getString("Battle.Type", "TDM");
+        String battle = getSetBattle();
         if (getBattle(battle) == null) battle = "TDM";
         setActiveBattle(battle);
 
+        int time = getDuration();
+        int minPlayers = getMinPlayers();
+        int maxPlayers = getMaxPlayers();
+
         for (Battle b : battles.values()) {
-            b.getTimer().setTime(getDuration());
+            b.getTimer().setTime(time);
+            b.setMinPlayers(minPlayers);
+            b.setMaxPlayers(maxPlayers);
         }
     }
 
-    public int getDuration() {
+    private String getSetBattle() {
+        return ConfigManager.get(Config.MAIN).getString("Battle.Type", "TDM");
+    }
+
+    private int getDuration() {
         return ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300);
+    }
+
+    private int getMinPlayers() {
+        int minPlayers = ConfigManager.get(Config.MAIN).getInt("Battle.MinPlayers", 2);
+        return minPlayers >= 2 ? minPlayers : 2;
+    }
+
+    private int getMaxPlayers() {
+        int maxPlayers = ConfigManager.get(Config.MAIN).getInt("Battle.MaxPlayers", 0);
+        int minPlayers = getMinPlayers();
+        if (maxPlayers == 0) maxPlayers = Integer.MAX_VALUE;
+        return maxPlayers >= minPlayers ? maxPlayers : minPlayers;
     }
 }

@@ -4,6 +4,8 @@
 Battle:
     Type: TDM
     Duration: 300
+    MinPlayers: 2
+    MaxPlayers: 0
 UsePermissions: false
 ReadyBlock: 42
 FriendlyFire: false

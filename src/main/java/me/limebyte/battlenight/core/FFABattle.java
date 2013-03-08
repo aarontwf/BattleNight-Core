@@ -4,8 +4,8 @@ import me.limebyte.battlenight.api.battle.Battle;
 
 public class FFABattle extends Battle {
 
-    public FFABattle(int lives) {
-        super(lives);
+    public FFABattle(int duration, int minPlayers, int maxPlayers) {
+        super(duration, minPlayers, maxPlayers);
     }
 
     @Override
