@@ -25,6 +25,7 @@ import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.UpdateChecker;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import me.limebyte.battlenight.core.util.sound.MusicManager;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -59,6 +60,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         // Setup Managers
         ClassManager.reloadClasses();
+        MusicManager musicManager = new MusicManager(this);
+        musicManager.loadSongs();
 
         // Debugging
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {

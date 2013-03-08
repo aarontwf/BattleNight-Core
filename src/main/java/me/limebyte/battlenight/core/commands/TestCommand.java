@@ -3,11 +3,9 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.util.BattleNightCommand;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.sound.Song;
-import me.limebyte.battlenight.core.util.sound.SongLoader;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,9 +34,7 @@ public class TestCommand extends BattleNightCommand {
         if (args[0].equalsIgnoreCase("music")) {
             if (isNotPlayer(sender)) return false;
 
-            SongLoader loader = new SongLoader(BattleNight.instance);
-            Song song = loader.load("battle-end");
-            song.play((Player) sender);
+            Song.battleEnd.play((Player) sender);
             return true;
         }
 

@@ -2,31 +2,69 @@ package me.limebyte.battlenight.core.util.sound;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+
+import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;
 
-public class SongLoader {
+public class MusicManager {
     private Plugin plugin;
-    private File file;
 
-    public SongLoader(Plugin plugin) {
+    private File file;
+    private File customFile;
+
+    public MusicManager(Plugin plugin) {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder().toString() + "/music/");
-        if (!this.file.exists()) {
-            this.file.mkdirs();
-        }
+        this.customFile = new File(plugin.getDataFolder().toString() + "/music/custom/");
+
+        if (!this.file.exists()) this.file.mkdirs();
+        if (!this.customFile.exists()) this.customFile.mkdirs();
+    }
+
+    public void loadSongs() {
+        Song.battleEnd = load("battle-end");
     }
 
     public Song load(String name) {
-        File localFile = new File(this.file + "/" + name + ".nbs");
-        if (!localFile.exists()) return null;
+        File file = new File(this.file + "/" + name + ".nbs");
+        if (!file.exists()) {
+            try {
+                loadDefault(name, file);
+            } catch (IOException e) {
+                Messenger.log(Level.WARNING, "Failed to load song \"" + name + "\"from the jar.");
+            }
+        }
 
-        return parseSong(localFile);
+        File customFile = new File(this.customFile + "/" + name + ".nbs");
+        if (!customFile.exists()) file = new File(this.file + "/" + name + ".nbs");
+
+        return customFile.exists() ? getSong(customFile) : getSong(file);
+    }
+
+    private boolean loadDefault(String name, File file) throws IOException {
+        InputStream inputStream = plugin.getResource("music/" + name + ".nbs");
+        FileOutputStream outputStream = new FileOutputStream(file);
+
+        byte[] arrayOfByte = new byte[10240];
+        int k = inputStream.read(arrayOfByte);
+        while (k != -1) {
+            outputStream.write(arrayOfByte, 0, k);
+            k = inputStream.read(arrayOfByte);
+        }
+
+        outputStream.close();
+        inputStream.close();
+        return true;
     }
 
     @SuppressWarnings("unused")
-    private Song parseSong(File file) {
+    private Song getSong(File file) {
         UtilDataInput data = null;
         Song song = new Song();
         try {
@@ -67,24 +105,23 @@ public class SongLoader {
                     if (jumps == 0) break;
                     layer += jumps;
                     byte inst = data.readByte();
-                    byte key = (byte) (data.readByte() - 33);
                     Sound sound = getSound(inst);
+                    byte pitch = (byte) (data.readByte() - 33);
 
-                    if (sound == null || (key < 0 || key > 24)) continue;
-                    song.addNote(new Note(sound, key, ticks * getTicks(tempo)));
+                    if (sound == null || (pitch < 0 || pitch > 24)) continue;
+                    song.addNote(new Note(sound, ticks * getTicks(tempo), 1.0f, pitch));
                 }
             }
 
             data.closeStream();
             return song;
         } catch (Exception e) {
-            d("ERROR: Couldn't load the specified melody file.");
             return null;
         }
     }
 
-    private int getTicks(int paramInt) {
-        switch (paramInt) {
+    private int getTicks(int tempo) {
+        switch (tempo) {
             case 1000:
                 return 2;
             case 500:
@@ -95,9 +132,9 @@ public class SongLoader {
         return 0;
     }
 
-    private Sound getSound(byte paramByte) {
+    private Sound getSound(byte inst) {
         try {
-            switch (paramByte) {
+            switch (inst) {
                 case 0:
                     return Sound.NOTE_PIANO;
                 case 1:
@@ -110,13 +147,9 @@ public class SongLoader {
                     return Sound.NOTE_STICKS;
             }
             return null;
-        } catch (Exception localException) {
+        } catch (Exception e) {
         }
         return null;
-    }
-
-    private void d(String paramString) {
-        System.out.println("[" + this.plugin.getName() + "] " + paramString);
     }
 
 }

@@ -12,21 +12,23 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class Song {
     private ArrayList<Note> notes;
-    private long duration;
+    private long length;
     private HashMap<String, Integer> listeners;
+
+    public static Song battleEnd;
 
     public Song() {
         notes = new ArrayList<Note>();
         listeners = new HashMap<String, Integer>();
-        duration = 0L;
+        length = 0L;
     }
 
     public void addNote(Note note) {
         this.notes.add(note);
-        if (note.getTick() > duration && note.getPitch() != 0) duration = note.getTick();
+        if (note.getTick() > length && note.getPitch() != 0) length = note.getTick();
     }
 
-    public void play(final Player player) {
+    public void play(Player player) {
         stop(player);
         BukkitTask task = new MusicPlayer(player).runTaskTimer(BattleNight.instance, 0L, 2L);
         listeners.put(player.getName(), task.getTaskId());
@@ -44,8 +46,8 @@ public class Song {
         return listeners.containsKey(player.getName());
     }
 
-    public long getDuration() {
-        return duration / 10;
+    public long length() {
+        return length / 10;
     }
 
     class MusicPlayer extends BukkitRunnable {
@@ -57,7 +59,7 @@ public class Song {
         }
 
         public void run() {
-            if (tick > duration) {
+            if (tick > length) {
                 stop(player);
                 return;
             }

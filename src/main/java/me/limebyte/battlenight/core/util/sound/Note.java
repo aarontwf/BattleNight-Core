@@ -7,15 +7,17 @@ public class Note {
     private final Sound sound;
     private final long tick;
     private final float pitch;
+    private final float volume;
 
-    public Note(Sound sound, int pitch, long tick) {
+    public Note(Sound sound, long tick, float volume, int pitch) {
         this.sound = sound;
         this.tick = tick;
+        this.volume = 1.0f;
         this.pitch = convertPitch(pitch);
     }
 
     public void play(Player player) {
-        player.playSound(player.getLocation(), sound, 1.0F, pitch);
+        player.playSound(player.getLocation(), sound, volume, pitch);
     }
 
     public long getTick() {
