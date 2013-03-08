@@ -3,7 +3,7 @@
 
 Battle:
     Type: TDM
-    Duration: 5:00
+    Duration: 300
 UsePermissions: false
 ReadyBlock: 42
 FriendlyFire: false
@@ -11,10 +11,10 @@ StopHealthRegen: true
 ExitWaypoint: false
 Teleportation:
     EnderPearls: true
-    Portals: false
+    Portals: true
     Commands: false
     Plugins: false
-    Unknown: false
+    Unknown: true
 Particles:
     ClassSelection: smoke
 Commands:

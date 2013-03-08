@@ -61,13 +61,13 @@ public class CheatListener extends APIRelatedListener {
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", false)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", true)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case UNKNOWN:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", false)) {
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", true)) {
                         event.setCancelled(true);
                         Messenger.tell(player, Message.NO_TELEPORTING);
                     }

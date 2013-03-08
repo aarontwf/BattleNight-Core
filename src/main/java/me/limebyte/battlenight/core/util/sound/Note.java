@@ -28,6 +28,11 @@ public class Note {
         return pitch;
     }
 
+    @Override
+    public String toString() {
+        return "Note: " + " s=" + sound + ", v=" + volume + ", p=" + pitch;
+    }
+
     public static float convertPitch(int pitch) {
         switch (pitch) {
             case 0:

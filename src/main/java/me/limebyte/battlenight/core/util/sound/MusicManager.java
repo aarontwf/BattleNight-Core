@@ -44,7 +44,12 @@ public class MusicManager {
         File customFile = new File(this.customFile + "/" + name + ".nbs");
         if (!customFile.exists()) file = new File(this.file + "/" + name + ".nbs");
 
-        return customFile.exists() ? getSong(customFile) : getSong(file);
+        if (customFile.exists()) {
+            Messenger.debug(Level.INFO, "Using custom " + name + " music.");
+            return getSong(customFile);
+        }
+
+        return getSong(file);
     }
 
     private boolean loadDefault(String name, File file) throws IOException {
@@ -66,7 +71,6 @@ public class MusicManager {
     @SuppressWarnings("unused")
     private Song getSong(File file) {
         UtilDataInput data = null;
-        Song song = new Song();
         try {
             data = new UtilDataInput(new FileInputStream(file));
 
@@ -90,6 +94,8 @@ public class MusicManager {
             int blocksAdded = data.readInt();
             int blocksRemoved = data.readInt();
             String exportName = data.readString();
+
+            Song song = new Song(songLength);
 
             int ticks = -1;
             int jumps = 0;

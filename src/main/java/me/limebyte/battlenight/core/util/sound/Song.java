@@ -2,8 +2,10 @@ package me.limebyte.battlenight.core.util.sound;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,15 +19,15 @@ public class Song {
 
     public static Song battleEnd;
 
-    public Song() {
+    public Song(long length) {
         notes = new ArrayList<Note>();
         listeners = new HashMap<String, Integer>();
-        length = 0L;
+        this.length = length * 2L;
     }
 
     public void addNote(Note note) {
         this.notes.add(note);
-        if (note.getTick() > length && note.getPitch() != 0) length = note.getTick();
+        Messenger.debug(Level.INFO, "Added " + note.toString());
     }
 
     public void play(Player player) {
@@ -47,7 +49,11 @@ public class Song {
     }
 
     public long length() {
-        return length / 10;
+        return length;
+    }
+
+    public long getLengthInSeconds() {
+        return length / 20L;
     }
 
     class MusicPlayer extends BukkitRunnable {
@@ -63,7 +69,7 @@ public class Song {
                 stop(player);
                 return;
             }
-            if ((!player.isOnline()) || (player.isDead())) {
+            if (!player.isOnline()) {
                 stop(player);
                 return;
             }

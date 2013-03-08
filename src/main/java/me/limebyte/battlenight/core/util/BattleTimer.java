@@ -20,7 +20,7 @@ public class BattleTimer extends Timer {
 
     @Override
     public void onTimeChange(long time) {
-        if (time == Song.battleEnd.length()) {
+        if (time == Song.battleEnd.getLengthInSeconds()) {
             Messenger.playSong(Song.battleEnd, true);
         }
 
