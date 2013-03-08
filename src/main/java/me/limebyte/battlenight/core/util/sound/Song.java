@@ -22,7 +22,7 @@ public class Song {
     public Song(long length) {
         notes = new ArrayList<Note>();
         listeners = new HashMap<String, Integer>();
-        this.length = length * 2L;
+        this.length = length;
     }
 
     public void addNote(Note note) {
@@ -53,7 +53,7 @@ public class Song {
     }
 
     public long getLengthInSeconds() {
-        return length / 20L;
+        return length / 10L;
     }
 
     class MusicPlayer extends BukkitRunnable {
@@ -65,7 +65,7 @@ public class Song {
         }
 
         public void run() {
-            if (tick > length) {
+            if (tick > length * 2L) {
                 stop(player);
                 return;
             }
@@ -76,7 +76,7 @@ public class Song {
             for (Note note : notes) {
                 if (tick == note.getTick()) note.play(player);
             }
-            this.tick += 2L;
+            tick += 2L;
         }
 
     }

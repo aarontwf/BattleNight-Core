@@ -20,17 +20,20 @@ public class BattleTimer extends Timer {
 
     @Override
     public void onTimeChange(long time) {
-        if (time == Song.battleEnd.getLengthInSeconds()) {
+        if (time == Song.battleEnd.length()) {
             Messenger.playSong(Song.battleEnd, true);
         }
 
-        if (time <= COUNTDOWN_START) {
-            Messenger.playSound(Sound.NOTE_PIANO, Note.convertPitch(18), true);
-            Messenger.tellEveryone("" + ChatColor.RED + time + "!", true);
-        } else if (time == MINUTE) {
-            Messenger.tellEveryone(ChatColor.RED + "1 minute remaining!", true);
-        } else if (time % MINUTE == 0) {
-            Messenger.tellEveryone(time / MINUTE + " minutes remaining.", true);
+        if (time % 10 == 0) {
+            long timeSec = time / 10;
+            if (timeSec <= COUNTDOWN_START) {
+                Messenger.playSound(Sound.NOTE_PIANO, Note.convertPitch(18), true);
+                Messenger.tellEveryone("" + ChatColor.RED + timeSec + "!", true);
+            } else if (timeSec == MINUTE) {
+                Messenger.tellEveryone(ChatColor.RED + "1 minute remaining!", true);
+            } else if (timeSec % MINUTE == 0) {
+                Messenger.tellEveryone(timeSec / MINUTE + " minutes remaining.", true);
+            }
         }
     }
 

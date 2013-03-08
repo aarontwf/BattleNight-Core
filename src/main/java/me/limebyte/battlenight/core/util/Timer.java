@@ -14,12 +14,12 @@ public abstract class Timer {
     private int taskID;
 
     public Timer(long time) {
-        this.time = time;
-        this.timeRemaining = time;
+        this.time = time * 10;
+        this.timeRemaining = this.time;
     }
 
     public void start() {
-        BukkitTask task = new TimerTask().runTaskTimer(BattleNight.instance, 20, 20);
+        BukkitTask task = new TimerTask().runTaskTimer(BattleNight.instance, 2, 2);
         taskID = task.getTaskId();
         running = true;
     }
@@ -32,19 +32,19 @@ public abstract class Timer {
     }
 
     public long getTime() {
-        return time;
+        return time / 10;
     }
 
     public void setTime(long time) {
-        this.time = time;
+        this.time = time * 10;
     }
 
     public long getTimeRemaining() {
-        return timeRemaining;
+        return timeRemaining / 10;
     }
 
     public void setTimeRemaining(long timeRemaining) {
-        this.timeRemaining = timeRemaining;
+        this.timeRemaining = timeRemaining * 10;
     }
 
     public boolean isRunning() {
@@ -52,6 +52,7 @@ public abstract class Timer {
     }
 
     class TimerTask extends BukkitRunnable {
+
         public void run() {
             timeRemaining--;
 
