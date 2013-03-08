@@ -106,6 +106,8 @@ public class CoreSpectatorManager implements SpectatorManager {
             return;
         }
 
+        if (targets.size() == 1) return;
+
         int index = targets.indexOf(spectators.get(player.getName()));
         index++;
         if (index > targets.size() - 1) index = 0;

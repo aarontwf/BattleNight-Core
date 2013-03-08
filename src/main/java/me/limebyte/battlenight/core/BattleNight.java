@@ -19,6 +19,7 @@ import me.limebyte.battlenight.core.listeners.HealthListener;
 import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
+import me.limebyte.battlenight.core.listeners.SpectatorListener;
 import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
@@ -85,6 +86,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         Nameplates.init(this, pm);
 
         // Event Registration
+        pm.registerEvents(new APIEventListener(), this);
         pm.registerEvents(new BlockListener(api), this);
         pm.registerEvents(new CheatListener(api), this);
         pm.registerEvents(new HealthListener(api), this);
@@ -94,7 +96,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new InteractListener(api), this);
         pm.registerEvents(new SafeTeleporter(), this);
         pm.registerEvents(new SignListener(api), this);
-        pm.registerEvents(new APIEventListener(), this);
+        pm.registerEvents(new SpectatorListener(api), this);
 
         // Update check
         PluginDescriptionFile pdf = getDescription();

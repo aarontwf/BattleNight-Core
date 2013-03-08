@@ -19,11 +19,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class CheatListener extends APIRelatedListener {
@@ -174,22 +172,6 @@ public class CheatListener extends APIRelatedListener {
                 event.setCancelled(true);
                 Messenger.tell(thrower, Message.NO_CHEATING);
             }
-        }
-    }
-
-    /** Spectator Events **/
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryOpen(InventoryOpenEvent event) {
-        if (getAPI().getSpectatorManager().getSpectators().contains(event.getPlayer().getName())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (getAPI().getSpectatorManager().getSpectators().contains(event.getPlayer().getName())) {
-            event.setCancelled(true);
         }
     }
 }
