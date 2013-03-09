@@ -46,8 +46,8 @@ public class SpectatorListener extends APIRelatedListener {
         Player player = event.getPlayer();
 
         if (manager.getSpectators().contains(player.getName())) {
-            event.setCancelled(true);
             manager.cycleTarget(player);
+            event.setCancelled(true);
         }
     }
 
