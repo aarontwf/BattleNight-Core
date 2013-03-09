@@ -41,12 +41,18 @@ public class HealthListener extends APIRelatedListener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
+        BattleNightAPI api = getAPI();
+
+        if (api.getSpectatorManager().getSpectators().contains(player.getName())) {
+            event.setCancelled(true);
+            return;
+        }
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            Battle battle = getAPI().getBattle();
+            Battle battle = api.getBattle();
 
-            if (!battle.containsPlayer(player) && !getAPI().getSpectatorManager().getSpectators().contains(player.getName())) return;
+            if (!battle.containsPlayer(player)) return;
             subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));
         }
     }
@@ -68,7 +74,7 @@ public class HealthListener extends APIRelatedListener {
             } else return true;
         }
 
-        if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName()) || getAPI().getSpectatorManager().getSpectators().contains(damaged.getName())) return false;
+        if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName())) return false;
 
         if (battle.containsPlayer(damager)) {
             if (!battle.isInProgress()) return false;
