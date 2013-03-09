@@ -112,5 +112,17 @@ public class CoreSpectatorManager implements SpectatorManager {
         index++;
         if (index > targets.size() - 1) index = 0;
         spectators.put(player.getName(), targets.get(index));
+
+        Player target = getTarget(player);
+
+        SafeTeleporter.tp(player, target.getLocation());
+
+        for (String n : api.getBattle().getPlayers()) {
+            if (Bukkit.getPlayerExact(n) != null) {
+                player.showPlayer(Bukkit.getPlayerExact(n));
+            }
+        }
+
+        player.hidePlayer(target);
     }
 }
