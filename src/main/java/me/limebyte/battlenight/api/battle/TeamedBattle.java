@@ -2,12 +2,10 @@ package me.limebyte.battlenight.api.battle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import me.limebyte.battlenight.api.event.BattleDeathEvent;
-import me.limebyte.battlenight.api.util.PlayerData;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;
@@ -22,6 +20,24 @@ public abstract class TeamedBattle extends Battle {
 
     public TeamedBattle(int duration, int minPlayers, int maxPlayers) {
         super(duration, minPlayers, maxPlayers);
+    }
+
+    @Override
+    public boolean stop() {
+        for (String name : getPlayers()) {
+            Player player = toPlayer(name);
+            if (player == null) continue;
+            setTeam(player, null);
+        }
+
+        boolean result = super.stop();
+
+        for (Team team : teams) {
+            if (team == null) continue;
+            team.reset(this);
+        }
+
+        return result;
     }
 
     public boolean addTeam(Team team) {
@@ -168,46 +184,6 @@ public abstract class TeamedBattle extends Battle {
 
         Team team = getTeam(player);
         if (team != null) team.addKill();
-    }
-
-    @Override
-    public boolean stop() {
-        if (!onStop()) return false;
-
-        Iterator<String> pIt = getPlayers().iterator();
-        while (pIt.hasNext()) {
-            Player player = toPlayer(pIt.next());
-            if (player == null) {
-                pIt.remove();
-                continue;
-            }
-
-            PlayerData.reset(player);
-            PlayerData.restore(player, true, false);
-            api.setPlayerClass(player, null);
-            Metadata.remove(player, "kills");
-            Metadata.remove(player, "deaths");
-            api.getSpectatorManager().removeTarget(player);
-            setTeam(player, null);
-            pIt.remove();
-        }
-
-        SpectatorManager spectatorManager = api.getSpectatorManager();
-        for (String name : spectatorManager.getSpectators()) {
-            Player player = toPlayer(name);
-            if (player == null) continue;
-            spectatorManager.removeSpectator(player);
-        }
-
-        for (Team team : teams) {
-            if (team == null) continue;
-            team.reset(this);
-        }
-
-        getLeadingPlayers().clear();
-        setArena(null);
-        inProgress = false;
-        return true;
     }
 
     @Override
