@@ -1,6 +1,6 @@
-package me.limebyte.battlenight.api.event;
+package me.limebyte.battlenight.api.tosort;
 
-import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.core.Battle;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

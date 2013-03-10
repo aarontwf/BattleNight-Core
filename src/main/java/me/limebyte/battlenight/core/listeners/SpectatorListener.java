@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.battle.SpectatorManager;
+import me.limebyte.battlenight.api.managers.SpectatorManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

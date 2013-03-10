@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.api.battle.SpectatorManager;
-import me.limebyte.battlenight.api.event.BattleDeathEvent;
-import me.limebyte.battlenight.api.util.PlayerData;
+import me.limebyte.battlenight.api.managers.SpectatorManager;
+import me.limebyte.battlenight.api.tosort.BattleDeathEvent;
+import me.limebyte.battlenight.api.tosort.PlayerData;
+import me.limebyte.battlenight.core.Battle;
 import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Bukkit;

@@ -2,10 +2,9 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
-import me.limebyte.battlenight.api.util.BattleNightCommand;
+import me.limebyte.battlenight.api.tosort.BattleNightCommand;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
-import me.limebyte.battlenight.core.util.sound.Song;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,13 +30,6 @@ public class TestCommand extends BattleNightCommand {
             return false;
         }
 
-        if (args[0].equalsIgnoreCase("music")) {
-            if (isNotPlayer(sender)) return false;
-
-            Song.battleEnd.play((Player) sender);
-            return true;
-        }
-
         // Commands with 2 arguments
         if (args.length < 2) {
             Messenger.tell(sender, Message.INCORRECT_USAGE);
@@ -48,6 +40,7 @@ public class TestCommand extends BattleNightCommand {
         return false;
     }
 
+    @SuppressWarnings("unused")
     private boolean isNotPlayer(CommandSender sender) {
         if (!(sender instanceof Player)) {
             Messenger.tell(sender, Message.PLAYER_ONLY);

@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api.util;
+package me.limebyte.battlenight.api.tosort;
 
 public class StandardPage extends Page {
 

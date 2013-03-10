@@ -2,13 +2,15 @@ package me.limebyte.battlenight.api.managers;
 
 import java.util.List;
 
-import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.core.Battle;
 
 public interface BattleManager {
 
-    public void registerBattle(Battle battle, String id) throws IllegalArgumentException;
+    public void reloadBattles();
 
-    public boolean deregisterBattle(String id) throws IllegalStateException;
+    public void register(Battle battle, String id) throws IllegalArgumentException;
+
+    public boolean deregister(String id) throws IllegalStateException;
 
     public Battle getBattle(String id);
 
@@ -17,7 +19,5 @@ public interface BattleManager {
     public Battle getActiveBattle();
 
     public boolean setActiveBattle(String id) throws IllegalStateException;
-
-    public void reload();
 
 }

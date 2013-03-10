@@ -1,8 +1,8 @@
 package me.limebyte.battlenight.core.util;
 
-import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.core.Battle;
+import me.limebyte.battlenight.core.managers.CoreMusicManager;
 import me.limebyte.battlenight.core.util.sound.Note;
-import me.limebyte.battlenight.core.util.sound.Song;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -20,8 +20,8 @@ public class BattleTimer extends Timer {
 
     @Override
     public void onTimeChange(long time) {
-        if (time == Song.battleEnd.length()) {
-            Messenger.playSong(Song.battleEnd, true);
+        if (time == CoreMusicManager.battleEnd.length()) {
+            Messenger.playSong(CoreMusicManager.battleEnd, true);
         }
 
         if (time % 10 == 0) {

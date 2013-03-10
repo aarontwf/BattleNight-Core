@@ -1,8 +1,8 @@
 package me.limebyte.battlenight.core.commands;
 
-import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.api.util.BattleNightCommand;
+import me.limebyte.battlenight.api.tosort.BattleNightCommand;
+import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 

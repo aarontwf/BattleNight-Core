@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.api.battle.Arena;
-import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.managers.ArenaManager;
+import me.limebyte.battlenight.api.tosort.Arena;
+import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -29,6 +29,7 @@ public class CoreArenaManager implements ArenaManager {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public void loadArenas() {
         Messenger.debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
@@ -38,6 +39,7 @@ public class CoreArenaManager implements ArenaManager {
         arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", arenas);
     }
 
+    @Override
     public void saveArenas() {
         Messenger.debug(Level.INFO, "Saving arenas...");
         ConfigManager.get(configFile).set("Waypoint.Lounge", lounge);
@@ -46,10 +48,12 @@ public class CoreArenaManager implements ArenaManager {
         ConfigManager.save(configFile);
     }
 
+    @Override
     public void register(Arena arena) {
         arenas.add(arena);
     }
 
+    @Override
     public void deregister(Arena arena) {
         arenas.remove(arena);
     }

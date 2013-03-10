@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.battle.Arena;
-import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.api.battle.Team;
-import me.limebyte.battlenight.api.battle.TeamedBattle;
-import me.limebyte.battlenight.api.util.Page;
+import me.limebyte.battlenight.api.Song;
+import me.limebyte.battlenight.api.tosort.Arena;
+import me.limebyte.battlenight.api.tosort.Page;
+import me.limebyte.battlenight.core.Battle;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.Team;
+import me.limebyte.battlenight.core.TeamedBattle;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
-import me.limebyte.battlenight.core.util.sound.Song;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -162,16 +162,16 @@ public class Messenger {
         }
     }
 
-    public static void playSong(Song song, boolean spectators) {
+    public static void playSong(Song battleEnd, boolean spectators) {
         for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
-            if (p != null) song.play(p);
+            if (p != null) battleEnd.play(p);
         }
 
         if (spectators) {
             for (String name : api.getSpectatorManager().getSpectators()) {
                 Player p = Bukkit.getPlayerExact(name);
-                if (p != null) song.play(p);
+                if (p != null) battleEnd.play(p);
             }
         }
     }

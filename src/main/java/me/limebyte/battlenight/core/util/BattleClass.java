@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.limebyte.battlenight.api.battle.PlayerClass;
+import me.limebyte.battlenight.api.tosort.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.Bukkit;

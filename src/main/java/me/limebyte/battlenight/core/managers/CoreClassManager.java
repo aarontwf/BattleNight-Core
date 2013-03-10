@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.api.battle.PlayerClass;
+import me.limebyte.battlenight.api.managers.ClassManager;
+import me.limebyte.battlenight.api.tosort.PlayerClass;
 import me.limebyte.battlenight.core.util.BattleClass;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -18,31 +19,17 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-public class ClassManager {
-    private static List<PlayerClass> classes = new ArrayList<PlayerClass>();
+public class CoreClassManager implements ClassManager {
 
     private static final Config configFile = Config.CLASSES;
+    private List<PlayerClass> classes = new ArrayList<PlayerClass>();
 
-    public static List<PlayerClass> getClasses() {
-        return classes;
+    public CoreClassManager() {
+        reloadClasses();
     }
 
-    public static HashMap<String, PlayerClass> getClassNames() {
-        HashMap<String, PlayerClass> classList = new HashMap<String, PlayerClass>();
-
-        for (PlayerClass c : classes) {
-            classList.put(c.getName(), c);
-        }
-
-        return classList;
-    }
-
-    public static void reloadClasses() {
-        loadClasses();
-        saveClasses();
-    }
-
-    public static void loadClasses() {
+    @Override
+    public void loadClasses() {
         Messenger.debug(Level.INFO, "Loading classes...");
         ConfigManager.reload(configFile);
         for (String className : ConfigManager.get(configFile).getConfigurationSection("Classes").getKeys(false)) {
@@ -53,13 +40,32 @@ public class ClassManager {
         }
     }
 
-    public static void saveClasses() {
+    @Override
+    public void saveClasses() {
         Messenger.debug(Level.INFO, "Saving classes...");
         for (PlayerClass c : classes) {
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Armour", parseItems(c.getArmour()));
             ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
         }
         ConfigManager.save(configFile);
+    }
+
+    @Override
+    public void reloadClasses() {
+        loadClasses();
+        saveClasses();
+    }
+
+    @Override
+    public List<PlayerClass> getClasses() {
+        return classes;
+    }
+
+    @Override
+    public PlayerClass getRandomClass() {
+        Random random = new Random();
+        int classNum = random.nextInt(classes.size());
+        return classes.get(classNum);
     }
 
     private static List<ItemStack> parseItems(String rawItems) {
@@ -291,12 +297,6 @@ public class ClassManager {
         sorted.add(3, boots);
 
         return sorted;
-    }
-
-    public static PlayerClass getRandomClass() {
-        Random random = new Random();
-        int classNum = random.nextInt(classes.size());
-        return classes.get(classNum);
     }
 
     private enum ArmourType {

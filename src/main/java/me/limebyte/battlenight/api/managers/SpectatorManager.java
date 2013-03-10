@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api.battle;
+package me.limebyte.battlenight.api.managers;
 
 import java.util.Set;
 

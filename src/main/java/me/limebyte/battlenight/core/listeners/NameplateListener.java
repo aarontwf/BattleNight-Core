@@ -1,9 +1,9 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.api.battle.Team;
-import me.limebyte.battlenight.api.battle.TeamedBattle;
+import me.limebyte.battlenight.core.Battle;
+import me.limebyte.battlenight.core.Team;
+import me.limebyte.battlenight.core.TeamedBattle;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

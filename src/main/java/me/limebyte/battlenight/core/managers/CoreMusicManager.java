@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util.sound;
+package me.limebyte.battlenight.core.managers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,34 +7,39 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.Song;
+import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.sound.Note;
+import me.limebyte.battlenight.core.util.sound.SimpleSong;
+import me.limebyte.battlenight.core.util.sound.UtilDataInput;
 
 import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;
 
-public class MusicManager {
+public class CoreMusicManager implements MusicManager {
     private Plugin plugin;
 
     private File file;
     private File customFile;
 
-    public MusicManager(Plugin plugin) {
+    public static Song battleEnd;
+
+    public CoreMusicManager(Plugin plugin) {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder().toString() + "/music/");
         this.customFile = new File(plugin.getDataFolder().toString() + "/music/custom/");
 
         if (!this.file.exists()) this.file.mkdirs();
         if (!this.customFile.exists()) this.customFile.mkdirs();
-    }
 
-    public void loadSongs() {
-        Song.battleEnd = load("battle-end");
+        loadSongs();
     }
 
     public Song load(String name) {
         File file = new File(this.file + "/" + name + ".nbs");
         try {
-            loadDefault(name, file);
+            loadFromJar(name, file);
         } catch (IOException e) {
             Messenger.log(Level.WARNING, "Failed to load song \"" + name + "\"from the jar.");
         }
@@ -43,13 +48,17 @@ public class MusicManager {
 
         if (customFile.exists()) {
             Messenger.debug(Level.INFO, "Using custom " + name + " music.");
-            return getSong(customFile);
+            return parseFile(customFile);
         }
 
-        return getSong(file);
+        return parseFile(file);
     }
 
-    private boolean loadDefault(String name, File file) throws IOException {
+    private void loadSongs() {
+        battleEnd = load("battle-end");
+    }
+
+    private boolean loadFromJar(String name, File file) throws IOException {
         InputStream inputStream = plugin.getResource("music/" + name + ".nbs");
         FileOutputStream outputStream = new FileOutputStream(file);
 
@@ -66,7 +75,7 @@ public class MusicManager {
     }
 
     @SuppressWarnings("unused")
-    private Song getSong(File file) {
+    private Song parseFile(File file) {
         UtilDataInput data = null;
         try {
             data = new UtilDataInput(new FileInputStream(file));
@@ -92,7 +101,7 @@ public class MusicManager {
             int blocksRemoved = data.readInt();
             String exportName = data.readString();
 
-            Song song = new Song(songLength);
+            SimpleSong song = new SimpleSong(songLength);
 
             int ticks = -1;
             int jumps = 0;

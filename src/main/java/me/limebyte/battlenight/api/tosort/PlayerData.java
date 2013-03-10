@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api.util;
+package me.limebyte.battlenight.api.tosort;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,8 +8,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.battle.SpectatorManager;
-import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;

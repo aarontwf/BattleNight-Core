@@ -5,8 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.battle.PlayerClass;
-import me.limebyte.battlenight.core.managers.ClassManager;
+import me.limebyte.battlenight.api.managers.ClassManager;
+import me.limebyte.battlenight.api.tosort.PlayerClass;
+import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -39,7 +40,12 @@ public class SignListener extends APIRelatedListener {
     public void onSignChange(SignChangeEvent e) {
         Player player = e.getPlayer();
         String title = e.getLine(0);
-        HashMap<String, PlayerClass> classes = ClassManager.getClassNames();
+
+        HashMap<String, PlayerClass> classes = new HashMap<String, PlayerClass>();
+        ClassManager manager = BattleNight.instance.getAPI().getClassManager();
+        for (PlayerClass clazz : manager.getClasses()) {
+            classes.put(clazz.getName(), clazz);
+        }
 
         if (classes != null) {
             if (classes.containsKey(title)) {
@@ -65,7 +71,12 @@ public class SignListener extends APIRelatedListener {
             if (block.getState() instanceof Sign) {
                 Sign sign = (Sign) block.getState();
                 String title = sign.getLine(0);
-                HashMap<String, PlayerClass> classes = ClassManager.getClassNames();
+
+                HashMap<String, PlayerClass> classes = new HashMap<String, PlayerClass>();
+                ClassManager manager = BattleNight.instance.getAPI().getClassManager();
+                for (PlayerClass clazz : manager.getClasses()) {
+                    classes.put(clazz.getName(), clazz);
+                }
 
                 if (getAPI().getBattle().containsPlayer(player)) {
                     if (classes.containsKey(title)) {

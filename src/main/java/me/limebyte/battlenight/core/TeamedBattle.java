@@ -1,11 +1,12 @@
-package me.limebyte.battlenight.api.battle;
+package me.limebyte.battlenight.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import me.limebyte.battlenight.api.event.BattleDeathEvent;
+import me.limebyte.battlenight.api.tosort.BattleDeathEvent;
+import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
 import me.limebyte.battlenight.core.util.Metadata;

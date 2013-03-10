@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.limebyte.battlenight.api.util.BattleNightCommand;
-import me.limebyte.battlenight.api.util.ListPage;
+import me.limebyte.battlenight.api.tosort.BattleNightCommand;
+import me.limebyte.battlenight.api.tosort.ListPage;
 import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.ChatColor;

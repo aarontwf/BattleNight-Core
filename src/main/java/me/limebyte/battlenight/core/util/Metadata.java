@@ -2,9 +2,9 @@ package me.limebyte.battlenight.core.util;
 
 import java.util.List;
 
-import me.limebyte.battlenight.api.battle.PlayerClass;
+import me.limebyte.battlenight.api.managers.ClassManager;
+import me.limebyte.battlenight.api.tosort.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.managers.ClassManager;
 
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -41,7 +41,12 @@ public class Metadata {
     public static PlayerClass getBattleClass(Player player) {
         String result = getString(player, "class");
         if (result == null) return null;
-        return ClassManager.getClassNames().get(result);
+
+        ClassManager manager = BattleNight.instance.getAPI().getClassManager();
+        for (PlayerClass clazz : manager.getClasses()) {
+            if (clazz.getName().equals(clazz.getName())) return clazz;
+        }
+        return null;
     }
 
     private static MetadataValue getValue(Player player, String key) {

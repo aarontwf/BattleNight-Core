@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.Song;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.Messenger;
 
@@ -12,14 +13,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public class Song {
+public class SimpleSong implements Song {
+
     private ArrayList<Note> notes;
     private long length;
     private HashMap<String, Integer> listeners;
 
-    public static Song battleEnd;
-
-    public Song(long length) {
+    public SimpleSong(long length) {
         notes = new ArrayList<Note>();
         listeners = new HashMap<String, Integer>();
         this.length = length;
@@ -50,10 +50,6 @@ public class Song {
 
     public long length() {
         return length;
-    }
-
-    public long getLengthInSeconds() {
-        return length / 10L;
     }
 
     class MusicPlayer extends BukkitRunnable {

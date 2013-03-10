@@ -5,8 +5,8 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
-import me.limebyte.battlenight.api.battle.Arena;
-import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.tosort.Arena;
+import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
@@ -20,13 +20,11 @@ import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.listeners.SpectatorListener;
-import me.limebyte.battlenight.core.managers.ClassManager;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.SafeTeleporter;
 import me.limebyte.battlenight.core.util.UpdateChecker;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
-import me.limebyte.battlenight.core.util.sound.MusicManager;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -53,16 +51,11 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         // Initialize Configuration
         ConfigManager.initConfigurations();
 
-        api = new API();
+        api = new API(this);
 
         Messenger.init(api);
 
         PluginManager pm = getServer().getPluginManager();
-
-        // Setup Managers
-        ClassManager.reloadClasses();
-        MusicManager musicManager = new MusicManager(this);
-        musicManager.loadSongs();
 
         // Debugging
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
@@ -70,8 +63,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         } else {
             Messenger.debug(Level.INFO, "Permissions Disabled, using Op.");
         }
-        String loadedClasses = ClassManager.getClassNames().keySet().toString();
-        Messenger.debug(Level.INFO, "Loaded Classes: " + loadedClasses.replaceAll("\\[|\\]", "") + ".");
 
         // Commands
         getCommand("battlenight").setExecutor(new CommandManager(api));

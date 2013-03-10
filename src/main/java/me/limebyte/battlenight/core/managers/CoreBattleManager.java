@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.BattleManager;
+import me.limebyte.battlenight.core.Battle;
 import me.limebyte.battlenight.core.FFABattle;
 import me.limebyte.battlenight.core.TDMBattle;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
@@ -27,22 +27,38 @@ public class CoreBattleManager implements BattleManager {
         int minPlayers = getMinPlayers();
         int maxPlayers = getMaxPlayers();
 
-        registerBattle(new TDMBattle(time, minPlayers, maxPlayers), "TDM");
-        registerBattle(new FFABattle(time, minPlayers, maxPlayers), "FFA");
+        register(new TDMBattle(time, minPlayers, maxPlayers), "TDM");
+        register(new FFABattle(time, minPlayers, maxPlayers), "FFA");
 
         if (getBattle(battle) == null) battle = "TDM";
         setActiveBattle(battle);
     }
 
+    public void reloadBattles() {
+        String battle = getSetBattle();
+        if (getBattle(battle) == null) battle = "TDM";
+        setActiveBattle(battle);
+
+        int time = getDuration();
+        int minPlayers = getMinPlayers();
+        int maxPlayers = getMaxPlayers();
+
+        for (Battle b : battles.values()) {
+            b.getTimer().setTime(time);
+            b.setMinPlayers(minPlayers);
+            b.setMaxPlayers(maxPlayers);
+        }
+    }
+
     @Override
-    public void registerBattle(Battle battle, String id) {
+    public void register(Battle battle, String id) {
         if (battle == null || battles.containsKey(id)) throw new IllegalArgumentException();
         battle.api = api;
         battles.put(id, battle);
     }
 
     @Override
-    public boolean deregisterBattle(String id) {
+    public boolean deregister(String id) {
         if (activeBattle.equals(id)) throw new IllegalStateException();
         if (!battles.containsKey(id)) return false;
         battles.remove(id);
@@ -73,22 +89,6 @@ public class CoreBattleManager implements BattleManager {
 
         activeBattle = id;
         return true;
-    }
-
-    public void reload() {
-        String battle = getSetBattle();
-        if (getBattle(battle) == null) battle = "TDM";
-        setActiveBattle(battle);
-
-        int time = getDuration();
-        int minPlayers = getMinPlayers();
-        int maxPlayers = getMaxPlayers();
-
-        for (Battle b : battles.values()) {
-            b.getTimer().setTime(time);
-            b.setMinPlayers(minPlayers);
-            b.setMaxPlayers(maxPlayers);
-        }
     }
 
     private String getSetBattle() {

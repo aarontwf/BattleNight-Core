@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api.battle;
+package me.limebyte.battlenight.core;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,10 +9,12 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.event.BattleDeathEvent;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.api.util.PlayerData;
-import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.api.managers.SpectatorManager;
+import me.limebyte.battlenight.api.tosort.Arena;
+import me.limebyte.battlenight.api.tosort.BattleDeathEvent;
+import me.limebyte.battlenight.api.tosort.PlayerData;
+import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.BattleTimer;
 import me.limebyte.battlenight.core.util.Messenger;

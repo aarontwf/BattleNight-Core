@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api.battle;
+package me.limebyte.battlenight.api.tosort;
 
 import java.util.ArrayList;
 import java.util.HashMap;
