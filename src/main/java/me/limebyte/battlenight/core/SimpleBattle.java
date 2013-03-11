@@ -9,12 +9,13 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.tosort.Arena;
-import me.limebyte.battlenight.api.tosort.BattleDeathEvent;
 import me.limebyte.battlenight.api.tosort.PlayerData;
 import me.limebyte.battlenight.api.tosort.Waypoint;
+import me.limebyte.battlenight.api.util.Timer;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.util.BattleTimer;
 import me.limebyte.battlenight.core.util.Messenger;
@@ -26,7 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public abstract class Battle {
+public abstract class SimpleBattle implements Battle {
 
     public BattleNightAPI api;
 
@@ -40,7 +41,7 @@ public abstract class Battle {
     private HashSet<String> players = new HashSet<String>();
     private Set<String> leadingPlayers = new HashSet<String>();
 
-    public Battle(int duration, int minPlayers, int maxPlayers) {
+    public SimpleBattle(int duration, int minPlayers, int maxPlayers) {
         timer = new BattleTimer(this, duration);
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -126,13 +127,6 @@ public abstract class Battle {
         return true;
     }
 
-    /**
-     * Adds the specified {@link Player} to the battle. This will return false
-     * if it is unsuccessful.
-     * 
-     * @param player the Player to add
-     * @return true if successful
-     */
     public boolean addPlayer(Player player) {
         if (isInProgress()) {
             Messenger.tell(player, Message.BATTLE_IN_PROGRESS);
@@ -174,13 +168,6 @@ public abstract class Battle {
         return true;
     }
 
-    /**
-     * Removes the specified {@link Player} to the battle. This will return
-     * false if it is unsuccessful.
-     * 
-     * @param player the Player to remove
-     * @return true if successful
-     */
     public boolean removePlayer(Player player) {
         if (!containsPlayer(player)) return false;
         PlayerData.reset(player);
@@ -196,12 +183,15 @@ public abstract class Battle {
         return true;
     }
 
-    public void respawn(Player player) {
-        if (!containsPlayer(player)) return;
+    public Location respawn(Player player) {
+        if (!containsPlayer(player)) return null;
         Messenger.debug(Level.INFO, "Respawning " + player.getName() + "...");
         PlayerData.reset(player);
+
+        Location loc = getArena().getRandomSpawnPoint().getLocation();
         api.getPlayerClass(player).equip(player);
-        SafeTeleporter.tp(player, getArena().getRandomSpawnPoint().getLocation());
+        SafeTeleporter.tp(player, loc);
+        return loc.add(0, 0.5, 0);
     }
 
     public Location toSpectator(Player player, boolean death) {
@@ -272,72 +262,34 @@ public abstract class Battle {
     /* Getters and Setters */
     /* ------------------- */
 
-    /**
-     * Returns the {@link Arena} that is set for this battle.
-     * 
-     * @return the arena
-     * @see Arena
-     */
     public Arena getArena() {
         return arena;
     }
 
-    /**
-     * Sets the {@link Arena} that will be used for this battle. The arena will
-     * not be set if this battle is in progress.
-     * 
-     * @param arena the arena to set
-     * @see Arena
-     */
     public void setArena(Arena arena) {
         if (isInProgress()) return;
         this.arena = arena;
     }
 
-    /**
-     * Returns the minimum amount of players the battle requires before it can
-     * be started.
-     * 
-     * @return the minPlayers
-     */
     public int getMinPlayers() {
         return minPlayers;
     }
 
-    /**
-     * Sets the minimum amount of players the battle requires before it can be
-     * started. This cannot be set below one.
-     * 
-     * @param minPlayers the minPlayers to set
-     */
     public void setMinPlayers(int minPlayers) {
         if (getMinPlayers() < 1) return;
         this.minPlayers = minPlayers;
     }
 
-    /**
-     * Returns the maximum amount of players the battle can have. By default
-     * this is set to {@link Integer.MAX_VALUE}.
-     * 
-     * @return the maxPlayers
-     */
     public int getMaxPlayers() {
         return maxPlayers;
     }
 
-    /**
-     * Sets the maximum amount of players the battle can have. Setting this
-     * value will prevent players from joining if the battle is full. This
-     * cannot be set to a value that is less than the minimum.
-     * 
-     * @param maxPlayers the maxPlayers to set
-     */
     public void setMaxPlayers(int maxPlayers) {
         if (maxPlayers < getMinPlayers()) return;
         this.maxPlayers = maxPlayers;
     }
 
-    public BattleTimer getTimer() {
+    public Timer getTimer() {
         return timer;
     }
 
@@ -386,19 +338,7 @@ public abstract class Battle {
 
     public abstract boolean onStop();
 
-    public void onPlayerDeath(BattleDeathEvent event) {
-        Player player = event.getPlayer();
-        Player killer = player.getKiller();
-
-        if (killer != null && killer != player) addKill(killer);
-
-        int deaths = Metadata.getInt(player, "deaths");
-        Metadata.set(player, "deaths", ++deaths);
-
-        event.setCancelled(true);
-    }
-
-    protected void addKill(Player player) {
+    public void addKill(Player player) {
         int kills = Metadata.getInt(player, "kills") + 1;
         int leadingKills = 0;
 
@@ -411,5 +351,10 @@ public abstract class Battle {
         if (leadingKills < kills) leadingPlayers.clear();
 
         leadingPlayers.add(player.getName());
+    }
+
+    public void addDeath(Player player) {
+        int deaths = Metadata.getInt(player, "deaths");
+        Metadata.set(player, "deaths", ++deaths);
     }
 }

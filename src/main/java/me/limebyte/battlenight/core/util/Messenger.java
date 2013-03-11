@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.Song;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.tosort.Arena;
 import me.limebyte.battlenight.api.tosort.Page;
-import me.limebyte.battlenight.core.Battle;
+import me.limebyte.battlenight.api.util.Song;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.Team;
 import me.limebyte.battlenight.core.TeamedBattle;
@@ -261,7 +261,7 @@ public class Messenger {
         String name = player.getName();
         Battle battle = api.getBattle();
 
-        if (battle.getPlayers().contains(name)) {
+        if (battle.containsPlayer(player)) {
             ChatColor teamColour = ChatColor.WHITE;
             if (battle instanceof TeamedBattle) {
                 teamColour = ((TeamedBattle) battle).getTeam(player).getColour();

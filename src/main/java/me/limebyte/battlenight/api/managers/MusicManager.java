@@ -1,6 +1,6 @@
 package me.limebyte.battlenight.api.managers;
 
-import me.limebyte.battlenight.api.Song;
+import me.limebyte.battlenight.api.util.Song;
 
 public interface MusicManager {
 

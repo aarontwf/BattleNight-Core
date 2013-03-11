@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.limebyte.battlenight.api.tosort.PlayerClass;
+import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionDefault;
 
-public class BattleClass implements PlayerClass {
+public class SimplePlayerClass implements PlayerClass {
     private String name;
     private Permission permission;
     private List<ItemStack> items, armour;
@@ -23,7 +23,7 @@ public class BattleClass implements PlayerClass {
 
     private static final int LAST_INV_SLOT = 35;
 
-    public BattleClass(String name, List<ItemStack> items, List<ItemStack> armour) {
+    public SimplePlayerClass(String name, List<ItemStack> items, List<ItemStack> armour) {
         this.name = name;
         this.items = items;
         this.armour = armour;

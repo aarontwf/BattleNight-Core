@@ -1,12 +1,11 @@
-package me.limebyte.battlenight.core.util.sound;
+package me.limebyte.battlenight.core.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.api.Song;
+import me.limebyte.battlenight.api.util.Song;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

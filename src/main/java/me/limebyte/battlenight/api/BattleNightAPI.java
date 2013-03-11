@@ -1,13 +1,13 @@
 package me.limebyte.battlenight.api;
 
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.tosort.BattleNightCommand;
-import me.limebyte.battlenight.api.tosort.PlayerClass;
-import me.limebyte.battlenight.core.Battle;
+import me.limebyte.battlenight.api.util.PlayerClass;
 
 import org.bukkit.entity.Player;
 

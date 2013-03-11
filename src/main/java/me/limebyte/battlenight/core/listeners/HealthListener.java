@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.core.Battle;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.core.TeamedBattle;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -62,8 +62,6 @@ public class HealthListener extends APIRelatedListener {
         Player damager;
 
         if (eDamager instanceof Projectile) {
-            if (checkCrashBug(damaged, event)) return false;
-
             LivingEntity shooter = ((Projectile) eDamager).getShooter();
             if (shooter instanceof Player) {
                 damager = (Player) shooter;
@@ -89,11 +87,6 @@ public class HealthListener extends APIRelatedListener {
         }
 
         return true;
-    }
-
-    private boolean checkCrashBug(Player damaged, EntityDamageByEntityEvent event) {
-        // if (event.getDamage() >= damaged.getHealth()) return true;
-        return false;
     }
 
 }

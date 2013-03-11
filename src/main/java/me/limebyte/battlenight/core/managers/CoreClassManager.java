@@ -9,8 +9,8 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.managers.ClassManager;
-import me.limebyte.battlenight.api.tosort.PlayerClass;
-import me.limebyte.battlenight.core.util.BattleClass;
+import me.limebyte.battlenight.api.util.PlayerClass;
+import me.limebyte.battlenight.core.util.SimplePlayerClass;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
@@ -36,7 +36,7 @@ public class CoreClassManager implements ClassManager {
             fixOldFiles(className);
             String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour", "");
             String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
-            classes.add(new BattleClass(className, parseItems(items), sortArmour(parseItems(armour))));
+            classes.add(new SimplePlayerClass(className, parseItems(items), sortArmour(parseItems(armour))));
         }
     }
 

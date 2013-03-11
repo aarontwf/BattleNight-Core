@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.api.Song;
 import me.limebyte.battlenight.api.managers.MusicManager;
+import me.limebyte.battlenight.api.util.Song;
 import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.sound.Note;
-import me.limebyte.battlenight.core.util.sound.SimpleSong;
-import me.limebyte.battlenight.core.util.sound.UtilDataInput;
+import me.limebyte.battlenight.core.util.Note;
+import me.limebyte.battlenight.core.util.SimpleSong;
+import me.limebyte.battlenight.core.util.UtilDataInput;
 
 import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;

@@ -1,19 +1,20 @@
 package me.limebyte.battlenight.core.util;
 
+import me.limebyte.battlenight.api.util.Timer;
 import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public abstract class Timer {
+public abstract class SimpleTimer implements Timer {
 
     private long time = 0;
     private long timeRemaining = 0;
     private boolean running;
     private int taskID;
 
-    public Timer(long time) {
+    public SimpleTimer(long time) {
         this.time = time * 10;
         this.timeRemaining = this.time;
     }

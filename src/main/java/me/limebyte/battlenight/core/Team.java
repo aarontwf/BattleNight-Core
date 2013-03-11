@@ -104,7 +104,7 @@ public class Team {
         return colour + name;
     }
 
-    protected void reset(Battle battle) {
+    protected void reset(SimpleBattle battle) {
         ready = false;
         kills = 0;
         deaths = 0;

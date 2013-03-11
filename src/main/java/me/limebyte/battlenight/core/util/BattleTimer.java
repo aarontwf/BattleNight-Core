@@ -1,19 +1,18 @@
 package me.limebyte.battlenight.core.util;
 
-import me.limebyte.battlenight.core.Battle;
+import me.limebyte.battlenight.core.SimpleBattle;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
-import me.limebyte.battlenight.core.util.sound.Note;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
-public class BattleTimer extends Timer {
+public class BattleTimer extends SimpleTimer {
 
-    private Battle battle;
+    private SimpleBattle battle;
     private static final int MINUTE = 60;
     private static final int COUNTDOWN_START = 10;
 
-    public BattleTimer(Battle battle, long time) {
+    public BattleTimer(SimpleBattle battle, long time) {
         super(time);
         this.battle = battle;
     }

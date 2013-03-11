@@ -10,7 +10,6 @@ import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
-import me.limebyte.battlenight.core.listeners.APIEventListener;
 import me.limebyte.battlenight.core.listeners.BlockListener;
 import me.limebyte.battlenight.core.listeners.CheatListener;
 import me.limebyte.battlenight.core.listeners.DeathListener;
@@ -77,7 +76,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         Nameplates.init(this, pm);
 
         // Event Registration
-        pm.registerEvents(new APIEventListener(), this);
         pm.registerEvents(new BlockListener(api), this);
         pm.registerEvents(new CheatListener(api), this);
         pm.registerEvents(new HealthListener(api), this);

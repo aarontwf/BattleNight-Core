@@ -6,7 +6,7 @@ import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ClassManager;
-import me.limebyte.battlenight.api.tosort.PlayerClass;
+import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.ClassSign;
 import me.limebyte.battlenight.core.util.Messenger;

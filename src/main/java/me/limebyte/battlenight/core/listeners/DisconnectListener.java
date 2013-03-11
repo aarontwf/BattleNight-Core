@@ -1,9 +1,7 @@
 package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.tosort.BattleDeathEvent;
-import me.limebyte.battlenight.api.tosort.PlayerData;
-import me.limebyte.battlenight.core.Battle;
+import me.limebyte.battlenight.api.battle.Battle;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,24 +29,14 @@ public class DisconnectListener extends APIRelatedListener {
     private void removePlayer(PlayerEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();
-        Battle battle;
+        Battle battle = getAPI().getBattle();
 
-        if (DeathListener.queue.containsKey(name)) {
-            BattleDeathEvent apiEvent = DeathListener.queue.get(name);
+        if (DeathListener.queue.contains(name)) {
             DeathListener.queue.remove(name);
-            battle = apiEvent.getBattle();
-
-            if (apiEvent.isCancelled()) {
-                battle.respawn(player);
-                battle.removePlayer(player);
-            } else {
-                PlayerData.reset(player);
-                PlayerData.restore(player, true, false);
-            }
-        } else {
-            battle = getAPI().getBattle();
-            battle.removePlayer(player);
-            getAPI().getSpectatorManager().removeSpectator(player);
+            battle.respawn(player);
         }
+
+        battle.removePlayer(player);
+        getAPI().getSpectatorManager().removeSpectator(player);
     }
 }

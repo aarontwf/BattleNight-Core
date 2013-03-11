@@ -2,7 +2,7 @@ package me.limebyte.battlenight.api.managers;
 
 import java.util.List;
 
-import me.limebyte.battlenight.api.tosort.PlayerClass;
+import me.limebyte.battlenight.api.util.PlayerClass;
 
 public interface ClassManager {
 

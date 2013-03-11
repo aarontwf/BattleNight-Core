@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import me.limebyte.battlenight.api.tosort.BattleDeathEvent;
 import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.core.util.Messenger;
 import me.limebyte.battlenight.core.util.Messenger.Message;
@@ -15,7 +14,7 @@ import me.limebyte.battlenight.core.util.SafeTeleporter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public abstract class TeamedBattle extends Battle {
+public abstract class TeamedBattle extends SimpleBattle {
 
     private List<Team> teams = new ArrayList<Team>();
 
@@ -180,7 +179,7 @@ public abstract class TeamedBattle extends Battle {
     }
 
     @Override
-    protected void addKill(Player player) {
+    public void addKill(Player player) {
         super.addKill(player);
 
         Team team = getTeam(player);
@@ -188,18 +187,11 @@ public abstract class TeamedBattle extends Battle {
     }
 
     @Override
-    public void onPlayerDeath(BattleDeathEvent event) {
-        Player player = event.getPlayer();
-        Player killer = player.getKiller();
+    public void addDeath(Player player) {
+        super.addDeath(player);
+
         Team team = getTeam(player);
-
-        if (killer != null && areEnemies(player, killer)) addKill(killer);
         if (team != null) team.addDeath();
-
-        int deaths = Metadata.getInt(player, "deaths");
-        Metadata.set(player, "deaths", ++deaths);
-
-        event.setCancelled(true);
     }
 
     protected void teleportAllToSpawn() {

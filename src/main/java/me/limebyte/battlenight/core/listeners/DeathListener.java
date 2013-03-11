@@ -1,16 +1,14 @@
 package me.limebyte.battlenight.core.listeners;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
-import me.limebyte.battlenight.api.tosort.BattleDeathEvent;
 import me.limebyte.battlenight.api.tosort.PlayerData;
-import me.limebyte.battlenight.core.Battle;
 import me.limebyte.battlenight.core.util.Messenger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,7 +17,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class DeathListener extends APIRelatedListener {
 
-    protected static Map<String, BattleDeathEvent> queue = new HashMap<String, BattleDeathEvent>();
+    protected static Set<String> queue = new HashSet<String>();
 
     public DeathListener(BattleNightAPI api) {
         super(api);
@@ -32,21 +30,19 @@ public class DeathListener extends APIRelatedListener {
 
         if (battle.containsPlayer(player)) {
             event.getDrops().clear();
+            event.setDroppedExp(0);
 
             if (battle.isInProgress()) {
                 Messenger.killFeed(player, player.getKiller(), event.getDeathMessage());
                 event.setDeathMessage("");
             }
 
-            BattleDeathEvent apiEvent = new BattleDeathEvent(battle, player);
-            Bukkit.getServer().getPluginManager().callEvent(apiEvent);
+            Player killer = player.getKiller();
 
-            if (!apiEvent.isCancelled()) {
-                apiEvent.setRespawnLocation(battle.toSpectator(player, true));
-            }
+            battle.addDeath(player);
+            if (killer != null && killer != player) battle.addKill(killer);
 
-            queue.put(player.getName(), apiEvent);
-
+            queue.add(player.getName());
         }
     }
 
@@ -56,17 +52,9 @@ public class DeathListener extends APIRelatedListener {
         String name = player.getName();
         SpectatorManager spectatorManager = getAPI().getSpectatorManager();
 
-        if (queue.containsKey(name)) {
-            BattleDeathEvent apiEvent = queue.get(name);
+        if (queue.contains(name)) {
             queue.remove(name);
-
-            if (apiEvent.isCancelled()) {
-                apiEvent.getBattle().respawn(player);
-            } else if (!apiEvent.isCancelled() && !spectatorManager.getSpectators().contains(player.getName())) {
-                PlayerData.restore(player, true, false);
-            }
-
-            event.setRespawnLocation(apiEvent.getRespawnLocation());
+            event.setRespawnLocation(getAPI().getBattle().respawn(player));
         } else if (spectatorManager.getSpectators().contains(player.getName())) {
             event.setRespawnLocation(PlayerData.getSavedLocation(player));
             spectatorManager.removeSpectator(player);

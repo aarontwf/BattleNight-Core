@@ -3,7 +3,7 @@ package me.limebyte.battlenight.core.util;
 import java.util.List;
 
 import me.limebyte.battlenight.api.managers.ClassManager;
-import me.limebyte.battlenight.api.tosort.PlayerClass;
+import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.entity.Player;
