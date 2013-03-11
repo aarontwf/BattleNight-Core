@@ -82,7 +82,7 @@ public class API implements BattleNightAPI {
 
     @Override
     public PlayerClass getPlayerClass(Player player) {
-        return Metadata.getBattleClass(player);
+        return Metadata.getPlayerClass(player);
     }
 
     @Override

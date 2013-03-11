@@ -85,7 +85,7 @@ public class SignListener extends APIRelatedListener {
                         if (player.hasPermission(playerClass.getPermission())) {
                             addName(player, sign);
 
-                            if (Metadata.getBattleClass(player) != playerClass) {
+                            if (Metadata.getPlayerClass(player) != playerClass) {
                                 ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                             }
 

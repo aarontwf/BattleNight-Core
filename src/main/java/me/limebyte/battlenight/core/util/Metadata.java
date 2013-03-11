@@ -38,13 +38,13 @@ public class Metadata {
         return null;
     }
 
-    public static PlayerClass getBattleClass(Player player) {
+    public static PlayerClass getPlayerClass(Player player) {
         String result = getString(player, "class");
         if (result == null) return null;
 
         ClassManager manager = BattleNight.instance.getAPI().getClassManager();
         for (PlayerClass clazz : manager.getClasses()) {
-            if (clazz.getName().equals(clazz.getName())) return clazz;
+            if (result.equals(clazz.getName())) return clazz;
         }
         return null;
     }
