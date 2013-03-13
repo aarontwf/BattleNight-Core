@@ -19,14 +19,14 @@ public class DeprecatedCommand extends BattleNightCommand {
         setNewLabel(newLabel);
     }
 
+    public String getNewLabel() {
+        return newLabel;
+    }
+
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         Messenger.tell(sender, Message.DEPRICATED_COMMAND, newLabel);
         return true;
-    }
-
-    public String getNewLabel() {
-        return newLabel;
     }
 
     public void setNewLabel(String newLabel) {

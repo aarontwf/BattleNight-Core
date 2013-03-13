@@ -1,6 +1,5 @@
 package me.limebyte.battlenight.core;
 
-
 public class FFABattle extends SimpleBattle {
 
     public FFABattle(int duration, int minPlayers, int maxPlayers) {

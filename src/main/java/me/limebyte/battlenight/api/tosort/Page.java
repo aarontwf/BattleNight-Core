@@ -7,7 +7,33 @@ import org.bukkit.ChatColor;
 
 public class Page {
 
+    private static int getStringWidth(String text) {
+        final int[] characterWidths = new int[] { 1, 9, 9, 8, 8, 8, 8, 7, 9, 8, 9, 9, 8, 9, 9, 9, 8, 8, 8, 8, 9, 9, 8, 9, 8, 8, 8, 8, 8, 9, 9, 9, 4, 2, 5, 6, 6, 6, 6, 3, 5, 5, 5, 6, 2, 6, 2, 6, 6, 6,
+                6, 6, 6, 6, 6, 6, 6, 6, 2, 2, 5, 6, 5, 6, 7, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 4, 6, 6, 3, 6, 6, 6, 6, 6, 5, 6, 6, 2, 6, 5, 3, 6, 6,
+                6, 6, 6, 6, 6, 4, 6, 6, 6, 6, 6, 6, 5, 2, 5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 6, 3, 6, 6, 6, 6, 6, 6, 6, 7, 6, 6,
+                6, 2, 6, 6, 8, 9, 9, 6, 6, 6, 8, 8, 6, 8, 8, 8, 8, 8, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 6, 9, 9, 9, 5, 9, 9, 8, 7, 7, 8, 7, 8, 8, 8, 7,
+                8, 8, 7, 9, 9, 6, 7, 7, 7, 7, 7, 9, 6, 7, 8, 7, 6, 6, 9, 7, 6, 7, 1 };
+        final String allowedCharacters = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'abcdefghijklmnopqrstuvwxyz {|}~?Ã³ÚÔõÓÕþÛÙÞ´¯ý─┼╔µã¶÷‗¹¨ Í▄°úÏÎâßÝ¾·±Ð¬║┐«¼¢╝í½╗";
+        int length = 0;
+        for (String line : ChatColor.stripColor(text).split("\n")) {
+            int lineLength = 0;
+            boolean skip = false;
+            for (char ch : line.toCharArray()) {
+                if (skip) {
+                    skip = false;
+                } else if (ch == '\u00A7') {
+                    skip = true;
+                } else if (allowedCharacters.indexOf(ch) != -1) {
+                    lineLength += characterWidths[ch];
+                }
+            }
+            length = Math.max(length, lineLength);
+        }
+        return length;
+    }
+
     String title, text, header, footer;
+
     private int pageWidth = 320;
 
     public Page(String title, String text) {
@@ -17,12 +43,22 @@ public class Page {
         footer = getFooter();
     }
 
-    public String[] getPage() {
-        List<String> page = new ArrayList<String>();
-        page.add(header);
-        page.addAll(processText(text));
-        page.add(footer);
-        return page.toArray(new String[page.size()]);
+    private String getFooter() {
+        String dashes = ChatColor.DARK_GRAY + "";
+        int dashSpace = getStringWidth("-");
+        int spaceAvailable = getStringWidth(header);
+        int spaceRemaining = spaceAvailable;
+
+        while (true) {
+            if (dashSpace > spaceRemaining) {
+                break;
+            }
+
+            dashes += "-";
+            spaceRemaining -= dashSpace;
+        }
+
+        return dashes;
     }
 
     private String getHeader() {
@@ -70,68 +106,16 @@ public class Page {
         return dashes + formattedTitle + extras + dashes;
     }
 
-    private String getFooter() {
-        String dashes = ChatColor.DARK_GRAY + "";
-        int dashSpace = getStringWidth("-");
-        int spaceAvailable = getStringWidth(header);
-        int spaceRemaining = spaceAvailable;
-
-        while (true) {
-            if (dashSpace > spaceRemaining) {
-                break;
-            }
-
-            dashes += "-";
-            spaceRemaining -= dashSpace;
-        }
-
-        return dashes;
-    }
-
-    private static int getStringWidth(String text) {
-        final int[] characterWidths = new int[] {
-                1, 9, 9, 8, 8, 8, 8, 7, 9, 8, 9, 9, 8, 9, 9, 9,
-                8, 8, 8, 8, 9, 9, 8, 9, 8, 8, 8, 8, 8, 9, 9, 9,
-                4, 2, 5, 6, 6, 6, 6, 3, 5, 5, 5, 6, 2, 6, 2, 6,
-                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 2, 2, 5, 6, 5, 6,
-                7, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 6, 6, 6, 6, 6,
-                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 4, 6, 6,
-                3, 6, 6, 6, 6, 6, 5, 6, 6, 2, 6, 5, 3, 6, 6, 6,
-                6, 6, 6, 6, 4, 6, 6, 6, 6, 6, 6, 5, 2, 5, 7, 6,
-                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 3, 6, 6,
-                6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6,
-                6, 3, 6, 6, 6, 6, 6, 6, 6, 7, 6, 6, 6, 2, 6, 6,
-                8, 9, 9, 6, 6, 6, 8, 8, 6, 8, 8, 8, 8, 8, 6, 6,
-                9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-                9, 9, 9, 9, 9, 9, 9, 9, 9, 6, 9, 9, 9, 5, 9, 9,
-                8, 7, 7, 8, 7, 8, 8, 8, 7, 8, 8, 7, 9, 9, 6, 7,
-                7, 7, 7, 7, 9, 6, 7, 8, 7, 6, 6, 9, 7, 6, 7, 1
-        };
-        final String allowedCharacters = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'abcdefghijklmnopqrstuvwxyz {|}~?Ã³ÚÔõÓÕþÛÙÞ´¯ý─┼╔µã¶÷‗¹¨ Í▄°úÏÎâßÝ¾·±Ð¬║┐«¼¢╝í½╗";
-        int length = 0;
-        for (String line : ChatColor.stripColor(text).split("\n")) {
-            int lineLength = 0;
-            boolean skip = false;
-            for (char ch : line.toCharArray()) {
-                if (skip) {
-                    skip = false;
-                } else if (ch == '\u00A7') {
-                    skip = true;
-                } else if (allowedCharacters.indexOf(ch) != -1) {
-                    lineLength += characterWidths[ch];
-                }
-            }
-            length = Math.max(length, lineLength);
-        }
-        return length;
+    public String[] getPage() {
+        List<String> page = new ArrayList<String>();
+        page.add(header);
+        page.addAll(processText(text));
+        page.add(footer);
+        return page.toArray(new String[page.size()]);
     }
 
     public int getWidth() {
         return pageWidth;
-    }
-
-    public void setWidth(int width) {
-        pageWidth = width;
     }
 
     private List<String> processText(String text) {
@@ -143,6 +127,10 @@ public class Page {
             }
             return result;
         } else return wrapText(text);
+    }
+
+    public void setWidth(int width) {
+        pageWidth = width;
     }
 
     private List<String> wrapText(String text) {

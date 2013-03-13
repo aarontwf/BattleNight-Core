@@ -20,6 +20,22 @@ import org.kitteh.tag.TagAPI;
 public class Nameplates {
     private static boolean enabled = false;
 
+    public static void copyResource(String resource, File file) {
+        InputStream in = BattleNight.instance.getResource(resource);
+        try {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void init(BattleNight plugin, PluginManager pm) {
         if (pm.getPlugin("TagAPI") == null) {
             Messenger.log(Level.WARNING, "TagAPI not found.  Installing...");
@@ -43,30 +59,10 @@ public class Nameplates {
         load(tagAPI);
     }
 
-    private static void update(PluginManager pm) {
-        // TODO
-    }
-
     private static void load(File file) throws UnknownDependencyException, InvalidPluginException, InvalidDescriptionException {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.loadPlugin(file);
         pm.enablePlugin(pm.getPlugin("TagAPI"));
-    }
-
-    public static void copyResource(String resource, File file) {
-        InputStream in = BattleNight.instance.getResource(resource);
-        try {
-            OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) != -1) {
-                out.write(buf, 0, len);
-            }
-            out.close();
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void refresh(Player player) {
@@ -75,6 +71,10 @@ public class Nameplates {
             TagAPI.refreshPlayer(player);
         } catch (Exception e) {
         }
+    }
+
+    private static void update(PluginManager pm) {
+        // TODO
     }
 
 }

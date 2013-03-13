@@ -27,6 +27,28 @@ public class ArenasCommand extends BattleNightCommand {
         setPermission(CommandPermission.ADMIN);
     }
 
+    private String getArenaName(Arena arena) {
+        ChatColor colour = arena.isEnabled() ? ChatColor.GREEN : ChatColor.RED;
+        return colour + arena.getDisplayName() + " (" + arena.getName() + ")";
+    }
+
+    private String numSetup(List<Arena> arenas) {
+        int num = 0;
+        int setup = 0;
+
+        for (Arena a : arenas) {
+            if (a == null) {
+                continue;
+            }
+            num++;
+            if (a.isSetup(2)) {
+                setup++;
+            }
+        }
+
+        return setup + "/" + num;
+    }
+
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         ArenaManager manager = api.getArenaManager();
@@ -220,24 +242,6 @@ public class ArenasCommand extends BattleNightCommand {
         }
 
         Messenger.tell(sender, new ListPage("BattleNight Arenas", lines));
-    }
-
-    private String getArenaName(Arena arena) {
-        ChatColor colour = arena.isEnabled() ? ChatColor.GREEN : ChatColor.RED;
-        return colour + arena.getDisplayName() + " (" + arena.getName() + ")";
-    }
-
-    private String numSetup(List<Arena> arenas) {
-        int num = 0;
-        int setup = 0;
-
-        for (Arena a : arenas) {
-            if (a == null) continue;
-            num++;
-            if (a.isSetup(2)) setup++;
-        }
-
-        return setup + "/" + num;
     }
 
 }

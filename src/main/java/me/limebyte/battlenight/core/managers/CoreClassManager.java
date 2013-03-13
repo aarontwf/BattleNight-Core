@@ -10,8 +10,8 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.util.PlayerClass;
-import me.limebyte.battlenight.core.util.SimplePlayerClass;
 import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.util.SimplePlayerClass;
 import me.limebyte.battlenight.core.util.config.ConfigManager;
 import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
 
@@ -21,51 +21,88 @@ import org.bukkit.inventory.ItemStack;
 
 public class CoreClassManager implements ClassManager {
 
+    private enum ArmourType {
+        HELMET(Material.LEATHER_HELMET, Material.CHAINMAIL_HELMET, Material.IRON_HELMET, Material.GOLD_HELMET, Material.DIAMOND_HELMET, Material.WOOL), CHESTPLATE(Material.LEATHER_CHESTPLATE,
+                Material.CHAINMAIL_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLD_CHESTPLATE, Material.DIAMOND_CHESTPLATE), LEGGINGS(Material.LEATHER_LEGGINGS, Material.CHAINMAIL_LEGGINGS,
+                Material.IRON_LEGGINGS, Material.GOLD_LEGGINGS, Material.DIAMOND_LEGGINGS), BOOTS(Material.LEATHER_BOOTS, Material.CHAINMAIL_BOOTS, Material.IRON_BOOTS, Material.GOLD_BOOTS,
+                Material.DIAMOND_BOOTS);
+
+        private Material[] materials;
+
+        ArmourType(Material... materials) {
+            this.materials = materials;
+        }
+
+        public boolean contains(ItemStack stack) {
+            for (Material material : materials) {
+                if (stack == null) {
+                    continue;
+                }
+                if (stack.getType().equals(material)) return true;
+            }
+            return false;
+        }
+    }
+
     private static final Config configFile = Config.CLASSES;
-    private List<PlayerClass> classes = new ArrayList<PlayerClass>();
 
-    public CoreClassManager() {
-        reloadClasses();
-    }
-
-    @Override
-    public void loadClasses() {
-        Messenger.debug(Level.INFO, "Loading classes...");
-        ConfigManager.reload(configFile);
-        for (String className : ConfigManager.get(configFile).getConfigurationSection("Classes").getKeys(false)) {
-            fixOldFiles(className);
-            String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour", "");
-            String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
-            classes.add(new SimplePlayerClass(className, parseItems(items), sortArmour(parseItems(armour))));
+    private static void fixOldFiles(String className) {
+        // Armour
+        String armor = ConfigManager.get(configFile).getString("Classes." + className + ".Armor");
+        String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour");
+        if (armor != null) {
+            if (armour == null) {
+                ConfigManager.get(configFile).set("Classes." + className + ".Armour", armor);
+            } else {
+                ConfigManager.get(configFile).set("Classes." + className + ".Armour", "none, none, none, none");
+            }
+            ConfigManager.get(configFile).set("Classes." + className + ".Armor", null);
         }
-    }
 
-    @Override
-    public void saveClasses() {
-        Messenger.debug(Level.INFO, "Saving classes...");
-        for (PlayerClass c : classes) {
-            ConfigManager.get(configFile).set("Classes." + c.getName() + ".Armour", parseItems(c.getArmour()));
-            ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
+        // DummyItem
+        int dummyItem = ConfigManager.get(configFile).getInt("DummyItem");
+        if (dummyItem != 0) {
+            ConfigManager.get(configFile).set("DummyItem", null);
         }
+
         ConfigManager.save(configFile);
     }
 
-    @Override
-    public void reloadClasses() {
-        loadClasses();
-        saveClasses();
-    }
+    private static String parseItems(List<ItemStack> items) {
+        String rawItems = "";
 
-    @Override
-    public List<PlayerClass> getClasses() {
-        return classes;
-    }
+        for (ItemStack item : items) {
 
-    @Override
-    public PlayerClass getRandomClass() {
-        Random random = new Random();
-        int classNum = random.nextInt(classes.size());
-        return classes.get(classNum);
+            if (item == null) {
+                rawItems += ", none";
+            } else {
+                int id = item.getTypeId();
+                int data = item.getDurability();
+                int amount = item.getAmount();
+                Map<Enchantment, Integer> enchantments = item.getEnchantments();
+
+                rawItems += ", " + id;
+                if (data > 0) {
+                    rawItems += ":" + data;
+                }
+                if (!item.getEnchantments().isEmpty()) {
+                    String rawEnchantments = "";
+                    rawItems += "e(";
+
+                    for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+                        rawEnchantments += "/" + enchantment.getKey().getId() + "~" + enchantment.getValue();
+                    }
+                    rawItems += rawEnchantments.substring(1);
+
+                    rawItems += ")";
+                }
+                if (amount > 1) {
+                    rawItems += "x" + amount;
+                }
+            }
+        }
+
+        return rawItems.substring(2);
     }
 
     private static List<ItemStack> parseItems(String rawItems) {
@@ -206,41 +243,27 @@ public class CoreClassManager implements ClassManager {
         return items;
     }
 
-    private static String parseItems(List<ItemStack> items) {
-        String rawItems = "";
-
-        for (ItemStack item : items) {
-
-            if (item == null) {
-                rawItems += ", none";
-            } else {
-                int id = item.getTypeId();
-                int data = item.getDurability();
-                int amount = item.getAmount();
-                Map<Enchantment, Integer> enchantments = item.getEnchantments();
-
-                rawItems += ", " + id;
-                if (data > 0) {
-                    rawItems += ":" + data;
-                }
-                if (!item.getEnchantments().isEmpty()) {
-                    String rawEnchantments = "";
-                    rawItems += "e(";
-
-                    for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-                        rawEnchantments += "/" + enchantment.getKey().getId() + "~" + enchantment.getValue();
-                    }
-                    rawItems += rawEnchantments.substring(1);
-
-                    rawItems += ")";
-                }
-                if (amount > 1) {
-                    rawItems += "x" + amount;
-                }
+    private static List<ItemStack> sortArmour(List<ItemStack> armour) {
+        ItemStack helmet = null, chestplate = null, leggings = null, boots = null;
+        for (ItemStack stack : armour) {
+            if (ArmourType.HELMET.contains(stack)) {
+                helmet = stack;
+            } else if (ArmourType.CHESTPLATE.contains(stack)) {
+                chestplate = stack;
+            } else if (ArmourType.LEGGINGS.contains(stack)) {
+                leggings = stack;
+            } else if (ArmourType.BOOTS.contains(stack)) {
+                boots = stack;
             }
         }
 
-        return rawItems.substring(2);
+        List<ItemStack> sorted = new ArrayList<ItemStack>();
+        sorted.add(0, helmet);
+        sorted.add(1, chestplate);
+        sorted.add(2, leggings);
+        sorted.add(3, boots);
+
+        return sorted;
     }
 
     private static ItemStack[] splitIntoStacks(ItemStack item, int amount) {
@@ -276,71 +299,49 @@ public class CoreClassManager implements ClassManager {
         return items;
     }
 
-    private static List<ItemStack> sortArmour(List<ItemStack> armour) {
-        ItemStack helmet = null, chestplate = null, leggings = null, boots = null;
-        for (ItemStack stack : armour) {
-            if (ArmourType.HELMET.contains(stack)) {
-                helmet = stack;
-            } else if (ArmourType.CHESTPLATE.contains(stack)) {
-                chestplate = stack;
-            } else if (ArmourType.LEGGINGS.contains(stack)) {
-                leggings = stack;
-            } else if (ArmourType.BOOTS.contains(stack)) {
-                boots = stack;
-            }
-        }
+    private List<PlayerClass> classes = new ArrayList<PlayerClass>();
 
-        List<ItemStack> sorted = new ArrayList<ItemStack>();
-        sorted.add(0, helmet);
-        sorted.add(1, chestplate);
-        sorted.add(2, leggings);
-        sorted.add(3, boots);
-
-        return sorted;
+    public CoreClassManager() {
+        reloadClasses();
     }
 
-    private enum ArmourType {
-        HELMET(Material.LEATHER_HELMET, Material.CHAINMAIL_HELMET, Material.IRON_HELMET, Material.GOLD_HELMET, Material.DIAMOND_HELMET, Material.WOOL), CHESTPLATE(Material.LEATHER_CHESTPLATE,
-                Material.CHAINMAIL_CHESTPLATE, Material.IRON_CHESTPLATE, Material.GOLD_CHESTPLATE, Material.DIAMOND_CHESTPLATE), LEGGINGS(Material.LEATHER_LEGGINGS, Material.CHAINMAIL_LEGGINGS,
-                Material.IRON_LEGGINGS, Material.GOLD_LEGGINGS, Material.DIAMOND_LEGGINGS), BOOTS(Material.LEATHER_BOOTS, Material.CHAINMAIL_BOOTS, Material.IRON_BOOTS, Material.GOLD_BOOTS,
-                Material.DIAMOND_BOOTS);
+    @Override
+    public List<PlayerClass> getClasses() {
+        return classes;
+    }
 
-        private Material[] materials;
+    @Override
+    public PlayerClass getRandomClass() {
+        Random random = new Random();
+        int classNum = random.nextInt(classes.size());
+        return classes.get(classNum);
+    }
 
-        ArmourType(Material... materials) {
-            this.materials = materials;
-        }
-
-        public boolean contains(ItemStack stack) {
-            for (Material material : materials) {
-                if (stack == null) {
-                    continue;
-                }
-                if (stack.getType().equals(material)) return true;
-            }
-            return false;
+    @Override
+    public void loadClasses() {
+        Messenger.debug(Level.INFO, "Loading classes...");
+        ConfigManager.reload(configFile);
+        for (String className : ConfigManager.get(configFile).getConfigurationSection("Classes").getKeys(false)) {
+            fixOldFiles(className);
+            String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour", "");
+            String items = ConfigManager.get(configFile).getString("Classes." + className + ".Items", "");
+            classes.add(new SimplePlayerClass(className, parseItems(items), sortArmour(parseItems(armour))));
         }
     }
 
-    private static void fixOldFiles(String className) {
-        // Armour
-        String armor = ConfigManager.get(configFile).getString("Classes." + className + ".Armor");
-        String armour = ConfigManager.get(configFile).getString("Classes." + className + ".Armour");
-        if (armor != null) {
-            if (armour == null) {
-                ConfigManager.get(configFile).set("Classes." + className + ".Armour", armor);
-            } else {
-                ConfigManager.get(configFile).set("Classes." + className + ".Armour", "none, none, none, none");
-            }
-            ConfigManager.get(configFile).set("Classes." + className + ".Armor", null);
-        }
+    @Override
+    public void reloadClasses() {
+        loadClasses();
+        saveClasses();
+    }
 
-        // DummyItem
-        int dummyItem = ConfigManager.get(configFile).getInt("DummyItem");
-        if (dummyItem != 0) {
-            ConfigManager.get(configFile).set("DummyItem", null);
+    @Override
+    public void saveClasses() {
+        Messenger.debug(Level.INFO, "Saving classes...");
+        for (PlayerClass c : classes) {
+            ConfigManager.get(configFile).set("Classes." + c.getName() + ".Armour", parseItems(c.getArmour()));
+            ConfigManager.get(configFile).set("Classes." + c.getName() + ".Items", parseItems(c.getItems()));
         }
-
         ConfigManager.save(configFile);
     }
 }

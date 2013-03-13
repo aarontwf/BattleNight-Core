@@ -17,12 +17,12 @@ public class DisconnectListener extends APIRelatedListener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerKick(PlayerKickEvent event) {
         removePlayer(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerKick(PlayerKickEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         removePlayer(event);
     }
 
@@ -31,10 +31,7 @@ public class DisconnectListener extends APIRelatedListener {
         String name = player.getName();
         Battle battle = getAPI().getBattle();
 
-        if (DeathListener.queue.contains(name)) {
-            DeathListener.queue.remove(name);
-            battle.respawn(player);
-        }
+        DeathListener.queue.remove(name);
 
         battle.removePlayer(player);
         getAPI().getSpectatorManager().removeSpectator(player);

@@ -27,121 +27,17 @@ public class CoreMusicManager implements MusicManager {
 
     public CoreMusicManager(Plugin plugin) {
         this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder().toString() + "/music/");
-        this.customFile = new File(plugin.getDataFolder().toString() + "/music/custom/");
+        file = new File(plugin.getDataFolder().toString() + "/music/");
+        customFile = new File(plugin.getDataFolder().toString() + "/music/custom/");
 
-        if (!this.file.exists()) this.file.mkdirs();
-        if (!this.customFile.exists()) this.customFile.mkdirs();
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        if (!customFile.exists()) {
+            customFile.mkdirs();
+        }
 
         loadSongs();
-    }
-
-    public Song load(String name) {
-        File file = new File(this.file + "/" + name + ".nbs");
-        try {
-            loadFromJar(name, file);
-        } catch (IOException e) {
-            Messenger.log(Level.WARNING, "Failed to load song \"" + name + "\"from the jar.");
-        }
-
-        File customFile = new File(this.customFile + "/" + name + ".nbs");
-
-        if (customFile.exists()) {
-            Messenger.debug(Level.INFO, "Using custom " + name + " music.");
-            return parseFile(customFile);
-        }
-
-        return parseFile(file);
-    }
-
-    private void loadSongs() {
-        battleEnd = load("battle-end");
-    }
-
-    private boolean loadFromJar(String name, File file) throws IOException {
-        InputStream inputStream = plugin.getResource("music/" + name + ".nbs");
-        FileOutputStream outputStream = new FileOutputStream(file);
-
-        byte[] arrayOfByte = new byte[10240];
-        int k = inputStream.read(arrayOfByte);
-        while (k != -1) {
-            outputStream.write(arrayOfByte, 0, k);
-            k = inputStream.read(arrayOfByte);
-        }
-
-        outputStream.close();
-        inputStream.close();
-        return true;
-    }
-
-    @SuppressWarnings("unused")
-    private Song parseFile(File file) {
-        UtilDataInput data = null;
-        try {
-            data = new UtilDataInput(new FileInputStream(file));
-
-            int songLength = data.readShort();
-            int songHeight = data.readShort();
-
-            String songName = data.readString();
-            String songAuthor = data.readString();
-            String originalSongAuthor = data.readString();
-            String songDescription = data.readString();
-
-            int tempo = data.readShort();
-            if ((tempo != 1000) && (tempo != 500) && (tempo != 250)) return null;
-
-            // Auto-saving, Auto-saving duration, Time signature
-            data.skipBytes(3);
-
-            int minutesSpent = data.readInt();
-            int leftClicks = data.readInt();
-            int rightClicks = data.readInt();
-            int blocksAdded = data.readInt();
-            int blocksRemoved = data.readInt();
-            String exportName = data.readString();
-
-            SimpleSong song = new SimpleSong(songLength);
-
-            int ticks = -1;
-            int jumps = 0;
-
-            while (true) {
-                jumps = data.readShort();
-                if (jumps == 0) break;
-                ticks += jumps;
-
-                short layer = -1;
-                while (true) {
-                    jumps = data.readShort();
-                    if (jumps == 0) break;
-                    layer += jumps;
-                    byte inst = data.readByte();
-                    Sound sound = getSound(inst);
-                    byte pitch = (byte) (data.readByte() - 33);
-
-                    if (sound == null || (pitch < 0 || pitch > 24)) continue;
-                    song.addNote(new Note(sound, ticks * getTicks(tempo), 1.0f, pitch));
-                }
-            }
-
-            data.closeStream();
-            return song;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private int getTicks(int tempo) {
-        switch (tempo) {
-            case 1000:
-                return 2;
-            case 500:
-                return 4;
-            case 250:
-                return 8;
-        }
-        return 0;
     }
 
     private Sound getSound(byte inst) {
@@ -162,6 +58,121 @@ public class CoreMusicManager implements MusicManager {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    private int getTicks(int tempo) {
+        switch (tempo) {
+            case 1000:
+                return 2;
+            case 500:
+                return 4;
+            case 250:
+                return 8;
+        }
+        return 0;
+    }
+
+    @Override
+    public Song load(String name) {
+        File file = new File(this.file + "/" + name + ".nbs");
+        try {
+            loadFromJar(name, file);
+        } catch (IOException e) {
+            Messenger.log(Level.WARNING, "Failed to load song \"" + name + "\"from the jar.");
+        }
+
+        File customFile = new File(this.customFile + "/" + name + ".nbs");
+
+        if (customFile.exists()) {
+            Messenger.debug(Level.INFO, "Using custom " + name + " music.");
+            return parseFile(customFile);
+        }
+
+        return parseFile(file);
+    }
+
+    private boolean loadFromJar(String name, File file) throws IOException {
+        InputStream inputStream = plugin.getResource("music/" + name + ".nbs");
+        FileOutputStream outputStream = new FileOutputStream(file);
+
+        byte[] arrayOfByte = new byte[10240];
+        int k = inputStream.read(arrayOfByte);
+        while (k != -1) {
+            outputStream.write(arrayOfByte, 0, k);
+            k = inputStream.read(arrayOfByte);
+        }
+
+        outputStream.close();
+        inputStream.close();
+        return true;
+    }
+
+    private void loadSongs() {
+        battleEnd = load("battle-end");
+    }
+
+    @SuppressWarnings("unused")
+    private Song parseFile(File file) {
+        UtilDataInput data = null;
+        try {
+            data = new UtilDataInput(new FileInputStream(file));
+
+            int songLength = data.readShort();
+            int songHeight = data.readShort();
+
+            String songName = data.readString();
+            String songAuthor = data.readString();
+            String originalSongAuthor = data.readString();
+            String songDescription = data.readString();
+
+            int tempo = data.readShort();
+            if (tempo != 1000 && tempo != 500 && tempo != 250) return null;
+
+            // Auto-saving, Auto-saving duration, Time signature
+            data.skipBytes(3);
+
+            int minutesSpent = data.readInt();
+            int leftClicks = data.readInt();
+            int rightClicks = data.readInt();
+            int blocksAdded = data.readInt();
+            int blocksRemoved = data.readInt();
+            String exportName = data.readString();
+
+            SimpleSong song = new SimpleSong(songLength);
+
+            int ticks = -1;
+            int jumps = 0;
+
+            while (true) {
+                jumps = data.readShort();
+                if (jumps == 0) {
+                    break;
+                }
+                ticks += jumps;
+
+                short layer = -1;
+                while (true) {
+                    jumps = data.readShort();
+                    if (jumps == 0) {
+                        break;
+                    }
+                    layer += jumps;
+                    byte inst = data.readByte();
+                    Sound sound = getSound(inst);
+                    byte pitch = (byte) (data.readByte() - 33);
+
+                    if (sound == null || pitch < 0 || pitch > 24) {
+                        continue;
+                    }
+                    song.addNote(new Note(sound, ticks * getTicks(tempo), 1.0f, pitch));
+                }
+            }
+
+            data.closeStream();
+            return song;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

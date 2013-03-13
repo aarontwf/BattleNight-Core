@@ -15,16 +15,10 @@ public class Waypoint implements ConfigurationSerializable {
     private Location location;
     private static final String LOC_SEP = ", ";
 
-    public Location getLocation() {
-        return location.clone();
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public boolean isSet() {
-        return location != null;
+    public static Waypoint deserialize(Map<String, Object> map) {
+        Waypoint waypoint = new Waypoint();
+        waypoint.setLocation(parseLocation((String) map.get("Location")));
+        return waypoint;
     }
 
     public static final String parseLocation(Location loc) {
@@ -53,6 +47,14 @@ public class Waypoint implements ConfigurationSerializable {
         return new Location(w, x, y, z, yaw, pitch);
     }
 
+    public Location getLocation() {
+        return location.clone();
+    }
+
+    public boolean isSet() {
+        return location != null;
+    }
+
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -60,10 +62,8 @@ public class Waypoint implements ConfigurationSerializable {
         return map;
     }
 
-    public static Waypoint deserialize(Map<String, Object> map) {
-        Waypoint waypoint = new Waypoint();
-        waypoint.setLocation(parseLocation((String) map.get("Location")));
-        return waypoint;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
 }

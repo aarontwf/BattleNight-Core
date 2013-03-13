@@ -9,50 +9,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 public abstract class SimpleTimer implements Timer {
 
-    private long time = 0;
-    private long timeRemaining = 0;
-    private boolean running;
-    private int taskID;
-
-    public SimpleTimer(long time) {
-        this.time = time * 10;
-        this.timeRemaining = this.time;
-    }
-
-    public void start() {
-        BukkitTask task = new TimerTask().runTaskTimer(BattleNight.instance, 2, 2);
-        taskID = task.getTaskId();
-        running = true;
-    }
-
-    public void stop() {
-        Bukkit.getScheduler().cancelTask(taskID);
-        running = false;
-        timeRemaining = time;
-    }
-
-    public long getTime() {
-        return time / 10;
-    }
-
-    public void setTime(long time) {
-        this.time = time * 10;
-    }
-
-    public long getTimeRemaining() {
-        return timeRemaining / 10;
-    }
-
-    public void setTimeRemaining(long timeRemaining) {
-        this.timeRemaining = timeRemaining * 10;
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
     class TimerTask extends BukkitRunnable {
 
+        @Override
         public void run() {
             timeRemaining--;
 
@@ -67,8 +26,58 @@ public abstract class SimpleTimer implements Timer {
 
     }
 
+    private long time = 0;
+    private long timeRemaining = 0;
+    private boolean running;
+
+    private int taskID;
+
+    public SimpleTimer(long time) {
+        this.time = time * 10;
+        timeRemaining = this.time;
+    }
+
+    @Override
+    public long getTime() {
+        return time / 10;
+    }
+
+    @Override
+    public long getTimeRemaining() {
+        return timeRemaining / 10;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
+
     public abstract void onTimeChange(long time);
 
     public abstract void onTimerEnd();
+
+    @Override
+    public void setTime(long time) {
+        this.time = time * 10;
+    }
+
+    @Override
+    public void setTimeRemaining(long timeRemaining) {
+        this.timeRemaining = timeRemaining * 10;
+    }
+
+    @Override
+    public void start() {
+        BukkitTask task = new TimerTask().runTaskTimer(BattleNight.instance, 2, 2);
+        taskID = task.getTaskId();
+        running = true;
+    }
+
+    @Override
+    public void stop() {
+        Bukkit.getScheduler().cancelTask(taskID);
+        running = false;
+        timeRemaining = time;
+    }
 
 }

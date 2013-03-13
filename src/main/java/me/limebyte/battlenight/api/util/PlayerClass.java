@@ -9,16 +9,16 @@ import org.bukkit.permissions.Permission;
 
 public interface PlayerClass {
 
+    public void equip(Player player);
+
+    public List<ItemStack> getArmour();
+
+    public List<ItemStack> getItems();
+
     public String getName();
 
     public Permission getPermission();
 
-    public List<ItemStack> getItems();
-
-    public List<ItemStack> getArmour();
-
     public HashMap<String, Boolean> getPermissions();
-
-    public void equip(Player player);
 
 }

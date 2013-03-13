@@ -16,6 +16,27 @@ public class CommandManager implements CommandExecutor {
     private static List<BattleNightCommand> commands = new ArrayList<BattleNightCommand>();
     private static BattleNightAPI api;
 
+    public static BattleNightCommand getCommand(String name) {
+        for (BattleNightCommand cmd : commands) {
+            if (cmd.matches(name)) return cmd;
+        }
+
+        return null;
+    }
+
+    public static List<BattleNightCommand> getCommands() {
+        return commands;
+    }
+
+    public static void registerCommand(BattleNightCommand command) {
+        command.api = api;
+        commands.add(command);
+    }
+
+    public static void unResgisterCommand(BattleNightCommand command) {
+        commands.remove(command);
+    }
+
     public CommandManager(BattleNightAPI api) {
         CommandManager.api = api;
 
@@ -51,27 +72,6 @@ public class CommandManager implements CommandExecutor {
 
         Messenger.tell(sender, Message.INVALID_COMMAND);
         return false;
-    }
-
-    public static void registerCommand(BattleNightCommand command) {
-        command.api = api;
-        commands.add(command);
-    }
-
-    public static void unResgisterCommand(BattleNightCommand command) {
-        commands.remove(command);
-    }
-
-    public static BattleNightCommand getCommand(String name) {
-        for (BattleNightCommand cmd : commands) {
-            if (cmd.matches(name)) return cmd;
-        }
-
-        return null;
-    }
-
-    public static List<BattleNightCommand> getCommands() {
-        return commands;
     }
 
 }

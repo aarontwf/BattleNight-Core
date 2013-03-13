@@ -27,7 +27,7 @@ public class SimplePlayerClass implements PlayerClass {
         this.name = name;
         this.items = items;
         this.armour = armour;
-        this.permissions = new HashMap<String, Boolean>();
+        permissions = new HashMap<String, Boolean>();
 
         String perm = "battlenight.class." + name.toLowerCase();
         permission = new Permission(perm, "Permission for the class: " + name + ".", PermissionDefault.TRUE);
@@ -35,31 +35,6 @@ public class SimplePlayerClass implements PlayerClass {
             Bukkit.getServer().getPluginManager().addPermission(permission);
         } catch (Exception e) {
         }
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public Permission getPermission() {
-        return permission;
-    }
-
-    @Override
-    public List<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    public List<ItemStack> getArmour() {
-        return armour;
-    }
-
-    @Override
-    public HashMap<String, Boolean> getPermissions() {
-        return permissions;
     }
 
     @Override
@@ -88,5 +63,30 @@ public class SimplePlayerClass implements PlayerClass {
         for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
             perms.setPermission(entry.getKey(), entry.getValue());
         }
+    }
+
+    @Override
+    public List<ItemStack> getArmour() {
+        return armour;
+    }
+
+    @Override
+    public List<ItemStack> getItems() {
+        return items;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Permission getPermission() {
+        return permission;
+    }
+
+    @Override
+    public HashMap<String, Boolean> getPermissions() {
+        return permissions;
     }
 }

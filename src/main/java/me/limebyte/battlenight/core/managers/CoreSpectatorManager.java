@@ -42,7 +42,9 @@ public class CoreSpectatorManager implements SpectatorManager {
     public Location addSpectator(Player player, Player target, boolean store) {
         if (spectators.containsKey(player.getName()) || !targets.contains(target.getName())) return null;
         spectators.put(player.getName(), target.getName());
-        if (store) PlayerData.store(player);
+        if (store) {
+            PlayerData.store(player);
+        }
         PlayerData.reset(player);
         SafeTeleporter.tp(player, target.getLocation());
         player.setGameMode(GameMode.ADVENTURE);
@@ -59,11 +61,44 @@ public class CoreSpectatorManager implements SpectatorManager {
     }
 
     @Override
-    public void removeSpectator(Player player) {
+    public void addTarget(Player player) {
+        String name = player.getName();
+        if (!targets.contains(name)) {
+            targets.add(name);
+        }
+    }
+
+    @Override
+    public void cycleTarget(Player player) {
         if (!spectators.containsKey(player.getName())) return;
-        spectators.remove(player.getName());
-        PlayerData.restore(player, true, false);
-        Messenger.tell(player, Message.GOODBYE_SPECTATOR);
+
+        if (targets.isEmpty()) {
+            removeSpectator(player);
+            return;
+        }
+
+        if (targets.size() == 1) return;
+
+        int index = targets.indexOf(spectators.get(player.getName()));
+        index++;
+        if (index > targets.size() - 1) {
+            index = 0;
+        }
+        spectators.put(player.getName(), targets.get(index));
+
+        Player target = getTarget(player);
+
+        SafeTeleporter.tp(player, target.getLocation());
+
+        for (String n : api.getBattle().getPlayers()) {
+            if (Bukkit.getPlayerExact(n) != null) {
+                player.showPlayer(Bukkit.getPlayerExact(n));
+            }
+        }
+
+        player.hidePlayer(target);
+
+        Messenger.tell(player, Message.TARGET_CYCLED, target);
     }
 
     @Override
@@ -72,9 +107,16 @@ public class CoreSpectatorManager implements SpectatorManager {
     }
 
     @Override
-    public void addTarget(Player player) {
-        String name = player.getName();
-        if (!targets.contains(name)) targets.add(name);
+    public Player getTarget(Player player) {
+        return Bukkit.getPlayerExact(spectators.get(player.getName()));
+    }
+
+    @Override
+    public void removeSpectator(Player player) {
+        if (!spectators.containsKey(player.getName())) return;
+        spectators.remove(player.getName());
+        PlayerData.restore(player, true, false);
+        Messenger.tell(player, Message.GOODBYE_SPECTATOR);
     }
 
     @Override
@@ -91,44 +133,8 @@ public class CoreSpectatorManager implements SpectatorManager {
     }
 
     @Override
-    public Player getTarget(Player player) {
-        return Bukkit.getPlayerExact(spectators.get(player.getName()));
-    }
-
-    @Override
     public void setTarget(Player player, Player target) {
         if (!spectators.containsKey(player.getName()) || spectators.containsKey(target.getName()) || !targets.contains(target.getName())) return;
         spectators.put(player.getName(), target.getName());
-    }
-
-    @Override
-    public void cycleTarget(Player player) {
-        if (!spectators.containsKey(player.getName())) return;
-
-        if (targets.isEmpty()) {
-            removeSpectator(player);
-            return;
-        }
-
-        if (targets.size() == 1) return;
-
-        int index = targets.indexOf(spectators.get(player.getName()));
-        index++;
-        if (index > targets.size() - 1) index = 0;
-        spectators.put(player.getName(), targets.get(index));
-
-        Player target = getTarget(player);
-
-        SafeTeleporter.tp(player, target.getLocation());
-
-        for (String n : api.getBattle().getPlayers()) {
-            if (Bukkit.getPlayerExact(n) != null) {
-                player.showPlayer(Bukkit.getPlayerExact(n));
-            }
-        }
-
-        player.hidePlayer(target);
-
-        Messenger.tell(player, Message.TARGET_CYCLED, target);
     }
 }

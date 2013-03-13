@@ -40,7 +40,9 @@ public class DeathListener extends APIRelatedListener {
             Player killer = player.getKiller();
 
             battle.addDeath(player);
-            if (killer != null && killer != player) battle.addKill(killer);
+            if (killer != null && killer != player) {
+                battle.addKill(killer);
+            }
 
             queue.add(player.getName());
         }

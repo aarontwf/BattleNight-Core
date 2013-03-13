@@ -8,23 +8,6 @@ import me.limebyte.battlenight.api.tosort.Waypoint;
 public interface ArenaManager {
 
     /**
-     * Loads the arenas from the configuration file into the manager.
-     */
-    public void loadArenas();
-
-    /**
-     * Saves the arenas back to the configuration file.
-     */
-    public void saveArenas();
-
-    /**
-     * Registers a new arena in the manager.
-     * 
-     * @param arena The arena to register.
-     */
-    public void register(Arena arena);
-
-    /**
      * DeRegisters an arena from the manager effectively removing it.
      * 
      * @param arena The arena to remove.
@@ -46,13 +29,25 @@ public interface ArenaManager {
     public List<Arena> getEnabledArenas();
 
     /**
-     * Gets the loaded and setup arenas with at least the specified amount of
-     * spawn points.
+     * Gets the exit waypoint.
      * 
-     * @param minSpawns The minimum amount of spawn points.
-     * @return setup arenas.
+     * @return exit waypoint.
      */
-    public List<Arena> getSetupArenas(int minSpawns);
+    public Waypoint getExit();
+
+    /**
+     * Gets the lounge waypoint.
+     * 
+     * @return lounge waypoint.
+     */
+    public Waypoint getLounge();
+
+    /**
+     * Gets a random loaded arena.
+     * 
+     * @return a random arena.
+     */
+    public Arena getRandomArena(int minSpawns);
 
     /**
      * Gets the loaded, enabled and setup arenas with at least the specified
@@ -64,24 +59,29 @@ public interface ArenaManager {
     public List<Arena> getReadyArenas(int minSpawns);
 
     /**
-     * Gets a random loaded arena.
+     * Gets the loaded and setup arenas with at least the specified amount of
+     * spawn points.
      * 
-     * @return a random arena.
+     * @param minSpawns The minimum amount of spawn points.
+     * @return setup arenas.
      */
-    public Arena getRandomArena(int minSpawns);
+    public List<Arena> getSetupArenas(int minSpawns);
 
     /**
-     * Gets the lounge waypoint.
-     * 
-     * @return lounge waypoint.
+     * Loads the arenas from the configuration file into the manager.
      */
-    public Waypoint getLounge();
+    public void loadArenas();
 
     /**
-     * Gets the exit waypoint.
+     * Registers a new arena in the manager.
      * 
-     * @return exit waypoint.
+     * @param arena The arena to register.
      */
-    public Waypoint getExit();
+    public void register(Arena arena);
+
+    /**
+     * Saves the arenas back to the configuration file.
+     */
+    public void saveArenas();
 
 }

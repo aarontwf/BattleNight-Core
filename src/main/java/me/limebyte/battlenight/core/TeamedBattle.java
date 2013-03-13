@@ -23,64 +23,23 @@ public abstract class TeamedBattle extends SimpleBattle {
     }
 
     @Override
-    public boolean stop() {
-        for (String name : getPlayers()) {
-            Player player = toPlayer(name);
-            if (player == null) continue;
-            setTeam(player, null);
+    public void addDeath(Player player) {
+        super.addDeath(player);
+
+        Team team = getTeam(player);
+        if (team != null) {
+            team.addDeath();
         }
-
-        boolean result = super.stop();
-
-        for (Team team : teams) {
-            if (team == null) continue;
-            team.reset(this);
-        }
-
-        return result;
     }
 
-    public boolean addTeam(Team team) {
-        String name = team.getName();
-        for (Team t : teams) {
-            if (t.getName().equals(name)) return false;
+    @Override
+    public void addKill(Player player) {
+        super.addKill(player);
+
+        Team team = getTeam(player);
+        if (team != null) {
+            team.addKill();
         }
-        if (!teams.add(team)) return false;
-        setMinPlayers(teams.size());
-        return true;
-    }
-
-    public boolean removeTeam(Team team) {
-        if (!teams.remove(team)) return false;
-        setMinPlayers(teams.size());
-        return true;
-    }
-
-    public List<Team> getLeadingTeams() {
-        if (teams.size() == 0) return null;
-
-        List<Team> leading = new ArrayList<Team>();
-        for (Team team : teams) {
-            if (leading.isEmpty()) {
-                leading.add(team);
-                continue;
-            }
-
-            Team inLead = leading.get(0);
-            double leadKD = inLead.getKD();
-            double teamKD = team.getKD();
-
-            if (leadKD > teamKD) continue;
-            if (leadKD < teamKD) leading.clear();
-
-            leading.add(team);
-        }
-
-        return leading;
-    }
-
-    public List<Team> getTeams() {
-        return teams;
     }
 
     @Override
@@ -95,10 +54,18 @@ public abstract class TeamedBattle extends SimpleBattle {
         return worked;
     }
 
-    @Override
-    public boolean removePlayer(Player player) {
-        setTeam(player, null);
-        return super.removePlayer(player);
+    public boolean addTeam(Team team) {
+        String name = team.getName();
+        for (Team t : teams) {
+            if (t.getName().equals(name)) return false;
+        }
+        if (!teams.add(team)) return false;
+        setMinPlayers(teams.size());
+        return true;
+    }
+
+    public boolean areEnemies(Player player1, Player player2) {
+        return !getTeam(player1).getName().equals(getTeam(player2).getName());
     }
 
     private boolean assignTeam(Player player) {
@@ -106,10 +73,81 @@ public abstract class TeamedBattle extends SimpleBattle {
 
         Team smallest = null;
         for (Team team : teams) {
-            if (smallest == null || team.getSize() < smallest.getSize()) smallest = team;
+            if (smallest == null || team.getSize() < smallest.getSize()) {
+                smallest = team;
+            }
         }
 
         setTeam(player, smallest);
+        return true;
+    }
+
+    public List<Team> getLeadingTeams() {
+        if (teams.size() == 0) return null;
+
+        List<Team> leading = new ArrayList<Team>();
+        for (Team team : teams) {
+            if (leading.isEmpty()) {
+                leading.add(team);
+                continue;
+            }
+
+            Team inLead = leading.get(0);
+            double leadKD = inLead.getKDR();
+            double teamKD = team.getKDR();
+
+            if (leadKD > teamKD) {
+                continue;
+            }
+            if (leadKD < teamKD) {
+                leading.clear();
+            }
+
+            leading.add(team);
+        }
+
+        return leading;
+    }
+
+    public Team getTeam(Player player) {
+        String teamName = Metadata.getString(player, "team");
+        if (teamName != null) {
+            for (Team team : teams) {
+                if (team.getName().equals(teamName)) return team;
+            }
+        }
+        return null;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    @Override
+    protected String getWinMessage() {
+        String message;
+        List<Team> leading = getLeadingTeams();
+
+        if (leading.isEmpty() || leading.size() == getTeams().size()) {
+            message = Message.DRAW.getMessage();
+        } else if (leading.size() == 1) {
+            message = Messenger.format(Message.TEAM_WON, leading.get(0));
+        } else {
+            message = Messenger.format(Message.TEAM_WON, leading);
+        }
+
+        return message;
+    }
+
+    @Override
+    public boolean removePlayer(Player player) {
+        setTeam(player, null);
+        return super.removePlayer(player);
+    }
+
+    public boolean removeTeam(Team team) {
+        if (!teams.remove(team)) return false;
+        setMinPlayers(teams.size());
         return true;
     }
 
@@ -132,43 +170,6 @@ public abstract class TeamedBattle extends SimpleBattle {
         }
     }
 
-    public Team getTeam(Player player) {
-        String teamName = Metadata.getString(player, "team");
-        if (teamName != null) {
-            for (Team team : teams) {
-                if (team.getName().equals(teamName)) return team;
-            }
-        }
-        return null;
-    }
-
-    public boolean areEnemies(Player player1, Player player2) {
-        return (!getTeam(player1).getName().equals(getTeam(player2).getName()));
-    }
-
-    @Override
-    public Location toSpectator(Player player, boolean death) {
-        if (!containsPlayer(player)) return null;
-        setTeam(player, null);
-        return super.toSpectator(player, death);
-    }
-
-    @Override
-    protected String getWinMessage() {
-        String message;
-        List<Team> leading = getLeadingTeams();
-
-        if (leading.isEmpty() || leading.size() == getTeams().size()) {
-            message = Message.DRAW.getMessage();
-        } else if (leading.size() == 1) {
-            message = Messenger.format(Message.TEAM_WON, leading.get(0));
-        } else {
-            message = Messenger.format(Message.TEAM_WON, leading);
-        }
-
-        return message;
-    }
-
     @Override
     public boolean shouldEnd() {
         if (!isInProgress()) return false;
@@ -179,21 +180,28 @@ public abstract class TeamedBattle extends SimpleBattle {
     }
 
     @Override
-    public void addKill(Player player) {
-        super.addKill(player);
+    public boolean stop() {
+        for (String name : getPlayers()) {
+            Player player = toPlayer(name);
+            if (player == null) {
+                continue;
+            }
+            setTeam(player, null);
+        }
 
-        Team team = getTeam(player);
-        if (team != null) team.addKill();
+        boolean result = super.stop();
+
+        for (Team team : teams) {
+            if (team == null) {
+                continue;
+            }
+            team.reset(this);
+        }
+
+        return result;
     }
 
     @Override
-    public void addDeath(Player player) {
-        super.addDeath(player);
-
-        Team team = getTeam(player);
-        if (team != null) team.addDeath();
-    }
-
     protected void teleportAllToSpawn() {
         @SuppressWarnings("unchecked")
         List<Waypoint> waypoints = (ArrayList<Waypoint>) getArena().getSpawnPoints().clone();
@@ -203,7 +211,9 @@ public abstract class TeamedBattle extends SimpleBattle {
         HashMap<String, Waypoint> spawns = new HashMap<String, Waypoint>();
 
         for (Team team : getTeams()) {
-            if (free.size() <= 0) free = waypoints;
+            if (free.size() <= 0) {
+                free = waypoints;
+            }
             int id = random.nextInt(free.size());
             spawns.put(team.getName(), free.get(id));
             free.remove(id);
@@ -211,8 +221,17 @@ public abstract class TeamedBattle extends SimpleBattle {
 
         for (String name : getPlayers()) {
             Player player = toPlayer(name);
-            if (player == null || !player.isOnline()) continue;
+            if (player == null || !player.isOnline()) {
+                continue;
+            }
             SafeTeleporter.tp(player, spawns.get(Metadata.getString(player, "team")).getLocation());
         }
+    }
+
+    @Override
+    public Location toSpectator(Player player, boolean death) {
+        if (!containsPlayer(player)) return null;
+        setTeam(player, null);
+        return super.toSpectator(player, death);
     }
 }

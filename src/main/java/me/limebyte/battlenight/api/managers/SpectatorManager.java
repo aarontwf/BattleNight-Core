@@ -11,18 +11,18 @@ public interface SpectatorManager {
 
     public Location addSpectator(Player player, Player target, boolean store);
 
-    public void removeSpectator(Player player);
+    public void addTarget(Player player);
+
+    public void cycleTarget(Player player);
 
     public Set<String> getSpectators();
 
-    public void addTarget(Player player);
+    public Player getTarget(Player player);
+
+    public void removeSpectator(Player player);
 
     public void removeTarget(Player player);
 
-    public Player getTarget(Player player);
-
     public void setTarget(Player player, Player target);
-
-    public void cycleTarget(Player player);
 
 }

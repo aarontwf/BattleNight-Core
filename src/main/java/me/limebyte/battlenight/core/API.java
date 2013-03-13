@@ -40,13 +40,13 @@ public class API implements BattleNightAPI {
     }
 
     @Override
-    public Battle getBattle() {
-        return battleManager.getActiveBattle();
+    public ArenaManager getArenaManager() {
+        return arenaManager;
     }
 
     @Override
-    public ArenaManager getArenaManager() {
-        return arenaManager;
+    public Battle getBattle() {
+        return battleManager.getActiveBattle();
     }
 
     @Override
@@ -65,6 +65,11 @@ public class API implements BattleNightAPI {
     }
 
     @Override
+    public PlayerClass getPlayerClass(Player player) {
+        return Metadata.getPlayerClass(player);
+    }
+
+    @Override
     public SpectatorManager getSpectatorManager() {
         return spectatorManager;
     }
@@ -76,16 +81,6 @@ public class API implements BattleNightAPI {
     }
 
     @Override
-    public void unregisterCommand(BattleNightCommand command) {
-        CommandManager.unResgisterCommand(command);
-    }
-
-    @Override
-    public PlayerClass getPlayerClass(Player player) {
-        return Metadata.getPlayerClass(player);
-    }
-
-    @Override
     public void setPlayerClass(Player player, PlayerClass playerClass) {
         if (playerClass != null) {
             Metadata.set(player, "class", playerClass.getName());
@@ -94,5 +89,10 @@ public class API implements BattleNightAPI {
             Metadata.remove(player, "class");
             SignListener.cleanSigns(player);
         }
+    }
+
+    @Override
+    public void unregisterCommand(BattleNightCommand command) {
+        CommandManager.unResgisterCommand(command);
     }
 }

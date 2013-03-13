@@ -30,250 +30,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class Messenger {
 
-    public static final String PREFIX = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
-    private static BattleNightAPI api;
-
-    public static void init(BattleNightAPI api) {
-        Messenger.api = api;
-    }
-
-    /** Strings **/
-
-    public static void tell(CommandSender sender, String message) {
-        sender.sendMessage(PREFIX + message);
-    }
-
-    public static void tellEveryone(String message, boolean spectators) {
-        if (spectators) {
-            for (String name : api.getSpectatorManager().getSpectators()) {
-                Player p = Bukkit.getPlayerExact(name);
-                if (p != null) {
-                    tell(p, message);
-                }
-            }
-        }
-
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null) {
-                tell(p, message);
-            }
-        }
-    }
-
-    public static void tellEveryoneExcept(Player player, String message, boolean spectators) {
-        if (spectators) {
-            for (String name : api.getSpectatorManager().getSpectators()) {
-                Player p = Bukkit.getPlayerExact(name);
-                if (p != null && player != p) {
-                    tell(p, message);
-                }
-            }
-        }
-
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null && player != p) {
-                tell(p, message);
-            }
-        }
-    }
-
-    public static void log(Level level, String message) {
-        BattleNight.instance.getLogger().log(level, message);
-    }
-
-    public static void debug(Level level, String message) {
-        if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
-            log(level, message);
-        }
-    }
-
-    /** Kill feed **/
-
-    public static void killFeed(Player player, Player killer, String deathMessage) {
-        deathMessage = ChatColor.GRAY + deathMessage;
-        deathMessage = deathMessage.replaceAll(player.getName(), getColouredName(player) + ChatColor.GRAY);
-        deathMessage = deathMessage.replaceAll(player.getDisplayName(), getColouredName(player) + ChatColor.GRAY);
-
-        if (killer != null) {
-            deathMessage = deathMessage.replaceAll(killer.getName(), getColouredName(killer) + ChatColor.GRAY);
-            deathMessage = deathMessage.replaceAll(killer.getDisplayName(), getColouredName(killer) + ChatColor.GRAY);
-        }
-
-        tellEveryone(deathMessage, true);
-    }
-
-    /** Pages **/
-
-    public static void tell(CommandSender sender, Page page) {
-        sender.sendMessage(page.getPage());
-    }
-
-    public static void tellEveryone(Page page, boolean spectators) {
-        if (spectators) {
-            for (String name : api.getSpectatorManager().getSpectators()) {
-                Player p = Bukkit.getPlayerExact(name);
-                if (p != null) {
-                    tell(p, page);
-                }
-            }
-        }
-
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null) {
-                tell(p, page);
-            }
-        }
-    }
-
-    public static void tellEveryoneExcept(Player player, Page page, boolean spectators) {
-        if (spectators) {
-            for (String name : api.getSpectatorManager().getSpectators()) {
-                Player p = Bukkit.getPlayerExact(name);
-                if (p != null && player != p) {
-                    tell(p, page);
-                }
-            }
-        }
-
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null && player != p) {
-                tell(p, page);
-            }
-        }
-    }
-
-    /** Sounds **/
-
-    public static void playSound(Sound sound, float pitch, boolean spectators) {
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null) p.playSound(p.getLocation(), sound, 20f, pitch);
-        }
-
-        if (spectators) {
-            for (String name : api.getSpectatorManager().getSpectators()) {
-                Player p = Bukkit.getPlayerExact(name);
-                if (p != null) p.playSound(p.getLocation(), sound, 20f, pitch);
-            }
-        }
-    }
-
-    public static void playSong(Song battleEnd, boolean spectators) {
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null) battleEnd.play(p);
-        }
-
-        if (spectators) {
-            for (String name : api.getSpectatorManager().getSpectators()) {
-                Player p = Bukkit.getPlayerExact(name);
-                if (p != null) battleEnd.play(p);
-            }
-        }
-    }
-
-    /** Messages **/
-
-    public static void tell(CommandSender sender, Message message) {
-        tell(sender, message.getMessage());
-    }
-
-    public static void tell(CommandSender sender, Message message, Object... args) {
-        tell(sender, format(message, args));
-    }
-
-    public static void tellEveryone(boolean spectators, Message message) {
-        tellEveryone(message.getMessage(), spectators);
-    }
-
-    public static void tellEveryone(boolean spectators, Message message, Object... args) {
-        tellEveryone(format(message, args), spectators);
-    }
-
-    public static void tellEveryoneExcept(Player player, boolean spectators, Message message) {
-        tellEveryoneExcept(player, message.getMessage(), spectators);
-    }
-
-    public static void tellEveryoneExcept(Player player, boolean spectators, Message message, Object... args) {
-        tellEveryoneExcept(player, format(message, args), spectators);
-    }
-
-    public static String format(Message message, Object... args) {
-        String msg = message.getMessage();
-
-        for (int i = 0; i < args.length; i++) {
-            msg = msg.replace("$" + (i + 1), describeObject(args[i]));
-        }
-
-        return msg;
-    }
-
-    private static String describeObject(Object obj) {
-        if (obj instanceof ComplexEntityPart) {
-            return describeObject(((ComplexEntityPart) obj).getParent());
-        } else if (obj instanceof Item) {
-            return describeMaterial(((Item) obj).getItemStack().getType());
-        } else if (obj instanceof ItemStack) {
-            return describeMaterial(((ItemStack) obj).getType());
-        } else if (obj instanceof Player) {
-            return getColouredName((Player) obj);
-        } else if (obj instanceof Entity) {
-            return describeEntity((Entity) obj);
-        } else if (obj instanceof Block) {
-            return describeMaterial(((Block) obj).getType());
-        } else if (obj instanceof Material) {
-            return describeMaterial((Material) obj);
-        } else if (obj instanceof Location) {
-            return describeLocation((Location) obj);
-        } else if (obj instanceof World) {
-            return ((World) obj).getName();
-        } else if (obj instanceof Team) {
-            return ((Team) obj).getColour() + ((Team) obj).getDisplayName();
-        } else if (obj instanceof List<?>) {
-            return ((List<?>) obj).toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1");
-        } else if (obj instanceof Arena) {
-            return ((Arena) obj).getDisplayName();
-        }
-        return obj.toString();
-    }
-
-    private static String describeEntity(Entity entity) {
-        if (entity instanceof Player) return ((Player) entity).getName();
-
-        return entity.getType().toString().toLowerCase().replace("_", " ");
-    }
-
-    private static String describeMaterial(Material material) {
-        if (material == Material.INK_SACK) return "dye";
-
-        return material.toString().toLowerCase().replace("_", " ");
-    }
-
-    private static String describeLocation(Location loc) {
-        return loc.getX() + ", " + loc.getY() + ", " + loc.getZ();
-    }
-
-    private static String getColouredName(Player player) {
-        String name = player.getName();
-        Battle battle = api.getBattle();
-
-        if (battle.containsPlayer(player)) {
-            ChatColor teamColour = ChatColor.WHITE;
-            if (battle instanceof TeamedBattle) {
-                teamColour = ((TeamedBattle) battle).getTeam(player).getColour();
-            }
-            Messenger.debug(Level.INFO, "Coloured name is " + teamColour + name);
-            return teamColour + name;
-        } else {
-            Messenger.debug(Level.INFO, "Coloured name is " + ChatColor.DARK_GRAY + name);
-            return ChatColor.DARK_GRAY + name;
-        }
-    }
-
     public enum Message {
         // Battle Messages
         BATTLE_IN_PROGRESS(ChatColor.RED + "A Battle is already in progress!"),
@@ -368,6 +124,257 @@ public class Messenger {
         @Override
         public String toString() {
             return message;
+        }
+    }
+
+    public static final String PREFIX = ChatColor.GRAY + "[BattleNight] " + ChatColor.WHITE;
+
+    private static BattleNightAPI api;
+
+    public static void debug(Level level, String message) {
+        if (ConfigManager.get(Config.MAIN).getBoolean("Debug", false)) {
+            log(level, message);
+        }
+    }
+
+    private static String describeEntity(Entity entity) {
+        if (entity instanceof Player) return ((Player) entity).getName();
+
+        return entity.getType().toString().toLowerCase().replace("_", " ");
+    }
+
+    private static String describeLocation(Location loc) {
+        return loc.getX() + ", " + loc.getY() + ", " + loc.getZ();
+    }
+
+    private static String describeMaterial(Material material) {
+        if (material == Material.INK_SACK) return "dye";
+
+        return material.toString().toLowerCase().replace("_", " ");
+    }
+
+    private static String describeObject(Object obj) {
+        if (obj instanceof ComplexEntityPart)
+            return describeObject(((ComplexEntityPart) obj).getParent());
+        else if (obj instanceof Item)
+            return describeMaterial(((Item) obj).getItemStack().getType());
+        else if (obj instanceof ItemStack)
+            return describeMaterial(((ItemStack) obj).getType());
+        else if (obj instanceof Player)
+            return getColouredName((Player) obj);
+        else if (obj instanceof Entity)
+            return describeEntity((Entity) obj);
+        else if (obj instanceof Block)
+            return describeMaterial(((Block) obj).getType());
+        else if (obj instanceof Material)
+            return describeMaterial((Material) obj);
+        else if (obj instanceof Location)
+            return describeLocation((Location) obj);
+        else if (obj instanceof World)
+            return ((World) obj).getName();
+        else if (obj instanceof Team)
+            return ((Team) obj).getColour() + ((Team) obj).getDisplayName();
+        else if (obj instanceof List<?>)
+            return ((List<?>) obj).toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1");
+        else if (obj instanceof Arena) return ((Arena) obj).getDisplayName();
+        return obj.toString();
+    }
+
+    public static String format(Message message, Object... args) {
+        String msg = message.getMessage();
+
+        for (int i = 0; i < args.length; i++) {
+            msg = msg.replace("$" + (i + 1), describeObject(args[i]));
+        }
+
+        return msg;
+    }
+
+    private static String getColouredName(Player player) {
+        String name = player.getName();
+        Battle battle = api.getBattle();
+
+        if (battle.containsPlayer(player)) {
+            ChatColor teamColour = ChatColor.WHITE;
+            if (battle instanceof TeamedBattle) {
+                teamColour = ((TeamedBattle) battle).getTeam(player).getColour();
+            }
+            Messenger.debug(Level.INFO, "Coloured name is " + teamColour + name);
+            return teamColour + name;
+        } else {
+            Messenger.debug(Level.INFO, "Coloured name is " + ChatColor.DARK_GRAY + name);
+            return ChatColor.DARK_GRAY + name;
+        }
+    }
+
+    public static void init(BattleNightAPI api) {
+        Messenger.api = api;
+    }
+
+    /** Kill feed **/
+
+    public static void killFeed(Player player, Player killer, String deathMessage) {
+        deathMessage = ChatColor.GRAY + deathMessage;
+        deathMessage = deathMessage.replaceAll(player.getName(), getColouredName(player) + ChatColor.GRAY);
+        deathMessage = deathMessage.replaceAll(player.getDisplayName(), getColouredName(player) + ChatColor.GRAY);
+
+        if (killer != null) {
+            deathMessage = deathMessage.replaceAll(killer.getName(), getColouredName(killer) + ChatColor.GRAY);
+            deathMessage = deathMessage.replaceAll(killer.getDisplayName(), getColouredName(killer) + ChatColor.GRAY);
+        }
+
+        tellEveryone(deathMessage, true);
+    }
+
+    public static void log(Level level, String message) {
+        BattleNight.instance.getLogger().log(level, message);
+    }
+
+    public static void playSong(Song battleEnd, boolean spectators) {
+        for (String name : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null) {
+                battleEnd.play(p);
+            }
+        }
+
+        if (spectators) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null) {
+                    battleEnd.play(p);
+                }
+            }
+        }
+    }
+
+    /** Sounds **/
+
+    public static void playSound(Sound sound, float pitch, boolean spectators) {
+        for (String name : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null) {
+                p.playSound(p.getLocation(), sound, 20f, pitch);
+            }
+        }
+
+        if (spectators) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null) {
+                    p.playSound(p.getLocation(), sound, 20f, pitch);
+                }
+            }
+        }
+    }
+
+    /** Messages **/
+
+    public static void tell(CommandSender sender, Message message) {
+        tell(sender, message.getMessage());
+    }
+
+    public static void tell(CommandSender sender, Message message, Object... args) {
+        tell(sender, format(message, args));
+    }
+
+    /** Pages **/
+
+    public static void tell(CommandSender sender, Page page) {
+        sender.sendMessage(page.getPage());
+    }
+
+    /** Strings **/
+
+    public static void tell(CommandSender sender, String message) {
+        sender.sendMessage(PREFIX + message);
+    }
+
+    public static void tellEveryone(boolean spectators, Message message) {
+        tellEveryone(message.getMessage(), spectators);
+    }
+
+    public static void tellEveryone(boolean spectators, Message message, Object... args) {
+        tellEveryone(format(message, args), spectators);
+    }
+
+    public static void tellEveryone(Page page, boolean spectators) {
+        if (spectators) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null) {
+                    tell(p, page);
+                }
+            }
+        }
+
+        for (String name : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null) {
+                tell(p, page);
+            }
+        }
+    }
+
+    public static void tellEveryone(String message, boolean spectators) {
+        if (spectators) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null) {
+                    tell(p, message);
+                }
+            }
+        }
+
+        for (String name : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null) {
+                tell(p, message);
+            }
+        }
+    }
+
+    public static void tellEveryoneExcept(Player player, boolean spectators, Message message) {
+        tellEveryoneExcept(player, message.getMessage(), spectators);
+    }
+
+    public static void tellEveryoneExcept(Player player, boolean spectators, Message message, Object... args) {
+        tellEveryoneExcept(player, format(message, args), spectators);
+    }
+
+    public static void tellEveryoneExcept(Player player, Page page, boolean spectators) {
+        if (spectators) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null && player != p) {
+                    tell(p, page);
+                }
+            }
+        }
+
+        for (String name : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null && player != p) {
+                tell(p, page);
+            }
+        }
+    }
+
+    public static void tellEveryoneExcept(Player player, String message, boolean spectators) {
+        if (spectators) {
+            for (String name : api.getSpectatorManager().getSpectators()) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (p != null && player != p) {
+                    tell(p, message);
+                }
+            }
+        }
+
+        for (String name : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null && player != p) {
+                tell(p, message);
+            }
         }
     }
 

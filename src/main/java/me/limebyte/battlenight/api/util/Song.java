@@ -5,6 +5,14 @@ import org.bukkit.entity.Player;
 public interface Song {
 
     /**
+     * Returns true if the specified player is listening to this song.
+     * 
+     * @param player
+     * @return true if listening
+     */
+    public boolean isListening(Player player);
+
+    /**
      * Returns the length of this song in ticks.
      * 
      * @return length in ticks.
@@ -24,13 +32,5 @@ public interface Song {
      * @param player
      */
     public void stop(Player player);
-
-    /**
-     * Returns true if the specified player is listening to this song.
-     * 
-     * @param player
-     * @return true if listening
-     */
-    public boolean isListening(Player player);
 
 }

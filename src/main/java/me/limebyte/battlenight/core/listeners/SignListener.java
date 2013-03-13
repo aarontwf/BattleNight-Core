@@ -32,33 +32,42 @@ public class SignListener extends APIRelatedListener {
     private static final String LINE = "----------";
     public static Set<ClassSign> classSigns = new HashSet<ClassSign>();
 
-    public SignListener(BattleNightAPI api) {
-        super(api);
+    private static void addName(Player player, Sign sign) {
+        getClassSign(sign).add(player);
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onSignChange(SignChangeEvent e) {
-        Player player = e.getPlayer();
-        String title = e.getLine(0);
+    public static void cleanSigns() {
+        for (ClassSign s : classSigns) {
+            s.clear();
+        }
+    }
 
-        HashMap<String, PlayerClass> classes = new HashMap<String, PlayerClass>();
-        ClassManager manager = BattleNight.instance.getAPI().getClassManager();
-        for (PlayerClass clazz : manager.getClasses()) {
-            classes.put(clazz.getName(), clazz);
+    public static void cleanSigns(Player player) {
+        for (ClassSign s : classSigns) {
+            s.remove(player);
+        }
+    }
+
+    private static ClassSign getClassSign(Sign sign) {
+        for (ClassSign s : classSigns) {
+            if (s.getSign().equals(sign)) return s;
         }
 
-        if (classes != null) {
-            if (classes.containsKey(title)) {
-                if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
-                    Messenger.tell(player, Message.UNSUCCESSFUL_SIGN, title);
-                    return;
-                }
+        ClassSign s = new ClassSign(sign);
+        classSigns.add(s);
+        return s;
+    }
 
-                e.setLine(1, LINE);
-                Messenger.tell(player, Message.SUCCESSFUL_SIGN, title);
-                return;
-            }
+    private static void reset(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
         }
+    }
+
+    public SignListener(BattleNightAPI api) {
+        super(api);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -100,37 +109,28 @@ public class SignListener extends APIRelatedListener {
         }
     }
 
-    private static void addName(Player player, Sign sign) {
-        getClassSign(sign).add(player);
-    }
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onSignChange(SignChangeEvent e) {
+        Player player = e.getPlayer();
+        String title = e.getLine(0);
 
-    public static void cleanSigns() {
-        for (ClassSign s : classSigns) {
-            s.clear();
-        }
-    }
-
-    public static void cleanSigns(Player player) {
-        for (ClassSign s : classSigns) {
-            s.remove(player);
-        }
-    }
-
-    private static ClassSign getClassSign(Sign sign) {
-        for (ClassSign s : classSigns) {
-            if (s.getSign().equals(sign)) return s;
+        HashMap<String, PlayerClass> classes = new HashMap<String, PlayerClass>();
+        ClassManager manager = BattleNight.instance.getAPI().getClassManager();
+        for (PlayerClass clazz : manager.getClasses()) {
+            classes.put(clazz.getName(), clazz);
         }
 
-        ClassSign s = new ClassSign(sign);
-        classSigns.add(s);
-        return s;
-    }
+        if (classes != null) {
+            if (classes.containsKey(title)) {
+                if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
+                    Messenger.tell(player, Message.UNSUCCESSFUL_SIGN, title);
+                    return;
+                }
 
-    private static void reset(Player player) {
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            player.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
+                e.setLine(1, LINE);
+                Messenger.tell(player, Message.SUCCESSFUL_SIGN, title);
+                return;
+            }
         }
     }
 }

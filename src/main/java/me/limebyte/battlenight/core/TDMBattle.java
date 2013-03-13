@@ -1,6 +1,5 @@
 package me.limebyte.battlenight.core;
 
-
 import org.bukkit.ChatColor;
 
 public class TDMBattle extends TeamedBattle {

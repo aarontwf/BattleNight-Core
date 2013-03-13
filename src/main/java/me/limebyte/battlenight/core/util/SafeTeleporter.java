@@ -29,21 +29,28 @@ public class SafeTeleporter implements Listener {
 
     private static Map<String, Location> teleporters = new HashMap<String, Location>();
 
-    public static void queue(Player player, Waypoint waypoint) {
-        queue(player, waypoint.getLocation());
-    }
-
     public static void queue(Player player, Location location) {
         playerQueue.add(player.getName());
         locationQueue.add(location);
     }
 
-    public static void tp(Player player, Waypoint waypoint) {
-        tp(player, waypoint.getLocation().clone());
+    public static void queue(Player player, Waypoint waypoint) {
+        queue(player, waypoint.getLocation());
     }
 
-    public static void tp(Player player, Location location) {
-        safeTP(player, location.clone());
+    private static void safeTP(final Player player, Location location) {
+        if (player.hasMetadata("NPC")) return;
+
+        Location loc = location;
+        loc.setY(loc.getY() + 0.5);
+
+        String name = player.getName();
+
+        telePass.add(name);
+        player.teleport(loc, TeleportCause.PLUGIN);
+        telePass.remove(name);
+
+        teleporters.put(name, loc);
     }
 
     public static void startTeleporting() {
@@ -64,19 +71,12 @@ public class SafeTeleporter implements Listener {
         taskID = 0;
     }
 
-    private static void safeTP(final Player player, Location location) {
-        if (player.hasMetadata("NPC")) return;
+    public static void tp(Player player, Location location) {
+        safeTP(player, location.clone());
+    }
 
-        Location loc = location;
-        loc.setY(loc.getY() + 1);
-
-        String name = player.getName();
-
-        telePass.add(name);
-        player.teleport(loc, TeleportCause.PLUGIN);
-        telePass.remove(name);
-
-        teleporters.put(name, loc);
+    public static void tp(Player player, Waypoint waypoint) {
+        tp(player, waypoint.getLocation().clone());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

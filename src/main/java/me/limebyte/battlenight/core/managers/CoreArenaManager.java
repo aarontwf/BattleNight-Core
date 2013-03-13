@@ -28,31 +28,6 @@ public class CoreArenaManager implements ArenaManager {
         loadArenas();
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void loadArenas() {
-        Messenger.debug(Level.INFO, "Loading arenas...");
-        ConfigManager.reload(configFile);
-
-        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
-        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", exit);
-        arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", arenas);
-    }
-
-    @Override
-    public void saveArenas() {
-        Messenger.debug(Level.INFO, "Saving arenas...");
-        ConfigManager.get(configFile).set("Waypoint.Lounge", lounge);
-        ConfigManager.get(configFile).set("Waypoint.Exit", exit);
-        ConfigManager.get(configFile).set("Arenas", arenas);
-        ConfigManager.save(configFile);
-    }
-
-    @Override
-    public void register(Arena arena) {
-        arenas.add(arena);
-    }
-
     @Override
     public void deregister(Arena arena) {
         arenas.remove(arena);
@@ -69,20 +44,33 @@ public class CoreArenaManager implements ArenaManager {
         Iterator<Arena> it = enabled.iterator();
         while (it.hasNext()) {
             Arena arena = it.next();
-            if (!arena.isEnabled()) it.remove();
+            if (!arena.isEnabled()) {
+                it.remove();
+            }
         }
         return enabled;
     }
 
     @Override
-    public List<Arena> getSetupArenas(int minSpawns) {
-        List<Arena> setup = new ArrayList<Arena>(arenas);
-        Iterator<Arena> it = setup.iterator();
-        while (it.hasNext()) {
-            Arena arena = it.next();
-            if (!arena.isSetup(minSpawns)) it.remove();
+    public Waypoint getExit() {
+        return exit;
+    }
+
+    @Override
+    public Waypoint getLounge() {
+        return lounge;
+    }
+
+    @Override
+    public Arena getRandomArena(int minSpawns) {
+        List<Arena> ready = getReadyArenas(minSpawns);
+        if (ready.size() > 1) {
+            ready.remove(lastArena);
         }
-        return setup;
+
+        Arena arena = ready.get(random.nextInt(ready.size()));
+        lastArena = arena;
+        return arena;
     }
 
     @Override
@@ -91,28 +79,49 @@ public class CoreArenaManager implements ArenaManager {
         Iterator<Arena> it = ready.iterator();
         while (it.hasNext()) {
             Arena arena = it.next();
-            if (!arena.isSetup(minSpawns) || !arena.isEnabled()) it.remove();
+            if (!arena.isSetup(minSpawns) || !arena.isEnabled()) {
+                it.remove();
+            }
         }
         return ready;
     }
 
     @Override
-    public Arena getRandomArena(int minSpawns) {
-        List<Arena> ready = getReadyArenas(minSpawns);
-        if (ready.size() > 1) ready.remove(lastArena);
+    public List<Arena> getSetupArenas(int minSpawns) {
+        List<Arena> setup = new ArrayList<Arena>(arenas);
+        Iterator<Arena> it = setup.iterator();
+        while (it.hasNext()) {
+            Arena arena = it.next();
+            if (!arena.isSetup(minSpawns)) {
+                it.remove();
+            }
+        }
+        return setup;
+    }
 
-        Arena arena = ready.get(random.nextInt(ready.size()));
-        lastArena = arena;
-        return arena;
+    @SuppressWarnings("unchecked")
+    @Override
+    public void loadArenas() {
+        Messenger.debug(Level.INFO, "Loading arenas...");
+        ConfigManager.reload(configFile);
+
+        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
+        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", exit);
+        arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", arenas);
     }
 
     @Override
-    public Waypoint getLounge() {
-        return lounge;
+    public void register(Arena arena) {
+        arenas.add(arena);
     }
 
-    public Waypoint getExit() {
-        return exit;
+    @Override
+    public void saveArenas() {
+        Messenger.debug(Level.INFO, "Saving arenas...");
+        ConfigManager.get(configFile).set("Waypoint.Lounge", lounge);
+        ConfigManager.get(configFile).set("Waypoint.Exit", exit);
+        ConfigManager.get(configFile).set("Arenas", arenas);
+        ConfigManager.save(configFile);
     }
 
 }

@@ -37,6 +37,26 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     public static BattleNight instance;
     private BattleNightAPI api;
 
+    @Override
+    public BattleNightAPI getAPI() {
+        return api;
+    }
+
+    @Override
+    public void onDisable() {
+        SignListener.cleanSigns();
+
+        // Stop the current Battle
+        getAPI().getBattle().stop();
+
+        // Save arenas
+        api.getArenaManager().saveArenas();
+
+        // Disable message
+        PluginDescriptionFile pdfFile = getDescription();
+        Messenger.log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
+    }
+
     /** Events **/
 
     @Override
@@ -89,30 +109,12 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
         // Update check
         PluginDescriptionFile pdf = getDescription();
-        if (ConfigManager.get(Config.MAIN).getBoolean("UpdateCheck", true)) new UpdateChecker(pdf).check();
+        if (ConfigManager.get(Config.MAIN).getBoolean("UpdateCheck", true)) {
+            new UpdateChecker(pdf).check();
+        }
 
         // Enable Message
         Messenger.log(Level.INFO, "Version " + pdf.getVersion() + " enabled successfully.");
         Messenger.log(Level.INFO, "Made by LimeByte.");
-    }
-
-    @Override
-    public void onDisable() {
-        SignListener.cleanSigns();
-
-        // Stop the current Battle
-        getAPI().getBattle().stop();
-
-        // Save arenas
-        api.getArenaManager().saveArenas();
-
-        // Disable message
-        PluginDescriptionFile pdfFile = getDescription();
-        Messenger.log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
-    }
-
-    @Override
-    public BattleNightAPI getAPI() {
-        return api;
     }
 }

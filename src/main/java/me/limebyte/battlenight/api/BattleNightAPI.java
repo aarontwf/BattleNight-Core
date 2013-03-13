@@ -13,9 +13,9 @@ import org.bukkit.entity.Player;
 
 public interface BattleNightAPI {
 
-    public Battle getBattle();
-
     public ArenaManager getArenaManager();
+
+    public Battle getBattle();
 
     public BattleManager getBattleManager();
 
@@ -23,14 +23,14 @@ public interface BattleNightAPI {
 
     public MusicManager getMusicManager();
 
+    public PlayerClass getPlayerClass(Player player);
+
     public SpectatorManager getSpectatorManager();
 
     public void registerCommand(BattleNightCommand command);
 
-    public void unregisterCommand(BattleNightCommand command);
-
-    public PlayerClass getPlayerClass(Player player);
-
     public void setPlayerClass(Player player, PlayerClass playerClass);
+
+    public void unregisterCommand(BattleNightCommand command);
 
 }

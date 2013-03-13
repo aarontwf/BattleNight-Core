@@ -21,6 +21,15 @@ public class TestCommand extends BattleNightCommand {
         setAliases(Arrays.asList("try"));
     }
 
+    @SuppressWarnings("unused")
+    private boolean isNotPlayer(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            Messenger.tell(sender, Message.PLAYER_ONLY);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         // Commands with 1 argument
@@ -37,15 +46,6 @@ public class TestCommand extends BattleNightCommand {
         }
 
         Messenger.tell(sender, Message.INVALID_COMMAND);
-        return false;
-    }
-
-    @SuppressWarnings("unused")
-    private boolean isNotPlayer(CommandSender sender) {
-        if (!(sender instanceof Player)) {
-            Messenger.tell(sender, Message.PLAYER_ONLY);
-            return true;
-        }
         return false;
     }
 }

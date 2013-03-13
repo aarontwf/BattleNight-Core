@@ -25,11 +25,8 @@ public class VersionCommand extends BattleNightCommand {
     protected boolean onPerformed(CommandSender sender, String[] args) {
         PluginDescriptionFile pdf = BattleNight.instance.getDescription();
 
-        StandardPage page = new StandardPage(
-                "BattleNight Version Info",
-                "This server is running BattleNight version " + pdf.getVersion() + ".  " +
-                        "For more information about Battlenight and this version, please visit:\n" +
-                        ChatColor.BLUE + ChatColor.UNDERLINE + pdf.getWebsite());
+        StandardPage page = new StandardPage("BattleNight Version Info", "This server is running BattleNight version " + pdf.getVersion() + ".  "
+                + "For more information about Battlenight and this version, please visit:\n" + ChatColor.BLUE + ChatColor.UNDERLINE + pdf.getWebsite());
         Messenger.tell(sender, page);
         return true;
     }

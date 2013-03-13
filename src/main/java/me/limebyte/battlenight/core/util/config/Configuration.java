@@ -23,20 +23,27 @@ public class Configuration {
         this(fileName, true);
     }
 
-    public Configuration(String fileName, String directory) {
-        this(fileName, directory, true);
-    }
-
     public Configuration(String fileName, boolean copyDefaults) {
         this.fileName = fileName;
         directory = BattleNight.instance.getDataFolder().getAbsolutePath();
         this.copyDefaults = copyDefaults;
     }
 
+    public Configuration(String fileName, String directory) {
+        this(fileName, directory, true);
+    }
+
     public Configuration(String fileName, String directory, boolean copyDefaults) {
         this.fileName = fileName;
         this.directory = BattleNight.instance.getDataFolder().getAbsolutePath() + File.separator + directory;
         this.copyDefaults = copyDefaults;
+    }
+
+    public FileConfiguration get() {
+        if (fileConfig == null) {
+            reload();
+        }
+        return fileConfig;
     }
 
     public void reload() {
@@ -53,13 +60,6 @@ public class Configuration {
             fileConfig.options().indent(4);
             fileConfig.options().copyDefaults(!file.exists() || copyDefaults);
         }
-    }
-
-    public FileConfiguration get() {
-        if (fileConfig == null) {
-            reload();
-        }
-        return fileConfig;
     }
 
     public void save() {

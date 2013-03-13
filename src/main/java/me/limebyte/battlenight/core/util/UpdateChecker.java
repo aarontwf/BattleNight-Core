@@ -13,7 +13,7 @@ public class UpdateChecker {
     private String version;
 
     public UpdateChecker(PluginDescriptionFile pdf) {
-        this.version = removeSuffix(pdf.getVersion());
+        version = removeSuffix(pdf.getVersion());
     }
 
     public void check() {
@@ -33,10 +33,6 @@ public class UpdateChecker {
         }
     }
 
-    private String removeSuffix(String version) {
-        return version.split("-")[0];
-    }
-
     private boolean isNewer(String latestVersion) {
         if (version.equals(latestVersion)) return false;
 
@@ -53,5 +49,9 @@ public class UpdateChecker {
         }
 
         return false;
+    }
+
+    private String removeSuffix(String version) {
+        return version.split("-")[0];
     }
 }

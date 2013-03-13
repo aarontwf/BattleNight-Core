@@ -31,9 +31,9 @@ public class LeaveCommand extends BattleNightCommand {
 
             SpectatorManager spectators = api.getSpectatorManager();
 
-            if (battle.containsPlayer(player)) {
+            if (battle.containsPlayer(player))
                 return battle.removePlayer(player);
-            } else if (spectators.getSpectators().contains(player.getName())) {
+            else if (spectators.getSpectators().contains(player.getName())) {
                 spectators.removeSpectator(player);
                 return true;
             } else {

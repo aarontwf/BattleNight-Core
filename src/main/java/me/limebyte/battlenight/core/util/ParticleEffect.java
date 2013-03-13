@@ -8,22 +8,21 @@ import org.bukkit.entity.Player;
 
 public class ParticleEffect {
 
-    private final static int SPIRAL_PARTICLE_COUNT = 30;
+    private enum Direction {
+        SOUTH_EAST(0), SOUTH(1), SOUTH_WEST(2), EAST(3), UP(4), WEST(5), NORTH_EAST(6), NORTH(7), NORTH_WEST(8);
 
-    private static void spiral(Location location, Effect effect) {
-        for (double i = 0; i < SPIRAL_PARTICLE_COUNT; i++) {
-            double deg = i / SPIRAL_PARTICLE_COUNT * 360;
-            double diffX = Math.rint(10 * (Math.sin(deg))) / 10;
-            double diffZ = Math.rint(10 * (Math.cos(deg))) / 10;
+        private int value;
 
-            Location loc = location.clone();
-            loc.setX(loc.getBlockX() + 0.5 + diffX);
-            loc.setY(Math.floor(loc.getY()) + (i / SPIRAL_PARTICLE_COUNT) * 1.8);
-            loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
+        Direction(int value) {
+            this.value = value;
+        }
 
-            loc.getWorld().playEffect(loc, effect, Direction.UP.getValue());
+        public int getValue() {
+            return value;
         }
     }
+
+    private final static int SPIRAL_PARTICLE_COUNT = 30;
 
     public static void classSelect(Player player, String type) {
         if (type.equalsIgnoreCase("ender")) {
@@ -36,10 +35,6 @@ public class ParticleEffect {
         }
     }
 
-    private static void playSmokeEffect(Location location) {
-        spiral(location, Effect.SMOKE);
-    }
-
     private static void playEnderEffect(Location location, Direction direction) {
         Location loc;
         for (double h = 0.0; h < 1.8; h += 0.2) {
@@ -49,17 +44,22 @@ public class ParticleEffect {
         }
     }
 
-    private enum Direction {
-        SOUTH_EAST(0), SOUTH(1), SOUTH_WEST(2), EAST(3), UP(4), WEST(5), NORTH_EAST(6), NORTH(7), NORTH_WEST(8);
+    private static void playSmokeEffect(Location location) {
+        spiral(location, Effect.SMOKE);
+    }
 
-        private int value;
+    private static void spiral(Location location, Effect effect) {
+        for (double i = 0; i < SPIRAL_PARTICLE_COUNT; i++) {
+            double deg = i / SPIRAL_PARTICLE_COUNT * 360;
+            double diffX = Math.rint(10 * Math.sin(deg)) / 10;
+            double diffZ = Math.rint(10 * Math.cos(deg)) / 10;
 
-        Direction(int value) {
-            this.value = value;
-        }
+            Location loc = location.clone();
+            loc.setX(loc.getBlockX() + 0.5 + diffX);
+            loc.setY(Math.floor(loc.getY()) + i / SPIRAL_PARTICLE_COUNT * 1.8);
+            loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
-        public int getValue() {
-            return value;
+            loc.getWorld().playEffect(loc, effect, Direction.UP.getValue());
         }
     }
 }

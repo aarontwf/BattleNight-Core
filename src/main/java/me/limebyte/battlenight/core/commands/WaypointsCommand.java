@@ -15,6 +15,10 @@ import org.bukkit.command.CommandSender;
 
 public class WaypointsCommand extends BattleNightCommand {
 
+    private static ChatColor getWaypointColour(Waypoint waypoint) {
+        return waypoint.isSet() ? ChatColor.GREEN : ChatColor.RED;
+    }
+
     protected WaypointsCommand() {
         super("Waypoints");
 
@@ -23,6 +27,23 @@ public class WaypointsCommand extends BattleNightCommand {
         setUsage("/bn waypoints");
         setPermission(CommandPermission.ADMIN);
         setAliases(Arrays.asList("wpoints"));
+    }
+
+    private String numSetup(Waypoint... waypoints) {
+        int num = 0;
+        int setup = 0;
+
+        for (Waypoint wp : waypoints) {
+            if (wp == null) {
+                continue;
+            }
+            num++;
+            if (wp.isSet()) {
+                setup++;
+            }
+        }
+
+        return setup + "/" + num;
     }
 
     @Override
@@ -38,23 +59,6 @@ public class WaypointsCommand extends BattleNightCommand {
 
         Messenger.tell(sender, new ListPage("BattleNight Waypoints", lines));
         return true;
-    }
-
-    private String numSetup(Waypoint... waypoints) {
-        int num = 0;
-        int setup = 0;
-
-        for (Waypoint wp : waypoints) {
-            if (wp == null) continue;
-            num++;
-            if (wp.isSet()) setup++;
-        }
-
-        return setup + "/" + num;
-    }
-
-    private static ChatColor getWaypointColour(Waypoint waypoint) {
-        return waypoint.isSet() ? ChatColor.GREEN : ChatColor.RED;
     }
 
 }

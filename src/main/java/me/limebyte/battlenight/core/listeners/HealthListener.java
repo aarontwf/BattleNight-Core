@@ -23,40 +23,6 @@ public class HealthListener extends APIRelatedListener {
         super(api);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-
-        if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
-        if (!getAPI().getBattle().containsPlayer(player)) return;
-
-        RegainReason reason = event.getRegainReason();
-        if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        BattleNightAPI api = getAPI();
-
-        if (api.getSpectatorManager().getSpectators().contains(player.getName())) {
-            event.setCancelled(true);
-            return;
-        }
-
-        if (event instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            Battle battle = api.getBattle();
-
-            if (!battle.containsPlayer(player)) return;
-            subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));
-        }
-    }
-
     private boolean canBeDamaged(Player damaged, Battle battle, EntityDamageByEntityEvent event) {
         Entity eDamager = event.getDamager();
         Player damager;
@@ -87,6 +53,40 @@ public class HealthListener extends APIRelatedListener {
         }
 
         return true;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        BattleNightAPI api = getAPI();
+
+        if (api.getSpectatorManager().getSpectators().contains(player.getName())) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+            Battle battle = api.getBattle();
+
+            if (!battle.containsPlayer(player)) return;
+            subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+
+        if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
+        if (!getAPI().getBattle().containsPlayer(player)) return;
+
+        RegainReason reason = event.getRegainReason();
+        if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {
+            event.setCancelled(true);
+        }
     }
 
 }

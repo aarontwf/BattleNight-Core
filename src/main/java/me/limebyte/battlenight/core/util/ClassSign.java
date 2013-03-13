@@ -23,9 +23,9 @@ public class ClassSign {
         refresh();
     }
 
-    public void remove(Player player) {
-        removeName(player.getName());
-        refresh();
+    private void addName(String name) {
+        names.remove(name);
+        names.add(0, name);
     }
 
     public void clear() {
@@ -33,19 +33,6 @@ public class ClassSign {
         sign.setLine(3, "");
         names.clear();
         refresh();
-    }
-
-    public Sign getSign() {
-        return sign;
-    }
-
-    private void addName(String name) {
-        names.remove(name);
-        names.add(0, name);
-    }
-
-    private void removeName(String name) {
-        names.remove(name);
     }
 
     private String getLine2() {
@@ -64,9 +51,22 @@ public class ClassSign {
         return line3;
     }
 
+    public Sign getSign() {
+        return sign;
+    }
+
     private void refresh() {
         sign.setLine(2, getLine2());
         sign.setLine(3, getLine3());
         sign.update();
+    }
+
+    public void remove(Player player) {
+        removeName(player.getName());
+        refresh();
+    }
+
+    private void removeName(String name) {
+        names.remove(name);
     }
 }

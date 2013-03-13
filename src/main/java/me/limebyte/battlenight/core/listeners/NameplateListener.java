@@ -29,7 +29,9 @@ public class NameplateListener extends APIRelatedListener {
             ChatColor teamColour = ChatColor.RED;
             if (battle instanceof TeamedBattle) {
                 Team team = ((TeamedBattle) battle).getTeam(player);
-                if (team != null) teamColour = team.getColour();
+                if (team != null) {
+                    teamColour = team.getColour();
+                }
             }
             event.setTag(teamColour + tag);
         } else if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {

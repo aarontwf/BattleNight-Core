@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 
 public interface Battle {
 
-    public boolean start();
+    public void addDeath(Player player);
 
-    public boolean stop();
+    public void addKill(Player player);
 
     /**
      * Adds the specified {@link Player} to the battle. This will return false
@@ -22,6 +22,56 @@ public interface Battle {
      * @return true if successful
      */
     public boolean addPlayer(Player player);
+
+    public boolean containsPlayer(Player player);
+
+    /**
+     * Returns the {@link Arena} that is set for this battle.
+     * 
+     * @return the arena
+     * @see Arena
+     */
+    public Arena getArena();
+
+    public int getDeaths(Player player);
+
+    public double getKDR(Player player);
+
+    public int getKills(Player player);
+
+    public Set<String> getLeadingPlayers();
+
+    /**
+     * Returns the maximum amount of players the battle can have. By default
+     * this is set to {@link Integer.MAX_VALUE}.
+     * 
+     * @return the maxPlayers
+     */
+    public int getMaxPlayers();
+
+    /**
+     * Returns the minimum amount of players the battle requires before it can
+     * be started.
+     * 
+     * @return the minPlayers
+     */
+    public int getMinPlayers();
+
+    /**
+     * @return the players
+     */
+    public Set<String> getPlayers();
+
+    public Timer getTimer();
+
+    /**
+     * @return if in progress
+     */
+    public boolean isInProgress();
+
+    public boolean onStart();
+
+    public boolean onStop();
 
     /**
      * Removes the specified {@link Player} to the battle. This will return
@@ -35,14 +85,6 @@ public interface Battle {
     public Location respawn(Player player);
 
     /**
-     * Returns the {@link Arena} that is set for this battle.
-     * 
-     * @return the arena
-     * @see Arena
-     */
-    public Arena getArena();
-
-    /**
      * Sets the {@link Arena} that will be used for this battle. The arena will
      * not be set if this battle is in progress.
      * 
@@ -50,30 +92,6 @@ public interface Battle {
      * @see Arena
      */
     public void setArena(Arena arena);
-
-    /**
-     * Returns the minimum amount of players the battle requires before it can
-     * be started.
-     * 
-     * @return the minPlayers
-     */
-    public int getMinPlayers();
-
-    /**
-     * Sets the minimum amount of players the battle requires before it can be
-     * started. This cannot be set below one.
-     * 
-     * @param minPlayers the minPlayers to set
-     */
-    public void setMinPlayers(int minPlayers);
-
-    /**
-     * Returns the maximum amount of players the battle can have. By default
-     * this is set to {@link Integer.MAX_VALUE}.
-     * 
-     * @return the maxPlayers
-     */
-    public int getMaxPlayers();
 
     /**
      * Sets the maximum amount of players the battle can have. Setting this
@@ -84,28 +102,16 @@ public interface Battle {
      */
     public void setMaxPlayers(int maxPlayers);
 
-    public Timer getTimer();
-
     /**
-     * @return if in progress
+     * Sets the minimum amount of players the battle requires before it can be
+     * started. This cannot be set below one.
+     * 
+     * @param minPlayers the minPlayers to set
      */
-    public boolean isInProgress();
+    public void setMinPlayers(int minPlayers);
 
-    /**
-     * @return the players
-     */
-    public Set<String> getPlayers();
+    public boolean start();
 
-    public boolean containsPlayer(Player player);
-
-    public Set<String> getLeadingPlayers();
-
-    public void addKill(Player player);
-
-    public void addDeath(Player player);
-
-    public boolean onStart();
-
-    public boolean onStop();
+    public boolean stop();
 
 }

@@ -43,13 +43,17 @@ public class InteractListener extends APIRelatedListener {
                         boolean allReady = true;
                         for (String n : battle.getPlayers()) {
                             Player p = Bukkit.getPlayerExact(n);
-                            if (p == null) continue;
+                            if (p == null) {
+                                continue;
+                            }
                             if (!Metadata.getBoolean(p, "ready")) {
                                 allReady = false;
                                 break;
                             }
                         }
-                        if (allReady) battle.start();
+                        if (allReady) {
+                            battle.start();
+                        }
                     } else {
                         Messenger.tell(player, Message.NO_CLASS);
                     }

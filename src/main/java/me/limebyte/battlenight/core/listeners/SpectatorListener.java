@@ -18,24 +18,10 @@ public class SpectatorListener extends APIRelatedListener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        String name = player.getName();
-
+    public void onInventoryOpen(InventoryOpenEvent event) {
         SpectatorManager manager = getAPI().getSpectatorManager();
 
-        if (getAPI().getBattle().containsPlayer(player)) {
-            for (String spec : manager.getSpectators()) {
-                Player spectator = Bukkit.getPlayerExact(spec);
-                if (spectator == null) continue;
-
-                if (manager.getTarget(spectator).getName() == name) {
-                    spectator.teleport(player);
-                }
-            }
-        }
-
-        if (manager.getSpectators().contains(player.getName())) {
+        if (manager.getSpectators().contains(event.getPlayer().getName())) {
             event.setCancelled(true);
         }
     }
@@ -52,10 +38,26 @@ public class SpectatorListener extends APIRelatedListener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryOpen(InventoryOpenEvent event) {
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        String name = player.getName();
+
         SpectatorManager manager = getAPI().getSpectatorManager();
 
-        if (manager.getSpectators().contains(event.getPlayer().getName())) {
+        if (getAPI().getBattle().containsPlayer(player)) {
+            for (String spec : manager.getSpectators()) {
+                Player spectator = Bukkit.getPlayerExact(spec);
+                if (spectator == null) {
+                    continue;
+                }
+
+                if (manager.getTarget(spectator).getName() == name) {
+                    spectator.teleport(player);
+                }
+            }
+        }
+
+        if (manager.getSpectators().contains(player.getName())) {
             event.setCancelled(true);
         }
     }
