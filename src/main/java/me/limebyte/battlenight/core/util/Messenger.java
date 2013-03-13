@@ -92,6 +92,10 @@ public class Messenger {
         WAYPOINT_SET_CURRENT_LOC(ChatColor.GREEN + "$1 Waypoint set to your current location."),
         WAYPOINT_SET_THIS_WORLD(ChatColor.GREEN + "$1 Waypoint set to $2 in this world."),
         WAYPOINT_UNSET(ChatColor.RED + "$1 Waypoint is not set."),
+        KICKED("You have been kicked from the Battle."),
+        PLAYER_KICKED("$1 has been kicked from the Battle."),
+        REASONED_KICK("You have been kicked from the Battle for $1."),
+        PLAYER_REASONED_KICKED("$1 has been kicked from the Battle for $2."),
 
         INVALID_ARENA(ChatColor.RED + "An Arena by that name does not exists!"),
         ARENA_EXISTS(ChatColor.RED + "An Arena by that name already exists!"),
@@ -101,6 +105,8 @@ public class Messenger {
         ARENA_DISABLED(ChatColor.GREEN + "$1 Arena disabled."),
         SPAWN_CREATED(ChatColor.GREEN + "Spawn point $1 created for Arena $2."),
         SPAWN_REMOVED(ChatColor.GREEN + "Spawn point $1 removed for Arena $2."),
+        ARENA_NAMED(ChatColor.GREEN + "Set display name to $1 for Arena $2."),
+        TEXTUREPACK_SET(ChatColor.GREEN + "Texture pack set for Arena $1."),
 
         INCORRECT_USAGE(ChatColor.RED + "Incorrect usage."),
         DEPRICATED_COMMAND(ChatColor.RED + "This command is deprecated, please use \"/bn $1\" instead."),

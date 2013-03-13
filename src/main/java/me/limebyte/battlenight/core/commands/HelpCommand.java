@@ -33,6 +33,8 @@ public class HelpCommand extends BattleNightCommand {
             }
         }
 
+        lines.add("For more information visit the wiki.");
+
         ListPage page = new ListPage("BattleNight Help Menu", lines);
         Messenger.tell(sender, page);
         return true;

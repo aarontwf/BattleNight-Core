@@ -31,12 +31,15 @@ public class SetCommand extends BattleNightCommand {
             return false;
         } else {
             Waypoint waypoint = null;
+            String name = "";
             ArenaManager manager = api.getArenaManager();
 
             if (args[0].equalsIgnoreCase("lounge")) {
                 waypoint = manager.getLounge();
+                name = "Lounge";
             } else if (args[0].equalsIgnoreCase("exit")) {
                 waypoint = manager.getExit();
+                name = "Exit";
             }
 
             if (waypoint != null) {
@@ -44,7 +47,7 @@ public class SetCommand extends BattleNightCommand {
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
                         waypoint.setLocation(player.getLocation());
-                        Messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, args[0]);
+                        Messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, name);
                     } else {
                         Messenger.tell(sender, Message.SPECIFY_COORDINATE);
                         Messenger.tell(sender, Message.USAGE, getUsage());
@@ -54,12 +57,12 @@ public class SetCommand extends BattleNightCommand {
                     Player player = (Player) sender;
                     Location loc = parseArgsToLocation(args, player.getWorld());
                     waypoint.setLocation(loc);
-                    Messenger.tell(sender, Message.WAYPOINT_SET_THIS_WORLD, args[0], loc);
+                    Messenger.tell(sender, Message.WAYPOINT_SET_THIS_WORLD, name, loc);
                 } else if (args.length == 5) {
                     if (Bukkit.getWorld(args[4]) != null) {
                         Location loc = parseArgsToLocation(args);
                         waypoint.setLocation(loc);
-                        Messenger.tell(sender, Message.WAYPOINT_SET, args[0], loc, loc.getWorld());
+                        Messenger.tell(sender, Message.WAYPOINT_SET, name, loc, loc.getWorld());
                     } else {
                         Messenger.tell(sender, Message.CANT_FIND_WORLD, args[4]);
                         return false;

@@ -43,11 +43,11 @@ public class KickCommand extends BattleNightCommand {
                 api.getBattle().removePlayer(player);
 
                 if (reason != null) {
-                    Messenger.tell(sender, "You have been kicked from the Battle for " + reason + ".");
-                    Messenger.tellEveryoneExcept(player, player.getName() + " has been kicked from the Battle for " + reason + ".", true);
+                    Messenger.tell(player, Message.REASONED_KICK, reason);
+                    Messenger.tellEveryoneExcept(player, true, Message.PLAYER_REASONED_KICKED, player, reason);
                 } else {
-                    Messenger.tell(sender, "You have been kicked from the Battle.");
-                    Messenger.tellEveryoneExcept(player, player.getName() + " has been kicked from the Battle.", true);
+                    Messenger.tell(player, Message.KICKED);
+                    Messenger.tellEveryoneExcept(player, true, Message.PLAYER_KICKED, player);
                 }
 
                 return true;

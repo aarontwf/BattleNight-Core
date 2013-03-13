@@ -127,7 +127,7 @@ public class ArenasCommand extends BattleNightCommand {
             Waypoint point = new Waypoint();
             point.setLocation(((Player) sender).getLocation());
             int index = arena.addSpawnPoint(point);
-            Messenger.tell(sender, Message.SPAWN_CREATED, index, arena);
+            Messenger.tell(sender, Message.SPAWN_CREATED, index + 1, arena);
             return true;
         }
 
@@ -206,7 +206,9 @@ public class ArenasCommand extends BattleNightCommand {
 
             for (Arena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
-                    arena.setDisplayName(createString(args, 2));
+                    String name = createString(args, 2);
+                    arena.setDisplayName(name);
+                    Messenger.tell(sender, Message.ARENA_NAMED, name, arena.getName());
                     return true;
                 }
             }
@@ -222,6 +224,7 @@ public class ArenasCommand extends BattleNightCommand {
             for (Arena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     arena.setTexturePack(args[2]);
+                    Messenger.tell(sender, Message.TEXTUREPACK_SET, arena.getName());
                     return true;
                 }
             }
