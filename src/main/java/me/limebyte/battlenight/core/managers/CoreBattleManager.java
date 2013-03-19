@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.core.battle.SimpleBattle;
 import me.limebyte.battlenight.core.battle.battles.FFABattle;
@@ -17,7 +18,7 @@ public class CoreBattleManager implements BattleManager {
 
     private BattleNightAPI api;
     private String activeBattle;
-    private Map<String, SimpleBattle> battles = new HashMap<String, SimpleBattle>();
+    private Map<String, Battle> battles = new HashMap<String, Battle>();
 
     public CoreBattleManager(BattleNightAPI api) {
         this.api = api;
@@ -45,24 +46,24 @@ public class CoreBattleManager implements BattleManager {
     }
 
     @Override
-    public SimpleBattle getActiveBattle() {
+    public Battle getActiveBattle() {
         return getBattle(activeBattle);
     }
 
     @Override
-    public SimpleBattle getBattle(String id) {
+    public Battle getBattle(String id) {
         return battles.get(id);
     }
 
     @Override
-    public List<SimpleBattle> getBattles() {
-        return new ArrayList<SimpleBattle>(battles.values());
+    public List<Battle> getBattles() {
+        return new ArrayList<Battle>(battles.values());
     }
 
     @Override
-    public void register(SimpleBattle battle, String id) {
+    public void register(Battle battle, String id) {
         if (battle == null || battles.containsKey(id)) throw new IllegalArgumentException();
-        battle.api = api;
+        if (battle instanceof SimpleBattle) ((SimpleBattle) battle).api = api;
         battles.put(id, battle);
     }
 
@@ -78,7 +79,7 @@ public class CoreBattleManager implements BattleManager {
         int minPlayers = getMinPlayers();
         int maxPlayers = getMaxPlayers();
 
-        for (SimpleBattle b : battles.values()) {
+        for (Battle b : battles.values()) {
             b.getTimer().setTime(time);
             b.setMinPlayers(minPlayers);
             b.setMaxPlayers(maxPlayers);
@@ -89,7 +90,7 @@ public class CoreBattleManager implements BattleManager {
     public boolean setActiveBattle(String id) {
         if (!battles.containsKey(id)) return false;
 
-        SimpleBattle active = getActiveBattle();
+        Battle active = getActiveBattle();
         if (active != null && active.isInProgress()) throw new IllegalStateException();
 
         activeBattle = id;

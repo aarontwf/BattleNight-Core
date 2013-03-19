@@ -6,8 +6,8 @@ import java.util.Set;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
-import me.limebyte.battlenight.api.tosort.PlayerData;
 import me.limebyte.battlenight.api.util.Messenger;
+import me.limebyte.battlenight.core.tosort.PlayerData;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
