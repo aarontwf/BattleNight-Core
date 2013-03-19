@@ -1,18 +1,17 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.tosort;
 
 import java.util.List;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.api.tosort.Arena;
 import me.limebyte.battlenight.api.tosort.Page;
 import me.limebyte.battlenight.api.util.Song;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.Team;
-import me.limebyte.battlenight.core.TeamedBattle;
-import me.limebyte.battlenight.core.util.config.ConfigManager;
-import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import me.limebyte.battlenight.core.battle.SimpleArena;
+import me.limebyte.battlenight.core.battle.SimpleTeam;
+import me.limebyte.battlenight.core.battle.SimpleTeamedBattle;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -178,11 +177,11 @@ public class Messenger {
             return describeLocation((Location) obj);
         else if (obj instanceof World)
             return ((World) obj).getName();
-        else if (obj instanceof Team)
-            return ((Team) obj).getColour() + ((Team) obj).getDisplayName();
+        else if (obj instanceof SimpleTeam)
+            return ((SimpleTeam) obj).getColour() + ((SimpleTeam) obj).getDisplayName();
         else if (obj instanceof List<?>)
             return ((List<?>) obj).toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1");
-        else if (obj instanceof Arena) return ((Arena) obj).getDisplayName();
+        else if (obj instanceof SimpleArena) return ((SimpleArena) obj).getDisplayName();
         return obj.toString();
     }
 
@@ -202,8 +201,8 @@ public class Messenger {
 
         if (battle.containsPlayer(player)) {
             ChatColor teamColour = ChatColor.WHITE;
-            if (battle instanceof TeamedBattle) {
-                teamColour = ((TeamedBattle) battle).getTeam(player).getColour();
+            if (battle instanceof SimpleTeamedBattle) {
+                teamColour = ((SimpleTeamedBattle) battle).getTeam(player).getColour();
             }
             Messenger.debug(Level.INFO, "Coloured name is " + teamColour + name);
             return teamColour + name;

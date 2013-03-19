@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util.config;
+package me.limebyte.battlenight.core.tosort;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

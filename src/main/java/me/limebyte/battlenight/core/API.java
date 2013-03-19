@@ -2,12 +2,12 @@ package me.limebyte.battlenight.core;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
-import me.limebyte.battlenight.api.tosort.BattleNightCommand;
 import me.limebyte.battlenight.api.tosort.PlayerData;
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.commands.CommandManager;
@@ -17,7 +17,7 @@ import me.limebyte.battlenight.core.managers.CoreBattleManager;
 import me.limebyte.battlenight.core.managers.CoreClassManager;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
 import me.limebyte.battlenight.core.managers.CoreSpectatorManager;
-import me.limebyte.battlenight.core.util.Metadata;
+import me.limebyte.battlenight.core.tosort.Metadata;
 
 import org.bukkit.entity.Player;
 

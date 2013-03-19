@@ -1,7 +1,9 @@
 package me.limebyte.battlenight.core.util;
 
-import me.limebyte.battlenight.core.SimpleBattle;
+import me.limebyte.battlenight.core.battle.SimpleBattle;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.Note;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;

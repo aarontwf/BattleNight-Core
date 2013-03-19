@@ -5,8 +5,7 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
-import me.limebyte.battlenight.api.tosort.Arena;
-import me.limebyte.battlenight.api.tosort.Waypoint;
+import me.limebyte.battlenight.core.battle.SimpleArena;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
@@ -19,11 +18,12 @@ import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.NameplateListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.listeners.SpectatorListener;
-import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.SafeTeleporter;
-import me.limebyte.battlenight.core.util.UpdateChecker;
-import me.limebyte.battlenight.core.util.config.ConfigManager;
-import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.UpdateChecker;
+import me.limebyte.battlenight.core.tosort.Waypoint;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -64,7 +64,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         instance = this;
 
         // Register Serialization Classes
-        ConfigurationSerialization.registerClass(Arena.class);
+        ConfigurationSerialization.registerClass(SimpleArena.class);
         ConfigurationSerialization.registerClass(Waypoint.class);
 
         // Initialize Configuration

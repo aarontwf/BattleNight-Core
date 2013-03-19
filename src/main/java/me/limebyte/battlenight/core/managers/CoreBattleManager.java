@@ -7,11 +7,11 @@ import java.util.Map;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.BattleManager;
-import me.limebyte.battlenight.core.FFABattle;
-import me.limebyte.battlenight.core.SimpleBattle;
-import me.limebyte.battlenight.core.TDMBattle;
-import me.limebyte.battlenight.core.util.config.ConfigManager;
-import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import me.limebyte.battlenight.core.battle.SimpleBattle;
+import me.limebyte.battlenight.core.battle.battles.FFABattle;
+import me.limebyte.battlenight.core.battle.battles.TDMBattle;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 public class CoreBattleManager implements BattleManager {
 

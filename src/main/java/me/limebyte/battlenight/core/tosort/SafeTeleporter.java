@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.tosort;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 

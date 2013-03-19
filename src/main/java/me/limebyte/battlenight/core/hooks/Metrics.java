@@ -46,8 +46,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.core.util.config.ConfigManager;
-import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

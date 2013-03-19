@@ -9,10 +9,10 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.api.util.Song;
-import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.Note;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.Note;
+import me.limebyte.battlenight.core.tosort.UtilDataInput;
 import me.limebyte.battlenight.core.util.SimpleSong;
-import me.limebyte.battlenight.core.util.UtilDataInput;
 
 import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;

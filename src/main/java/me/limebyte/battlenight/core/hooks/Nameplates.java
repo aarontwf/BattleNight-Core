@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.tosort.Messenger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

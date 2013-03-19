@@ -6,6 +6,8 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.util.Song;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.Note;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

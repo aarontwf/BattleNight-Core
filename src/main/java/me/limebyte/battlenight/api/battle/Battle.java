@@ -2,7 +2,6 @@ package me.limebyte.battlenight.api.battle;
 
 import java.util.Set;
 
-import me.limebyte.battlenight.api.tosort.Arena;
 import me.limebyte.battlenight.api.util.Timer;
 
 import org.bukkit.Location;

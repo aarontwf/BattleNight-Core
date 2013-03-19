@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.tosort;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

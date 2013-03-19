@@ -1,24 +1,24 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.battle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import me.limebyte.battlenight.api.tosort.Waypoint;
-import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.Messenger.Message;
-import me.limebyte.battlenight.core.util.Metadata;
-import me.limebyte.battlenight.core.util.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Waypoint;
+import me.limebyte.battlenight.core.tosort.Messenger.Message;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public abstract class TeamedBattle extends SimpleBattle {
+public abstract class SimpleTeamedBattle extends SimpleBattle {
 
-    private List<Team> teams = new ArrayList<Team>();
+    private List<SimpleTeam> teams = new ArrayList<SimpleTeam>();
 
-    public TeamedBattle(int duration, int minPlayers, int maxPlayers) {
+    public SimpleTeamedBattle(int duration, int minPlayers, int maxPlayers) {
         super(duration, minPlayers, maxPlayers);
     }
 
@@ -26,7 +26,7 @@ public abstract class TeamedBattle extends SimpleBattle {
     public void addDeath(Player player) {
         super.addDeath(player);
 
-        Team team = getTeam(player);
+        SimpleTeam team = getTeam(player);
         if (team != null) {
             team.addDeath();
         }
@@ -36,7 +36,7 @@ public abstract class TeamedBattle extends SimpleBattle {
     public void addKill(Player player) {
         super.addKill(player);
 
-        Team team = getTeam(player);
+        SimpleTeam team = getTeam(player);
         if (team != null) {
             team.addKill();
         }
@@ -47,16 +47,16 @@ public abstract class TeamedBattle extends SimpleBattle {
         if (!assignTeam(player)) return false;
         boolean worked = super.addPlayer(player);
         if (worked) {
-            Team team = getTeam(player);
+            SimpleTeam team = getTeam(player);
             Messenger.tell(player, Message.JOINED_TEAM, team);
             Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_TEAM, player, team);
         }
         return worked;
     }
 
-    public boolean addTeam(Team team) {
+    public boolean addTeam(SimpleTeam team) {
         String name = team.getName();
-        for (Team t : teams) {
+        for (SimpleTeam t : teams) {
             if (t.getName().equals(name)) return false;
         }
         if (!teams.add(team)) return false;
@@ -71,8 +71,8 @@ public abstract class TeamedBattle extends SimpleBattle {
     private boolean assignTeam(Player player) {
         if (teams.size() < 2) return false;
 
-        Team smallest = null;
-        for (Team team : teams) {
+        SimpleTeam smallest = null;
+        for (SimpleTeam team : teams) {
             if (smallest == null || team.getSize() < smallest.getSize()) {
                 smallest = team;
             }
@@ -82,17 +82,17 @@ public abstract class TeamedBattle extends SimpleBattle {
         return true;
     }
 
-    public List<Team> getLeadingTeams() {
+    public List<SimpleTeam> getLeadingTeams() {
         if (teams.size() == 0) return null;
 
-        List<Team> leading = new ArrayList<Team>();
-        for (Team team : teams) {
+        List<SimpleTeam> leading = new ArrayList<SimpleTeam>();
+        for (SimpleTeam team : teams) {
             if (leading.isEmpty()) {
                 leading.add(team);
                 continue;
             }
 
-            Team inLead = leading.get(0);
+            SimpleTeam inLead = leading.get(0);
             double leadKD = inLead.getKDR();
             double teamKD = team.getKDR();
 
@@ -109,24 +109,24 @@ public abstract class TeamedBattle extends SimpleBattle {
         return leading;
     }
 
-    public Team getTeam(Player player) {
+    public SimpleTeam getTeam(Player player) {
         String teamName = Metadata.getString(player, "team");
         if (teamName != null) {
-            for (Team team : teams) {
+            for (SimpleTeam team : teams) {
                 if (team.getName().equals(teamName)) return team;
             }
         }
         return null;
     }
 
-    public List<Team> getTeams() {
+    public List<SimpleTeam> getTeams() {
         return teams;
     }
 
     @Override
     protected String getWinMessage() {
         String message;
-        List<Team> leading = getLeadingTeams();
+        List<SimpleTeam> leading = getLeadingTeams();
 
         if (leading.isEmpty() || leading.size() == getTeams().size()) {
             message = Message.DRAW.getMessage();
@@ -145,16 +145,16 @@ public abstract class TeamedBattle extends SimpleBattle {
         return super.removePlayer(player);
     }
 
-    public boolean removeTeam(Team team) {
+    public boolean removeTeam(SimpleTeam team) {
         if (!teams.remove(team)) return false;
         setMinPlayers(teams.size());
         return true;
     }
 
-    public void setTeam(Player player, Team team) {
+    public void setTeam(Player player, SimpleTeam team) {
         String prevTeam = Metadata.getString(player, "team");
         if (prevTeam != null) {
-            for (Team t : teams) {
+            for (SimpleTeam t : teams) {
                 if (t.getName().equals(prevTeam)) {
                     t.decrementSize();
                     break;
@@ -173,7 +173,7 @@ public abstract class TeamedBattle extends SimpleBattle {
     @Override
     public boolean shouldEnd() {
         if (!isInProgress()) return false;
-        for (Team team : getTeams()) {
+        for (SimpleTeam team : getTeams()) {
             if (team.getSize() < 1) return true;
         }
         return false;
@@ -191,7 +191,7 @@ public abstract class TeamedBattle extends SimpleBattle {
 
         boolean result = super.stop();
 
-        for (Team team : teams) {
+        for (SimpleTeam team : teams) {
             if (team == null) {
                 continue;
             }
@@ -210,7 +210,7 @@ public abstract class TeamedBattle extends SimpleBattle {
 
         HashMap<String, Waypoint> spawns = new HashMap<String, Waypoint>();
 
-        for (Team team : getTeams()) {
+        for (SimpleTeam team : getTeams()) {
             if (free.size() <= 0) {
                 free = waypoints;
             }

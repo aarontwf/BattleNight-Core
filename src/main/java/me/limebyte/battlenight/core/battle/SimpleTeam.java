@@ -1,8 +1,8 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.battle;
 
 import org.bukkit.ChatColor;
 
-public class Team {
+public class SimpleTeam {
 
     private String name;
     private String displayName;
@@ -12,11 +12,11 @@ public class Team {
     private int deaths = 0;
     private int size = 0;
 
-    public Team(String name) {
+    public SimpleTeam(String name) {
         this(name, ChatColor.WHITE);
     }
 
-    public Team(String name, ChatColor colour) {
+    public SimpleTeam(String name, ChatColor colour) {
         this.name = name.toLowerCase();
         displayName = name;
         this.colour = colour;

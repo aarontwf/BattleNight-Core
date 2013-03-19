@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.tosort;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

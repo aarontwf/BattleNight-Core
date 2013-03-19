@@ -1,24 +1,26 @@
-package me.limebyte.battlenight.api.tosort;
+package me.limebyte.battlenight.core.battle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import me.limebyte.battlenight.api.battle.Arena;
+import me.limebyte.battlenight.core.tosort.Waypoint;
+
 import org.bukkit.configuration.serialization.SerializableAs;
 
 @SerializableAs("Arena")
-public class Arena implements ConfigurationSerializable {
+public class SimpleArena implements Arena {
 
     @SuppressWarnings("unchecked")
-    public static Arena deserialize(Map<String, Object> map) {
+    public static SimpleArena deserialize(Map<String, Object> map) {
         Object displayName = map.get("DisplayName");
         Object spawnPoints = map.get("SpawnPoints");
         Object enabled = map.get("Enabled");
         Object texturePack = map.get("TexturePack");
 
-        Arena arena = new Arena((String) map.get("Name"));
+        SimpleArena arena = new SimpleArena((String) map.get("Name"));
         if (displayName != null) {
             arena.displayName = (String) displayName;
         }
@@ -43,7 +45,7 @@ public class Arena implements ConfigurationSerializable {
 
     private final Random RANDOM = new Random();
 
-    public Arena(String name) {
+    public SimpleArena(String name) {
         this.name = name.toLowerCase();
         displayName = name;
     }

@@ -2,9 +2,9 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.core.TeamedBattle;
-import me.limebyte.battlenight.core.util.config.ConfigManager;
-import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import me.limebyte.battlenight.core.battle.SimpleTeamedBattle;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -44,8 +44,8 @@ public class HealthListener extends APIRelatedListener {
             if (!battle.isInProgress()) return false;
             if (damager == damaged) return true;
 
-            if (battle instanceof TeamedBattle) {
-                if (((TeamedBattle) battle).areEnemies(damager, damaged)) return true;
+            if (battle instanceof SimpleTeamedBattle) {
+                if (((SimpleTeamedBattle) battle).areEnemies(damager, damaged)) return true;
                 return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
             }
 

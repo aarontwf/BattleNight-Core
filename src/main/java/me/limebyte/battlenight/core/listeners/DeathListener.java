@@ -7,7 +7,7 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.tosort.PlayerData;
-import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.tosort.Messenger;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

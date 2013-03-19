@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.api.tosort.BattleNightCommand;
 import me.limebyte.battlenight.api.tosort.ListPage;
-import me.limebyte.battlenight.api.tosort.Waypoint;
-import me.limebyte.battlenight.core.util.Messenger;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.Waypoint;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

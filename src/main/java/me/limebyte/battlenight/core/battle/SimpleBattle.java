@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.battle;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,19 +9,20 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
-import me.limebyte.battlenight.api.tosort.Arena;
 import me.limebyte.battlenight.api.tosort.PlayerData;
-import me.limebyte.battlenight.api.tosort.Waypoint;
 import me.limebyte.battlenight.api.util.Timer;
+import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Waypoint;
 import me.limebyte.battlenight.core.util.BattleTimer;
-import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.Messenger.Message;
-import me.limebyte.battlenight.core.util.Metadata;
-import me.limebyte.battlenight.core.util.SafeTeleporter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

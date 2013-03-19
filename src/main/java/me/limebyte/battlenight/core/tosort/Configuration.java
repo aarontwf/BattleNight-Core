@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util.config;
+package me.limebyte.battlenight.core.tosort;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.util.Messenger;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

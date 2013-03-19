@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.api.tosort.Arena;
-import me.limebyte.battlenight.api.tosort.BattleNightCommand;
 import me.limebyte.battlenight.api.tosort.ListPage;
-import me.limebyte.battlenight.api.tosort.Waypoint;
-import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.Messenger.Message;
+import me.limebyte.battlenight.core.battle.SimpleArena;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.Waypoint;
+import me.limebyte.battlenight.core.tosort.Messenger.Message;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -27,16 +27,16 @@ public class ArenasCommand extends BattleNightCommand {
         setPermission(CommandPermission.ADMIN);
     }
 
-    private String getArenaName(Arena arena) {
+    private String getArenaName(SimpleArena arena) {
         ChatColor colour = arena.isEnabled() ? ChatColor.GREEN : ChatColor.RED;
         return colour + arena.getDisplayName() + " (" + arena.getName() + ")";
     }
 
-    private String numSetup(List<Arena> arenas) {
+    private String numSetup(List<SimpleArena> arenas) {
         int num = 0;
         int setup = 0;
 
-        for (Arena a : arenas) {
+        for (SimpleArena a : arenas) {
             if (a == null) {
                 continue;
             }
@@ -52,7 +52,7 @@ public class ArenasCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         ArenaManager manager = api.getArenaManager();
-        List<Arena> arenas = manager.getArenas();
+        List<SimpleArena> arenas = manager.getArenas();
 
         if (args.length < 1) {
             sendArenasList(sender, arenas);
@@ -70,13 +70,13 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            for (Arena arena : arenas) {
+            for (SimpleArena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     Messenger.tell(sender, Message.ARENA_EXISTS);
                     return false;
                 }
             }
-            manager.register(new Arena(args[1]));
+            manager.register(new SimpleArena(args[1]));
             Messenger.tell(sender, Message.ARENA_CREATED, args[1]);
 
             return false;
@@ -88,9 +88,9 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            Iterator<Arena> it = arenas.iterator();
+            Iterator<SimpleArena> it = arenas.iterator();
             while (it.hasNext()) {
-                Arena arena = it.next();
+                SimpleArena arena = it.next();
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     it.remove();
                     Messenger.tell(sender, Message.ARENA_DELETED, args[1]);
@@ -112,8 +112,8 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            Arena arena = null;
-            for (Arena a : arenas) {
+            SimpleArena arena = null;
+            for (SimpleArena a : arenas) {
                 if (a.getName().equalsIgnoreCase(args[1])) {
                     arena = a;
                 }
@@ -140,8 +140,8 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            Arena arena = null;
-            for (Arena a : arenas) {
+            SimpleArena arena = null;
+            for (SimpleArena a : arenas) {
                 if (a.getName().equalsIgnoreCase(args[1])) {
                     arena = a;
                 }
@@ -170,7 +170,7 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            for (Arena arena : arenas) {
+            for (SimpleArena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     arena.enable();
                     Messenger.tell(sender, Message.ARENA_ENABLED, arena);
@@ -187,7 +187,7 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            for (Arena arena : arenas) {
+            for (SimpleArena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     arena.disable();
                     Messenger.tell(sender, Message.ARENA_DISABLED, arena);
@@ -204,7 +204,7 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            for (Arena arena : arenas) {
+            for (SimpleArena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     String name = createString(args, 2);
                     arena.setDisplayName(name);
@@ -221,7 +221,7 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            for (Arena arena : arenas) {
+            for (SimpleArena arena : arenas) {
                 if (arena.getName().equalsIgnoreCase(args[1])) {
                     arena.setTexturePack(args[2]);
                     Messenger.tell(sender, Message.TEXTUREPACK_SET, arena.getName());
@@ -236,11 +236,11 @@ public class ArenasCommand extends BattleNightCommand {
         return false;
     }
 
-    private void sendArenasList(CommandSender sender, List<Arena> arenas) {
+    private void sendArenasList(CommandSender sender, List<SimpleArena> arenas) {
         List<String> lines = new ArrayList<String>();
 
         lines.add(ChatColor.WHITE + "Setup Arenas: " + numSetup(arenas));
-        for (Arena arena : arenas) {
+        for (SimpleArena arena : arenas) {
             lines.add(getArenaName(arena) + ChatColor.WHITE + " (" + arena.getSpawnPoints().size() + " Spawns)");
         }
 

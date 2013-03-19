@@ -1,4 +1,6 @@
-package me.limebyte.battlenight.core;
+package me.limebyte.battlenight.core.battle.battles;
+
+import me.limebyte.battlenight.core.battle.SimpleBattle;
 
 public class FFABattle extends SimpleBattle {
 

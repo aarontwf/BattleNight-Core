@@ -2,7 +2,7 @@ package me.limebyte.battlenight.api.managers;
 
 import java.util.List;
 
-import me.limebyte.battlenight.core.SimpleBattle;
+import me.limebyte.battlenight.core.battle.SimpleBattle;
 
 public interface BattleManager {
 

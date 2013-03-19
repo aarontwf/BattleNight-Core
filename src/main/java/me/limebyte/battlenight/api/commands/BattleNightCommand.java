@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api.tosort;
+package me.limebyte.battlenight.api.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,10 +6,10 @@ import java.util.List;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.core.commands.CommandPermission;
-import me.limebyte.battlenight.core.util.Messenger;
-import me.limebyte.battlenight.core.util.Messenger.Message;
-import me.limebyte.battlenight.core.util.config.ConfigManager;
-import me.limebyte.battlenight.core.util.config.ConfigManager.Config;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
+import me.limebyte.battlenight.core.tosort.Messenger.Message;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
