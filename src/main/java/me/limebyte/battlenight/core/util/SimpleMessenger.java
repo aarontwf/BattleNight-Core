@@ -5,8 +5,8 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.api.tosort.Page;
 import me.limebyte.battlenight.api.util.Messenger;
+import me.limebyte.battlenight.api.util.Page;
 import me.limebyte.battlenight.api.util.Song;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.SimpleArena;
@@ -390,6 +390,16 @@ public class SimpleMessenger implements Messenger {
         public String toString() {
             return message;
         }
+    }
+
+    @Override
+    public void debug(Level level, String message, Object... args) {
+        debug(level, format(message, args));
+    }
+
+    @Override
+    public void log(Level level, String message, Object... args) {
+        log(level, format(message, args));
     }
 
 }

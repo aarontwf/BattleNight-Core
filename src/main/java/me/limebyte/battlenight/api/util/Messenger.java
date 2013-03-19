@@ -2,7 +2,6 @@ package me.limebyte.battlenight.api.util;
 
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.api.tosort.Page;
 import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Sound;
@@ -13,6 +12,8 @@ public interface Messenger {
 
     public void debug(Level level, String message);
 
+    public void debug(Level level, String message, Object... args);
+
     public String format(Message message, Object... args);
 
     public String format(String message, Object... args);
@@ -20,6 +21,8 @@ public interface Messenger {
     public String getColouredName(Player player);
 
     public void log(Level level, String message);
+
+    public void log(Level level, String message, Object... args);
 
     public void playSong(Song song);
 

@@ -1,17 +1,19 @@
-package me.limebyte.battlenight.api.tosort;
+package me.limebyte.battlenight.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.limebyte.battlenight.api.util.Page;
+
 import org.bukkit.ChatColor;
 
-public class Page {
+public class SimplePage implements Page {
 
     String title, text, header, footer;
 
     private int pageWidth = 320;
 
-    public Page(String title, String text) {
+    public SimplePage(String title, String text) {
         this.title = title;
         this.text = text;
         header = getHeader();

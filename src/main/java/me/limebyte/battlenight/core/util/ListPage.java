@@ -1,6 +1,7 @@
-package me.limebyte.battlenight.api.tosort;
+package me.limebyte.battlenight.core.util;
 
 import java.util.List;
+
 
 public class ListPage extends StandardPage {
 

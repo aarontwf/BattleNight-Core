@@ -1,6 +1,7 @@
-package me.limebyte.battlenight.api.tosort;
+package me.limebyte.battlenight.core.util;
 
-public class StandardPage extends Page {
+
+public class StandardPage extends SimplePage {
 
     public StandardPage(String title, String text) {
         super(title, text);

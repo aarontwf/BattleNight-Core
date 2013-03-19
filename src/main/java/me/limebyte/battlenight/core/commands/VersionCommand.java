@@ -3,8 +3,8 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
-import me.limebyte.battlenight.api.tosort.StandardPage;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.util.StandardPage;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
