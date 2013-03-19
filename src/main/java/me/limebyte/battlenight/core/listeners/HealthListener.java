@@ -23,38 +23,6 @@ public class HealthListener extends APIRelatedListener {
         super(api);
     }
 
-    private boolean canBeDamaged(Player damaged, Battle battle, EntityDamageByEntityEvent event) {
-        Entity eDamager = event.getDamager();
-        Player damager;
-
-        if (eDamager instanceof Projectile) {
-            LivingEntity shooter = ((Projectile) eDamager).getShooter();
-            if (shooter instanceof Player) {
-                damager = (Player) shooter;
-            } else return true;
-        } else {
-            if (eDamager instanceof Player) {
-                damager = (Player) eDamager;
-            } else return true;
-        }
-
-        if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName())) return false;
-
-        if (battle.containsPlayer(damager)) {
-            if (!battle.isInProgress()) return false;
-            if (damager == damaged) return true;
-
-            if (battle instanceof SimpleTeamedBattle) {
-                if (((SimpleTeamedBattle) battle).areEnemies(damager, damaged)) return true;
-                return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
-            }
-
-            return true;
-        }
-
-        return true;
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
@@ -87,6 +55,38 @@ public class HealthListener extends APIRelatedListener {
         if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {
             event.setCancelled(true);
         }
+    }
+
+    private boolean canBeDamaged(Player damaged, Battle battle, EntityDamageByEntityEvent event) {
+        Entity eDamager = event.getDamager();
+        Player damager;
+
+        if (eDamager instanceof Projectile) {
+            LivingEntity shooter = ((Projectile) eDamager).getShooter();
+            if (shooter instanceof Player) {
+                damager = (Player) shooter;
+            } else return true;
+        } else {
+            if (eDamager instanceof Player) {
+                damager = (Player) eDamager;
+            } else return true;
+        }
+
+        if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName())) return false;
+
+        if (battle.containsPlayer(damager)) {
+            if (!battle.isInProgress()) return false;
+            if (damager == damaged) return true;
+
+            if (battle instanceof SimpleTeamedBattle) {
+                if (((SimpleTeamedBattle) battle).areEnemies(damager, damaged)) return true;
+                return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
+            }
+
+            return true;
+        }
+
+        return true;
     }
 
 }

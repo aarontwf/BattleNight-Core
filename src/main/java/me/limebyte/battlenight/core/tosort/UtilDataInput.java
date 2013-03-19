@@ -6,19 +6,19 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class UtilDataInput implements DataInput {
-    public static String a(DataInput paramDataInput) throws IOException {
-        return DataInputStream.readUTF(paramDataInput);
-    }
-
     protected final DataInputStream inputStream;
-    protected final InputStream b;
 
+    protected final InputStream b;
     protected final byte[] c;
 
     public UtilDataInput(InputStream inputStream) {
         b = inputStream;
         this.inputStream = new DataInputStream(inputStream);
         c = new byte[8];
+    }
+
+    public static String a(DataInput paramDataInput) throws IOException {
+        return DataInputStream.readUTF(paramDataInput);
     }
 
     public final int a(byte[] paramArrayOfByte, int paramInt1, int paramInt2) throws IOException {

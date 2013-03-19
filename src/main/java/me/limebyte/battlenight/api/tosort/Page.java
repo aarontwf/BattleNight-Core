@@ -7,6 +7,17 @@ import org.bukkit.ChatColor;
 
 public class Page {
 
+    String title, text, header, footer;
+
+    private int pageWidth = 320;
+
+    public Page(String title, String text) {
+        this.title = title;
+        this.text = text;
+        header = getHeader();
+        footer = getFooter();
+    }
+
     private static int getStringWidth(String text) {
         final int[] characterWidths = new int[] { 1, 9, 9, 8, 8, 8, 8, 7, 9, 8, 9, 9, 8, 9, 9, 9, 8, 8, 8, 8, 9, 9, 8, 9, 8, 8, 8, 8, 8, 9, 9, 9, 4, 2, 5, 6, 6, 6, 6, 3, 5, 5, 5, 6, 2, 6, 2, 6, 6, 6,
                 6, 6, 6, 6, 6, 6, 6, 6, 2, 2, 5, 6, 5, 6, 7, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 4, 6, 6, 3, 6, 6, 6, 6, 6, 5, 6, 6, 2, 6, 5, 3, 6, 6,
@@ -32,15 +43,20 @@ public class Page {
         return length;
     }
 
-    String title, text, header, footer;
+    public String[] getPage() {
+        List<String> page = new ArrayList<String>();
+        page.add(header);
+        page.addAll(processText(text));
+        page.add(footer);
+        return page.toArray(new String[page.size()]);
+    }
 
-    private int pageWidth = 320;
+    public int getWidth() {
+        return pageWidth;
+    }
 
-    public Page(String title, String text) {
-        this.title = title;
-        this.text = text;
-        header = getHeader();
-        footer = getFooter();
+    public void setWidth(int width) {
+        pageWidth = width;
     }
 
     private String getFooter() {
@@ -106,18 +122,6 @@ public class Page {
         return dashes + formattedTitle + extras + dashes;
     }
 
-    public String[] getPage() {
-        List<String> page = new ArrayList<String>();
-        page.add(header);
-        page.addAll(processText(text));
-        page.add(footer);
-        return page.toArray(new String[page.size()]);
-    }
-
-    public int getWidth() {
-        return pageWidth;
-    }
-
     private List<String> processText(String text) {
         if (text.contains("\n")) {
             List<String> result = new ArrayList<String>();
@@ -127,10 +131,6 @@ public class Page {
             }
             return result;
         } else return wrapText(text);
-    }
-
-    public void setWidth(int width) {
-        pageWidth = width;
     }
 
     private List<String> wrapText(String text) {

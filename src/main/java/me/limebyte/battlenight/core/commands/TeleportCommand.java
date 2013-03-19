@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.Waypoint;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,18 +26,20 @@ public class TeleportCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
+        Messenger messenger = api.getMessenger();
+
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Battle battle = api.getBattle();
 
             if (battle.containsPlayer(player) || api.getSpectatorManager().getSpectators().contains(player.getName())) {
-                Messenger.tell(sender, Message.NO_TELEPORTING);
+                messenger.tell(sender, Message.NO_TELEPORTING);
                 return false;
             }
 
             if (args.length < 1) {
-                Messenger.tell(sender, Message.SPECIFY_WAYPOINT);
-                Messenger.tell(sender, Message.USAGE, getUsage());
+                messenger.tell(sender, Message.SPECIFY_WAYPOINT);
+                messenger.tell(sender, Message.USAGE, getUsage());
                 return false;
             }
 
@@ -51,18 +53,18 @@ public class TeleportCommand extends BattleNightCommand {
             // TODO Arenas
 
             if (waypoint == null) {
-                Messenger.tell(sender, Message.INVALID_WAYPOINT);
+                messenger.tell(sender, Message.INVALID_WAYPOINT);
                 return false;
             }
 
             if (!waypoint.isSet()) {
-                Messenger.tell(sender, Message.WAYPOINT_UNSET, waypoint);
+                messenger.tell(sender, Message.WAYPOINT_UNSET, waypoint);
                 return false;
             }
             SafeTeleporter.tp(player, waypoint);
             return true;
         } else {
-            Messenger.tell(sender, Message.PLAYER_ONLY);
+            messenger.tell(sender, Message.PLAYER_ONLY);
             return false;
         }
     }

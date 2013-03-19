@@ -5,8 +5,8 @@ import java.util.List;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.api.util.Messenger;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,6 +15,25 @@ import org.bukkit.command.CommandSender;
 public class CommandManager implements CommandExecutor {
     private static List<BattleNightCommand> commands = new ArrayList<BattleNightCommand>();
     private static BattleNightAPI api;
+
+    public CommandManager(BattleNightAPI api) {
+        CommandManager.api = api;
+
+        registerCommand(new AnnounceCommand());
+        registerCommand(new ArenasCommand());
+        registerCommand(new EndCommand());
+        registerCommand(new HelpCommand());
+        registerCommand(new JoinCommand());
+        registerCommand(new KickCommand());
+        registerCommand(new LeaveCommand());
+        registerCommand(new ReloadCommand());
+        registerCommand(new SetCommand());
+        registerCommand(new TeleportCommand());
+        registerCommand(new TestCommand());
+        registerCommand(new VersionCommand());
+        registerCommand(new WatchCommand());
+        registerCommand(new WaypointsCommand());
+    }
 
     public static BattleNightCommand getCommand(String name) {
         for (BattleNightCommand cmd : commands) {
@@ -37,29 +56,12 @@ public class CommandManager implements CommandExecutor {
         commands.remove(command);
     }
 
-    public CommandManager(BattleNightAPI api) {
-        CommandManager.api = api;
-
-        registerCommand(new AnnounceCommand());
-        registerCommand(new ArenasCommand());
-        registerCommand(new EndCommand());
-        registerCommand(new HelpCommand());
-        registerCommand(new JoinCommand());
-        registerCommand(new KickCommand());
-        registerCommand(new LeaveCommand());
-        registerCommand(new ReloadCommand());
-        registerCommand(new SetCommand());
-        registerCommand(new TeleportCommand());
-        registerCommand(new TestCommand());
-        registerCommand(new VersionCommand());
-        registerCommand(new WatchCommand());
-        registerCommand(new WaypointsCommand());
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Messenger messenger = api.getMessenger();
+
         if (args.length < 1) {
-            Messenger.tell(sender, Message.INCORRECT_USAGE);
+            messenger.tell(sender, Message.INCORRECT_USAGE);
             return false;
         }
 
@@ -70,7 +72,7 @@ public class CommandManager implements CommandExecutor {
             }
         }
 
-        Messenger.tell(sender, Message.INVALID_COMMAND);
+        messenger.tell(sender, Message.INVALID_COMMAND);
         return false;
     }
 

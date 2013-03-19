@@ -2,9 +2,9 @@ package me.limebyte.battlenight.core.commands;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Waypoint;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,11 +23,30 @@ public class SetCommand extends BattleNightCommand {
         setPermission(CommandPermission.ADMIN);
     }
 
+    private Location parseArgsToLocation(String[] args) {
+        int x = getInteger(args[1], -30000000, 30000000);
+        int y = getInteger(args[2], 0, 256);
+        int z = getInteger(args[3], -30000000, 30000000);
+        World world = Bukkit.getWorld(args[4]);
+
+        return new Location(world, x + 0.5, y, z + 0.5);
+    }
+
+    private Location parseArgsToLocation(String[] args, World world) {
+        int x = getInteger(args[1], -30000000, 30000000);
+        int y = getInteger(args[2], 0, 256);
+        int z = getInteger(args[3], -30000000, 30000000);
+
+        return new Location(world, x + 0.5, y, z + 0.5);
+    }
+
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
+        Messenger messenger = api.getMessenger();
+
         if (args.length < 1) {
-            Messenger.tell(sender, Message.SPECIFY_WAYPOINT);
-            Messenger.tell(sender, Message.USAGE, getUsage());
+            messenger.tell(sender, Message.SPECIFY_WAYPOINT);
+            messenger.tell(sender, Message.USAGE, getUsage());
             return false;
         } else {
             Waypoint waypoint = null;
@@ -47,54 +66,37 @@ public class SetCommand extends BattleNightCommand {
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
                         waypoint.setLocation(player.getLocation());
-                        Messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, name);
+                        messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, name);
                     } else {
-                        Messenger.tell(sender, Message.SPECIFY_COORDINATE);
-                        Messenger.tell(sender, Message.USAGE, getUsage());
+                        messenger.tell(sender, Message.SPECIFY_COORDINATE);
+                        messenger.tell(sender, Message.USAGE, getUsage());
                         return false;
                     }
                 } else if (args.length == 4 && sender instanceof Player) {
                     Player player = (Player) sender;
                     Location loc = parseArgsToLocation(args, player.getWorld());
                     waypoint.setLocation(loc);
-                    Messenger.tell(sender, Message.WAYPOINT_SET_THIS_WORLD, name, loc);
+                    messenger.tell(sender, Message.WAYPOINT_SET_THIS_WORLD, name, loc);
                 } else if (args.length == 5) {
                     if (Bukkit.getWorld(args[4]) != null) {
                         Location loc = parseArgsToLocation(args);
                         waypoint.setLocation(loc);
-                        Messenger.tell(sender, Message.WAYPOINT_SET, name, loc, loc.getWorld());
+                        messenger.tell(sender, Message.WAYPOINT_SET, name, loc, loc.getWorld());
                     } else {
-                        Messenger.tell(sender, Message.CANT_FIND_WORLD, args[4]);
+                        messenger.tell(sender, Message.CANT_FIND_WORLD, args[4]);
                         return false;
                     }
                 } else {
-                    Messenger.tell(sender, Message.INCORRECT_USAGE);
-                    Messenger.tell(sender, Message.USAGE, getUsage());
+                    messenger.tell(sender, Message.INCORRECT_USAGE);
+                    messenger.tell(sender, Message.USAGE, getUsage());
                     return false;
                 }
                 return true;
             } else {
-                Messenger.tell(sender, Message.INVALID_WAYPOINT);
+                messenger.tell(sender, Message.INVALID_WAYPOINT);
                 return false;
             }
         }
-    }
-
-    private Location parseArgsToLocation(String[] args) {
-        int x = getInteger(args[1], -30000000, 30000000);
-        int y = getInteger(args[2], 0, 256);
-        int z = getInteger(args[3], -30000000, 30000000);
-        World world = Bukkit.getWorld(args[4]);
-
-        return new Location(world, x + 0.5, y, z + 0.5);
-    }
-
-    private Location parseArgsToLocation(String[] args, World world) {
-        int x = getInteger(args[1], -30000000, 30000000);
-        int y = getInteger(args[2], 0, 256);
-        int z = getInteger(args[3], -30000000, 30000000);
-
-        return new Location(world, x + 0.5, y, z + 0.5);
     }
 
 }

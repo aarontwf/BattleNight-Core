@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleArena;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
@@ -20,7 +21,6 @@ import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.listeners.SpectatorListener;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Messenger;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.UpdateChecker;
 import me.limebyte.battlenight.core.tosort.Waypoint;
@@ -31,8 +31,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BattleNight extends JavaPlugin implements BattleNightPlugin {
-
-    /** Variables **/
 
     public static BattleNight instance;
     private BattleNightAPI api;
@@ -45,16 +43,11 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     @Override
     public void onDisable() {
         SignListener.cleanSigns();
-
-        // Stop the current Battle
         getAPI().getBattle().stop();
-
-        // Save arenas
         api.getArenaManager().saveArenas();
 
-        // Disable message
         PluginDescriptionFile pdfFile = getDescription();
-        Messenger.log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
+        api.getMessenger().log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
     }
 
     /** Events **/
@@ -63,24 +56,21 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     public void onEnable() {
         instance = this;
 
-        // Register Serialization Classes
         ConfigurationSerialization.registerClass(SimpleArena.class);
         ConfigurationSerialization.registerClass(Waypoint.class);
-
-        // Initialize Configuration
         ConfigManager.initConfigurations();
 
         api = new API(this);
 
-        Messenger.init(api);
-
+        Messenger messenger = api.getMessenger();
         PluginManager pm = getServer().getPluginManager();
+        PluginDescriptionFile pdf = getDescription();
 
         // Debugging
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false)) {
-            Messenger.debug(Level.INFO, "Permissions Enabled.");
+            messenger.debug(Level.INFO, "Permissions Enabled.");
         } else {
-            Messenger.debug(Level.INFO, "Permissions Disabled, using Op.");
+            messenger.debug(Level.INFO, "Permissions Disabled, using Op.");
         }
 
         // Commands
@@ -91,8 +81,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
             Metrics metrics = new Metrics(this);
             metrics.start();
         } catch (IOException e) {
-            // Failed to submit the stats :-(
         }
+
         Nameplates.init(this, pm);
 
         // Event Registration
@@ -107,14 +97,12 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new SignListener(api), this);
         pm.registerEvents(new SpectatorListener(api), this);
 
-        // Update check
-        PluginDescriptionFile pdf = getDescription();
         if (ConfigManager.get(Config.MAIN).getBoolean("UpdateCheck", true)) {
-            new UpdateChecker(pdf).check();
+            new UpdateChecker(api, pdf).check();
         }
 
         // Enable Message
-        Messenger.log(Level.INFO, "Version " + pdf.getVersion() + " enabled successfully.");
-        Messenger.log(Level.INFO, "Made by LimeByte.");
+        messenger.log(Level.INFO, "Version " + pdf.getVersion() + " enabled successfully.");
+        messenger.log(Level.INFO, "Made by LimeByte.");
     }
 }

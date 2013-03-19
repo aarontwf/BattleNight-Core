@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;
 
@@ -24,7 +24,8 @@ public class ReloadCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        Messenger.tell(sender, Message.RELOADING);
+        Messenger messenger = api.getMessenger();
+        messenger.tell(sender, Message.RELOADING);
 
         try {
             api.getBattle().stop();
@@ -36,11 +37,11 @@ public class ReloadCommand extends BattleNightCommand {
             api.getBattleManager().reloadBattles();
             api.getClassManager().reloadClasses();
 
-            Messenger.tell(sender, Message.RELOAD_SUCCESSFUL);
+            messenger.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;
         } catch (Exception e) {
-            Messenger.tell(sender, Message.RELOAD_FAILED);
-            Messenger.log(Level.SEVERE, e.getStackTrace().toString());
+            messenger.tell(sender, Message.RELOAD_FAILED);
+            messenger.log(Level.SEVERE, e.getStackTrace().toString());
             return false;
         }
     }

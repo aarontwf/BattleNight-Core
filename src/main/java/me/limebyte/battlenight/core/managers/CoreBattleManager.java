@@ -59,28 +59,6 @@ public class CoreBattleManager implements BattleManager {
         return new ArrayList<SimpleBattle>(battles.values());
     }
 
-    private int getDuration() {
-        return ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300);
-    }
-
-    private int getMaxPlayers() {
-        int maxPlayers = ConfigManager.get(Config.MAIN).getInt("Battle.MaxPlayers", 0);
-        int minPlayers = getMinPlayers();
-        if (maxPlayers == 0) {
-            maxPlayers = Integer.MAX_VALUE;
-        }
-        return maxPlayers >= minPlayers ? maxPlayers : minPlayers;
-    }
-
-    private int getMinPlayers() {
-        int minPlayers = ConfigManager.get(Config.MAIN).getInt("Battle.MinPlayers", 2);
-        return minPlayers >= 2 ? minPlayers : 2;
-    }
-
-    private String getSetBattle() {
-        return ConfigManager.get(Config.MAIN).getString("Battle.Type", "TDM");
-    }
-
     @Override
     public void register(SimpleBattle battle, String id) {
         if (battle == null || battles.containsKey(id)) throw new IllegalArgumentException();
@@ -116,5 +94,27 @@ public class CoreBattleManager implements BattleManager {
 
         activeBattle = id;
         return true;
+    }
+
+    private int getDuration() {
+        return ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300);
+    }
+
+    private int getMaxPlayers() {
+        int maxPlayers = ConfigManager.get(Config.MAIN).getInt("Battle.MaxPlayers", 0);
+        int minPlayers = getMinPlayers();
+        if (maxPlayers == 0) {
+            maxPlayers = Integer.MAX_VALUE;
+        }
+        return maxPlayers >= minPlayers ? maxPlayers : minPlayers;
+    }
+
+    private int getMinPlayers() {
+        int minPlayers = ConfigManager.get(Config.MAIN).getInt("Battle.MinPlayers", 2);
+        return minPlayers >= 2 ? minPlayers : 2;
+    }
+
+    private String getSetBattle() {
+        return ConfigManager.get(Config.MAIN).getString("Battle.Type", "TDM");
     }
 }

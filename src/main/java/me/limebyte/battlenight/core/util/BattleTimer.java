@@ -1,8 +1,9 @@
 package me.limebyte.battlenight.core.util;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleBattle;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
-import me.limebyte.battlenight.core.tosort.Messenger;
 import me.limebyte.battlenight.core.tosort.Note;
 
 import org.bukkit.ChatColor;
@@ -10,30 +11,34 @@ import org.bukkit.Sound;
 
 public class BattleTimer extends SimpleTimer {
 
+    private BattleNightAPI api;
     private SimpleBattle battle;
     private static final int MINUTE = 60;
     private static final int COUNTDOWN_START = 10;
 
-    public BattleTimer(SimpleBattle battle, long time) {
+    public BattleTimer(BattleNightAPI api, SimpleBattle battle, long time) {
         super(time);
+        this.api = api;
         this.battle = battle;
     }
 
     @Override
     public void onTimeChange(long time) {
+        Messenger messenger = api.getMessenger();
+
         if (time == CoreMusicManager.battleEnd.length()) {
-            Messenger.playSong(CoreMusicManager.battleEnd, true);
+            messenger.playSong(CoreMusicManager.battleEnd);
         }
 
         if (time % 10 == 0) {
             long timeSec = time / 10;
             if (timeSec <= COUNTDOWN_START) {
-                Messenger.playSound(Sound.NOTE_PIANO, Note.convertPitch(18), true);
-                Messenger.tellEveryone("" + ChatColor.RED + timeSec + "!", true);
+                messenger.playSound(Sound.NOTE_PIANO, Note.convertPitch(18));
+                messenger.tellEveryone("" + ChatColor.RED + timeSec + "!");
             } else if (timeSec == MINUTE) {
-                Messenger.tellEveryone(ChatColor.RED + "1 minute remaining!", true);
+                messenger.tellEveryone(ChatColor.RED + "1 minute remaining!");
             } else if (timeSec % MINUTE == 0) {
-                Messenger.tellEveryone(timeSec / MINUTE + " minutes remaining.", true);
+                messenger.tellEveryone(timeSec / MINUTE + " minutes remaining.");
             }
         }
     }

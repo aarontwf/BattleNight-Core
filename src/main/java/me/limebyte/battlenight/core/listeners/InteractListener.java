@@ -4,9 +4,8 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
 import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -36,7 +35,7 @@ public class InteractListener extends APIRelatedListener {
                     if (getAPI().getPlayerClass(player) != null) {
                         if (!Metadata.getBoolean(player, "ready")) {
                             Metadata.set(player, "ready", true);
-                            Messenger.tellEveryone(true, Message.PLAYER_IS_READY, player);
+                            getAPI().getMessenger().tellEveryone(Message.PLAYER_IS_READY, player);
                         }
 
                         if (battle.getPlayers().size() < 2) return;
@@ -55,7 +54,7 @@ public class InteractListener extends APIRelatedListener {
                             battle.start();
                         }
                     } else {
-                        Messenger.tell(player, Message.NO_CLASS);
+                        getAPI().getMessenger().tell(player, Message.NO_CLASS);
                     }
                 }
             }

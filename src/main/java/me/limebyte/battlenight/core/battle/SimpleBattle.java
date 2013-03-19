@@ -14,15 +14,15 @@ import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.tosort.PlayerData;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Timer;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.Waypoint;
 import me.limebyte.battlenight.core.util.BattleTimer;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,7 +43,7 @@ public abstract class SimpleBattle implements Battle {
     private Set<String> leadingPlayers = new HashSet<String>();
 
     public SimpleBattle(int duration, int minPlayers, int maxPlayers) {
-        timer = new BattleTimer(this, duration);
+        timer = new BattleTimer(api, this, duration);
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
     }
@@ -79,31 +79,33 @@ public abstract class SimpleBattle implements Battle {
 
     @Override
     public boolean addPlayer(Player player) {
+        Messenger messenger = api.getMessenger();
+
         if (isInProgress()) {
-            Messenger.tell(player, Message.BATTLE_IN_PROGRESS);
+            messenger.tell(player, Message.BATTLE_IN_PROGRESS);
             return false;
         }
 
         if (containsPlayer(player)) {
-            Messenger.tell(player, Message.ALREADY_IN_BATTLE);
+            messenger.tell(player, Message.ALREADY_IN_BATTLE);
             return false;
         }
 
         if (getPlayers().size() + 1 > getMaxPlayers()) {
-            Messenger.tell(player, Message.BATTLE_FULL);
+            messenger.tell(player, Message.BATTLE_FULL);
             return false;
         }
 
         ArenaManager arenaManager = api.getArenaManager();
 
         if (!arenaManager.getLounge().isSet()) {
-            Messenger.tell(player, Message.WAYPOINTS_UNSET);
+            messenger.tell(player, Message.WAYPOINTS_UNSET);
             return false;
         }
 
         if (getArena() == null) {
             if (arenaManager.getReadyArenas(1).isEmpty()) {
-                Messenger.tell(player, Message.NO_ARENAS);
+                messenger.tell(player, Message.NO_ARENAS);
                 return false;
             }
             setArena(arenaManager.getRandomArena(1));
@@ -113,8 +115,8 @@ public abstract class SimpleBattle implements Battle {
         PlayerData.reset(player);
         getPlayers().add(player.getName());
         SafeTeleporter.tp(player, arenaManager.getLounge().getLocation());
-        Messenger.tell(player, Message.JOINED_BATTLE, arena);
-        Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_BATTLE, player);
+        messenger.tell(player, Message.JOINED_BATTLE, arena);
+        messenger.tellEveryoneExcept(player, Message.PLAYER_JOINED_BATTLE, player);
         if (!arena.getTexturePack().isEmpty()) {
             player.setTexturePack(arena.getTexturePack());
         }
@@ -193,21 +195,6 @@ public abstract class SimpleBattle implements Battle {
         return timer;
     }
 
-    protected String getWinMessage() {
-        String message;
-        Set<String> leading = getLeadingPlayers();
-
-        if (leading.isEmpty()) {
-            message = Message.DRAW.getMessage();
-        } else if (leading.size() == 1) {
-            message = Messenger.format(Message.PLAYER_WON, leading.toArray()[0]);
-        } else {
-            message = Messenger.format(Message.PLAYER_WON, leading);
-        }
-
-        return message;
-    }
-
     /**
      * @return if in progress
      */
@@ -243,7 +230,7 @@ public abstract class SimpleBattle implements Battle {
     @Override
     public Location respawn(Player player) {
         if (!containsPlayer(player)) return null;
-        Messenger.debug(Level.INFO, "Respawning " + player.getName() + "...");
+        api.getMessenger().debug(Level.INFO, "Respawning " + player.getName() + "...");
         PlayerData.reset(player);
 
         Location loc = getArena().getRandomSpawnPoint().getLocation();
@@ -281,8 +268,10 @@ public abstract class SimpleBattle implements Battle {
         if (isInProgress()) return false;
         if (getArena() == null || !getArena().isSetup(1) || !getArena().isEnabled()) return false;
 
+        Messenger messenger = api.getMessenger();
+
         if (getPlayers().size() < getMinPlayers()) {
-            Messenger.tellEveryone(true, Message.NOT_ENOUGH_PLAYERS, getMinPlayers() - getPlayers().size());
+            messenger.tellEveryone(Message.NOT_ENOUGH_PLAYERS, getMinPlayers() - getPlayers().size());
             return false;
         }
 
@@ -309,7 +298,7 @@ public abstract class SimpleBattle implements Battle {
         timer.start();
         inProgress = true;
 
-        Messenger.tellEveryone(true, Message.BATTLE_STARTED);
+        messenger.tellEveryone(Message.BATTLE_STARTED);
 
         SignListener.cleanSigns();
         return true;
@@ -324,7 +313,7 @@ public abstract class SimpleBattle implements Battle {
         }
 
         if (inProgress) {
-            Messenger.tellEveryone(getWinMessage(), true);
+            api.getMessenger().tellEveryone(getWinMessage());
         }
 
         Iterator<String> pIt = getPlayers().iterator();
@@ -359,6 +348,63 @@ public abstract class SimpleBattle implements Battle {
         return true;
     }
 
+    public Location toSpectator(Player player, boolean death) {
+        if (!containsPlayer(player)) return null;
+        Messenger messenger = api.getMessenger();
+
+        messenger.debug(Level.INFO, "To spectator " + player.getName());
+        Location loc;
+
+        api.setPlayerClass(player, null);
+        getPlayers().remove(player.getName());
+        api.getSpectatorManager().removeTarget(player);
+        if (!death) {
+            PlayerData.reset(player);
+        }
+        Metadata.remove(player, "ready");
+
+        if (shouldEnd()) {
+            loc = PlayerData.getSavedLocation(player);
+            if (!death) {
+                PlayerData.restore(player, true, false);
+            }
+
+            String winMessage = getWinMessage();
+            messenger.tell(player, winMessage);
+            messenger.tellEveryone(winMessage);
+
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
+                @Override
+                public void run() {
+                    stop();
+                }
+            }, 1L);
+        } else {
+            loc = api.getSpectatorManager().addSpectator(player, false);
+            messenger.tellEveryone(player.getDisplayName() + " is now a spectator.");
+        }
+        return loc;
+    }
+
+    protected String getWinMessage() {
+        String message;
+        Set<String> leading = getLeadingPlayers();
+
+        if (leading.isEmpty()) {
+            message = Message.DRAW.getMessage();
+        } else if (leading.size() == 1) {
+            message = api.getMessenger().format(Message.PLAYER_WON, leading.toArray()[0]);
+        } else {
+            message = api.getMessenger().format(Message.PLAYER_WON, leading);
+        }
+
+        return message;
+    }
+
+    /* ------ */
+    /* Events */
+    /* ------ */
+
     protected void teleportAllToSpawn() {
         @SuppressWarnings("unchecked")
         List<Waypoint> waypoints = (ArrayList<Waypoint>) getArena().getSpawnPoints().clone();
@@ -383,48 +429,8 @@ public abstract class SimpleBattle implements Battle {
         SafeTeleporter.startTeleporting();
     }
 
-    /* ------ */
-    /* Events */
-    /* ------ */
-
     protected Player toPlayer(String name) {
         Player player = Bukkit.getPlayerExact(name);
         return player;
-    }
-
-    public Location toSpectator(Player player, boolean death) {
-        if (!containsPlayer(player)) return null;
-        Messenger.debug(Level.INFO, "To spectator " + player.getName());
-        Location loc;
-
-        api.setPlayerClass(player, null);
-        getPlayers().remove(player.getName());
-        api.getSpectatorManager().removeTarget(player);
-        if (!death) {
-            PlayerData.reset(player);
-        }
-        Metadata.remove(player, "ready");
-
-        if (shouldEnd()) {
-            loc = PlayerData.getSavedLocation(player);
-            if (!death) {
-                PlayerData.restore(player, true, false);
-            }
-
-            String winMessage = getWinMessage();
-            Messenger.tell(player, winMessage);
-            Messenger.tellEveryone(winMessage, true);
-
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
-                @Override
-                public void run() {
-                    stop();
-                }
-            }, 1L);
-        } else {
-            loc = api.getSpectatorManager().addSpectator(player, false);
-            Messenger.tellEveryone(player.getDisplayName() + " is now a spectator.", true);
-        }
-        return loc;
     }
 }

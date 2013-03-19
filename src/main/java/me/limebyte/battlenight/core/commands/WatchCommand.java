@@ -5,8 +5,8 @@ import java.util.Arrays;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.api.util.Messenger;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,6 +25,8 @@ public class WatchCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
+        Messenger messenger = api.getMessenger();
+
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Battle battle = api.getBattle();
@@ -32,24 +34,24 @@ public class WatchCommand extends BattleNightCommand {
             SpectatorManager spectatorManager = api.getSpectatorManager();
 
             if (!battle.isInProgress()) {
-                Messenger.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
+                messenger.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
                 return false;
             }
 
             if (spectatorManager.getSpectators().contains(player.getName())) {
-                Messenger.tell(sender, Message.ALREADY_SPECTATING);
+                messenger.tell(sender, Message.ALREADY_SPECTATING);
                 return false;
             }
 
             if (battle.containsPlayer(player)) {
-                Messenger.tell(sender, Message.CANT_SPECTATE);
+                messenger.tell(sender, Message.CANT_SPECTATE);
                 return false;
             }
 
             spectatorManager.addSpectator(player, true);
             return true;
         } else {
-            Messenger.tell(sender, Message.PLAYER_ONLY);
+            messenger.tell(sender, Message.PLAYER_ONLY);
             return false;
         }
     }

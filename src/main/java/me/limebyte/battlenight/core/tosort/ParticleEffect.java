@@ -1,26 +1,10 @@
 package me.limebyte.battlenight.core.tosort;
 
-import java.util.logging.Level;
-
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class ParticleEffect {
-
-    private enum Direction {
-        SOUTH_EAST(0), SOUTH(1), SOUTH_WEST(2), EAST(3), UP(4), WEST(5), NORTH_EAST(6), NORTH(7), NORTH_WEST(8);
-
-        private int value;
-
-        Direction(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 
     private final static int SPIRAL_PARTICLE_COUNT = 30;
 
@@ -29,10 +13,7 @@ public class ParticleEffect {
             playEnderEffect(player.getLocation(), Direction.UP);
         } else if (type.equalsIgnoreCase("smoke")) {
             playSmokeEffect(player.getLocation());
-        } else {
-            Messenger.debug(Level.INFO, "Invalid or no particle type.");
-            return;
-        }
+        } else return;
     }
 
     private static void playEnderEffect(Location location, Direction direction) {
@@ -60,6 +41,20 @@ public class ParticleEffect {
             loc.setZ(loc.getBlockZ() + 0.5 + diffZ);
 
             loc.getWorld().playEffect(loc, effect, Direction.UP.getValue());
+        }
+    }
+
+    private enum Direction {
+        SOUTH_EAST(0), SOUTH(1), SOUTH_WEST(2), EAST(3), UP(4), WEST(5), NORTH_EAST(6), NORTH(7), NORTH_WEST(8);
+
+        private int value;
+
+        Direction(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
         }
     }
 }

@@ -11,10 +11,9 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.ClassSign;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.ParticleEffect;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -32,8 +31,8 @@ public class SignListener extends APIRelatedListener {
     private static final String LINE = "----------";
     public static Set<ClassSign> classSigns = new HashSet<ClassSign>();
 
-    private static void addName(Player player, Sign sign) {
-        getClassSign(sign).add(player);
+    public SignListener(BattleNightAPI api) {
+        super(api);
     }
 
     public static void cleanSigns() {
@@ -46,6 +45,10 @@ public class SignListener extends APIRelatedListener {
         for (ClassSign s : classSigns) {
             s.remove(player);
         }
+    }
+
+    private static void addName(Player player, Sign sign) {
+        getClassSign(sign).add(player);
     }
 
     private static ClassSign getClassSign(Sign sign) {
@@ -64,10 +67,6 @@ public class SignListener extends APIRelatedListener {
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
         }
-    }
-
-    public SignListener(BattleNightAPI api) {
-        super(api);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -101,7 +100,7 @@ public class SignListener extends APIRelatedListener {
                             reset(player);
                             getAPI().setPlayerClass(player, classes.get(title));
                         } else {
-                            Messenger.tell(player, Message.NO_PERMISSION_CLASS);
+                            getAPI().getMessenger().tell(player, Message.NO_PERMISSION_CLASS);
                         }
                     }
                 }
@@ -123,13 +122,12 @@ public class SignListener extends APIRelatedListener {
         if (classes != null) {
             if (classes.containsKey(title)) {
                 if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
-                    Messenger.tell(player, Message.UNSUCCESSFUL_SIGN, title);
+                    getAPI().getMessenger().tell(player, Message.UNSUCCESSFUL_SIGN, title);
                     return;
                 }
 
                 e.setLine(1, LINE);
-                Messenger.tell(player, Message.SUCCESSFUL_SIGN, title);
-                return;
+                getAPI().getMessenger().tell(player, Message.SUCCESSFUL_SIGN, title);
             }
         }
     }

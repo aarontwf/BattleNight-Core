@@ -7,8 +7,9 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.tosort.PlayerData;
-import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.api.util.Messenger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,7 +34,7 @@ public class DeathListener extends APIRelatedListener {
             event.setDroppedExp(0);
 
             if (battle.isInProgress()) {
-                Messenger.killFeed(player, player.getKiller(), event.getDeathMessage());
+                killFeed(player, player.getKiller(), event.getDeathMessage());
                 event.setDeathMessage("");
             }
 
@@ -61,6 +62,21 @@ public class DeathListener extends APIRelatedListener {
             event.setRespawnLocation(PlayerData.getSavedLocation(player));
             spectatorManager.removeSpectator(player);
         }
+    }
+
+    private void killFeed(Player player, Player killer, String deathMessage) {
+        Messenger messenger = getAPI().getMessenger();
+
+        deathMessage = ChatColor.GRAY + deathMessage;
+        deathMessage = deathMessage.replaceAll(player.getName(), messenger.getColouredName(player) + ChatColor.GRAY);
+        deathMessage = deathMessage.replaceAll(player.getDisplayName(), messenger.getColouredName(player) + ChatColor.GRAY);
+
+        if (killer != null) {
+            deathMessage = deathMessage.replaceAll(killer.getName(), messenger.getColouredName(killer) + ChatColor.GRAY);
+            deathMessage = deathMessage.replaceAll(killer.getDisplayName(), messenger.getColouredName(killer) + ChatColor.GRAY);
+        }
+
+        messenger.tellEveryone(deathMessage);
     }
 
 }

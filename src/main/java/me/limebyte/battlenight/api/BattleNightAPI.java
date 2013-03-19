@@ -7,6 +7,7 @@ import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
 
 import org.bukkit.entity.Player;
@@ -20,6 +21,8 @@ public interface BattleNightAPI {
     public BattleManager getBattleManager();
 
     public ClassManager getClassManager();
+
+    public Messenger getMessenger();
 
     public MusicManager getMusicManager();
 

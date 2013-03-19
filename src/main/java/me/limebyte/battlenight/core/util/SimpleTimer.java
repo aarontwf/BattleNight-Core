@@ -9,27 +9,10 @@ import org.bukkit.scheduler.BukkitTask;
 
 public abstract class SimpleTimer implements Timer {
 
-    class TimerTask extends BukkitRunnable {
-
-        @Override
-        public void run() {
-            timeRemaining--;
-
-            if (timeRemaining <= 0) {
-                onTimerEnd();
-                stop();
-                return;
-            }
-
-            onTimeChange(timeRemaining);
-        }
-
-    }
-
     private long time = 0;
+
     private long timeRemaining = 0;
     private boolean running;
-
     private int taskID;
 
     public SimpleTimer(long time) {
@@ -78,6 +61,23 @@ public abstract class SimpleTimer implements Timer {
         Bukkit.getScheduler().cancelTask(taskID);
         running = false;
         timeRemaining = time;
+    }
+
+    class TimerTask extends BukkitRunnable {
+
+        @Override
+        public void run() {
+            timeRemaining--;
+
+            if (timeRemaining <= 0) {
+                onTimerEnd();
+                stop();
+                return;
+            }
+
+            onTimeChange(timeRemaining);
+        }
+
     }
 
 }

@@ -4,6 +4,19 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class Note {
+    private final Sound sound;
+
+    private final long tick;
+    private final float pitch;
+    private final float volume;
+
+    public Note(Sound sound, long tick, float volume, int pitch) {
+        this.sound = sound;
+        this.tick = tick;
+        this.volume = 1.0f;
+        this.pitch = convertPitch(pitch);
+    }
+
     public static float convertPitch(int pitch) {
         switch (pitch) {
             case 0:
@@ -58,19 +71,6 @@ public class Note {
                 return 2.0F;
         }
         return 0.0F;
-    }
-
-    private final Sound sound;
-    private final long tick;
-    private final float pitch;
-
-    private final float volume;
-
-    public Note(Sound sound, long tick, float volume, int pitch) {
-        this.sound = sound;
-        this.tick = tick;
-        this.volume = 1.0f;
-        this.pitch = convertPitch(pitch);
     }
 
     public float getPitch() {

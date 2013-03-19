@@ -6,9 +6,8 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -43,7 +42,7 @@ public class CheatListener extends APIRelatedListener {
         if (battle.isInProgress()) return;
         if (battle.containsPlayer(player)) {
             event.setCancelled(true);
-            Messenger.tell(player, Message.NO_CHEATING);
+            getAPI().getMessenger().tell(player, Message.NO_CHEATING);
         }
     }
 
@@ -54,7 +53,7 @@ public class CheatListener extends APIRelatedListener {
         if (battle.containsPlayer(player)) {
             if (event.getCursor() != null && event.getSlotType() == SlotType.OUTSIDE) {
                 event.setCancelled(true);
-                Messenger.tell(player, Message.NO_CHEATING);
+                getAPI().getMessenger().tell(player, Message.NO_CHEATING);
             }
         }
 
@@ -96,7 +95,7 @@ public class CheatListener extends APIRelatedListener {
 
         // Its not listed so block it
         event.setCancelled(true);
-        Messenger.tell(player, Message.NO_COMMAND);
+        getAPI().getMessenger().tell(player, Message.NO_COMMAND);
         return;
     }
 
@@ -106,7 +105,7 @@ public class CheatListener extends APIRelatedListener {
         Battle battle = getAPI().getBattle();
         if (battle.containsPlayer(player)) {
             event.setCancelled(true);
-            Messenger.tell(player, Message.NO_CHEATING);
+            getAPI().getMessenger().tell(player, Message.NO_CHEATING);
         }
 
         if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
@@ -126,32 +125,32 @@ public class CheatListener extends APIRelatedListener {
                 case COMMAND:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
                         event.setCancelled(true);
-                        Messenger.tell(player, Message.NO_TELEPORTING);
+                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case PLUGIN:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Plugins", false)) {
                         event.setCancelled(true);
-                        Messenger.tell(player, Message.NO_TELEPORTING);
+                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case ENDER_PEARL:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
                         event.setCancelled(true);
-                        Messenger.tell(player, Message.NO_TELEPORTING);
+                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case NETHER_PORTAL:
                 case END_PORTAL:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", true)) {
                         event.setCancelled(true);
-                        Messenger.tell(player, Message.NO_TELEPORTING);
+                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 case UNKNOWN:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", true)) {
                         event.setCancelled(true);
-                        Messenger.tell(player, Message.NO_TELEPORTING);
+                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
                     }
                     break;
                 default:
@@ -170,7 +169,7 @@ public class CheatListener extends APIRelatedListener {
             Player thrower = (Player) projectile.getShooter();
             if (battle.containsPlayer(thrower)) {
                 event.setCancelled(true);
-                Messenger.tell(thrower, Message.NO_CHEATING);
+                getAPI().getMessenger().tell(thrower, Message.NO_CHEATING);
             }
         }
     }

@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.tosort.Messenger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -38,19 +38,28 @@ public class Nameplates {
 
     public static void init(BattleNight plugin, PluginManager pm) {
         if (pm.getPlugin("TagAPI") == null) {
-            Messenger.log(Level.WARNING, "TagAPI not found.  Installing...");
+            Messenger messenger = plugin.getAPI().getMessenger();
+            messenger.log(Level.WARNING, "TagAPI not found.  Installing...");
             try {
                 install(plugin, pm);
             } catch (Exception e) {
-                Messenger.log(Level.SEVERE, "Failed to install TagAPI.");
+                messenger.log(Level.SEVERE, "Failed to install TagAPI.");
                 enabled = false;
                 return;
             }
-            Messenger.log(Level.INFO, "TagAPI installed successfully.");
+            messenger.log(Level.INFO, "TagAPI installed successfully.");
         } else {
             update(pm);
         }
         enabled = true;
+    }
+
+    public static void refresh(Player player) {
+        if (!enabled) return;
+        try {
+            TagAPI.refreshPlayer(player);
+        } catch (Exception e) {
+        }
     }
 
     private static void install(BattleNight plugin, PluginManager pm) throws UnknownDependencyException, InvalidPluginException, InvalidDescriptionException {
@@ -63,14 +72,6 @@ public class Nameplates {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.loadPlugin(file);
         pm.enablePlugin(pm.getPlugin("TagAPI"));
-    }
-
-    public static void refresh(Player player) {
-        if (!enabled) return;
-        try {
-            TagAPI.refreshPlayer(player);
-        } catch (Exception e) {
-        }
     }
 
     private static void update(PluginManager pm) {

@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.commands.CommandPermission;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,19 +39,6 @@ public abstract class BattleNightCommand {
         return aliases.contains(input.toLowerCase());
     }
 
-    protected String createString(String[] args, int start) {
-        StringBuilder string = new StringBuilder();
-
-        for (int x = start; x < args.length; x++) {
-            string.append(args[x]);
-            if (x != args.length - 1) {
-                string.append(" ");
-            }
-        }
-
-        return string.toString();
-    }
-
     /**
      * Returns a list of active aliases of this command
      * 
@@ -68,27 +55,6 @@ public abstract class BattleNightCommand {
      */
     public String getDescription() {
         return description;
-    }
-
-    protected int getInteger(String value, int min) {
-        return getInteger(value, min, Integer.MAX_VALUE);
-    }
-
-    protected int getInteger(String value, int min, int max) {
-        int i = min;
-
-        try {
-            i = Integer.valueOf(value);
-        } catch (NumberFormatException ex) {
-        }
-
-        if (i < min) {
-            i = min;
-        } else if (i > max) {
-            i = max;
-        }
-
-        return i;
     }
 
     /**
@@ -134,8 +100,6 @@ public abstract class BattleNightCommand {
     public boolean matches(String input) {
         return input.equalsIgnoreCase(getName());
     }
-
-    protected abstract boolean onPerformed(CommandSender sender, String[] args);
 
     /**
      * Executes the command, returning its success
@@ -221,6 +185,7 @@ public abstract class BattleNightCommand {
      * @return true if they can use it, otherwise false
      */
     public boolean testPermission(CommandSender sender) {
+        Messenger messenger = api.getMessenger();
         if (getPermission() == null) return true;
 
         if (getPermission().getBukkitPerm() == null || getPermission().getBukkitPerm().length() == 0) return true;
@@ -231,7 +196,7 @@ public abstract class BattleNightCommand {
             if (sender.hasPermission(permission))
                 return true;
             else {
-                Messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
+                messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
                 return false;
             }
         } else {
@@ -239,11 +204,47 @@ public abstract class BattleNightCommand {
                 if (sender.isOp())
                     return true;
                 else {
-                    Messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
+                    messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
                     return false;
                 }
             } else return true;
         }
     }
+
+    protected String createString(String[] args, int start) {
+        StringBuilder string = new StringBuilder();
+
+        for (int x = start; x < args.length; x++) {
+            string.append(args[x]);
+            if (x != args.length - 1) {
+                string.append(" ");
+            }
+        }
+
+        return string.toString();
+    }
+
+    protected int getInteger(String value, int min) {
+        return getInteger(value, min, Integer.MAX_VALUE);
+    }
+
+    protected int getInteger(String value, int min, int max) {
+        int i = min;
+
+        try {
+            i = Integer.valueOf(value);
+        } catch (NumberFormatException ex) {
+        }
+
+        if (i < min) {
+            i = min;
+        } else if (i > max) {
+            i = max;
+        }
+
+        return i;
+    }
+
+    protected abstract boolean onPerformed(CommandSender sender, String[] args);
 
 }

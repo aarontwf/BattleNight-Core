@@ -7,9 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.MusicManager;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Song;
-import me.limebyte.battlenight.core.tosort.Messenger;
 import me.limebyte.battlenight.core.tosort.Note;
 import me.limebyte.battlenight.core.tosort.UtilDataInput;
 import me.limebyte.battlenight.core.util.SimpleSong;
@@ -18,6 +19,7 @@ import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;
 
 public class CoreMusicManager implements MusicManager {
+    private BattleNightAPI api;
     private Plugin plugin;
 
     private File file;
@@ -25,7 +27,8 @@ public class CoreMusicManager implements MusicManager {
 
     public static Song battleEnd;
 
-    public CoreMusicManager(Plugin plugin) {
+    public CoreMusicManager(BattleNightAPI api, Plugin plugin) {
+        this.api = api;
         this.plugin = plugin;
         file = new File(plugin.getDataFolder().toString() + "/music/");
         customFile = new File(plugin.getDataFolder().toString() + "/music/custom/");
@@ -38,6 +41,27 @@ public class CoreMusicManager implements MusicManager {
         }
 
         loadSongs();
+    }
+
+    @Override
+    public Song load(String name) {
+        Messenger messenger = api.getMessenger();
+        File file = new File(this.file + "/" + name + ".nbs");
+
+        try {
+            loadFromJar(name, file);
+        } catch (IOException e) {
+            messenger.log(Level.WARNING, "Failed to load song \"" + name + "\"from the jar.");
+        }
+
+        File customFile = new File(this.customFile + "/" + name + ".nbs");
+
+        if (customFile.exists()) {
+            messenger.debug(Level.INFO, "Using custom " + name + " music.");
+            return parseFile(customFile);
+        }
+
+        return parseFile(file);
     }
 
     private Sound getSound(byte inst) {
@@ -70,25 +94,6 @@ public class CoreMusicManager implements MusicManager {
                 return 8;
         }
         return 0;
-    }
-
-    @Override
-    public Song load(String name) {
-        File file = new File(this.file + "/" + name + ".nbs");
-        try {
-            loadFromJar(name, file);
-        } catch (IOException e) {
-            Messenger.log(Level.WARNING, "Failed to load song \"" + name + "\"from the jar.");
-        }
-
-        File customFile = new File(this.customFile + "/" + name + ".nbs");
-
-        if (customFile.exists()) {
-            Messenger.debug(Level.INFO, "Using custom " + name + " music.");
-            return parseFile(customFile);
-        }
-
-        return parseFile(file);
     }
 
     private boolean loadFromJar(String name, File file) throws IOException {
@@ -138,7 +143,7 @@ public class CoreMusicManager implements MusicManager {
             int blocksRemoved = data.readInt();
             String exportName = data.readString();
 
-            SimpleSong song = new SimpleSong(songLength);
+            SimpleSong song = new SimpleSong(api, songLength);
 
             int ticks = -1;
             int jumps = 0;
@@ -174,5 +179,4 @@ public class CoreMusicManager implements MusicManager {
             return null;
         }
     }
-
 }

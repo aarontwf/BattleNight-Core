@@ -7,17 +7,12 @@ import java.util.List;
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.tosort.ListPage;
-import me.limebyte.battlenight.core.tosort.Messenger;
 import me.limebyte.battlenight.core.tosort.Waypoint;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class WaypointsCommand extends BattleNightCommand {
-
-    private static ChatColor getWaypointColour(Waypoint waypoint) {
-        return waypoint.isSet() ? ChatColor.GREEN : ChatColor.RED;
-    }
 
     protected WaypointsCommand() {
         super("Waypoints");
@@ -27,6 +22,10 @@ public class WaypointsCommand extends BattleNightCommand {
         setUsage("/bn waypoints");
         setPermission(CommandPermission.ADMIN);
         setAliases(Arrays.asList("wpoints"));
+    }
+
+    private static ChatColor getWaypointColour(Waypoint waypoint) {
+        return waypoint.isSet() ? ChatColor.GREEN : ChatColor.RED;
     }
 
     private String numSetup(Waypoint... waypoints) {
@@ -57,7 +56,7 @@ public class WaypointsCommand extends BattleNightCommand {
         lines.add(getWaypointColour(w1) + "Lounge" + ChatColor.WHITE + " (/bn set lounge...)");
         lines.add(getWaypointColour(w2) + "Exit" + ChatColor.WHITE + " (/bn set exit...)");
 
-        Messenger.tell(sender, new ListPage("BattleNight Waypoints", lines));
+        api.getMessenger().tell(sender, new ListPage("BattleNight Waypoints", lines));
         return true;
     }
 

@@ -6,7 +6,6 @@ import java.util.List;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.tosort.ListPage;
-import me.limebyte.battlenight.core.tosort.Messenger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -36,7 +35,7 @@ public class HelpCommand extends BattleNightCommand {
         lines.add("For more information visit the wiki.");
 
         ListPage page = new ListPage("BattleNight Help Menu", lines);
-        Messenger.tell(sender, page);
+        api.getMessenger().tell(sender, page);
         return true;
     }
 

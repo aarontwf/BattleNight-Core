@@ -5,18 +5,24 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.util.Messenger;
+
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class UpdateChecker {
 
     private static final String UPDATE_URL = "https://raw.github.com/BattleNight/BattleNight-Core/master/version.txt";
+    private BattleNightAPI api;
     private String version;
 
-    public UpdateChecker(PluginDescriptionFile pdf) {
+    public UpdateChecker(BattleNightAPI api, PluginDescriptionFile pdf) {
+        this.api = api;
         version = removeSuffix(pdf.getVersion());
     }
 
     public void check() {
+        Messenger messenger = api.getMessenger();
 
         try {
             URL update = new URL(UPDATE_URL);
@@ -25,10 +31,10 @@ public class UpdateChecker {
             in.close();
 
             if (isNewer(latestVersion)) {
-                Messenger.log(Level.INFO, "Update v" + latestVersion + " available!");
+                messenger.log(Level.INFO, "Update v" + latestVersion + " available!");
             }
         } catch (Exception e) {
-            Messenger.debug(Level.WARNING, "Failed to update check.");
+            messenger.debug(Level.WARNING, "Failed to check for updates.");
             return;
         }
     }

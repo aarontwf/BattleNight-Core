@@ -72,152 +72,6 @@ import org.bukkit.scheduler.BukkitTask;
 public class Metrics {
 
     /**
-     * Represents a custom graph on the website
-     */
-    public static class Graph {
-
-        /**
-         * The graph's name, alphanumeric and spaces only :) If it does not
-         * comply to the above when submitted, it is rejected
-         */
-        private final String name;
-
-        /**
-         * The set of plotters that are contained within this graph
-         */
-        private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
-
-        private Graph(final String name) {
-            this.name = name;
-        }
-
-        /**
-         * Add a plotter to the graph, which will be used to plot entries
-         * 
-         * @param plotter the plotter to add to the graph
-         */
-        public void addPlotter(final Plotter plotter) {
-            plotters.add(plotter);
-        }
-
-        @Override
-        public boolean equals(final Object object) {
-            if (!(object instanceof Graph)) return false;
-
-            final Graph graph = (Graph) object;
-            return graph.name.equals(name);
-        }
-
-        /**
-         * Gets the graph's name
-         * 
-         * @return the Graph's name
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Gets an <b>unmodifiable</b> set of the plotter objects in the graph
-         * 
-         * @return an unmodifiable {@link Set} of the plotter objects
-         */
-        public Set<Plotter> getPlotters() {
-            return Collections.unmodifiableSet(plotters);
-        }
-
-        @Override
-        public int hashCode() {
-            return name.hashCode();
-        }
-
-        /**
-         * Called when the server owner decides to opt-out of Metrics while the
-         * server is running.
-         */
-        protected void onOptOut() {
-        }
-
-        /**
-         * Remove a plotter from the graph
-         * 
-         * @param plotter the plotter to remove from the graph
-         */
-        public void removePlotter(final Plotter plotter) {
-            plotters.remove(plotter);
-        }
-
-    }
-
-    /**
-     * Interface used to collect custom data for a plugin
-     */
-    public static abstract class Plotter {
-
-        /**
-         * The plot's name
-         */
-        private final String name;
-
-        /**
-         * Construct a plotter with the default plot name
-         */
-        public Plotter() {
-            this("Default");
-        }
-
-        /**
-         * Construct a plotter with a specific plot name
-         * 
-         * @param name the name of the plotter to use, which will show up on the
-         *        website
-         */
-        public Plotter(final String name) {
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(final Object object) {
-            if (!(object instanceof Plotter)) return false;
-
-            final Plotter plotter = (Plotter) object;
-            return plotter.name.equals(name) && plotter.getValue() == getValue();
-        }
-
-        /**
-         * Get the column name for the plotted point
-         * 
-         * @return the plotted point's column name
-         */
-        public String getColumnName() {
-            return name;
-        }
-
-        /**
-         * Get the current value for the plotted point. Since this function
-         * defers to an external function it may or may not return immediately
-         * thus cannot be guaranteed to be thread friendly or safe. This
-         * function can be called from any thread so care should be taken when
-         * accessing resources that need to be synchronized.
-         * 
-         * @return the current value for the point to be plotted.
-         */
-        public abstract int getValue();
-
-        @Override
-        public int hashCode() {
-            return getColumnName().hashCode();
-        }
-
-        /**
-         * Called after the website graphs have been updated
-         */
-        public void reset() {
-        }
-
-    }
-
-    /**
      * The current revision number
      */
     private final static int REVISION = 6;
@@ -242,35 +96,6 @@ public class Metrics {
      * Interval of time to ping (in minutes)
      */
     private static final int PING_INTERVAL = 10;
-
-    /**
-     * Encode text as UTF-8
-     * 
-     * @param text the text to encode
-     * @return the encoded text, as UTF-8
-     */
-    private static String encode(final String text) throws UnsupportedEncodingException {
-        return URLEncoder.encode(text, "UTF-8");
-    }
-
-    /**
-     * <p>
-     * Encode a key/value data pair to be used in a HTTP post request. This
-     * INCLUDES a & so the first key/value pair MUST be included manually, e.g:
-     * </p>
-     * <code>
-     * StringBuffer data = new StringBuffer();
-     * data.append(encode("guid")).append('=').append(encode(guid));
-     * encodeDataPair(data, "version", description.getVersion());
-     * </code>
-     * 
-     * @param buffer the stringbuilder to append the data pair onto
-     * @param key the key value
-     * @param value the value
-     */
-    private static void encodeDataPair(final StringBuilder buffer, final String key, final String value) throws UnsupportedEncodingException {
-        buffer.append('&').append(encode(key)).append('=').append(encode(value));
-    }
 
     /**
      * The plugin this metrics submits for
@@ -339,6 +164,35 @@ public class Metrics {
     }
 
     /**
+     * Encode text as UTF-8
+     * 
+     * @param text the text to encode
+     * @return the encoded text, as UTF-8
+     */
+    private static String encode(final String text) throws UnsupportedEncodingException {
+        return URLEncoder.encode(text, "UTF-8");
+    }
+
+    /**
+     * <p>
+     * Encode a key/value data pair to be used in a HTTP post request. This
+     * INCLUDES a & so the first key/value pair MUST be included manually, e.g:
+     * </p>
+     * <code>
+     * StringBuffer data = new StringBuffer();
+     * data.append(encode("guid")).append('=').append(encode(guid));
+     * encodeDataPair(data, "version", description.getVersion());
+     * </code>
+     * 
+     * @param buffer the stringbuilder to append the data pair onto
+     * @param key the key value
+     * @param value the value
+     */
+    private static void encodeDataPair(final StringBuilder buffer, final String key, final String value) throws UnsupportedEncodingException {
+        buffer.append('&').append(encode(key)).append('=').append(encode(value));
+    }
+
+    /**
      * Adds a custom data plotter to the default graph
      * 
      * @param plotter The plotter to use to plot custom data
@@ -386,8 +240,6 @@ public class Metrics {
         // and return back
         return graph;
     }
-
-    // BattleNight Removed getConfigFile()
 
     /**
      * Disables metrics for the server by setting "opt-out" to true in the
@@ -438,6 +290,82 @@ public class Metrics {
         }
     }
 
+    // BattleNight Removed getConfigFile()
+
+    /**
+     * Has the server owner denied plugin metrics?
+     * 
+     * @return true if metrics should be opted out of it
+     */
+    public boolean isOptOut() {
+        synchronized (optOutLock) {
+            ConfigManager.reload(Config.METRICS); // BattleNight
+            return configuration.getBoolean("opt-out", false);
+        }
+    }
+
+    /**
+     * Start measuring statistics. This will immediately create an async
+     * repeating task as the plugin and send the initial data to the metrics
+     * backend, and then after that it will post in increments of PING_INTERVAL
+     * * 1200 ticks.
+     * 
+     * @return True if statistics measuring is running, otherwise false.
+     */
+    public boolean start() {
+        synchronized (optOutLock) {
+            // Did we opt out?
+            if (isOptOut()) return false;
+
+            // Is metrics already running?
+            if (task != null) return true;
+
+            // Begin hitting the server with glorious data
+            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+
+                private boolean firstPost = true;
+
+                @Override
+                public void run() {
+                    try {
+                        // This has to be synchronized or it can collide with
+                        // the disable method.
+                        synchronized (optOutLock) {
+                            // Disable Task, if it is running and the server
+                            // owner decided to opt-out
+                            if (isOptOut() && task != null) {
+                                task.cancel();
+                                task = null;
+                                // Tell all plotters to stop gathering
+                                // information.
+                                for (Graph graph : graphs) {
+                                    graph.onOptOut();
+                                }
+                            }
+                        }
+
+                        // We use the inverse of firstPost because if it is the
+                        // first time we are posting,
+                        // it is not a interval ping, so it evaluates to FALSE
+                        // Each time thereafter it will evaluate to TRUE, i.e
+                        // PING!
+                        postPlugin(!firstPost);
+
+                        // After the first post we set firstPost to false
+                        // Each post thereafter will be a ping
+                        firstPost = false;
+                    } catch (IOException e) {
+                        if (debug) {
+                            Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+                        }
+                    }
+                }
+            }, 0, PING_INTERVAL * 1200);
+
+            return true;
+        }
+    }
+
     /**
      * Check if mineshafter is present. If it is, we need to bypass it to send
      * POST requests
@@ -450,18 +378,6 @@ public class Metrics {
             return true;
         } catch (Exception e) {
             return false;
-        }
-    }
-
-    /**
-     * Has the server owner denied plugin metrics?
-     * 
-     * @return true if metrics should be opted out of it
-     */
-    public boolean isOptOut() {
-        synchronized (optOutLock) {
-            ConfigManager.reload(Config.METRICS); // BattleNight
-            return configuration.getBoolean("opt-out", false);
         }
     }
 
@@ -595,65 +511,149 @@ public class Metrics {
     }
 
     /**
-     * Start measuring statistics. This will immediately create an async
-     * repeating task as the plugin and send the initial data to the metrics
-     * backend, and then after that it will post in increments of PING_INTERVAL
-     * * 1200 ticks.
-     * 
-     * @return True if statistics measuring is running, otherwise false.
+     * Represents a custom graph on the website
      */
-    public boolean start() {
-        synchronized (optOutLock) {
-            // Did we opt out?
-            if (isOptOut()) return false;
+    public static class Graph {
 
-            // Is metrics already running?
-            if (task != null) return true;
+        /**
+         * The graph's name, alphanumeric and spaces only :) If it does not
+         * comply to the above when submitted, it is rejected
+         */
+        private final String name;
 
-            // Begin hitting the server with glorious data
-            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+        /**
+         * The set of plotters that are contained within this graph
+         */
+        private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
 
-                private boolean firstPost = true;
-
-                @Override
-                public void run() {
-                    try {
-                        // This has to be synchronized or it can collide with
-                        // the disable method.
-                        synchronized (optOutLock) {
-                            // Disable Task, if it is running and the server
-                            // owner decided to opt-out
-                            if (isOptOut() && task != null) {
-                                task.cancel();
-                                task = null;
-                                // Tell all plotters to stop gathering
-                                // information.
-                                for (Graph graph : graphs) {
-                                    graph.onOptOut();
-                                }
-                            }
-                        }
-
-                        // We use the inverse of firstPost because if it is the
-                        // first time we are posting,
-                        // it is not a interval ping, so it evaluates to FALSE
-                        // Each time thereafter it will evaluate to TRUE, i.e
-                        // PING!
-                        postPlugin(!firstPost);
-
-                        // After the first post we set firstPost to false
-                        // Each post thereafter will be a ping
-                        firstPost = false;
-                    } catch (IOException e) {
-                        if (debug) {
-                            Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
-                        }
-                    }
-                }
-            }, 0, PING_INTERVAL * 1200);
-
-            return true;
+        private Graph(final String name) {
+            this.name = name;
         }
+
+        /**
+         * Add a plotter to the graph, which will be used to plot entries
+         * 
+         * @param plotter the plotter to add to the graph
+         */
+        public void addPlotter(final Plotter plotter) {
+            plotters.add(plotter);
+        }
+
+        @Override
+        public boolean equals(final Object object) {
+            if (!(object instanceof Graph)) return false;
+
+            final Graph graph = (Graph) object;
+            return graph.name.equals(name);
+        }
+
+        /**
+         * Gets the graph's name
+         * 
+         * @return the Graph's name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Gets an <b>unmodifiable</b> set of the plotter objects in the graph
+         * 
+         * @return an unmodifiable {@link Set} of the plotter objects
+         */
+        public Set<Plotter> getPlotters() {
+            return Collections.unmodifiableSet(plotters);
+        }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode();
+        }
+
+        /**
+         * Remove a plotter from the graph
+         * 
+         * @param plotter the plotter to remove from the graph
+         */
+        public void removePlotter(final Plotter plotter) {
+            plotters.remove(plotter);
+        }
+
+        /**
+         * Called when the server owner decides to opt-out of Metrics while the
+         * server is running.
+         */
+        protected void onOptOut() {
+        }
+
+    }
+
+    /**
+     * Interface used to collect custom data for a plugin
+     */
+    public static abstract class Plotter {
+
+        /**
+         * The plot's name
+         */
+        private final String name;
+
+        /**
+         * Construct a plotter with the default plot name
+         */
+        public Plotter() {
+            this("Default");
+        }
+
+        /**
+         * Construct a plotter with a specific plot name
+         * 
+         * @param name the name of the plotter to use, which will show up on the
+         *        website
+         */
+        public Plotter(final String name) {
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals(final Object object) {
+            if (!(object instanceof Plotter)) return false;
+
+            final Plotter plotter = (Plotter) object;
+            return plotter.name.equals(name) && plotter.getValue() == getValue();
+        }
+
+        /**
+         * Get the column name for the plotted point
+         * 
+         * @return the plotted point's column name
+         */
+        public String getColumnName() {
+            return name;
+        }
+
+        /**
+         * Get the current value for the plotted point. Since this function
+         * defers to an external function it may or may not return immediately
+         * thus cannot be guaranteed to be thread friendly or safe. This
+         * function can be called from any thread so care should be taken when
+         * accessing resources that need to be synchronized.
+         * 
+         * @return the current value for the point to be plotted.
+         */
+        public abstract int getValue();
+
+        @Override
+        public int hashCode() {
+            return getColumnName().hashCode();
+        }
+
+        /**
+         * Called after the website graphs have been updated
+         */
+        public void reset() {
+        }
+
     }
 
 }

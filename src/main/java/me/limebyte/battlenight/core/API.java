@@ -9,6 +9,7 @@ import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.tosort.PlayerData;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.listeners.SignListener;
@@ -18,23 +19,30 @@ import me.limebyte.battlenight.core.managers.CoreClassManager;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
 import me.limebyte.battlenight.core.managers.CoreSpectatorManager;
 import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.util.SimpleMessenger;
 
 import org.bukkit.entity.Player;
 
 public class API implements BattleNightAPI {
 
+    // Managers
     private ArenaManager arenaManager;
     private BattleManager battleManager;
     private ClassManager classManager;
     private MusicManager musicManager;
     private SpectatorManager spectatorManager;
 
+    private Messenger messenger;
+
     public API(BattleNight plugin) {
-        arenaManager = new CoreArenaManager();
+        // Managers
+        arenaManager = new CoreArenaManager(this);
         battleManager = new CoreBattleManager(this);
-        classManager = new CoreClassManager();
-        musicManager = new CoreMusicManager(plugin);
+        classManager = new CoreClassManager(this);
+        musicManager = new CoreMusicManager(this, plugin);
         spectatorManager = new CoreSpectatorManager(this);
+
+        messenger = new SimpleMessenger(this);
 
         PlayerData.api = this;
     }
@@ -57,6 +65,11 @@ public class API implements BattleNightAPI {
     @Override
     public ClassManager getClassManager() {
         return classManager;
+    }
+
+    @Override
+    public Messenger getMessenger() {
+        return messenger;
     }
 
     @Override

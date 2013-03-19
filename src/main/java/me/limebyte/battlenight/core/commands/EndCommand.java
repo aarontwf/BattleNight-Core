@@ -3,8 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;
 
@@ -23,7 +22,7 @@ public class EndCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         api.getBattle().stop();
-        Messenger.tell(sender, Message.BATTLE_ENDED);
+        api.getMessenger().tell(sender, Message.BATTLE_ENDED);
         return true;
     }
 

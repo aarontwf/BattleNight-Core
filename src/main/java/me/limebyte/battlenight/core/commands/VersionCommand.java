@@ -5,7 +5,6 @@ import java.util.Arrays;
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.tosort.StandardPage;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.tosort.Messenger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -27,7 +26,7 @@ public class VersionCommand extends BattleNightCommand {
 
         StandardPage page = new StandardPage("BattleNight Version Info", "This server is running BattleNight version " + pdf.getVersion() + ".  "
                 + "For more information about Battlenight and this version, please visit:\n" + ChatColor.BLUE + ChatColor.UNDERLINE + pdf.getWebsite());
-        Messenger.tell(sender, page);
+        api.getMessenger().tell(sender, page);
         return true;
     }
 

@@ -9,9 +9,8 @@ import java.util.Set;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.tosort.PlayerData;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -56,7 +55,7 @@ public class CoreSpectatorManager implements SpectatorManager {
             }
         }
 
-        Messenger.tell(player, Message.WELCOME_SPECTATOR, target);
+        api.getMessenger().tell(player, Message.WELCOME_SPECTATOR, target);
         return target.getLocation().clone();
     }
 
@@ -98,7 +97,7 @@ public class CoreSpectatorManager implements SpectatorManager {
 
         player.hidePlayer(target);
 
-        Messenger.tell(player, Message.TARGET_CYCLED, target);
+        api.getMessenger().tell(player, Message.TARGET_CYCLED, target);
     }
 
     @Override
@@ -116,7 +115,7 @@ public class CoreSpectatorManager implements SpectatorManager {
         if (!spectators.containsKey(player.getName())) return;
         spectators.remove(player.getName());
         PlayerData.restore(player, true, false);
-        Messenger.tell(player, Message.GOODBYE_SPECTATOR);
+        api.getMessenger().tell(player, Message.GOODBYE_SPECTATOR);
     }
 
     @Override

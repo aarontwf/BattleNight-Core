@@ -30,10 +30,6 @@ public class SimpleTeam {
         kills++;
     }
 
-    protected void decrementSize() {
-        size--;
-    }
-
     public ChatColor getColour() {
         return colour;
     }
@@ -70,19 +66,8 @@ public class SimpleTeam {
         return size;
     }
 
-    protected void incrementSize() {
-        size++;
-    }
-
     public boolean isReady() {
         return ready;
-    }
-
-    protected void reset(SimpleBattle battle) {
-        ready = false;
-        kills = 0;
-        deaths = 0;
-        size = 0;
     }
 
     public void setColour(ChatColor colour) {
@@ -108,6 +93,21 @@ public class SimpleTeam {
     @Override
     public String toString() {
         return colour + name;
+    }
+
+    protected void decrementSize() {
+        size--;
+    }
+
+    protected void incrementSize() {
+        size++;
+    }
+
+    protected void reset(SimpleBattle battle) {
+        ready = false;
+        kills = 0;
+        deaths = 0;
+        size = 0;
     }
 
 }

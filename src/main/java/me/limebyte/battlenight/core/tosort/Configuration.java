@@ -3,7 +3,6 @@ package me.limebyte.battlenight.core.tosort;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
 
 import me.limebyte.battlenight.core.BattleNight;
 
@@ -68,7 +67,6 @@ public class Configuration {
             try {
                 get().save(file);
             } catch (IOException ex) {
-                Messenger.log(Level.SEVERE, "Could not save config to " + file + ": " + ex.getMessage());
             }
         }
     }

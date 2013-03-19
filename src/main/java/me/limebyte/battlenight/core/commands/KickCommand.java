@@ -3,8 +3,8 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.api.util.Messenger;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -24,9 +24,11 @@ public class KickCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
+        Messenger messenger = api.getMessenger();
+
         if (args.length < 1) {
-            Messenger.tell(sender, Message.SPECIFY_PLAYER);
-            Messenger.tell(sender, Message.USAGE, getUsage());
+            messenger.tell(sender, Message.SPECIFY_PLAYER);
+            messenger.tell(sender, Message.USAGE, getUsage());
             return false;
         }
 
@@ -43,21 +45,21 @@ public class KickCommand extends BattleNightCommand {
                 api.getBattle().removePlayer(player);
 
                 if (reason != null) {
-                    Messenger.tell(player, Message.REASONED_KICK, reason);
-                    Messenger.tellEveryoneExcept(player, true, Message.PLAYER_REASONED_KICKED, player, reason);
+                    messenger.tell(player, Message.REASONED_KICK, reason);
+                    messenger.tellEveryoneExcept(player, Message.PLAYER_REASONED_KICKED, player, reason);
                 } else {
-                    Messenger.tell(player, Message.KICKED);
-                    Messenger.tellEveryoneExcept(player, true, Message.PLAYER_KICKED, player);
+                    messenger.tell(player, Message.KICKED);
+                    messenger.tellEveryoneExcept(player, Message.PLAYER_KICKED, player);
                 }
 
                 return true;
             } else {
-                Messenger.tell(sender, Message.PLAYER_NOT_IN_BATTLE, args[0]);
+                messenger.tell(sender, Message.PLAYER_NOT_IN_BATTLE, args[0]);
                 return false;
             }
 
         } else {
-            Messenger.tell(sender, Message.CANT_FIND_PLAYER, args[0]);
+            messenger.tell(sender, Message.CANT_FIND_PLAYER, args[0]);
             return false;
         }
     }

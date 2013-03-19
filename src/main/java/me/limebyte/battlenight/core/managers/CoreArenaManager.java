@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.core.battle.SimpleArena;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Messenger;
 import me.limebyte.battlenight.core.tosort.Waypoint;
 
 public class CoreArenaManager implements ArenaManager {
 
+    private BattleNightAPI api;
     private List<SimpleArena> arenas = new ArrayList<SimpleArena>();
     private static final Config configFile = Config.ARENAS;
 
@@ -24,7 +25,8 @@ public class CoreArenaManager implements ArenaManager {
     private static SimpleArena lastArena;
     private static Random random = new Random();
 
-    public CoreArenaManager() {
+    public CoreArenaManager(BattleNightAPI api) {
+        this.api = api;
         loadArenas();
     }
 
@@ -102,7 +104,7 @@ public class CoreArenaManager implements ArenaManager {
     @SuppressWarnings("unchecked")
     @Override
     public void loadArenas() {
-        Messenger.debug(Level.INFO, "Loading arenas...");
+        api.getMessenger().debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
 
         lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
@@ -117,7 +119,7 @@ public class CoreArenaManager implements ArenaManager {
 
     @Override
     public void saveArenas() {
-        Messenger.debug(Level.INFO, "Saving arenas...");
+        api.getMessenger().debug(Level.INFO, "Saving arenas...");
         ConfigManager.get(configFile).set("Waypoint.Lounge", lounge);
         ConfigManager.get(configFile).set("Waypoint.Exit", exit);
         ConfigManager.get(configFile).set("Arenas", arenas);

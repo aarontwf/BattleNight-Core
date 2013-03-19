@@ -37,6 +37,27 @@ public class SafeTeleporter implements Listener {
         queue(player, waypoint.getLocation());
     }
 
+    public static void startTeleporting() {
+        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BattleNight.instance, new Runnable() {
+            @Override
+            public void run() {
+                if (playerQueue.isEmpty()) {
+                    stopTeleporting();
+                } else {
+                    tp(Bukkit.getPlayerExact(playerQueue.poll()), locationQueue.poll());
+                }
+            }
+        }, 0L, 10L);
+    }
+
+    public static void tp(Player player, Location location) {
+        safeTP(player, location.clone());
+    }
+
+    public static void tp(Player player, Waypoint waypoint) {
+        tp(player, waypoint.getLocation().clone());
+    }
+
     private static void safeTP(final Player player, Location location) {
         if (player.hasMetadata("NPC")) return;
 
@@ -52,30 +73,9 @@ public class SafeTeleporter implements Listener {
         teleporters.put(name, loc);
     }
 
-    public static void startTeleporting() {
-        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BattleNight.instance, new Runnable() {
-            @Override
-            public void run() {
-                if (playerQueue.isEmpty()) {
-                    stopTeleporting();
-                } else {
-                    tp(Bukkit.getPlayerExact(playerQueue.poll()), locationQueue.poll());
-                }
-            }
-        }, 0L, 10L);
-    }
-
     private static void stopTeleporting() {
         Bukkit.getServer().getScheduler().cancelTask(taskID);
         taskID = 0;
-    }
-
-    public static void tp(Player player, Location location) {
-        safeTP(player, location.clone());
-    }
-
-    public static void tp(Player player, Waypoint waypoint) {
-        tp(player, waypoint.getLocation().clone());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

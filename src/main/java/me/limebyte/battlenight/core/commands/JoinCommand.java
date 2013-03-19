@@ -3,8 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,7 +25,7 @@ public class JoinCommand extends BattleNightCommand {
         if (sender instanceof Player)
             return api.getBattle().addPlayer((Player) sender);
         else {
-            Messenger.tell(sender, Message.PLAYER_ONLY);
+            api.getMessenger().tell(sender, Message.PLAYER_ONLY);
             return false;
         }
     }

@@ -41,6 +41,14 @@ public class Metadata {
         return null;
     }
 
+    public static void remove(Player player, String key) {
+        player.removeMetadata(key, BattleNight.instance);
+    }
+
+    public static void set(Player player, String key, Object value) {
+        player.setMetadata(key, new FixedMetadataValue(BattleNight.instance, value));
+    }
+
     private static MetadataValue getValue(Player player, String key) {
         List<MetadataValue> values = player.getMetadata(key);
         String bnName = BattleNight.instance.getDescription().getName();
@@ -51,14 +59,6 @@ public class Metadata {
         }
 
         return null;
-    }
-
-    public static void remove(Player player, String key) {
-        player.removeMetadata(key, BattleNight.instance);
-    }
-
-    public static void set(Player player, String key, Object value) {
-        player.setMetadata(key, new FixedMetadataValue(BattleNight.instance, value));
     }
 
 }

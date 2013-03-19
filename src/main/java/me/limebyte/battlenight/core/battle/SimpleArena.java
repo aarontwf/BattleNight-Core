@@ -13,6 +13,19 @@ import org.bukkit.configuration.serialization.SerializableAs;
 @SerializableAs("Arena")
 public class SimpleArena implements Arena {
 
+    private String name;
+
+    private String displayName;
+    private ArrayList<Waypoint> spawnPoints = new ArrayList<Waypoint>();
+    private boolean enabled = true;
+    private String texturePack = "";
+    private final Random RANDOM = new Random();
+
+    public SimpleArena(String name) {
+        this.name = name.toLowerCase();
+        displayName = name;
+    }
+
     @SuppressWarnings("unchecked")
     public static SimpleArena deserialize(Map<String, Object> map) {
         Object displayName = map.get("DisplayName");
@@ -35,19 +48,6 @@ public class SimpleArena implements Arena {
         }
 
         return arena;
-    }
-
-    private String name;
-    private String displayName;
-    private ArrayList<Waypoint> spawnPoints = new ArrayList<Waypoint>();
-    private boolean enabled = true;
-    private String texturePack = "";
-
-    private final Random RANDOM = new Random();
-
-    public SimpleArena(String name) {
-        this.name = name.toLowerCase();
-        displayName = name;
     }
 
     @Override

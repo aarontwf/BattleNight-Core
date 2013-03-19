@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.Waypoint;
+import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -47,9 +47,10 @@ public abstract class SimpleTeamedBattle extends SimpleBattle {
         if (!assignTeam(player)) return false;
         boolean worked = super.addPlayer(player);
         if (worked) {
+            Messenger messenger = api.getMessenger();
             SimpleTeam team = getTeam(player);
-            Messenger.tell(player, Message.JOINED_TEAM, team);
-            Messenger.tellEveryoneExcept(player, true, Message.PLAYER_JOINED_TEAM, player, team);
+            messenger.tell(player, Message.JOINED_TEAM, team);
+            messenger.tellEveryoneExcept(player, Message.PLAYER_JOINED_TEAM, player, team);
         }
         return worked;
     }
@@ -66,20 +67,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle {
 
     public boolean areEnemies(Player player1, Player player2) {
         return !getTeam(player1).getName().equals(getTeam(player2).getName());
-    }
-
-    private boolean assignTeam(Player player) {
-        if (teams.size() < 2) return false;
-
-        SimpleTeam smallest = null;
-        for (SimpleTeam team : teams) {
-            if (smallest == null || team.getSize() < smallest.getSize()) {
-                smallest = team;
-            }
-        }
-
-        setTeam(player, smallest);
-        return true;
     }
 
     public List<SimpleTeam> getLeadingTeams() {
@@ -121,22 +108,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle {
 
     public List<SimpleTeam> getTeams() {
         return teams;
-    }
-
-    @Override
-    protected String getWinMessage() {
-        String message;
-        List<SimpleTeam> leading = getLeadingTeams();
-
-        if (leading.isEmpty() || leading.size() == getTeams().size()) {
-            message = Message.DRAW.getMessage();
-        } else if (leading.size() == 1) {
-            message = Messenger.format(Message.TEAM_WON, leading.get(0));
-        } else {
-            message = Messenger.format(Message.TEAM_WON, leading);
-        }
-
-        return message;
     }
 
     @Override
@@ -202,6 +173,44 @@ public abstract class SimpleTeamedBattle extends SimpleBattle {
     }
 
     @Override
+    public Location toSpectator(Player player, boolean death) {
+        if (!containsPlayer(player)) return null;
+        setTeam(player, null);
+        return super.toSpectator(player, death);
+    }
+
+    private boolean assignTeam(Player player) {
+        if (teams.size() < 2) return false;
+
+        SimpleTeam smallest = null;
+        for (SimpleTeam team : teams) {
+            if (smallest == null || team.getSize() < smallest.getSize()) {
+                smallest = team;
+            }
+        }
+
+        setTeam(player, smallest);
+        return true;
+    }
+
+    @Override
+    protected String getWinMessage() {
+        Messenger messenger = api.getMessenger();
+        String message;
+        List<SimpleTeam> leading = getLeadingTeams();
+
+        if (leading.isEmpty() || leading.size() == getTeams().size()) {
+            message = Message.DRAW.getMessage();
+        } else if (leading.size() == 1) {
+            message = messenger.format(Message.TEAM_WON, leading.get(0));
+        } else {
+            message = messenger.format(Message.TEAM_WON, leading);
+        }
+
+        return message;
+    }
+
+    @Override
     protected void teleportAllToSpawn() {
         @SuppressWarnings("unchecked")
         List<Waypoint> waypoints = (ArrayList<Waypoint>) getArena().getSpawnPoints().clone();
@@ -226,12 +235,5 @@ public abstract class SimpleTeamedBattle extends SimpleBattle {
             }
             SafeTeleporter.tp(player, spawns.get(Metadata.getString(player, "team")).getLocation());
         }
-    }
-
-    @Override
-    public Location toSpectator(Player player, boolean death) {
-        if (!containsPlayer(player)) return null;
-        setTeam(player, null);
-        return super.toSpectator(player, death);
     }
 }

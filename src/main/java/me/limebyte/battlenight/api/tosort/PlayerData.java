@@ -12,7 +12,6 @@ import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Messenger;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.Waypoint;
 
@@ -28,6 +27,46 @@ import org.bukkit.util.Vector;
 public class PlayerData {
     public static BattleNightAPI api;
     private static Map<String, PlayerData> storage = new HashMap<String, PlayerData>();
+
+    private Set<String> vanishedPlayers = new HashSet<String>();
+
+    private Collection<PotionEffect> potionEffects;
+
+    private boolean allowFlight;
+
+    private Location compassTarget;
+
+    private String displayName;
+
+    private ItemStack[] enderItems;
+    private float exaustion;
+    private float exp;
+    private float fallDistance;
+    private int fireTicks;
+    private float flySpeed;
+    private int foodLevel;
+    private int gameMode;
+    private int health;
+    private ItemStack[] invItems;
+    private ItemStack[] invArmour;
+    private int level;
+    private Location location;
+    private String playerListName;
+    private long playerTimeOffset;
+    private int remainingAir;
+    private float saturation;
+    private int ticksLived;
+    private Vector velocity;
+    private float walkSpeed;
+    private boolean flying;
+    private boolean playerTimeRelative;
+    private boolean sleepingIgnored;
+    private boolean sneaking;
+    private boolean sprinting;
+
+    private PlayerData() {
+
+    }
 
     public static Location getSavedLocation(Player player) {
         String name = player.getName();
@@ -83,7 +122,7 @@ public class PlayerData {
     public static boolean restore(Player player, boolean teleport, boolean keepInMemory) {
         String name = player.getName();
         if (!storage.containsKey(name)) {
-            Messenger.debug(Level.SEVERE, "Failed to restore " + name + "!");
+            api.getMessenger().debug(Level.SEVERE, "Failed to restore " + name + "!");
             return false;
         }
 
@@ -201,45 +240,5 @@ public class PlayerData {
         data.sprinting = player.isSprinting();
 
         storage.put(player.getName(), data);
-    }
-
-    private Set<String> vanishedPlayers = new HashSet<String>();
-    private Collection<PotionEffect> potionEffects;
-    private boolean allowFlight;
-    private Location compassTarget;
-    private String displayName;
-    private ItemStack[] enderItems;
-    private float exaustion;
-    private float exp;
-    private float fallDistance;
-    private int fireTicks;
-    private float flySpeed;
-    private int foodLevel;
-    private int gameMode;
-    private int health;
-    private ItemStack[] invItems;
-    private ItemStack[] invArmour;
-    private int level;
-    private Location location;
-    private String playerListName;
-    private long playerTimeOffset;
-    private int remainingAir;
-    private float saturation;
-    private int ticksLived;
-    private Vector velocity;
-    private float walkSpeed;
-
-    private boolean flying;
-
-    private boolean playerTimeRelative;
-
-    private boolean sleepingIgnored;
-
-    private boolean sneaking;
-
-    private boolean sprinting;
-
-    private PlayerData() {
-
     }
 }
