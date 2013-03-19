@@ -1,8 +1,7 @@
 package me.limebyte.battlenight.core.battle.battles;
 
-
-import me.limebyte.battlenight.core.battle.SimpleTeamedBattle;
 import me.limebyte.battlenight.core.battle.SimpleTeam;
+import me.limebyte.battlenight.core.battle.SimpleTeamedBattle;
 
 import org.bukkit.ChatColor;
 

@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Random;
 
 import me.limebyte.battlenight.core.tosort.Messenger;
+import me.limebyte.battlenight.core.tosort.Messenger.Message;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.Waypoint;
-import me.limebyte.battlenight.core.tosort.Messenger.Message;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

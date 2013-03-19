@@ -3,8 +3,8 @@ package me.limebyte.battlenight.core.commands;
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.core.tosort.Messenger;
-import me.limebyte.battlenight.core.tosort.Waypoint;
 import me.limebyte.battlenight.core.tosort.Messenger.Message;
+import me.limebyte.battlenight.core.tosort.Waypoint;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

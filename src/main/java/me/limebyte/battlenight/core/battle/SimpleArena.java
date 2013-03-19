@@ -50,47 +50,58 @@ public class SimpleArena implements Arena {
         displayName = name;
     }
 
+    @Override
     public int addSpawnPoint(Waypoint waypoint) {
         spawnPoints.add(waypoint);
         return spawnPoints.size() - 1;
     }
 
+    @Override
     public void disable() {
         setEnabled(false);
     }
 
+    @Override
     public void enable() {
         setEnabled(true);
     }
 
+    @Override
     public String getDisplayName() {
         return displayName;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Waypoint getRandomSpawnPoint() {
         return getSpawnPoints().get(RANDOM.nextInt(getSpawnPoints().size()));
     }
 
+    @Override
     public ArrayList<Waypoint> getSpawnPoints() {
         return spawnPoints;
     }
 
+    @Override
     public String getTexturePack() {
         return texturePack;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    @Override
     public boolean isSetup(int minSpawnPoints) {
         return spawnPoints.size() >= minSpawnPoints;
     }
 
+    @Override
     public void removeSpawnPoint(Waypoint waypoint) {
         spawnPoints.remove(waypoint);
     }
@@ -106,14 +117,17 @@ public class SimpleArena implements Arena {
         return map;
     }
 
+    @Override
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    @Override
     public void setTexturePack(String texturePack) {
         this.texturePack = texturePack;
     }
