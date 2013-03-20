@@ -5,10 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.BattleManager;
-import me.limebyte.battlenight.core.battle.SimpleBattle;
 import me.limebyte.battlenight.core.battle.battles.FFABattle;
 import me.limebyte.battlenight.core.battle.battles.TDMBattle;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
@@ -16,13 +14,10 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 public class CoreBattleManager implements BattleManager {
 
-    private BattleNightAPI api;
     private String activeBattle;
     private Map<String, Battle> battles = new HashMap<String, Battle>();
 
-    public CoreBattleManager(BattleNightAPI api) {
-        this.api = api;
-
+    public CoreBattleManager() {
         String battle = getSetBattle();
         int time = getDuration();
         int minPlayers = getMinPlayers();
@@ -63,7 +58,6 @@ public class CoreBattleManager implements BattleManager {
     @Override
     public void register(Battle battle, String id) {
         if (battle == null || battles.containsKey(id)) throw new IllegalArgumentException();
-        if (battle instanceof SimpleBattle) ((SimpleBattle) battle).api = api;
         battles.put(id, battle);
     }
 

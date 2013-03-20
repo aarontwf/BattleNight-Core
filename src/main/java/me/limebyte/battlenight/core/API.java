@@ -39,7 +39,7 @@ public class API implements BattleNightAPI {
 
         // Managers
         arenaManager = new CoreArenaManager(this);
-        battleManager = new CoreBattleManager(this);
+        battleManager = new CoreBattleManager();
         classManager = new CoreClassManager(this);
         musicManager = new CoreMusicManager(this, plugin);
         spectatorManager = new CoreSpectatorManager(this);
