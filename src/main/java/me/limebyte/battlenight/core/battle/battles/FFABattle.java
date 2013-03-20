@@ -1,11 +1,12 @@
 package me.limebyte.battlenight.core.battle.battles;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.core.battle.SimpleBattle;
 
 public class FFABattle extends SimpleBattle {
 
-    public FFABattle(int duration, int minPlayers, int maxPlayers) {
-        super(duration, minPlayers, maxPlayers);
+    public FFABattle(BattleNightAPI api, int duration, int minPlayers, int maxPlayers) {
+        super(api, duration, minPlayers, maxPlayers);
     }
 
     @Override

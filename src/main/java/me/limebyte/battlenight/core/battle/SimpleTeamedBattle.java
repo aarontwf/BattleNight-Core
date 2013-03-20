@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
@@ -18,8 +19,8 @@ public abstract class SimpleTeamedBattle extends SimpleBattle {
 
     private List<SimpleTeam> teams = new ArrayList<SimpleTeam>();
 
-    public SimpleTeamedBattle(int duration, int minPlayers, int maxPlayers) {
-        super(duration, minPlayers, maxPlayers);
+    public SimpleTeamedBattle(BattleNightAPI api, int duration, int minPlayers, int maxPlayers) {
+        super(api, duration, minPlayers, maxPlayers);
     }
 
     @Override

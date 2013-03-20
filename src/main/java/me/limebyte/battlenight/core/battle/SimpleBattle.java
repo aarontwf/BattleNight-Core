@@ -42,7 +42,8 @@ public abstract class SimpleBattle implements Battle {
     private HashSet<String> players = new HashSet<String>();
     private Set<String> leadingPlayers = new HashSet<String>();
 
-    public SimpleBattle(int duration, int minPlayers, int maxPlayers) {
+    public SimpleBattle(BattleNightAPI api, int duration, int minPlayers, int maxPlayers) {
+        this.api = api;
         timer = new BattleTimer(api, this, duration);
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;

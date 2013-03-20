@@ -8,7 +8,6 @@ import java.util.Map;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.BattleManager;
-import me.limebyte.battlenight.core.battle.SimpleBattle;
 import me.limebyte.battlenight.core.battle.battles.FFABattle;
 import me.limebyte.battlenight.core.battle.battles.TDMBattle;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
@@ -16,20 +15,17 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 public class CoreBattleManager implements BattleManager {
 
-    private BattleNightAPI api;
     private String activeBattle;
     private Map<String, Battle> battles = new HashMap<String, Battle>();
 
     public CoreBattleManager(BattleNightAPI api) {
-        this.api = api;
-
         String battle = getSetBattle();
         int time = getDuration();
         int minPlayers = getMinPlayers();
         int maxPlayers = getMaxPlayers();
 
-        register(new TDMBattle(time, minPlayers, maxPlayers), "TDM");
-        register(new FFABattle(time, minPlayers, maxPlayers), "FFA");
+        register(new TDMBattle(api, time, minPlayers, maxPlayers), "TDM");
+        register(new FFABattle(api, time, minPlayers, maxPlayers), "FFA");
 
         if (getBattle(battle) == null) {
             battle = "TDM";
@@ -63,7 +59,6 @@ public class CoreBattleManager implements BattleManager {
     @Override
     public void register(Battle battle, String id) {
         if (battle == null || battles.containsKey(id)) throw new IllegalArgumentException();
-        if (battle instanceof SimpleBattle) ((SimpleBattle) battle).api = api;
         battles.put(id, battle);
     }
 
