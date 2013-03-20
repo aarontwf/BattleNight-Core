@@ -30,7 +30,7 @@ import org.bukkit.entity.Player;
 
 public abstract class SimpleBattle implements Battle {
 
-    public BattleNightAPI api = BattleNight.instance.getAPI();
+    public BattleNightAPI api;
 
     private BattleTimer timer;
     private int minPlayers;
