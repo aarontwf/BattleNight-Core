@@ -25,6 +25,8 @@ import org.bukkit.entity.Player;
 
 public class API implements BattleNightAPI {
 
+    private Messenger messenger;
+
     // Managers
     private ArenaManager arenaManager;
     private BattleManager battleManager;
@@ -32,17 +34,15 @@ public class API implements BattleNightAPI {
     private MusicManager musicManager;
     private SpectatorManager spectatorManager;
 
-    private Messenger messenger;
-
     public API(BattleNight plugin) {
+        messenger = new SimpleMessenger(this);
+
         // Managers
         arenaManager = new CoreArenaManager(this);
         battleManager = new CoreBattleManager(this);
         classManager = new CoreClassManager(this);
         musicManager = new CoreMusicManager(this, plugin);
         spectatorManager = new CoreSpectatorManager(this);
-
-        messenger = new SimpleMessenger(this);
 
         PlayerData.api = this;
     }
