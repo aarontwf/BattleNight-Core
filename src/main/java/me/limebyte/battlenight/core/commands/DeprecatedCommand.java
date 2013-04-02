@@ -1,6 +1,5 @@
 package me.limebyte.battlenight.core.commands;
 
-import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;

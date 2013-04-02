@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.api.commands;
+package me.limebyte.battlenight.core.commands;
 
 public enum CommandPermission {
 

@@ -2,7 +2,6 @@ package me.limebyte.battlenight.core;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.managers.ClassManager;
@@ -10,6 +9,7 @@ import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
+import me.limebyte.battlenight.core.commands.BattleNightCommand;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.managers.CoreArenaManager;
@@ -87,7 +87,6 @@ public class API implements BattleNightAPI {
         return spectatorManager;
     }
 
-    @Override
     public void registerCommand(BattleNightCommand command) {
         CommandManager.registerCommand(command);
 
@@ -104,7 +103,6 @@ public class API implements BattleNightAPI {
         }
     }
 
-    @Override
     public void unregisterCommand(BattleNightCommand command) {
         CommandManager.unResgisterCommand(command);
     }

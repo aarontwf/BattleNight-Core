@@ -2,7 +2,6 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
-import me.limebyte.battlenight.api.commands.BattleNightCommand;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.util.StandardPage;
 
