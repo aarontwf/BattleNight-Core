@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
+import me.limebyte.battlenight.api.commands.CommandPermission;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleArena;

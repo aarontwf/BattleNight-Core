@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
+import me.limebyte.battlenight.api.commands.CommandPermission;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 

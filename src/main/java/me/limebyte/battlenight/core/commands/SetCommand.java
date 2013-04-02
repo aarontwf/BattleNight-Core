@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
 import me.limebyte.battlenight.api.commands.BattleNightCommand;
+import me.limebyte.battlenight.api.commands.CommandPermission;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Waypoint;
