@@ -3,9 +3,9 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
-import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;
 

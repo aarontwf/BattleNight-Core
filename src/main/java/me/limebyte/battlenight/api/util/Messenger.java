@@ -2,8 +2,6 @@ package me.limebyte.battlenight.api.util;
 
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
-
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

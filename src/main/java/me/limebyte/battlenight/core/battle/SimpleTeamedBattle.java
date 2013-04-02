@@ -8,10 +8,10 @@ import java.util.Random;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Team;
 import me.limebyte.battlenight.api.battle.TeamedBattle;
+import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
-import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

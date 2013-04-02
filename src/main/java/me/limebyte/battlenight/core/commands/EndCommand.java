@@ -2,7 +2,7 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
-import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
+import me.limebyte.battlenight.api.util.Message;
 
 import org.bukkit.command.CommandSender;
 

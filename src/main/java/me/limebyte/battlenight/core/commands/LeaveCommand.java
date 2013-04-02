@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
+import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
-import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

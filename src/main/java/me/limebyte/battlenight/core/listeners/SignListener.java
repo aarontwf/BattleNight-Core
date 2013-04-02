@@ -6,6 +6,7 @@ import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ClassManager;
+import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.ClassSign;
@@ -13,7 +14,6 @@ import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.ParticleEffect;
-import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
