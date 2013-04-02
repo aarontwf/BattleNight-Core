@@ -7,8 +7,8 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.core.battle.SimpleArena;
 import me.limebyte.battlenight.core.battle.SimpleWaypoint;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
@@ -16,13 +16,13 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 public class CoreArenaManager implements ArenaManager {
 
     private BattleNightAPI api;
-    private List<SimpleArena> arenas = new ArrayList<SimpleArena>();
+    private List<Arena> arenas = new ArrayList<Arena>();
     private static final Config configFile = Config.ARENAS;
 
     private SimpleWaypoint lounge = new SimpleWaypoint();
     private SimpleWaypoint exit = new SimpleWaypoint();
 
-    private static SimpleArena lastArena;
+    private static Arena lastArena;
     private static Random random = new Random();
 
     public CoreArenaManager(BattleNightAPI api) {
@@ -31,21 +31,21 @@ public class CoreArenaManager implements ArenaManager {
     }
 
     @Override
-    public void deregister(SimpleArena arena) {
+    public void deregister(Arena arena) {
         arenas.remove(arena);
     }
 
     @Override
-    public List<SimpleArena> getArenas() {
+    public List<Arena> getArenas() {
         return arenas;
     }
 
     @Override
-    public List<SimpleArena> getEnabledArenas() {
-        List<SimpleArena> enabled = new ArrayList<SimpleArena>(arenas);
-        Iterator<SimpleArena> it = enabled.iterator();
+    public List<Arena> getEnabledArenas() {
+        List<Arena> enabled = new ArrayList<Arena>(arenas);
+        Iterator<Arena> it = enabled.iterator();
         while (it.hasNext()) {
-            SimpleArena arena = it.next();
+            Arena arena = it.next();
             if (!arena.isEnabled()) {
                 it.remove();
             }
@@ -64,23 +64,23 @@ public class CoreArenaManager implements ArenaManager {
     }
 
     @Override
-    public SimpleArena getRandomArena(int minSpawns) {
-        List<SimpleArena> ready = getReadyArenas(minSpawns);
+    public Arena getRandomArena(int minSpawns) {
+        List<Arena> ready = getReadyArenas(minSpawns);
         if (ready.size() > 1) {
             ready.remove(lastArena);
         }
 
-        SimpleArena arena = ready.get(random.nextInt(ready.size()));
+        Arena arena = ready.get(random.nextInt(ready.size()));
         lastArena = arena;
         return arena;
     }
 
     @Override
-    public List<SimpleArena> getReadyArenas(int minSpawns) {
-        List<SimpleArena> ready = new ArrayList<SimpleArena>(arenas);
-        Iterator<SimpleArena> it = ready.iterator();
+    public List<Arena> getReadyArenas(int minSpawns) {
+        List<Arena> ready = new ArrayList<Arena>(arenas);
+        Iterator<Arena> it = ready.iterator();
         while (it.hasNext()) {
-            SimpleArena arena = it.next();
+            Arena arena = it.next();
             if (!arena.isSetup(minSpawns) || !arena.isEnabled()) {
                 it.remove();
             }
@@ -89,11 +89,11 @@ public class CoreArenaManager implements ArenaManager {
     }
 
     @Override
-    public List<SimpleArena> getSetupArenas(int minSpawns) {
-        List<SimpleArena> setup = new ArrayList<SimpleArena>(arenas);
-        Iterator<SimpleArena> it = setup.iterator();
+    public List<Arena> getSetupArenas(int minSpawns) {
+        List<Arena> setup = new ArrayList<Arena>(arenas);
+        Iterator<Arena> it = setup.iterator();
         while (it.hasNext()) {
-            SimpleArena arena = it.next();
+            Arena arena = it.next();
             if (!arena.isSetup(minSpawns)) {
                 it.remove();
             }
@@ -109,11 +109,11 @@ public class CoreArenaManager implements ArenaManager {
 
         lounge = (SimpleWaypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
         exit = (SimpleWaypoint) ConfigManager.get(configFile).get("Waypoint.Exit", exit);
-        arenas = (List<SimpleArena>) ConfigManager.get(configFile).getList("Arenas", arenas);
+        arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", arenas);
     }
 
     @Override
-    public void register(SimpleArena arena) {
+    public void register(Arena arena) {
         arenas.add(arena);
     }
 

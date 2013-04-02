@@ -2,8 +2,8 @@ package me.limebyte.battlenight.api.managers;
 
 import java.util.List;
 
+import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
-import me.limebyte.battlenight.core.battle.SimpleArena;
 
 public interface ArenaManager {
 
@@ -12,21 +12,21 @@ public interface ArenaManager {
      * 
      * @param arena The arena to remove.
      */
-    public void deregister(SimpleArena arena);
+    public void deregister(Arena arena);
 
     /**
      * Gets the loaded arenas.
      * 
      * @return loaded arenas.
      */
-    public List<SimpleArena> getArenas();
+    public List<Arena> getArenas();
 
     /**
      * Gets the loaded and enabled arenas.
      * 
      * @return enabled arenas.
      */
-    public List<SimpleArena> getEnabledArenas();
+    public List<Arena> getEnabledArenas();
 
     /**
      * Gets the exit waypoint.
@@ -47,7 +47,7 @@ public interface ArenaManager {
      * 
      * @return a random arena.
      */
-    public SimpleArena getRandomArena(int minSpawns);
+    public Arena getRandomArena(int minSpawns);
 
     /**
      * Gets the loaded, enabled and setup arenas with at least the specified
@@ -56,7 +56,7 @@ public interface ArenaManager {
      * @param minSpawns The minimum amount of spawn points.
      * @return ready arenas.
      */
-    public List<SimpleArena> getReadyArenas(int minSpawns);
+    public List<Arena> getReadyArenas(int minSpawns);
 
     /**
      * Gets the loaded and setup arenas with at least the specified amount of
@@ -65,7 +65,7 @@ public interface ArenaManager {
      * @param minSpawns The minimum amount of spawn points.
      * @return setup arenas.
      */
-    public List<SimpleArena> getSetupArenas(int minSpawns);
+    public List<Arena> getSetupArenas(int minSpawns);
 
     /**
      * Loads the arenas from the configuration file into the manager.
@@ -77,7 +77,7 @@ public interface ArenaManager {
      * 
      * @param arena The arena to register.
      */
-    public void register(SimpleArena arena);
+    public void register(Arena arena);
 
     /**
      * Saves the arenas back to the configuration file.
