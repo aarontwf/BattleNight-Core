@@ -2,8 +2,8 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.core.battle.SimpleTeam;
-import me.limebyte.battlenight.core.battle.SimpleTeamedBattle;
+import me.limebyte.battlenight.api.battle.Team;
+import me.limebyte.battlenight.api.battle.TeamedBattle;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,8 +27,8 @@ public class NameplateListener extends APIRelatedListener {
 
         if (battle.containsPlayer(player)) {
             ChatColor teamColour = ChatColor.RED;
-            if (battle instanceof SimpleTeamedBattle) {
-                SimpleTeam team = ((SimpleTeamedBattle) battle).getTeam(player);
+            if (battle instanceof TeamedBattle) {
+                Team team = ((TeamedBattle) battle).getTeam(player);
                 if (team != null) {
                     teamColour = team.getColour();
                 }

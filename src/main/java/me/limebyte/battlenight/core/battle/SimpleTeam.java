@@ -1,8 +1,10 @@
 package me.limebyte.battlenight.core.battle;
 
+import me.limebyte.battlenight.api.battle.Team;
+
 import org.bukkit.ChatColor;
 
-public class SimpleTeam {
+public class SimpleTeam implements Team {
 
     private String name;
     private String displayName;
