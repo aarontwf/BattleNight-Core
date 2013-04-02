@@ -20,7 +20,6 @@ import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
-import me.limebyte.battlenight.core.tosort.Waypoint;
 import me.limebyte.battlenight.core.util.BattleTimer;
 import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
@@ -408,8 +407,8 @@ public abstract class SimpleBattle implements Battle {
 
     protected void teleportAllToSpawn() {
         @SuppressWarnings("unchecked")
-        List<Waypoint> waypoints = (ArrayList<Waypoint>) getArena().getSpawnPoints().clone();
-        List<Waypoint> free = waypoints;
+        List<SimpleWaypoint> waypoints = (ArrayList<SimpleWaypoint>) getArena().getSpawnPoints().clone();
+        List<SimpleWaypoint> free = waypoints;
         Random random = new Random();
 
         for (String name : getPlayers()) {

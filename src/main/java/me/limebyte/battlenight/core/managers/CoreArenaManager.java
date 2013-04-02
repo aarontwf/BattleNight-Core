@@ -9,9 +9,9 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.core.battle.SimpleArena;
+import me.limebyte.battlenight.core.battle.SimpleWaypoint;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Waypoint;
 
 public class CoreArenaManager implements ArenaManager {
 
@@ -19,8 +19,8 @@ public class CoreArenaManager implements ArenaManager {
     private List<SimpleArena> arenas = new ArrayList<SimpleArena>();
     private static final Config configFile = Config.ARENAS;
 
-    private Waypoint lounge = new Waypoint();
-    private Waypoint exit = new Waypoint();
+    private SimpleWaypoint lounge = new SimpleWaypoint();
+    private SimpleWaypoint exit = new SimpleWaypoint();
 
     private static SimpleArena lastArena;
     private static Random random = new Random();
@@ -54,12 +54,12 @@ public class CoreArenaManager implements ArenaManager {
     }
 
     @Override
-    public Waypoint getExit() {
+    public SimpleWaypoint getExit() {
         return exit;
     }
 
     @Override
-    public Waypoint getLounge() {
+    public SimpleWaypoint getLounge() {
         return lounge;
     }
 
@@ -107,8 +107,8 @@ public class CoreArenaManager implements ArenaManager {
         api.getMessenger().debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
 
-        lounge = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
-        exit = (Waypoint) ConfigManager.get(configFile).get("Waypoint.Exit", exit);
+        lounge = (SimpleWaypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
+        exit = (SimpleWaypoint) ConfigManager.get(configFile).get("Waypoint.Exit", exit);
         arenas = (List<SimpleArena>) ConfigManager.get(configFile).getList("Arenas", arenas);
     }
 

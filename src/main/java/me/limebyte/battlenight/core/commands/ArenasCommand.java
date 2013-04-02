@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleArena;
-import me.limebyte.battlenight.core.tosort.Waypoint;
+import me.limebyte.battlenight.core.battle.SimpleWaypoint;
 import me.limebyte.battlenight.core.util.ListPage;
 import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
@@ -135,7 +136,7 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            Waypoint point = new Waypoint();
+            SimpleWaypoint point = new SimpleWaypoint();
             point.setLocation(((Player) sender).getLocation());
             int index = arena.addSpawnPoint(point);
             messenger.tell(sender, Message.SPAWN_CREATED, index + 1, arena);

@@ -11,7 +11,6 @@ import me.limebyte.battlenight.api.battle.TeamedBattle;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
-import me.limebyte.battlenight.core.tosort.Waypoint;
 import me.limebyte.battlenight.core.util.SimpleMessenger.Message;
 
 import org.bukkit.Location;
@@ -216,11 +215,11 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
     @Override
     protected void teleportAllToSpawn() {
         @SuppressWarnings("unchecked")
-        List<Waypoint> waypoints = (ArrayList<Waypoint>) getArena().getSpawnPoints().clone();
-        List<Waypoint> free = waypoints;
+        List<SimpleWaypoint> waypoints = (ArrayList<SimpleWaypoint>) getArena().getSpawnPoints().clone();
+        List<SimpleWaypoint> free = waypoints;
         Random random = new Random();
 
-        HashMap<String, Waypoint> spawns = new HashMap<String, Waypoint>();
+        HashMap<String, SimpleWaypoint> spawns = new HashMap<String, SimpleWaypoint>();
 
         for (Team team : getTeams()) {
             if (free.size() <= 0) {

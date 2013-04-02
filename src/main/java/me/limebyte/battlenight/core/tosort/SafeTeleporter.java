@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.hooks.Nameplates;
 

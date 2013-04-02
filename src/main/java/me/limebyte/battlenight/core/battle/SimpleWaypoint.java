@@ -1,27 +1,28 @@
-package me.limebyte.battlenight.core.tosort;
+package me.limebyte.battlenight.core.battle;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import me.limebyte.battlenight.api.battle.Waypoint;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 
 @SerializableAs("Waypoint")
-public class Waypoint implements ConfigurationSerializable {
+public class SimpleWaypoint implements Waypoint {
 
     private Location location;
     private static final String LOC_SEP = ", ";
 
-    public static Waypoint deserialize(Map<String, Object> map) {
-        Waypoint waypoint = new Waypoint();
+    public static SimpleWaypoint deserialize(Map<String, Object> map) {
+        SimpleWaypoint waypoint = new SimpleWaypoint();
         waypoint.setLocation(parseLocation((String) map.get("Location")));
         return waypoint;
     }
 
-    public static final String parseLocation(Location loc) {
+    private static String parseLocation(Location loc) {
         if (loc == null) return "unset";
         String w = loc.getWorld().getName();
         double x = loc.getBlockX() + 0.5;
@@ -32,7 +33,7 @@ public class Waypoint implements ConfigurationSerializable {
         return w + "(" + x + LOC_SEP + y + LOC_SEP + z + LOC_SEP + yaw + LOC_SEP + pitch + ")";
     }
 
-    public static final Location parseLocation(String string) {
+    private static Location parseLocation(String string) {
         if (string.equals("unset")) return null;
         String[] parts = string.split("\\(");
         World w = Bukkit.getServer().getWorld(parts[0]);

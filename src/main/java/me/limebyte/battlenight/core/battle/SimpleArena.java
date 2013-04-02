@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Random;
 
 import me.limebyte.battlenight.api.battle.Arena;
-import me.limebyte.battlenight.core.tosort.Waypoint;
+import me.limebyte.battlenight.api.battle.Waypoint;
 
 import org.bukkit.configuration.serialization.SerializableAs;
 

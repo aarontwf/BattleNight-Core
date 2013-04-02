@@ -2,8 +2,6 @@ package me.limebyte.battlenight.api.battle;
 
 import java.util.ArrayList;
 
-import me.limebyte.battlenight.core.tosort.Waypoint;
-
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 public interface Arena extends ConfigurationSerializable {

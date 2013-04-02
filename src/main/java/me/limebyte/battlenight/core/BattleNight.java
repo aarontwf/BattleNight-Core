@@ -7,6 +7,7 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleArena;
+import me.limebyte.battlenight.core.battle.SimpleWaypoint;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.hooks.Nameplates;
@@ -23,7 +24,6 @@ import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.UpdateChecker;
-import me.limebyte.battlenight.core.tosort.Waypoint;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -57,7 +57,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         instance = this;
 
         ConfigurationSerialization.registerClass(SimpleArena.class);
-        ConfigurationSerialization.registerClass(Waypoint.class);
+        ConfigurationSerialization.registerClass(SimpleWaypoint.class);
         ConfigManager.initConfigurations();
 
         api = new API(this);

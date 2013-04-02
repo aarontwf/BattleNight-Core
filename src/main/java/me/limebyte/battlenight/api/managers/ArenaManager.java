@@ -2,8 +2,8 @@ package me.limebyte.battlenight.api.managers;
 
 import java.util.List;
 
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.battle.SimpleArena;
-import me.limebyte.battlenight.core.tosort.Waypoint;
 
 public interface ArenaManager {
 
