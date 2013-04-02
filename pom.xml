@@ -48,6 +48,10 @@
 			<id>kitteh-repo</id>
 			<url>http://repo.kitteh.org/content/groups/public</url>
 		</repository>
+		<repository>
+			<id>battlenight-repo</id>
+			<url>https://raw.github.com/BattleNight/API/repo/</url>
+		</repository>
 	</repositories>
 
 	<!-- Dependencies -->
@@ -55,13 +59,19 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>RELEASE</version>
+			<version>LATEST</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.limebyte.battlenight</groupId>
+			<artifactId>api</artifactId>
+			<version>1.6.1-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.kitteh</groupId>
 			<artifactId>tagapi</artifactId>
-			<version>RELEASE</version>
+			<version>LATEST</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -120,6 +130,20 @@
 					<target>1.6</target>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
+			</plugin>
+			<!-- Dependency addition -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<!-- Javadoc Generator -->
 			<plugin>
