@@ -1,7 +1,6 @@
 package me.limebyte.battlenight.core;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.managers.ClassManager;
@@ -50,11 +49,6 @@ public class API implements BattleNightAPI {
     @Override
     public ArenaManager getArenaManager() {
         return arenaManager;
-    }
-
-    @Override
-    public Battle getBattle() {
-        return battleManager.getActiveBattle();
     }
 
     @Override
