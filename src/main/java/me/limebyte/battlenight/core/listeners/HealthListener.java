@@ -36,7 +36,7 @@ public class HealthListener extends APIRelatedListener {
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            Battle battle = api.getBattle();
+            Battle battle = api.getBattleManager().getActiveBattle();
 
             if (!battle.containsPlayer(player)) return;
             subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));
@@ -49,7 +49,7 @@ public class HealthListener extends APIRelatedListener {
         Player player = (Player) event.getEntity();
 
         if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
-        if (!getAPI().getBattle().containsPlayer(player)) return;
+        if (!getAPI().getBattleManager().getActiveBattle().containsPlayer(player)) return;
 
         RegainReason reason = event.getRegainReason();
         if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {

@@ -34,14 +34,14 @@ public class KickCommand extends BattleNightCommand {
         Player player = Bukkit.getPlayerExact(args[0]);
 
         if (player != null) {
-            if (api.getBattle().containsPlayer(player)) {
+            if (api.getBattleManager().getActiveBattle().containsPlayer(player)) {
                 String reason = null;
 
                 if (args.length > 1) {
                     reason = createString(args, 1);
                 }
 
-                api.getBattle().removePlayer(player);
+                api.getBattleManager().getActiveBattle().removePlayer(player);
 
                 if (reason != null) {
                     messenger.tell(player, Message.REASONED_KICK, reason);

@@ -27,7 +27,7 @@ public class DeathListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        Battle battle = getAPI().getBattle();
+        Battle battle = getAPI().getBattleManager().getActiveBattle();
 
         if (battle.containsPlayer(player)) {
             event.getDrops().clear();
@@ -57,7 +57,7 @@ public class DeathListener extends APIRelatedListener {
 
         if (queue.contains(name)) {
             queue.remove(name);
-            event.setRespawnLocation(getAPI().getBattle().respawn(player));
+            event.setRespawnLocation(getAPI().getBattleManager().getActiveBattle().respawn(player));
         } else if (spectatorManager.getSpectators().contains(player.getName())) {
             event.setRespawnLocation(PlayerData.getSavedLocation(player));
             spectatorManager.removeSpectator(player);

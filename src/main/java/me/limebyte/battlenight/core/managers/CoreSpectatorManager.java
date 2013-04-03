@@ -49,7 +49,7 @@ public class CoreSpectatorManager implements SpectatorManager {
         player.setGameMode(GameMode.ADVENTURE);
         player.hidePlayer(target);
 
-        for (String n : api.getBattle().getPlayers()) {
+        for (String n : api.getBattleManager().getActiveBattle().getPlayers()) {
             if (Bukkit.getPlayerExact(n) != null) {
                 Bukkit.getPlayerExact(n).hidePlayer(player);
             }
@@ -89,7 +89,7 @@ public class CoreSpectatorManager implements SpectatorManager {
 
         SafeTeleporter.tp(player, target.getLocation());
 
-        for (String n : api.getBattle().getPlayers()) {
+        for (String n : api.getBattleManager().getActiveBattle().getPlayers()) {
             if (Bukkit.getPlayerExact(n) != null) {
                 player.showPlayer(Bukkit.getPlayerExact(n));
             }

@@ -27,7 +27,7 @@ public class ReloadCommand extends BattleNightCommand {
         messenger.tell(sender, Message.RELOADING);
 
         try {
-            api.getBattle().stop();
+            api.getBattleManager().getActiveBattle().stop();
 
             ConfigManager.reloadAll();
             ConfigManager.saveAll();

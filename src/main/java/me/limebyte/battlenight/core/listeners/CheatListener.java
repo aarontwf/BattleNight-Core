@@ -37,7 +37,7 @@ public class CheatListener extends APIRelatedListener {
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        Battle battle = getAPI().getBattle();
+        Battle battle = getAPI().getBattleManager().getActiveBattle();
 
         if (battle.isInProgress()) return;
         if (battle.containsPlayer(player)) {
@@ -49,7 +49,7 @@ public class CheatListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        Battle battle = getAPI().getBattle();
+        Battle battle = getAPI().getBattleManager().getActiveBattle();
         if (battle.containsPlayer(player)) {
             if (event.getCursor() != null && event.getSlotType() == SlotType.OUTSIDE) {
                 event.setCancelled(true);
@@ -67,7 +67,7 @@ public class CheatListener extends APIRelatedListener {
         if (event.isCancelled()) return;
 
         Player player = event.getPlayer();
-        Battle battle = getAPI().getBattle();
+        Battle battle = getAPI().getBattleManager().getActiveBattle();
         if (!battle.containsPlayer(player) || !getAPI().getSpectatorManager().getSpectators().contains(player.getName())) return;
         if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
@@ -102,7 +102,7 @@ public class CheatListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Battle battle = getAPI().getBattle();
+        Battle battle = getAPI().getBattleManager().getActiveBattle();
         if (battle.containsPlayer(player)) {
             event.setCancelled(true);
             getAPI().getMessenger().tell(player, Message.NO_CHEATING);
@@ -120,7 +120,7 @@ public class CheatListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        if (getAPI().getBattle().containsPlayer(player) && !SafeTeleporter.telePass.contains(player.getName())) {
+        if (getAPI().getBattleManager().getActiveBattle().containsPlayer(player) && !SafeTeleporter.telePass.contains(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
@@ -162,7 +162,7 @@ public class CheatListener extends APIRelatedListener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        Battle battle = getAPI().getBattle();
+        Battle battle = getAPI().getBattleManager().getActiveBattle();
         if (battle.isInProgress()) return;
         Projectile projectile = event.getEntity();
         if (projectile.getShooter() instanceof Player) {

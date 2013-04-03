@@ -43,7 +43,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     @Override
     public void onDisable() {
         SignListener.cleanSigns();
-        getAPI().getBattle().stop();
+        getAPI().getBattleManager().getActiveBattle().stop();
         api.getArenaManager().saveArenas();
 
         PluginDescriptionFile pdfFile = getDescription();

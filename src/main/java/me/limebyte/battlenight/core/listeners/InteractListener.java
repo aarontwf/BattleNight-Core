@@ -25,7 +25,7 @@ public class InteractListener extends APIRelatedListener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         Action action = event.getAction();
         Player player = event.getPlayer();
-        Battle battle = getAPI().getBattle();
+        Battle battle = getAPI().getBattleManager().getActiveBattle();
 
         if (action.equals(Action.LEFT_CLICK_BLOCK)) {
             Block block = event.getClickedBlock();

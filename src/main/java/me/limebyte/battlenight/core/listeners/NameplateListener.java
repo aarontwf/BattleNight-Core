@@ -23,7 +23,7 @@ public class NameplateListener extends APIRelatedListener {
     public void onPlayerReceiveNameTag(PlayerReceiveNameTagEvent event) {
         Player player = event.getNamedPlayer();
         String tag = player.getName();
-        Battle battle = getAPI().getBattle();
+        Battle battle = getAPI().getBattleManager().getActiveBattle();
 
         if (battle.containsPlayer(player)) {
             ChatColor teamColour = ChatColor.RED;

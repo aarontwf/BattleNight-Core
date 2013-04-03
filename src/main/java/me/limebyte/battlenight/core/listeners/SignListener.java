@@ -86,7 +86,7 @@ public class SignListener extends APIRelatedListener {
                     classes.put(clazz.getName(), clazz);
                 }
 
-                if (getAPI().getBattle().containsPlayer(player)) {
+                if (getAPI().getBattleManager().getActiveBattle().containsPlayer(player)) {
                     if (classes.containsKey(title)) {
                         PlayerClass playerClass = classes.get(title);
 
