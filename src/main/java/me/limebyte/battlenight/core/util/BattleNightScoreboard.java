@@ -28,9 +28,6 @@ public class BattleNightScoreboard {
         objective = scoreboard.registerNewObjective("bn_scoreboard", "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName("Score");
-
-        addTeam("Red", ChatColor.RED, false);
-        addTeam("Blue", ChatColor.BLUE, false);
     }
 
     public static void addTeam(String name, ChatColor colour, boolean friendlyFire) {
