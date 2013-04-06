@@ -12,6 +12,7 @@ import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.util.BattleNightScoreboard;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -32,6 +33,8 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         if (team != null) {
             team.addDeath();
         }
+
+        BattleNightScoreboard.setKDR(player, (int) Math.round(getKDR(player) * 100));
     }
 
     @Override
@@ -42,6 +45,8 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         if (team != null) {
             team.addKill();
         }
+
+        BattleNightScoreboard.setKDR(player, (int) Math.round(getKDR(player) * 100));
     }
 
     @Override
@@ -51,6 +56,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         if (worked) {
             Messenger messenger = api.getMessenger();
             Team team = getTeam(player);
+            BattleNightScoreboard.addPlayer(player, team.getName());
             messenger.tell(player, Message.JOINED_TEAM, team);
             messenger.tellEveryoneExcept(player, Message.PLAYER_JOINED_TEAM, player, team);
         }
@@ -64,6 +70,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         }
         if (!teams.add(team)) return false;
         setMinPlayers(teams.size());
+        BattleNightScoreboard.addTeam(team.getDisplayName(), team.getColour(), false);
         return true;
     }
 
@@ -115,6 +122,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
     @Override
     public boolean removePlayer(Player player) {
         setTeam(player, null);
+        BattleNightScoreboard.removePlayer(player);
         return super.removePlayer(player);
     }
 
@@ -160,6 +168,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
                 continue;
             }
             setTeam(player, null);
+            BattleNightScoreboard.removePlayer(player);
         }
 
         boolean result = super.stop();

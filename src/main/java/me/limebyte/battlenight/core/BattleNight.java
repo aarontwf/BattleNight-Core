@@ -24,6 +24,7 @@ import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.UpdateChecker;
+import me.limebyte.battlenight.core.util.BattleNightScoreboard;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -84,6 +85,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         }
 
         Nameplates.init(this, pm);
+
+        BattleNightScoreboard.init();
 
         // Event Registration
         pm.registerEvents(new BlockListener(api), this);
