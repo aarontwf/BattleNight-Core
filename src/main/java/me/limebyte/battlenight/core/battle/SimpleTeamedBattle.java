@@ -56,7 +56,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         if (worked) {
             Messenger messenger = api.getMessenger();
             Team team = getTeam(player);
-            BattleNightScoreboard.addPlayer(player, team.getName());
+            BattleNightScoreboard.addPlayer(player, team);
             messenger.tell(player, Message.JOINED_TEAM, team);
             messenger.tellEveryoneExcept(player, Message.PLAYER_JOINED_TEAM, player, team);
         }
@@ -70,7 +70,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         }
         if (!teams.add(team)) return false;
         setMinPlayers(teams.size());
-        BattleNightScoreboard.addTeam(team.getDisplayName(), team.getColour(), false);
+        BattleNightScoreboard.addTeam(team, false);
         return true;
     }
 

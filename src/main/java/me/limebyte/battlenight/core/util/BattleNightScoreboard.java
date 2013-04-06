@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -30,20 +29,20 @@ public class BattleNightScoreboard {
         objective.setDisplayName("Score");
     }
 
-    public static void addTeam(String name, ChatColor colour, boolean friendlyFire) {
-        Team team = scoreboard.registerNewTeam("bn_team_" + name.toLowerCase());
-        team.setDisplayName(colour + name + " Team");
-        team.setPrefix(name.toUpperCase());
+    public static void addTeam(me.limebyte.battlenight.api.battle.Team team, boolean friendlyFire) {
+        Team t = scoreboard.registerNewTeam("bn_team_" + team.getName());
+        t.setDisplayName(team.getColour() + team.getDisplayName() + " Team");
+        t.setPrefix(team.getDisplayName().toUpperCase());
 
-        team.setAllowFriendlyFire(friendlyFire);
-        team.setCanSeeFriendlyInvisibles(true);
+        t.setAllowFriendlyFire(friendlyFire);
+        t.setCanSeeFriendlyInvisibles(true);
     }
 
-    public static void addPlayer(Player player, String team) {
+    public static void addPlayer(Player player, me.limebyte.battlenight.api.battle.Team team) {
         scoreboards.put(player.getName(), player.getScoreboard());
 
         for (Team t : scoreboard.getTeams()) {
-            if (t.getName().equals("bn_team_" + team)) {
+            if (t.getName().equals("bn_team_" + team.getName())) {
                 t.addPlayer(player);
                 break;
             }
