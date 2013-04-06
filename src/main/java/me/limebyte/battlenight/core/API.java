@@ -18,6 +18,7 @@ import me.limebyte.battlenight.core.managers.CoreMusicManager;
 import me.limebyte.battlenight.core.managers.CoreSpectatorManager;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
+import me.limebyte.battlenight.core.util.BattleNightScoreboard;
 import me.limebyte.battlenight.core.util.SimpleMessenger;
 
 import org.bukkit.entity.Player;
@@ -35,6 +36,7 @@ public class API implements BattleNightAPI {
 
     public API(BattleNight plugin) {
         messenger = new SimpleMessenger(this);
+        BattleNightScoreboard.init();
 
         // Managers
         arenaManager = new CoreArenaManager(this);
