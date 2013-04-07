@@ -64,6 +64,8 @@ public class BattleNightScoreboard {
     }
 
     public static void removePlayer(Player player) {
+        if (!scoreboard.getPlayers().contains(player)) return;
+
         String name = player.getName();
         player.setScoreboard(scoreboards.get(name));
         scoreboards.remove(name);
