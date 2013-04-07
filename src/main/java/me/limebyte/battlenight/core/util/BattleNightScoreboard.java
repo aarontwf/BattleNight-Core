@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -49,6 +48,7 @@ public class BattleNightScoreboard {
         }
 
         player.setScoreboard(scoreboard);
+        setScore(player, 0);
     }
 
     public static void removePlayer(Player player) {
@@ -58,9 +58,8 @@ public class BattleNightScoreboard {
         scoreboard.getPlayerTeam(player).removePlayer(player);
     }
 
-    public static void setKDR(Player player, int kdr) {
-        Score score = objective.getScore(player);
-        score.setScore(kdr);
+    public static void setScore(Player player, int score) {
+        objective.getScore(player).setScore(score);
     }
 
 }

@@ -34,7 +34,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             team.addDeath();
         }
 
-        BattleNightScoreboard.setKDR(player, (int) Math.round(getKDR(player) * 100));
+        BattleNightScoreboard.setScore(player, (int) Math.round(getKDR(player) * 100));
     }
 
     @Override
@@ -46,7 +46,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             team.addKill();
         }
 
-        BattleNightScoreboard.setKDR(player, (int) Math.round(getKDR(player) * 100));
+        BattleNightScoreboard.setScore(player, (int) Math.round(getKDR(player) * 100));
     }
 
     @Override
