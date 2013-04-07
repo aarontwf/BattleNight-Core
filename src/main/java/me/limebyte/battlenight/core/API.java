@@ -36,7 +36,7 @@ public class API implements BattleNightAPI {
 
     public API(BattleNight plugin) {
         messenger = new SimpleMessenger(this);
-        BattleNightScoreboard.init();
+        BattleNightScoreboard.init(this);
 
         // Managers
         arenaManager = new CoreArenaManager(this);

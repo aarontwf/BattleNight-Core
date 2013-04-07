@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.api.BattleNightAPI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,13 +16,17 @@ import org.bukkit.scoreboard.Team;
 
 public class BattleNightScoreboard {
 
+    private static BattleNightAPI api;
+
     private static ScoreboardManager manager;
     private static Scoreboard scoreboard;
     private static Objective objective;
 
     private static Map<String, Scoreboard> scoreboards = new HashMap<String, Scoreboard>();
 
-    public static void init() {
+    public static void init(BattleNightAPI api) {
+        BattleNightScoreboard.api = api;
+
         manager = Bukkit.getScoreboardManager();
         scoreboard = manager.getNewScoreboard();
 
@@ -39,17 +43,17 @@ public class BattleNightScoreboard {
         t.setAllowFriendlyFire(friendlyFire);
         t.setCanSeeFriendlyInvisibles(true);
 
-        BattleNight.instance.getAPI().getMessenger().debug(Level.INFO, "Registered team " + t.getName());
+        api.getMessenger().debug(Level.INFO, "Registered team " + t.getName());
     }
 
     public static void addPlayer(Player player, me.limebyte.battlenight.api.battle.Team team) {
         scoreboards.put(player.getName(), player.getScoreboard());
 
         for (Team t : scoreboard.getTeams()) {
-            BattleNight.instance.getAPI().getMessenger().debug(Level.INFO, "Found team " + t.getName());
+            api.getMessenger().debug(Level.INFO, "Found team " + t.getName());
             if (t.getName().equals("bn_team_" + team.getName())) {
                 t.addPlayer(player);
-                BattleNight.instance.getAPI().getMessenger().debug(Level.INFO, "Added " + player.getName() + " to " + t.getName());
+                api.getMessenger().debug(Level.INFO, "Added " + player.getName() + " to " + t.getName());
                 break;
             }
 
