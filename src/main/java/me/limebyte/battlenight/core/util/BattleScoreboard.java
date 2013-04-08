@@ -2,12 +2,9 @@ package me.limebyte.battlenight.core.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
-import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.TeamedBattle;
-import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +16,6 @@ import org.bukkit.scoreboard.Team;
 
 public class BattleScoreboard {
 
-    private BattleNightAPI api;
     private Battle battle;
     private boolean teamed = false;
 
@@ -31,7 +27,6 @@ public class BattleScoreboard {
 
     public BattleScoreboard(Battle battle) {
         this.battle = battle;
-        api = BattleNight.instance.getAPI();
         teamed = battle instanceof TeamedBattle;
 
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -58,8 +53,6 @@ public class BattleScoreboard {
 
         t.setAllowFriendlyFire(friendlyFire);
         t.setCanSeeFriendlyInvisibles(true);
-
-        api.getMessenger().debug(Level.INFO, "Registered team " + t.getName());
     }
 
     public void addPlayer(Player player) {
@@ -68,10 +61,8 @@ public class BattleScoreboard {
         if (teamed) {
             String teamName = ((TeamedBattle) battle).getTeam(player).getName();
             for (Team team : scoreboard.getTeams()) {
-                api.getMessenger().debug(Level.INFO, "Found team " + team.getName());
                 if (team.getName().equals("bn_team_" + teamName)) {
                     team.addPlayer(player);
-                    api.getMessenger().debug(Level.INFO, "Added " + player.getName() + " to " + team.getName());
                     break;
                 }
 
