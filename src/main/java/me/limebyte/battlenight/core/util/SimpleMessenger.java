@@ -71,10 +71,8 @@ public class SimpleMessenger implements Messenger {
             if (battle instanceof SimpleTeamedBattle) {
                 teamColour = ((SimpleTeamedBattle) battle).getTeam(player).getColour();
             }
-            debug(Level.INFO, "Coloured name is " + teamColour + name);
             return teamColour + name;
         } else {
-            debug(Level.INFO, "Coloured name is " + ChatColor.DARK_GRAY + name);
             return ChatColor.DARK_GRAY + name;
         }
     }

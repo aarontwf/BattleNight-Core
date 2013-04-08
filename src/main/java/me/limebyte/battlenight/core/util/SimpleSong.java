@@ -2,7 +2,6 @@ package me.limebyte.battlenight.core.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.util.Song;
@@ -16,14 +15,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class SimpleSong implements Song {
 
-    private BattleNightAPI api;
-
     private ArrayList<Note> notes;
     private long length;
     private HashMap<String, Integer> listeners;
 
     public SimpleSong(BattleNightAPI api, long length) {
-        this.api = api;
         notes = new ArrayList<Note>();
         listeners = new HashMap<String, Integer>();
         this.length = length;
@@ -31,7 +27,6 @@ public class SimpleSong implements Song {
 
     public void addNote(Note note) {
         notes.add(note);
-        api.getMessenger().debug(Level.INFO, "Added " + note.toString());
     }
 
     @Override
