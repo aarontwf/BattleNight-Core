@@ -27,7 +27,7 @@ public class BattleScoreboard {
 
     private static final String TITLE_PREFIX = ChatColor.BOLD.toString() + ChatColor.GRAY;
     private static final String LOBBY_TITLE = TITLE_PREFIX + "Battle Lobby";
-    private static final String BATTLE_TITLE = TITLE_PREFIX + "Battle (%s:%s)";
+    private static final String BATTLE_TITLE = TITLE_PREFIX + "Battle (%1$TM:%1$TS)";
 
     public BattleScoreboard(Battle battle) {
         this.battle = battle;
@@ -96,9 +96,7 @@ public class BattleScoreboard {
     }
 
     public void updateTime(long time) {
-        long minutes = (long) Math.floor(time / 60);
-        long seconds = time % 60;
-        objective.setDisplayName(String.format(BATTLE_TITLE, minutes, seconds));
+        objective.setDisplayName(String.format(BATTLE_TITLE, time * 1000));
     }
 
 }

@@ -38,9 +38,7 @@ public class BattleTimer extends SimpleTimer {
                 messenger.playSound(Sound.NOTE_PIANO, Note.convertPitch(18));
                 messenger.tellEveryone("" + ChatColor.RED + timeSec + "!");
             } else if (timeSec == MINUTE) {
-                messenger.tellEveryone(ChatColor.RED + "1 minute remaining!");
-            } else if (timeSec % MINUTE == 0) {
-                messenger.tellEveryone(timeSec / MINUTE + " minutes remaining.");
+                messenger.tellEveryone(ChatColor.RED + "The time is almost up!  Keep fighting!");
             }
         }
     }
