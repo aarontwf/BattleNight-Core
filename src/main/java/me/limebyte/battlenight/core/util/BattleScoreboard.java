@@ -25,8 +25,9 @@ public class BattleScoreboard {
     private static int id = 0;
     private static Map<String, Scoreboard> scoreboards = new HashMap<String, Scoreboard>();
 
-    private static final String LOBBY_TITLE = ChatColor.GRAY + "Lobby";
-    private static final String BATTLE_TITLE = ChatColor.GRAY + "Battle (%s:%s)";
+    private static final String TITLE_PREFIX = ChatColor.BOLD.toString() + ChatColor.GRAY;
+    private static final String LOBBY_TITLE = TITLE_PREFIX + "Battle Lobby";
+    private static final String BATTLE_TITLE = TITLE_PREFIX + "Battle (%s:%s)";
 
     public BattleScoreboard(Battle battle) {
         this.battle = battle;
