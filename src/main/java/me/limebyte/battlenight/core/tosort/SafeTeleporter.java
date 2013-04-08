@@ -9,7 +9,6 @@ import java.util.Set;
 
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.hooks.Nameplates;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -91,8 +90,6 @@ public class SafeTeleporter implements Listener {
             telePass.add(name);
             player.teleport(loc, TeleportCause.PLUGIN);
             telePass.remove(name);
-
-            Nameplates.refresh(player);
         }
     }
 }

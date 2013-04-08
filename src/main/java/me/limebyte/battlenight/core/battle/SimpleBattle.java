@@ -21,6 +21,7 @@ import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.util.BattleScoreboard;
 import me.limebyte.battlenight.core.util.BattleTimer;
 
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ public abstract class SimpleBattle implements Battle {
     public BattleNightAPI api;
 
     private BattleTimer timer;
+    private BattleScoreboard scoreboard;
     private int minPlayers;
     private int maxPlayers;
 
@@ -43,7 +45,10 @@ public abstract class SimpleBattle implements Battle {
 
     public SimpleBattle(BattleNightAPI api, int duration, int minPlayers, int maxPlayers) {
         this.api = api;
+
         timer = new BattleTimer(api, this, duration);
+        scoreboard = new BattleScoreboard(this);
+
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
     }
@@ -55,6 +60,7 @@ public abstract class SimpleBattle implements Battle {
     @Override
     public void addDeath(Player player) {
         Metadata.set(player, "deaths", getDeaths(player) + 1);
+        getScoreboard().updateScore(player);
     }
 
     @Override
@@ -75,6 +81,7 @@ public abstract class SimpleBattle implements Battle {
         }
 
         leadingPlayers.add(player.getName());
+        getScoreboard().updateScore(player);
     }
 
     @Override
@@ -114,6 +121,7 @@ public abstract class SimpleBattle implements Battle {
         PlayerData.store(player);
         PlayerData.reset(player);
         getPlayers().add(player.getName());
+        getScoreboard().addPlayer(player);
         SafeTeleporter.tp(player, arenaManager.getLounge().getLocation());
         messenger.tell(player, Message.JOINED_BATTLE, arena);
         messenger.tellEveryoneExcept(player, Message.PLAYER_JOINED_BATTLE, player);
@@ -147,15 +155,8 @@ public abstract class SimpleBattle implements Battle {
         int kills = getKills(player);
         int deaths = getDeaths(player);
 
-        if (kills > deaths) {
-            if (deaths == 0) return kills;
-            return kills / deaths;
-        }
-        if (kills < deaths) {
-            if (kills == 0) return -deaths;
-            return 0 - kills / deaths;
-        }
-        return 0;
+        if (deaths == 0) deaths = 1;
+        return kills / deaths;
     }
 
     @Override
@@ -216,6 +217,7 @@ public abstract class SimpleBattle implements Battle {
         PlayerData.restore(player, true, false);
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
+        getScoreboard().removePlayer(player);
         Metadata.remove(player, "ready");
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
@@ -327,6 +329,7 @@ public abstract class SimpleBattle implements Battle {
             PlayerData.reset(player);
             PlayerData.restore(player, true, false);
             api.setPlayerClass(player, null);
+            getScoreboard().removePlayer(player);
             Metadata.remove(player, "kills");
             Metadata.remove(player, "deaths");
             api.getSpectatorManager().removeTarget(player);
@@ -399,6 +402,11 @@ public abstract class SimpleBattle implements Battle {
         }
 
         return message;
+    }
+
+    // TODO Add to API
+    public BattleScoreboard getScoreboard() {
+        return scoreboard;
     }
 
     /* ------ */

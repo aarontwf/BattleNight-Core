@@ -68,12 +68,6 @@
 			<version>1.6.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.kitteh</groupId>
-			<artifactId>tagapi</artifactId>
-			<version>LATEST</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 
 	<!-- Build settings -->
@@ -98,14 +92,6 @@
 				<includes>
 					<include>*.yml</include>
 					<include>*.dat</include>
-				</includes>
-			</resource>
-			<resource>
-				<targetPath>.</targetPath>
-				<directory>${basedir}/src/main/resources/jars</directory>
-				<filtering>false</filtering>
-				<includes>
-					<include>*.jar</include>
 				</includes>
 			</resource>
 			<resource>

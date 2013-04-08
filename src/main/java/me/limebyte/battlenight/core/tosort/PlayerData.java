@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
-import me.limebyte.battlenight.core.hooks.Nameplates;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
@@ -112,7 +111,6 @@ public class PlayerData {
         player.setSleepingIgnored(true);
         player.setSneaking(false);
         player.setSprinting(false);
-        Nameplates.refresh(player);
 
         // TODO if (DEFAULT !=null) player.setTexturePack(DEFAULT);
     }
@@ -186,7 +184,6 @@ public class PlayerData {
         player.setSleepingIgnored(data.sleepingIgnored);
         player.setSneaking(data.sneaking);
         player.setSprinting(data.sprinting);
-        Nameplates.refresh(player);
 
         if (!keepInMemory) {
             storage.remove(name);
