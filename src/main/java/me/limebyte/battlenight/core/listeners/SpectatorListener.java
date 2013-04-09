@@ -17,7 +17,7 @@ public class SpectatorListener extends APIRelatedListener {
         super(api);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryOpen(InventoryOpenEvent event) {
         SpectatorManager manager = getAPI().getSpectatorManager();
 
@@ -26,7 +26,7 @@ public class SpectatorListener extends APIRelatedListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInterract(PlayerInteractEvent event) {
         SpectatorManager manager = getAPI().getSpectatorManager();
         Player player = event.getPlayer();
@@ -37,7 +37,7 @@ public class SpectatorListener extends APIRelatedListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();

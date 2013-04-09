@@ -10,6 +10,7 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -22,6 +23,7 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class CheatListener extends APIRelatedListener {
 
@@ -29,11 +31,7 @@ public class CheatListener extends APIRelatedListener {
         super(api);
     }
 
-    // //////////////////
-    // General Events //
-    // //////////////////
-
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
@@ -46,23 +44,25 @@ public class CheatListener extends APIRelatedListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Battle battle = getAPI().getBattleManager().getActiveBattle();
-        if (battle.containsPlayer(player)) {
-            if (event.getCursor() != null && event.getSlotType() == SlotType.OUTSIDE) {
-                event.setCancelled(true);
-                getAPI().getMessenger().tell(player, Message.NO_CHEATING);
-            }
-        }
 
         if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
             event.setCancelled(true);
         }
+
+        if (battle.containsPlayer(player) && event.getSlotType() != SlotType.OUTSIDE) {
+            ItemStack cursor = event.getCursor();
+            if (cursor != null && cursor.getType() != Material.AIR) {
+                event.setCancelled(true);
+                getAPI().getMessenger().tell(player, Message.NO_CHEATING);
+            }
+        }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled()) return;
 
@@ -99,7 +99,7 @@ public class CheatListener extends APIRelatedListener {
         return;
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Battle battle = getAPI().getBattleManager().getActiveBattle();
@@ -112,10 +112,6 @@ public class CheatListener extends APIRelatedListener {
             event.setCancelled(true);
         }
     }
-
-    // //////////////////
-    // Lounge Events //
-    // //////////////////
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
@@ -160,7 +156,7 @@ public class CheatListener extends APIRelatedListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         Battle battle = getAPI().getBattleManager().getActiveBattle();
         if (battle.isInProgress()) return;
