@@ -20,9 +20,9 @@ public class BattleScoreboard {
     private boolean teamed = false;
 
     private Scoreboard scoreboard;
-    private Objective objective;
+    private Objective scores;
+    private Objective belowName;
 
-    private static int id = 0;
     private static Map<String, Scoreboard> scoreboards = new HashMap<String, Scoreboard>();
 
     private static final String TITLE_PREFIX = ChatColor.BOLD.toString() + ChatColor.GRAY;
@@ -34,18 +34,14 @@ public class BattleScoreboard {
         teamed = battle instanceof TeamedBattle;
 
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        objective = scoreboard.registerNewObjective("bn_scoreboard" + id++, "dummy");
 
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.setDisplayName(LOBBY_TITLE);
+        scores = scoreboard.registerNewObjective("bn_scores", "dummy");
+        scores.setDisplaySlot(DisplaySlot.SIDEBAR);
+        scores.setDisplayName(LOBBY_TITLE);
 
-        if (!teamed) {
-            Team team = scoreboard.registerNewTeam("bn_allplayers");
-            team.setDisplayName("BattleNight");
-            team.setPrefix(ChatColor.RED.toString());
-            team.setAllowFriendlyFire(true);
-            team.setCanSeeFriendlyInvisibles(false);
-        }
+        belowName = scoreboard.registerNewObjective("bn_belowname", "dummy");
+        belowName.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        belowName.setDisplayName("Kills");
     }
 
     public void addTeam(me.limebyte.battlenight.api.battle.Team team, boolean friendlyFire) {
@@ -61,6 +57,7 @@ public class BattleScoreboard {
 
     public void addPlayer(Player player) {
         scoreboards.put(player.getName(), player.getScoreboard());
+        player.setScoreboard(scoreboard);
 
         if (teamed) {
             String teamName = ((TeamedBattle) battle).getTeam(player).getName();
@@ -71,32 +68,32 @@ public class BattleScoreboard {
                 }
 
             }
-        } else {
-            scoreboard.getTeam("bn_allplayers").addPlayer(player);
         }
 
-        player.setScoreboard(scoreboard);
-        objective.getScore(player).setScore(0);
+        scores.getScore(player).setScore(0);
     }
 
     public void removePlayer(Player player) {
         if (!scoreboard.getPlayers().contains(player)) return;
 
+        Team team = scoreboard.getPlayerTeam(player);
+        if (team != null) team.removePlayer(player);
+
         String name = player.getName();
         player.setScoreboard(scoreboards.get(name));
         scoreboards.remove(name);
-
-        Team team = scoreboard.getPlayerTeam(player);
-        if (team != null) team.removePlayer(player);
     }
 
     public void updateScore(Player player) {
         int score = (int) Math.round(battle.getKDR(player) * 100);
-        objective.getScore(player).setScore(score);
+        int kills = battle.getKills(player);
+
+        scores.getScore(player).setScore(score);
+        belowName.getScore(player).setScore(kills);
     }
 
     public void updateTime(long time) {
-        objective.setDisplayName(String.format(BATTLE_TITLE, time * 1000));
+        scores.setDisplayName(String.format(BATTLE_TITLE, time * 1000));
     }
 
 }
