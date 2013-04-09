@@ -31,7 +31,7 @@ public class CheatListener extends APIRelatedListener {
         super(api);
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
@@ -44,7 +44,7 @@ public class CheatListener extends APIRelatedListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Battle battle = getAPI().getBattleManager().getActiveBattle();
@@ -53,7 +53,7 @@ public class CheatListener extends APIRelatedListener {
             event.setCancelled(true);
         }
 
-        if (battle.containsPlayer(player) && event.getSlotType() != SlotType.OUTSIDE) {
+        if (battle.containsPlayer(player) && event.getSlotType() == SlotType.OUTSIDE) {
             ItemStack cursor = event.getCursor();
             if (cursor != null && cursor.getType() != Material.AIR) {
                 event.setCancelled(true);
@@ -62,7 +62,7 @@ public class CheatListener extends APIRelatedListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled()) return;
 
@@ -156,7 +156,7 @@ public class CheatListener extends APIRelatedListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         Battle battle = getAPI().getBattleManager().getActiveBattle();
         if (battle.isInProgress()) return;
