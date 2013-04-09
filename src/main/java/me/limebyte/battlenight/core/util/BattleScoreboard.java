@@ -79,8 +79,11 @@ public class BattleScoreboard {
         Team team = scoreboard.getPlayerTeam(player);
         if (team != null) team.removePlayer(player);
 
+        scoreboard.resetScores(player);
+
         String name = player.getName();
-        player.setScoreboard(scoreboards.get(name));
+        Scoreboard board = scoreboards.get(name);
+        if (board != null) player.setScoreboard(board);
         scoreboards.remove(name);
     }
 
