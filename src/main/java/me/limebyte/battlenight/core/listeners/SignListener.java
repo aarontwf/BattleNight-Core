@@ -1,15 +1,15 @@
 package me.limebyte.battlenight.core.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.tosort.ClassSign;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.Metadata;
@@ -29,36 +29,52 @@ import org.bukkit.potion.PotionEffect;
 public class SignListener extends APIRelatedListener {
 
     private static final String LINE = "----------";
-    public static Set<ClassSign> classSigns = new HashSet<ClassSign>();
+    public static HashMap<Sign, ArrayList<String>> classSigns = new HashMap<Sign, ArrayList<String>>();
 
     public SignListener(BattleNightAPI api) {
         super(api);
     }
 
     public static void cleanSigns() {
-        for (ClassSign s : classSigns) {
-            s.clear();
+        Iterator<Sign> it = classSigns.keySet().iterator();
+
+        while (it.hasNext()) {
+            Sign sign = it.next();
+            sign.setLine(2, "");
+            sign.setLine(3, "");
+            it.remove();
         }
     }
 
     public static void cleanSigns(Player player) {
-        for (ClassSign s : classSigns) {
-            s.remove(player);
+        String name = player.getName();
+        Iterator<Entry<Sign, ArrayList<String>>> it = classSigns.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Entry<Sign, ArrayList<String>> entry = it.next();
+            ArrayList<String> names = entry.getValue();
+            if (!names.contains(name)) continue;
+
+            Sign sign = entry.getKey();
+            names.remove(name);
+            sign.setLine(2, names.size() > 0 ? names.get(0) : "");
+            sign.setLine(3, names.size() > 1 ? names.get(1) : "");
         }
     }
 
     private static void addName(Player player, Sign sign) {
-        getClassSign(sign).add(player);
+        if (!classSigns.containsKey(sign)) classSigns.put(sign, new ArrayList<String>());
+
+        cleanSigns(player);
+        classSigns.get(sign).add(player.getName());
+        refreshNames(sign);
     }
 
-    private static ClassSign getClassSign(Sign sign) {
-        for (ClassSign s : classSigns) {
-            if (s.getSign().equals(sign)) return s;
-        }
-
-        ClassSign s = new ClassSign(sign);
-        classSigns.add(s);
-        return s;
+    private static void refreshNames(Sign sign) {
+        if (!classSigns.containsKey(sign)) return;
+        ArrayList<String> names = classSigns.get(sign);
+        sign.setLine(2, names.size() > 0 ? names.get(0) : "");
+        sign.setLine(3, names.size() > 1 ? names.get(1) : "");
     }
 
     private static void reset(Player player) {
@@ -71,7 +87,6 @@ public class SignListener extends APIRelatedListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             Block block = event.getClickedBlock();
             Player player = event.getPlayer();
