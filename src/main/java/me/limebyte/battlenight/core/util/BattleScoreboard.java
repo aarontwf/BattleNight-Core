@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -70,7 +71,9 @@ public class BattleScoreboard {
             }
         }
 
-        scores.getScore(player).setScore(0);
+        Score score = scores.getScore(player);
+        score.setScore(1); // Force the player to pop up on the sidebar
+        score.setScore(0);
     }
 
     public void removePlayer(Player player) {
