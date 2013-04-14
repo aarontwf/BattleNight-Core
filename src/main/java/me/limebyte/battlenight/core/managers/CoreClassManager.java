@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 public class CoreClassManager implements ClassManager {
 
     private static final Config configFile = Config.CLASSES;
+    private static final int MAX_ENCHANT = 1000;
 
     private List<PlayerClass> classes = new ArrayList<PlayerClass>();
     private BattleNightAPI api;
@@ -277,13 +278,8 @@ public class CoreClassManager implements ClassManager {
                         lvl = enc.getStartLevel();
                     }
 
-                    // Cap levels
-                    if (lvl > enc.getMaxLevel()) {
-                        lvl = enc.getMaxLevel();
-                    }
-
                     // Add it
-                    enchantments.put(enc, lvl);
+                    enchantments.put(enc, lvl > MAX_ENCHANT ? MAX_ENCHANT : lvl);
                 }
             }
 
@@ -307,7 +303,7 @@ public class CoreClassManager implements ClassManager {
 
             if (!enchantments.isEmpty()) {
                 try {
-                    stack.addEnchantments(enchantments);
+                    stack.addUnsafeEnchantments(enchantments);
                 } catch (Exception ex) {
                     // TODO Log it
                 }
