@@ -21,7 +21,7 @@ public class BattleScoreboard {
     private boolean teamed = false;
 
     private Scoreboard scoreboard;
-    private Objective scores;
+    private Objective sidebar;
     private Objective belowName;
 
     private static Map<String, Scoreboard> scoreboards = new HashMap<String, Scoreboard>();
@@ -36,9 +36,9 @@ public class BattleScoreboard {
 
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
-        scores = scoreboard.registerNewObjective("bn_scores", "dummy");
-        scores.setDisplaySlot(DisplaySlot.SIDEBAR);
-        scores.setDisplayName(LOBBY_TITLE);
+        sidebar = scoreboard.registerNewObjective("bn_scores", "dummy");
+        sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+        sidebar.setDisplayName(LOBBY_TITLE);
 
         belowName = scoreboard.registerNewObjective("bn_belowname", "dummy");
         belowName.setDisplaySlot(DisplaySlot.BELOW_NAME);
@@ -60,6 +60,16 @@ public class BattleScoreboard {
         scoreboards.put(player.getName(), player.getScoreboard());
         player.setScoreboard(scoreboard);
 
+        scoreboard.resetScores(player);
+
+        Score score = sidebar.getScore(player);
+        score.setScore(score.getScore() + 1); // Hacky but it works
+        score.setScore(0);
+
+        Score kills = belowName.getScore(player);
+        kills.setScore(score.getScore() + 1); // Hacky but it works
+        kills.setScore(0);
+
         if (teamed) {
             String teamName = ((TeamedBattle) battle).getTeam(player).getName();
             for (Team team : scoreboard.getTeams()) {
@@ -70,10 +80,6 @@ public class BattleScoreboard {
 
             }
         }
-
-        Score score = scores.getScore(player);
-        score.setScore(1); // Force the player to pop up on the sidebar
-        score.setScore(0);
     }
 
     public void removePlayer(Player player) {
@@ -90,16 +96,16 @@ public class BattleScoreboard {
         scoreboards.remove(name);
     }
 
-    public void updateScore(Player player) {
+    public void updateScores(Player player) {
         int score = (int) Math.round(battle.getKDR(player) * 100);
         int kills = battle.getKills(player);
 
-        scores.getScore(player).setScore(score);
+        sidebar.getScore(player).setScore(score);
         belowName.getScore(player).setScore(kills);
     }
 
     public void updateTime(long time) {
-        scores.setDisplayName(String.format(BATTLE_TITLE, time * 1000));
+        sidebar.setDisplayName(String.format(BATTLE_TITLE, time * 1000));
     }
 
 }

@@ -60,7 +60,7 @@ public abstract class SimpleBattle implements Battle {
     @Override
     public void addDeath(Player player) {
         Metadata.set(player, "deaths", getDeaths(player) + 1);
-        getScoreboard().updateScore(player);
+        getScoreboard().updateScores(player);
     }
 
     @Override
@@ -81,7 +81,7 @@ public abstract class SimpleBattle implements Battle {
         }
 
         leadingPlayers.add(player.getName());
-        getScoreboard().updateScore(player);
+        getScoreboard().updateScores(player);
     }
 
     @Override
