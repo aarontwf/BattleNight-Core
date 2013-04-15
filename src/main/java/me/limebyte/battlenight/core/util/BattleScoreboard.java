@@ -40,9 +40,9 @@ public class BattleScoreboard {
         sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
         sidebar.setDisplayName(LOBBY_TITLE);
 
-        belowName = scoreboard.registerNewObjective("bn_belowname", "dummy");
+        belowName = scoreboard.registerNewObjective("bn_belowname", "health");
         belowName.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        belowName.setDisplayName("Kills");
+        belowName.setDisplayName("/ 20");
     }
 
     public void addTeam(me.limebyte.battlenight.api.battle.Team team, boolean friendlyFire) {
@@ -65,10 +65,6 @@ public class BattleScoreboard {
         Score score = sidebar.getScore(player);
         score.setScore(score.getScore() + 1); // Hacky but it works
         score.setScore(0);
-
-        Score kills = belowName.getScore(player);
-        kills.setScore(score.getScore() + 1); // Hacky but it works
-        kills.setScore(0);
 
         if (teamed) {
             String teamName = ((TeamedBattle) battle).getTeam(player).getName();
@@ -98,10 +94,7 @@ public class BattleScoreboard {
 
     public void updateScores(Player player) {
         int score = (int) Math.round(battle.getKDR(player) * 100);
-        int kills = battle.getKills(player);
-
         sidebar.getScore(player).setScore(score);
-        belowName.getScore(player).setScore(kills);
     }
 
     public void updateTime(long time) {
