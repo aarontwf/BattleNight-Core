@@ -5,7 +5,7 @@
 	<name>BattleNight</name>
 	<groupId>me.limebyte</groupId>
 	<artifactId>battlenight.core</artifactId>
-	<version>1.6.2-SNAPSHOT</version>
+	<version>1.7.0</version>
 	<url>http://dev.bukkit.org/server-mods/battlenight</url>
 	<inceptionYear>2011</inceptionYear>
 	<description>RPG Arena based PvP Battles.</description>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>me.limebyte.battlenight</groupId>
 			<artifactId>api</artifactId>
-			<version>1.6.1-SNAPSHOT</version>
+			<version>1.7.0</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
