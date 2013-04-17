@@ -8,6 +8,7 @@ import java.util.Random;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Team;
 import me.limebyte.battlenight.api.battle.TeamedBattle;
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Metadata;
@@ -215,16 +216,15 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
 
     @Override
     protected void teleportAllToSpawn() {
-        @SuppressWarnings("unchecked")
-        List<SimpleWaypoint> waypoints = (ArrayList<SimpleWaypoint>) getArena().getSpawnPoints().clone();
-        List<SimpleWaypoint> free = waypoints;
+        ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>(getArena().getSpawnPoints());
+        ArrayList<Waypoint> free = new ArrayList<Waypoint>(waypoints);
         Random random = new Random();
 
-        HashMap<String, SimpleWaypoint> spawns = new HashMap<String, SimpleWaypoint>();
+        HashMap<String, Waypoint> spawns = new HashMap<String, Waypoint>();
 
         for (Team team : getTeams()) {
             if (free.size() <= 0) {
-                free = waypoints;
+                free = new ArrayList<Waypoint>(waypoints);
             }
             int id = random.nextInt(free.size());
             spawns.put(team.getName(), free.get(id));
@@ -236,7 +236,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             if (player == null || !player.isOnline()) {
                 continue;
             }
-            SafeTeleporter.tp(player, spawns.get(Metadata.getString(player, "team")).getLocation());
+            SafeTeleporter.tp(player, spawns.get(Metadata.getString(player, "team")));
         }
     }
 }

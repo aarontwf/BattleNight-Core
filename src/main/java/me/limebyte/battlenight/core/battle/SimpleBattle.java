@@ -3,7 +3,6 @@ package me.limebyte.battlenight.core.battle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
@@ -11,6 +10,7 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.util.Message;
@@ -414,9 +414,8 @@ public abstract class SimpleBattle implements Battle {
     /* ------ */
 
     protected void teleportAllToSpawn() {
-        @SuppressWarnings("unchecked")
-        List<SimpleWaypoint> waypoints = (ArrayList<SimpleWaypoint>) getArena().getSpawnPoints().clone();
-        List<SimpleWaypoint> free = waypoints;
+        ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>(getArena().getSpawnPoints());
+        ArrayList<Waypoint> free = new ArrayList<Waypoint>(waypoints);
         Random random = new Random();
 
         for (String name : getPlayers()) {
@@ -426,7 +425,7 @@ public abstract class SimpleBattle implements Battle {
             }
 
             if (free.size() <= 0) {
-                free = waypoints;
+                free = new ArrayList<Waypoint>(waypoints);
             }
 
             int id = random.nextInt(free.size());
