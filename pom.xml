@@ -50,7 +50,7 @@
 		</repository>
 		<repository>
 			<id>battlenight-repo</id>
-			<url>https://raw.github.com/BattleNight/API/repo/</url>
+			<url>https://raw.github.com/BattleNight/BattleNight-API/repo/</url>
 		</repository>
 	</repositories>
 
@@ -63,9 +63,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>me.limebyte.battlenight</groupId>
-			<artifactId>api</artifactId>
-			<version>1.7.0</version>
+			<groupId>me.limebyte</groupId>
+			<artifactId>BattleNight-API</artifactId>
+			<version>1.7.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
