@@ -93,12 +93,13 @@ public class BattleScoreboard {
     }
 
     public void updateScores(Player player) {
-        int score = (int) Math.round(battle.getKDR(player) * 100);
+        int score = (int) battle.getKDR(player) * 100;
         sidebar.getScore(player).setScore(score);
     }
 
     public void updateTime(long time) {
-        sidebar.setDisplayName(String.format(BATTLE_TITLE, time * 1000));
+        String name = time == -1 ? LOBBY_TITLE : String.format(BATTLE_TITLE, time * 1000);
+        sidebar.setDisplayName(name);
     }
 
 }
