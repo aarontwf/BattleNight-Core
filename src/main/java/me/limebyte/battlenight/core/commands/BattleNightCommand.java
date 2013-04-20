@@ -21,6 +21,7 @@ public abstract class BattleNightCommand {
     private final String name;
     private String label;
     private List<String> aliases;
+    private List<String> primaryChoices;
     protected String description = "";
     protected String usageMessage;
     private CommandPermission permission;
@@ -45,6 +46,14 @@ public abstract class BattleNightCommand {
      */
     public List<String> getAliases() {
         return aliases;
+    }
+    
+    public List<String> getPrimaryChoices() {
+        return primaryChoices;
+    }
+    
+    public void setPrimaryChoices(List<String> primaryChoices) {
+        this.primaryChoices = primaryChoices;
     }
 
     /**

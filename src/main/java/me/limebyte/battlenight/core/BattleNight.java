@@ -8,6 +8,7 @@ import me.limebyte.battlenight.api.BattleNightPlugin;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleArena;
 import me.limebyte.battlenight.core.battle.SimpleWaypoint;
+import me.limebyte.battlenight.core.commands.BattleNightTabCompleter;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.listeners.BlockListener;
@@ -23,6 +24,7 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.UpdateChecker;
 
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -72,7 +74,10 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         }
 
         // Commands
-        getCommand("battlenight").setExecutor(new CommandManager(api));
+        PluginCommand command = getCommand("battlenight");
+        CommandManager manager = new CommandManager(api);
+        command.setExecutor(manager);
+        command.setTabCompleter(new BattleNightTabCompleter());
 
         // Hooks
         try {

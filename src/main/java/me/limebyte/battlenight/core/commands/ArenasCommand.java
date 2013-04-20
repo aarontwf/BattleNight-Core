@@ -17,6 +17,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.ImmutableList;
+
 public class ArenasCommand extends BattleNightCommand {
 
     public ArenasCommand() {
@@ -26,6 +28,7 @@ public class ArenasCommand extends BattleNightCommand {
         setDescription("Various arena related commands.");
         setUsage("/bn arenas <action> [arena]");
         setPermission(CommandPermission.ADMIN);
+        setPrimaryChoices(ImmutableList.of("list", "create", "delete", "addspawn", "removespawn", "enable", "disable", "setdisplay", "settexturepack"));
     }
 
     private String getArenaName(Arena arena) {
@@ -211,7 +214,7 @@ public class ArenasCommand extends BattleNightCommand {
             return false;
         }
 
-        if (args[0].equalsIgnoreCase("name")) {
+        if (args[0].equalsIgnoreCase("setdisplay")) {
             if (args.length < 3) {
                 messenger.tell(sender, Message.SPECIFY_ARENA);
                 return false;
@@ -228,7 +231,7 @@ public class ArenasCommand extends BattleNightCommand {
             return false;
         }
 
-        if (args[0].equalsIgnoreCase("texturepack")) {
+        if (args[0].equalsIgnoreCase("settexturepack")) {
             if (args.length < 3) {
                 messenger.tell(sender, Message.SPECIFY_ARENA);
                 return false;

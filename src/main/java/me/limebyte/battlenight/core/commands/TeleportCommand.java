@@ -11,6 +11,8 @@ import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.ImmutableList;
+
 public class TeleportCommand extends BattleNightCommand {
 
     protected TeleportCommand() {
@@ -21,6 +23,7 @@ public class TeleportCommand extends BattleNightCommand {
         setUsage("/bn tp <waypoint>\n/bn tp <arena> [spawn]");
         setPermission(CommandPermission.ADMIN);
         setAliases(Arrays.asList("teleport", "goto"));
+        setPrimaryChoices(ImmutableList.of("lounge", "exit"));
     }
 
     @Override

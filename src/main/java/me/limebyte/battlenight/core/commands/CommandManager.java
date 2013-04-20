@@ -74,5 +74,15 @@ public class CommandManager implements CommandExecutor {
         messenger.tell(sender, Message.INVALID_COMMAND);
         return false;
     }
+    
+    public static List<String> getMainChoices() {
+        List<String> list = new ArrayList<String>();
+        
+        for (BattleNightCommand command : commands) {
+            list.add(command.getLabel());
+        }
+        
+        return list;
+    }
 
 }

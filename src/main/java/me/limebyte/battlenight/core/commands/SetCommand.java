@@ -11,6 +11,8 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.ImmutableList;
+
 public class SetCommand extends BattleNightCommand {
 
     protected SetCommand() {
@@ -20,6 +22,7 @@ public class SetCommand extends BattleNightCommand {
         setDescription("Sets a BattleNight waypoint.");
         setUsage("/bn set <waypoint> [x] [y] [z] [world]");
         setPermission(CommandPermission.ADMIN);
+        setPrimaryChoices(ImmutableList.of("lounge", "exit"));
     }
 
     private Location parseArgsToLocation(String[] args) {
