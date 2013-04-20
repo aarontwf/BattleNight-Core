@@ -9,14 +9,4 @@ public class FFABattle extends SimpleBattle {
         super(api, duration, minPlayers, maxPlayers);
     }
 
-    @Override
-    public boolean onStart() {
-        return true;
-    }
-
-    @Override
-    public boolean onStop() {
-        return true;
-    }
-
 }

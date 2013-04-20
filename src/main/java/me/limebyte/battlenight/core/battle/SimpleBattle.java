@@ -205,10 +205,14 @@ public abstract class SimpleBattle implements Battle {
     }
 
     @Override
-    public abstract boolean onStart();
+    public boolean onStart() {
+        return true;
+    }
 
     @Override
-    public abstract boolean onStop();
+    public boolean onStop() {
+        return true;
+    }
 
     @Override
     public boolean removePlayer(Player player) {
@@ -277,8 +281,6 @@ public abstract class SimpleBattle implements Battle {
             return false;
         }
 
-        if (!onStart()) return false;
-
         Iterator<String> it = getPlayers().iterator();
         while (it.hasNext()) {
             Player player = toPlayer(it.next());
@@ -308,8 +310,6 @@ public abstract class SimpleBattle implements Battle {
 
     @Override
     public boolean stop() {
-        if (!onStop()) return false;
-
         if (timer.isRunning()) {
             timer.stop();
         }

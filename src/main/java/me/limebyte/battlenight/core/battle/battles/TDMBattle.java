@@ -15,14 +15,4 @@ public class TDMBattle extends SimpleTeamedBattle {
         addTeam(new SimpleTeam("Red", ChatColor.RED));
     }
 
-    @Override
-    public boolean onStart() {
-        return true;
-    }
-
-    @Override
-    public boolean onStop() {
-        return true;
-    }
-
 }
