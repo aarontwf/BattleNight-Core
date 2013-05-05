@@ -21,9 +21,10 @@ public class JoinCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        if (sender instanceof Player)
-            return api.getBattleManager().getActiveBattle().addPlayer((Player) sender);
-        else {
+        if (sender instanceof Player) {
+            api.getLobby().addPlayer((Player) sender);
+            return true;
+        } else {
             api.getMessenger().tell(sender, Message.PLAYER_ONLY);
             return false;
         }

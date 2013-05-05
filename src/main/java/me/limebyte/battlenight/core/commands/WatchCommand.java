@@ -28,7 +28,7 @@ public class WatchCommand extends BattleNightCommand {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            Battle battle = api.getBattleManager().getActiveBattle();
+            Battle battle = api.getBattleManager().getBattle();
 
             SpectatorManager spectatorManager = api.getSpectatorManager();
 

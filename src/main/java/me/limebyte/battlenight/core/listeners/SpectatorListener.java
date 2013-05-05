@@ -44,7 +44,7 @@ public class SpectatorListener extends APIRelatedListener {
 
         SpectatorManager manager = getAPI().getSpectatorManager();
 
-        if (getAPI().getBattleManager().getActiveBattle().containsPlayer(player)) {
+        if (getAPI().getBattleManager().getBattle().containsPlayer(player)) {
             for (String spec : manager.getSpectators()) {
                 Player spectator = Bukkit.getPlayerExact(spec);
                 if (spectator == null) {

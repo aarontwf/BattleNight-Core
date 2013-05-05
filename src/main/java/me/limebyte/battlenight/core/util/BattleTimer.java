@@ -46,7 +46,6 @@ public class BattleTimer extends SimpleTimer {
     @Override
     public void onTimerEnd() {
         battle.stop();
-        battle.getScoreboard().updateTime(-1);
     }
 
 }

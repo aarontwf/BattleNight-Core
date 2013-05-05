@@ -29,7 +29,7 @@ public class DisconnectListener extends APIRelatedListener {
     private void removePlayer(PlayerEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();
-        Battle battle = getAPI().getBattleManager().getActiveBattle();
+        Battle battle = getAPI().getBattleManager().getBattle();
 
         DeathListener.queue.remove(name);
 

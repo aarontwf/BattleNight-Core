@@ -66,7 +66,7 @@ public class CoreArenaManager implements ArenaManager {
     @Override
     public Arena getRandomArena(int minSpawns) {
         List<Arena> ready = getReadyArenas(minSpawns);
-        if (ready.size() > 1) {
+        if (lastArena != null && ready.size() > 1) {
             ready.remove(lastArena);
         }
 

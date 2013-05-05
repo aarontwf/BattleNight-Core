@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.managers.ClassManager;
@@ -8,6 +9,7 @@ import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
+import me.limebyte.battlenight.core.battle.SimpleLobby;
 import me.limebyte.battlenight.core.commands.BattleNightCommand;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.listeners.SignListener;
@@ -32,6 +34,8 @@ public class API implements BattleNightAPI {
     private ClassManager classManager;
     private MusicManager musicManager;
     private SpectatorManager spectatorManager;
+    
+    private Lobby lobby;
 
     public API(BattleNight plugin) {
         messenger = new SimpleMessenger(this);
@@ -43,6 +47,8 @@ public class API implements BattleNightAPI {
         musicManager = new CoreMusicManager(this, plugin);
         spectatorManager = new CoreSpectatorManager(this);
 
+        lobby = new SimpleLobby(this);
+        
         PlayerData.api = this;
     }
 
@@ -59,6 +65,11 @@ public class API implements BattleNightAPI {
     @Override
     public ClassManager getClassManager() {
         return classManager;
+    }
+    
+    @Override
+    public Lobby getLobby() {
+        return lobby;
     }
 
     @Override

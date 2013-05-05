@@ -27,7 +27,7 @@ public class LeaveCommand extends BattleNightCommand {
         Messenger messenger = api.getMessenger();
 
         if (sender instanceof Player) {
-            Battle battle = api.getBattleManager().getActiveBattle();
+            Battle battle = api.getBattleManager().getBattle();
             Player player = (Player) sender;
 
             SpectatorManager spectators = api.getSpectatorManager();

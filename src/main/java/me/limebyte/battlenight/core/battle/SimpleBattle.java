@@ -11,7 +11,6 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Waypoint;
-import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
@@ -21,7 +20,7 @@ import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
-import me.limebyte.battlenight.core.util.BattleScoreboard;
+import me.limebyte.battlenight.core.util.BattleScorePane;
 import me.limebyte.battlenight.core.util.BattleTimer;
 
 import org.bukkit.Bukkit;
@@ -33,7 +32,7 @@ public abstract class SimpleBattle implements Battle {
     public BattleNightAPI api;
 
     private BattleTimer timer;
-    private BattleScoreboard scoreboard;
+    private BattleScorePane scoreboard;
     private int minPlayers;
     private int maxPlayers;
 
@@ -47,7 +46,7 @@ public abstract class SimpleBattle implements Battle {
         this.api = api;
 
         timer = new BattleTimer(api, this, duration);
-        scoreboard = new BattleScoreboard(this);
+        scoreboard = new BattleScorePane(this);
 
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -86,45 +85,13 @@ public abstract class SimpleBattle implements Battle {
 
     @Override
     public boolean addPlayer(Player player) {
-        Messenger messenger = api.getMessenger();
-
-        if (isInProgress()) {
-            messenger.tell(player, Message.BATTLE_IN_PROGRESS);
-            return false;
-        }
-
-        if (containsPlayer(player)) {
-            messenger.tell(player, Message.ALREADY_IN_BATTLE);
-            return false;
-        }
-
-        if (getPlayers().size() + 1 > getMaxPlayers()) {
-            messenger.tell(player, Message.BATTLE_FULL);
-            return false;
-        }
-
-        ArenaManager arenaManager = api.getArenaManager();
-
-        if (!arenaManager.getLounge().isSet()) {
-            messenger.tell(player, Message.WAYPOINTS_UNSET);
-            return false;
-        }
-
-        if (getArena() == null) {
-            if (arenaManager.getReadyArenas(1).isEmpty()) {
-                messenger.tell(player, Message.NO_ARENAS);
-                return false;
-            }
-            setArena(arenaManager.getRandomArena(1));
-        }
-
-        PlayerData.store(player);
-        PlayerData.reset(player);
         getPlayers().add(player.getName());
         getScoreboard().addPlayer(player);
-        SafeTeleporter.tp(player, arenaManager.getLounge().getLocation());
-        messenger.tell(player, Message.JOINED_BATTLE, arena);
-        messenger.tellEveryoneExcept(player, Message.PLAYER_JOINED_BATTLE, player);
+        
+        Metadata.set(player, "kills", 0);
+        Metadata.set(player, "deaths", 0);
+        api.getSpectatorManager().addTarget(player);
+        
         if (!arena.getTexturePack().isEmpty()) {
             player.setTexturePack(arena.getTexturePack());
         }
@@ -222,7 +189,6 @@ public abstract class SimpleBattle implements Battle {
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
         getScoreboard().removePlayer(player);
-        Metadata.remove(player, "ready");
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
         api.getSpectatorManager().removeTarget(player);
@@ -269,33 +235,14 @@ public abstract class SimpleBattle implements Battle {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean start() {
         if (isInProgress()) return false;
-        if (getArena() == null || !getArena().isSetup(1) || !getArena().isEnabled()) return false;
 
         Messenger messenger = api.getMessenger();
 
-        if (getPlayers().size() < getMinPlayers()) {
-            messenger.tellEveryone(Message.NOT_ENOUGH_PLAYERS, getMinPlayers() - getPlayers().size());
-            return false;
-        }
+        // TODO messenger.tellEveryone(Message.NOT_ENOUGH_PLAYERS, getMinPlayers() - getPlayers().size());
 
-        Iterator<String> it = getPlayers().iterator();
-        while (it.hasNext()) {
-            Player player = toPlayer(it.next());
-            if (player == null) {
-                it.remove();
-                continue;
-            }
-
-            Metadata.remove(player, "ready");
-            Metadata.set(player, "kills", 0);
-            Metadata.set(player, "deaths", 0);
-            api.getSpectatorManager().addTarget(player);
-        }
-
-        leadingPlayers = (HashSet<String>) players.clone();
+        leadingPlayers = new HashSet<String>(players);
 
         teleportAllToSpawn();
 
@@ -326,13 +273,17 @@ public abstract class SimpleBattle implements Battle {
                 continue;
             }
 
-            PlayerData.reset(player);
-            PlayerData.restore(player, true, false);
-            api.setPlayerClass(player, null);
+            api.getSpectatorManager().removeTarget(player);
+            
             getScoreboard().removePlayer(player);
+            api.getLobby().getScoreboard().addPlayer(player);
+            
             Metadata.remove(player, "kills");
             Metadata.remove(player, "deaths");
-            api.getSpectatorManager().removeTarget(player);
+            
+            SafeTeleporter.tp(player, api.getArenaManager().getLounge());
+            PlayerData.reset(player);
+            
             pIt.remove();
         }
 
@@ -345,6 +296,8 @@ public abstract class SimpleBattle implements Battle {
             spectatorManager.removeSpectator(player);
         }
 
+        api.getBattleManager().getNewBattle();
+        
         leadingPlayers.clear();
         arena = null;
         inProgress = false;
@@ -364,7 +317,6 @@ public abstract class SimpleBattle implements Battle {
         if (!death) {
             PlayerData.reset(player);
         }
-        Metadata.remove(player, "ready");
 
         if (shouldEnd()) {
             loc = PlayerData.getSavedLocation(player);
@@ -405,7 +357,7 @@ public abstract class SimpleBattle implements Battle {
     }
 
     // TODO Add to API
-    public BattleScoreboard getScoreboard() {
+    public BattleScorePane getScoreboard() {
         return scoreboard;
     }
 
