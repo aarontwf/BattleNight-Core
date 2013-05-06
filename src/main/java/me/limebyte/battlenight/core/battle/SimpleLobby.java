@@ -92,6 +92,11 @@ public class SimpleLobby implements Lobby {
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
     }
+    
+    @Override
+    public Set<String> getPlayers() {
+        return new HashSet<String>(players);
+    }
 
     @Override
     public void startBattle() {
