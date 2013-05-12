@@ -38,6 +38,11 @@ public class SimpleLobby implements Lobby {
         Messenger messenger = api.getMessenger();
         Battle battle = api.getBattleManager().getBattle();
         
+        if (players.contains(player.getName())) {
+            messenger.tell(player, Message.ALREADY_IN_LOBBY);
+            return;
+        }
+        
         if (battle.containsPlayer(player)) {
             messenger.tell(player, Message.ALREADY_IN_BATTLE);
             return;
