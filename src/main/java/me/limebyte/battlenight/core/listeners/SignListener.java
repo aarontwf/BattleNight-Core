@@ -93,7 +93,7 @@ public class SignListener extends APIRelatedListener {
 
             if (block.getState() instanceof Sign) {
                 Sign sign = (Sign) block.getState();
-                String title = sign.getLine(0);
+                String title = sign.getLine(1);
 
                 HashMap<String, PlayerClass> classes = new HashMap<String, PlayerClass>();
                 ClassManager manager = BattleNight.instance.getAPI().getClassManager();
@@ -101,7 +101,16 @@ public class SignListener extends APIRelatedListener {
                     classes.put(clazz.getName(), clazz);
                 }
 
-                if (getAPI().getBattleManager().getBattle().containsPlayer(player)) {
+                // For old signs
+                if (classes.containsKey(sign.getLine(0))) {
+                    title = sign.getLine(0);
+                    sign.setLine(0, "");
+                    sign.setLine(1, title);
+                    sign.setLine(2, LINE);
+                    sign.setLine(3, "");
+                }
+                
+                if (getAPI().getLobby().getPlayers().contains(player.getName())) {
                     if (classes.containsKey(title)) {
                         PlayerClass playerClass = classes.get(title);
 
@@ -141,7 +150,10 @@ public class SignListener extends APIRelatedListener {
                     return;
                 }
 
-                e.setLine(1, LINE);
+                e.setLine(0, "");
+                e.setLine(1, title);
+                e.setLine(2, LINE);
+                e.setLine(3, "");
                 getAPI().getMessenger().tell(player, Message.SUCCESSFUL_SIGN, title);
             }
         }
