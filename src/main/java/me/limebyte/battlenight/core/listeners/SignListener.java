@@ -108,6 +108,7 @@ public class SignListener extends APIRelatedListener {
                     sign.setLine(1, title);
                     sign.setLine(2, LINE);
                     sign.setLine(3, "");
+                    sign.update();
                 }
                 
                 if (getAPI().getLobby().getPlayers().contains(player.getName())) {
