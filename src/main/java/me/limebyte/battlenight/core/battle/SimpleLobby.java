@@ -78,7 +78,7 @@ public class SimpleLobby implements Lobby {
     public void removePlayer(Player player) {
         Messenger messenger = api.getMessenger();
         
-        if (!players.contains(player)) {
+        if (!players.contains(player.getName())) {
             messenger.tell(player, Message.NOT_IN_LOBBY);
             return;
         }
