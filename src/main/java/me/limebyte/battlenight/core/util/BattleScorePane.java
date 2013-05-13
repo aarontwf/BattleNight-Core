@@ -49,7 +49,7 @@ public class BattleScorePane extends SimpleScorePane {
     }
     
     public void updateScores(Player player) {
-        int score = (int) battle.getKDR(player) * 100;
+        int score = PlayerStats.get(player.getName()).getScore();
         sidebar.getScore(player).setScore(score);
     }
 

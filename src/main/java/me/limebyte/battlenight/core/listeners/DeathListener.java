@@ -7,8 +7,11 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.util.Messenger;
+import me.limebyte.battlenight.core.battle.SimpleBattle;
 import me.limebyte.battlenight.core.tosort.PlayerData;
+import me.limebyte.battlenight.core.util.PlayerStats;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +30,7 @@ public class DeathListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        String name = player.getName();
         Battle battle = getAPI().getBattleManager().getBattle();
 
         if (battle.containsPlayer(player)) {
@@ -39,13 +43,24 @@ public class DeathListener extends APIRelatedListener {
             }
 
             Player killer = player.getKiller();
-
-            battle.addDeath(player);
+            PlayerStats stats = PlayerStats.get(name);
+            boolean suicide = true;
+            
             if (killer != null && killer != player) {
+                stats.addKill(false);
                 battle.addKill(killer);
+                suicide = false;
             }
+            
+            stats.addDeath(suicide);
+            
+            // Update leading
+            updateLeaders((SimpleBattle) battle, stats);
+            
+            // Old Stuff
+            battle.addDeath(player);
 
-            queue.add(player.getName());
+            queue.add(name);
         }
     }
 
@@ -77,6 +92,20 @@ public class DeathListener extends APIRelatedListener {
         }
 
         messenger.tellBattle(deathMessage);
+    }
+    
+    private void updateLeaders(SimpleBattle battle, PlayerStats stats) {
+        int leadingScore = 0;
+        Set<String> leaders = (battle).leadingPlayers;
+        Player leader = Bukkit.getPlayerExact(leaders.iterator().next());
+        
+        if (leader != null) {
+            leadingScore = PlayerStats.get(leader.getName()).getScore();
+        }
+        
+        if (leadingScore > stats.getScore()) return;
+        if (leadingScore < stats.getScore()) leaders.clear();
+        leaders.add(leader.getName());
     }
 
 }

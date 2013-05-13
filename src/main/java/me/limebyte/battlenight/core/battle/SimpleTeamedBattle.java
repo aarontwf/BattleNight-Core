@@ -27,8 +27,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
 
     @Override
     public void addDeath(Player player) {
-        super.addDeath(player);
-
         Team team = getTeam(player);
         if (team != null) {
             team.addDeath();
@@ -37,8 +35,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
 
     @Override
     public void addKill(Player player) {
-        super.addKill(player);
-
         Team team = getTeam(player);
         if (team != null) {
             team.addKill();

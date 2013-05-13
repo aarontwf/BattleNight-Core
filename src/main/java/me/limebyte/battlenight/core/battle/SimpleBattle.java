@@ -40,7 +40,7 @@ public abstract class SimpleBattle implements Battle {
     protected boolean inProgress = false;
 
     private HashSet<String> players = new HashSet<String>();
-    private Set<String> leadingPlayers = new HashSet<String>();
+    public Set<String> leadingPlayers = new HashSet<String>();
 
     public SimpleBattle(BattleNightAPI api, int duration, int minPlayers, int maxPlayers) {
         this.api = api;
@@ -58,29 +58,12 @@ public abstract class SimpleBattle implements Battle {
 
     @Override
     public void addDeath(Player player) {
-        Metadata.set(player, "deaths", getDeaths(player) + 1);
-        getScoreboard().updateScores(player);
+        // TODO Remove
     }
 
     @Override
     public void addKill(Player player) {
-        int kills = getKills(player) + 1;
-        int leadingKills = 0;
-
-        Player leader = toPlayer(leadingPlayers.iterator().next());
-        if (leader != null) {
-            leadingKills = getKills(leader);
-        }
-
-        Metadata.set(player, "kills", kills);
-
-        if (leadingKills > kills) return;
-        if (leadingKills < kills) {
-            leadingPlayers.clear();
-        }
-
-        leadingPlayers.add(player.getName());
-        getScoreboard().updateScores(player);
+        // TODO Remove
     }
 
     @Override
@@ -88,8 +71,6 @@ public abstract class SimpleBattle implements Battle {
         getPlayers().add(player.getName());
         getScoreboard().addPlayer(player);
         
-        Metadata.set(player, "kills", 0);
-        Metadata.set(player, "deaths", 0);
         api.getSpectatorManager().addTarget(player);
         
         if (!arena.getTexturePack().isEmpty()) {
@@ -119,16 +100,14 @@ public abstract class SimpleBattle implements Battle {
 
     @Override
     public double getKDR(Player player) {
-        int kills = getKills(player);
-        int deaths = getDeaths(player);
-
-        if (deaths == 0) deaths = 1;
-        return kills / deaths;
+        // TODO Remove
+        return 0;
     }
 
     @Override
     public int getKills(Player player) {
-        return Metadata.getInt(player, "kills");
+        // TODO Remove
+        return 0;
     }
 
     @Override
@@ -189,8 +168,6 @@ public abstract class SimpleBattle implements Battle {
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
         getScoreboard().removePlayer(player);
-        Metadata.remove(player, "kills");
-        Metadata.remove(player, "deaths");
         api.getSpectatorManager().removeTarget(player);
 
         if (shouldEnd()) {
@@ -276,9 +253,6 @@ public abstract class SimpleBattle implements Battle {
             api.getSpectatorManager().removeTarget(player);
             
             getScoreboard().removePlayer(player);
-            
-            Metadata.remove(player, "kills");
-            Metadata.remove(player, "deaths");
             
             ((SimpleLobby) api.getLobby()).addPlayerFromBattle(player);
             
