@@ -276,13 +276,11 @@ public abstract class SimpleBattle implements Battle {
             api.getSpectatorManager().removeTarget(player);
             
             getScoreboard().removePlayer(player);
-            api.getLobby().getScoreboard().addPlayer(player);
             
             Metadata.remove(player, "kills");
             Metadata.remove(player, "deaths");
             
-            SafeTeleporter.tp(player, api.getArenaManager().getLounge());
-            PlayerData.reset(player);
+            ((SimpleLobby) api.getLobby()).addPlayerFromBattle(player);
             
             pIt.remove();
         }

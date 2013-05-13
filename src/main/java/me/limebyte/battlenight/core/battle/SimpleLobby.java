@@ -102,6 +102,38 @@ public class SimpleLobby implements Lobby {
     public Set<String> getPlayers() {
         return new HashSet<String>(players);
     }
+    
+    protected void addPlayerFromBattle(Player player) {
+        Messenger messenger = api.getMessenger();
+        
+        if (players.contains(player.getName())) {
+            messenger.tell(player, Message.ALREADY_IN_LOBBY);
+            return;
+        }
+        
+        ArenaManager arenas = api.getArenaManager();
+        if (!arenas.getLounge().isSet()) {
+            messenger.tell(player, Message.WAYPOINTS_UNSET);
+            return;
+        }
+
+        if (arena == null) {
+            if (arenas.getReadyArenas(1).isEmpty()) {
+                messenger.tell(player, Message.NO_ARENAS);
+                return;
+            }
+            arena = arenas.getRandomArena(1);
+        }
+        
+        players.add(player.getName());
+        
+        PlayerData.reset(player);
+        SafeTeleporter.tp(player, arenas.getLounge());
+        scoreboard.addPlayer(player);
+        
+        messenger.tell(player, Message.JOINED_LOBBY, arena);
+        messenger.tellBattleExcept(player, Message.PLAYER_JOINED_LOBBY, player);
+    }
 
     @Override
     public void startBattle() {
