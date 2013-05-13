@@ -65,16 +65,17 @@ public class SimpleMessenger implements Messenger {
     public String getColouredName(Player player) {
         String name = player.getName();
         Battle battle = api.getBattleManager().getBattle();
-
-        if (battle.containsPlayer(player)) {
-            ChatColor teamColour = ChatColor.WHITE;
+        ChatColor colour = ChatColor.WHITE;
+        
+        if (battle != null && battle.containsPlayer(player)) {
             if (battle instanceof SimpleTeamedBattle) {
-                teamColour = ((SimpleTeamedBattle) battle).getTeam(player).getColour();
+                colour = ((SimpleTeamedBattle) battle).getTeam(player).getColour();
             }
-            return teamColour + name;
-        } else {
-            return ChatColor.DARK_GRAY + name;
+        } else if (!api.getLobby().getPlayers().contains(player.getName())){
+            colour = ChatColor.DARK_GRAY;
         }
+        
+        return colour + name;
     }
 
     @Override
