@@ -99,8 +99,6 @@ public class SimpleMessenger implements Messenger {
         }
     }
 
-    /** Sounds **/
-
     @Override
     public void playSound(Sound sound, float pitch) {
         for (String name : api.getBattleManager().getBattle().getPlayers()) {
@@ -117,8 +115,6 @@ public class SimpleMessenger implements Messenger {
             }
         }
     }
-
-    /** Messages **/
 
     @Override
     public void tell(CommandSender sender, Message message) {
@@ -147,17 +143,17 @@ public class SimpleMessenger implements Messenger {
     }
 
     @Override
-    public void tellEveryone(Message message) {
-        tellEveryone(message.getMessage());
+    public void tellBattle(Message message) {
+        tellBattle(message.getMessage());
     }
 
     @Override
-    public void tellEveryone(Message message, Object... args) {
-        tellEveryone(format(message, args));
+    public void tellBattle(Message message, Object... args) {
+        tellBattle(format(message, args));
     }
 
     @Override
-    public void tellEveryone(Page page) {
+    public void tellBattle(Page page) {
         for (String name : api.getBattleManager().getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
@@ -174,7 +170,7 @@ public class SimpleMessenger implements Messenger {
     }
 
     @Override
-    public void tellEveryone(String message) {
+    public void tellBattle(String message) {
         for (String name : api.getBattleManager().getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
@@ -191,22 +187,22 @@ public class SimpleMessenger implements Messenger {
     }
 
     @Override
-    public void tellEveryone(String message, Object... args) {
-        tellEveryone(format(message, args));
+    public void tellBattle(String message, Object... args) {
+        tellBattle(format(message, args));
     }
 
     @Override
-    public void tellEveryoneExcept(Player player, Message message) {
-        tellEveryoneExcept(player, message.getMessage());
+    public void tellBattleExcept(Player player, Message message) {
+        tellBattleExcept(player, message.getMessage());
     }
 
     @Override
-    public void tellEveryoneExcept(Player player, Message message, Object... args) {
-        tellEveryoneExcept(player, message.getMessage(), args);
+    public void tellBattleExcept(Player player, Message message, Object... args) {
+        tellBattleExcept(player, message.getMessage(), args);
     }
 
     @Override
-    public void tellEveryoneExcept(Player player, Page page) {
+    public void tellBattleExcept(Player player, Page page) {
         for (String name : api.getBattleManager().getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) {
@@ -223,7 +219,7 @@ public class SimpleMessenger implements Messenger {
     }
 
     @Override
-    public void tellEveryoneExcept(Player player, String message) {
+    public void tellBattleExcept(Player player, String message) {
         for (String name : api.getBattleManager().getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) {
@@ -240,8 +236,8 @@ public class SimpleMessenger implements Messenger {
     }
 
     @Override
-    public void tellEveryoneExcept(Player player, String message, Object... args) {
-        tellEveryoneExcept(player, format(message, args));
+    public void tellBattleExcept(Player player, String message, Object... args) {
+        tellBattleExcept(player, format(message, args));
 
     }
 
@@ -283,7 +279,7 @@ public class SimpleMessenger implements Messenger {
         else if (obj instanceof SimpleTeam)
             return ((SimpleTeam) obj).getColour() + ((SimpleTeam) obj).getDisplayName();
         else if (obj instanceof List<?>)
-            return ((List<?>) obj).toString().replaceAll("\\[|\\]", "").replaceAll("[,]([^,]*)$", " and$1");
+            return ((List<?>) obj).toString().replaceAll("[,]([^,]*)$", " and $1").replaceAll("\\[|\\]", "");
         else if (obj instanceof SimpleArena) return ((SimpleArena) obj).getDisplayName();
         return obj.toString();
     }
@@ -296,6 +292,41 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void log(Level level, String message, Object... args) {
         log(level, format(message, args));
+    }
+
+    @Override
+    public void tellLobby(Message message) {
+        tellLobby(message.getMessage());
+    }
+
+    @Override
+    public void tellLobby(Message message, Object... args) {
+        tellLobby(format(message, args));
+    }
+
+    @Override
+    public void tellLobby(Page page) {
+        for (String name : api.getLobby().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null) {
+                tell(p, page);
+            }
+        }
+    }
+
+    @Override
+    public void tellLobby(String message) {
+        for (String name : api.getLobby().getPlayers()) {
+            Player p = Bukkit.getPlayerExact(name);
+            if (p != null) {
+                tell(p, message);
+            }
+        }
+    }
+
+    @Override
+    public void tellLobby(String message, Object... args) {
+        tellLobby(format(message, args));
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.util.Message;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.Metadata;
@@ -36,10 +37,11 @@ public class InteractListener extends APIRelatedListener {
 
             if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
                 if (lobby.getPlayers().contains(player.getName())) {
+                    Messenger messenger = getAPI().getMessenger();
                     if (getAPI().getPlayerClass(player) != null) {
                         if (!Metadata.getBoolean(player, "ready")) {
                             Metadata.set(player, "ready", true);
-                            getAPI().getMessenger().tellEveryone(Message.PLAYER_IS_READY, player);
+                            messenger.tellLobby(Message.PLAYER_IS_READY, player);
                         }
 
                         if (lobby.getPlayers().size() < 2) return;
@@ -52,12 +54,16 @@ public class InteractListener extends APIRelatedListener {
                         }
                         
                         if (waiting.isEmpty()) {
-                            lobby.startBattle();
+                            try {
+                                lobby.startBattle();
+                            } catch (IllegalStateException e) {
+                                messenger.tellLobby(e.getMessage());
+                            }
                         } else {
-                            // TODO Tell lobby who we are waiting for
+                            messenger.tellLobby(Message.WAITING_FOR_PLAYERS, waiting);
                         }
                     } else {
-                        getAPI().getMessenger().tell(player, Message.NO_CLASS);
+                        messenger.tell(player, Message.NO_CLASS);
                     }
                 }
             }

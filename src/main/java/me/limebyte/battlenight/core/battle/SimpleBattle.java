@@ -249,7 +249,7 @@ public abstract class SimpleBattle implements Battle {
         timer.start();
         inProgress = true;
 
-        messenger.tellEveryone(Message.BATTLE_STARTED);
+        messenger.tellBattle(Message.BATTLE_STARTED);
 
         SignListener.cleanSigns();
         return true;
@@ -262,7 +262,7 @@ public abstract class SimpleBattle implements Battle {
         }
 
         if (inProgress) {
-            api.getMessenger().tellEveryone(getWinMessage());
+            api.getMessenger().tellBattle(getWinMessage());
         }
 
         Iterator<String> pIt = getPlayers().iterator();
@@ -326,7 +326,7 @@ public abstract class SimpleBattle implements Battle {
 
             String winMessage = getWinMessage();
             messenger.tell(player, winMessage);
-            messenger.tellEveryone(winMessage);
+            messenger.tellBattle(winMessage);
 
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
                 @Override
@@ -336,7 +336,7 @@ public abstract class SimpleBattle implements Battle {
             }, 1L);
         } else {
             loc = api.getSpectatorManager().addSpectator(player, false);
-            messenger.tellEveryone(player.getDisplayName() + " is now a spectator.");
+            messenger.tellBattle(player.getDisplayName() + " is now a spectator.");
         }
         return loc;
     }

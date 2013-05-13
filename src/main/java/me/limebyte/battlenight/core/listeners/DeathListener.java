@@ -76,7 +76,7 @@ public class DeathListener extends APIRelatedListener {
             deathMessage = deathMessage.replaceAll(killer.getDisplayName(), messenger.getColouredName(killer) + ChatColor.GRAY);
         }
 
-        messenger.tellEveryone(deathMessage);
+        messenger.tellBattle(deathMessage);
     }
 
 }

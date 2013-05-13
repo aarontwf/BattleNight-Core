@@ -45,10 +45,10 @@ public class KickCommand extends BattleNightCommand {
 
                 if (reason != null) {
                     messenger.tell(player, Message.REASONED_KICK, reason);
-                    messenger.tellEveryoneExcept(player, Message.PLAYER_REASONED_KICKED, player, reason);
+                    messenger.tellBattleExcept(player, Message.PLAYER_REASONED_KICKED, player, reason);
                 } else {
                     messenger.tell(player, Message.KICKED);
-                    messenger.tellEveryoneExcept(player, Message.PLAYER_KICKED, player);
+                    messenger.tellBattleExcept(player, Message.PLAYER_KICKED, player);
                 }
 
                 return true;

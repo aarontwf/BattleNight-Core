@@ -75,7 +75,7 @@ public class SimpleLobby implements Lobby {
         scoreboard.addPlayer(player);
         
         messenger.tell(player, Message.JOINED_LOBBY, arena);
-        messenger.tellEveryoneExcept(player, Message.PLAYER_JOINED_LOBBY, player);
+        messenger.tellBattleExcept(player, Message.PLAYER_JOINED_LOBBY, player);
         
     }
 

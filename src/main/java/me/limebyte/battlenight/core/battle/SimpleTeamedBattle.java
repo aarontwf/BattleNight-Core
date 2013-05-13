@@ -53,7 +53,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             Messenger messenger = api.getMessenger();
             Team team = getTeam(player);
             messenger.tell(player, Message.JOINED_TEAM, team);
-            messenger.tellEveryoneExcept(player, Message.PLAYER_JOINED_TEAM, player, team);
+            messenger.tellBattleExcept(player, Message.PLAYER_JOINED_TEAM, player, team);
         }
         return worked;
     }
