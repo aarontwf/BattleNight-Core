@@ -103,6 +103,11 @@ public class SimpleLobby implements Lobby {
         return new HashSet<String>(players);
     }
     
+    @Override
+    public boolean contains(Player player) {
+        return players.contains(player.getName());
+    }
+    
     protected void addPlayerFromBattle(Player player) {
         Messenger messenger = api.getMessenger();
         

@@ -47,14 +47,13 @@ public class DeathListener extends APIRelatedListener {
             boolean suicide = true;
             
             if (killer != null && killer != player) {
-                stats.addKill(false);
+                PlayerStats.get(killer.getName()).addKill(false);
                 battle.addKill(killer);
                 suicide = false;
             }
             
             stats.addDeath(suicide);
-            
-            // Update leading
+
             updateLeaders((SimpleBattle) battle, stats);
             
             // Old Stuff

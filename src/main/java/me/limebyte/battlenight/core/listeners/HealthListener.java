@@ -38,7 +38,7 @@ public class HealthListener extends APIRelatedListener {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             Battle battle = api.getBattleManager().getBattle();
 
-            if (!battle.containsPlayer(player)) return;
+            if (!api.getLobby().contains(player) && !battle.containsPlayer(player)) return;
             subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));
         }
     }
@@ -74,8 +74,9 @@ public class HealthListener extends APIRelatedListener {
 
         if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName())) return false;
 
+        if (getAPI().getLobby().contains(damaged)) return false;
+        
         if (battle.containsPlayer(damager)) {
-            if (!battle.isInProgress()) return false;
             if (damager == damaged) return true;
 
             if (battle instanceof SimpleTeamedBattle) {
