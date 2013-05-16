@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Team;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Page;
@@ -69,12 +70,13 @@ public class SimpleMessenger implements Messenger {
         
         if (battle != null && battle.containsPlayer(player)) {
             if (battle instanceof SimpleTeamedBattle) {
-                colour = ((SimpleTeamedBattle) battle).getTeam(player).getColour();
+                Team team = ((SimpleTeamedBattle) battle).getTeam(player);
+                if (team != null) colour = team.getColour();
             }
         } else if (!api.getLobby().getPlayers().contains(player.getName())){
             colour = ChatColor.DARK_GRAY;
         }
-        
+
         return colour + name;
     }
 
