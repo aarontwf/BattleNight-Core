@@ -44,6 +44,8 @@ public class InteractListener extends APIRelatedListener {
                             messenger.tellLobby(Message.PLAYER_IS_READY, player);
                         }
                         
+                        if (lobby.isStarting()) return;
+                        
                         Set<String> waiting = new HashSet<String>(lobby.getPlayers());
                         Iterator<String> it = waiting.iterator();
                         while(it.hasNext()) {

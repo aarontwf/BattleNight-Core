@@ -12,6 +12,7 @@ import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
+import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
@@ -19,13 +20,17 @@ import me.limebyte.battlenight.core.util.SimpleScorePane;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class SimpleLobby implements Lobby {
 
+    private static final int COUNTDOWN = 5;
+    
     private BattleNightAPI api;
     private Set<String> players;
     private Arena arena;
     private SimpleScorePane scoreboard;
+    private boolean starting = false;
     
     public SimpleLobby(BattleNightAPI api) {
         this.api = api;
@@ -75,7 +80,7 @@ public class SimpleLobby implements Lobby {
         scoreboard.addPlayer(player);
         
         messenger.tell(player, Message.JOINED_LOBBY, arena);
-        messenger.tellBattleExcept(player, Message.PLAYER_JOINED_LOBBY, player);
+        messenger.tellLobby(Message.PLAYER_JOINED_LOBBY, player);
         
     }
 
@@ -137,7 +142,7 @@ public class SimpleLobby implements Lobby {
         scoreboard.addPlayer(player);
         
         messenger.tell(player, Message.JOINED_LOBBY, arena);
-        messenger.tellBattleExcept(player, Message.PLAYER_JOINED_LOBBY, player);
+        messenger.tellLobby(Message.PLAYER_JOINED_LOBBY, player);
     }
 
     @Override
@@ -147,7 +152,32 @@ public class SimpleLobby implements Lobby {
         
         if (battle.isInProgress()) throw new IllegalStateException("Battle in progress!");
         if (players.size() < battle.getMinPlayers()) throw new IllegalStateException("Not enough players!");
+        
+        starting = true;
         battle.setArena(arena);
+        startCountdown();
+    }
+    
+    private void startCountdown() {
+        new BukkitRunnable() {
+            int count = COUNTDOWN;
+            Messenger messenger = api.getMessenger();
+            
+            @Override
+            public void run() {
+                count--;
+                if (count <= 0) {
+                    this.cancel();
+                    start();
+                }
+                messenger.tellLobby(Message.LOBBY_COUNTDOWN, count);
+            }
+        }.runTaskTimer(BattleNight.instance, 0, 20);
+    }
+    
+    private void start() {
+        BattleManager manager = api.getBattleManager();
+        Battle battle = manager.getBattle();
         
         for (String name : players) {
             Player player = Bukkit.getPlayerExact(name);
@@ -160,6 +190,13 @@ public class SimpleLobby implements Lobby {
         battle.start();
         
         players.clear();
+        
+        starting = false;
+    }
+    
+    @Override
+    public boolean isStarting() {
+        return starting;
     }
 
     @Override
