@@ -177,15 +177,13 @@ public abstract class SimpleBattle implements Battle {
     }
 
     @Override
-    public Location respawn(Player player) {
-        if (!containsPlayer(player)) return null;
+    public void respawn(Player player) {
+        if (!containsPlayer(player)) return;
+
         api.getMessenger().debug(Level.INFO, "Respawning " + player.getName() + "...");
         PlayerData.reset(player);
-
-        Location loc = getArena().getRandomSpawnPoint().getLocation();
         api.getPlayerClass(player).equip(player);
-        SafeTeleporter.tp(player, loc);
-        return loc.add(0, 0.5, 0);
+        SafeTeleporter.tp(player, getArena().getRandomSpawnPoint());
     }
 
     @Override

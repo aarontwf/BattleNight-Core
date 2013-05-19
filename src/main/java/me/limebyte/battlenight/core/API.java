@@ -48,7 +48,7 @@ public class API implements BattleNightAPI {
         spectatorManager = new CoreSpectatorManager(this);
 
         lobby = new SimpleLobby(this);
-        
+
         PlayerData.api = this;
     }
 

@@ -7,21 +7,18 @@ import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.battle.SimpleBattle;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
 
-@SerializableAs("PlayerStats")
-public class PlayerStats implements ConfigurationSerializable {
+public class PlayerStats {
 
     private static Map<String, PlayerStats> players = new HashMap<String, PlayerStats>();
-    
+
     private String name;
-    
+
     private int kills;
     private int assists;
     private int killStreak;
     private int deaths;
-    
+
     private int score;
 
     public PlayerStats(String name) {
@@ -32,7 +29,7 @@ public class PlayerStats implements ConfigurationSerializable {
         this.deaths = 0;
         this.score = 0;
     }
-    
+
     public static PlayerStats get(String name) {
         synchronized(PlayerStats.class) {
             if (players.get(name) == null) {
@@ -41,10 +38,8 @@ public class PlayerStats implements ConfigurationSerializable {
             return players.get(name);
         }
     }
-    
+
     public void addKill(boolean assist) {
-        killStreak++;
-        
         if (assist) {
             assists++;
             score += 5;
@@ -52,37 +47,41 @@ public class PlayerStats implements ConfigurationSerializable {
             kills++;
             score += 10 + killStreak;
         }
-        
+        killStreak++;
+
         SimpleBattle battle = (SimpleBattle) BattleNight.instance.getAPI().getBattleManager().getBattle();
         battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name));
     }
-    
+
     public void addDeath(boolean suicide) {
         killStreak = 0;
         deaths++;
         if (suicide) score -= 5;
+        
+        SimpleBattle battle = (SimpleBattle) BattleNight.instance.getAPI().getBattleManager().getBattle();
+        battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name));
     }
-    
+
     public int getKills() {
         return kills;
     }
-    
+
     public int getAssists() {
         return assists;
     }
-    
+
     public int getKillStreak() {
         return killStreak;
     }
-    
+
     public int getDeaths() {
         return deaths;
     }
-    
+
     public int getScore() {
         return score;
     }
-    
+
     public void reset() {
         this.kills = 0;
         this.assists = 0;
@@ -90,11 +89,5 @@ public class PlayerStats implements ConfigurationSerializable {
         this.deaths = 0;
         this.score = 0;
     }
-    
-    @Override
-    public Map<String, Object> serialize() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
+
 }
