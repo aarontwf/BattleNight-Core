@@ -125,9 +125,6 @@ public class CoreClassManager implements ClassManager {
             String name = config.getString(path + ".name");
             String lore = config.getString(path + ".lore");
             
-            api.getMessenger().log(Level.INFO, "Path is: " + path);
-            api.getMessenger().log(Level.INFO, "Slot is: " + slot);
-            
             int slotId;
             Material mat;
             Map<Enchantment, Integer> encs = new HashMap<Enchantment, Integer>();
@@ -140,7 +137,6 @@ public class CoreClassManager implements ClassManager {
             }
             
             if (slotId < 0 || slotId > INV_SIZE - 1) return;
-            api.getMessenger().log(Level.INFO, "In range");
             if (type == null) return;
             api.getMessenger().log(Level.INFO, "Type is:" + type);
             mat = getMaterial(type);
