@@ -214,8 +214,8 @@ public class CoreClassManager implements ClassManager {
                     type = PotionEffectType.getById(Integer.parseInt(effLvl[0]));
                     if (type == null) continue;
                 }
-                int level = 1;
-                if (effLvl.length > 1) level = Integer.parseInt(effLvl[1]);
+                int level = 0;
+                if (effLvl.length > 1) level = Integer.parseInt(effLvl[1]) - 1;
                 parsedEffects.add(new PotionEffect(type, Integer.MAX_VALUE, level, true));
             }
         }
@@ -275,8 +275,8 @@ public class CoreClassManager implements ClassManager {
         String effectList = "";
         for (PotionEffect effect : effects) {
             effectList += ", " + effect.getType().getName().toLowerCase();
-            int level = effect.getAmplifier();
-            if (level > 1) effectList += "~" + level;
+            int level = effect.getAmplifier() + 1;
+            effectList += "~" + level;
         }
         config.set(path, effectList.substring(2));
     }
