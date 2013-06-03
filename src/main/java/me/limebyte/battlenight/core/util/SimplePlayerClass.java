@@ -47,13 +47,14 @@ public class SimplePlayerClass implements PlayerClass {
 
         // Set it
         Metadata.set(player, "class", name);
-
+        
         // Main Inventory
         for (int i = 0; i < items.size(); i++) {
             if (i > LAST_INV_SLOT) {
                 break;
             }
             inv.setItem(i, items.get(i));
+            player.sendMessage("Gave " + items.get(i).getType().toString());
         }
 
         // Armour
