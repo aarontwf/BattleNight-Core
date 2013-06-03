@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.util.PlayerClass;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.SimplePlayerClass;
@@ -90,10 +89,6 @@ public class CoreClassManager implements ClassManager {
         for (String slot : slots) {
             parseItem(config, path, items, slot);
         }
-
-        for (ItemStack stack : items) {
-            BattleNight.instance.getLogger().log(Level.INFO, "Loaded " + stack.getType());
-        }
         
         return items;
     }
@@ -110,12 +105,13 @@ public class CoreClassManager implements ClassManager {
         Set<String> slots = section.getKeys(false);
         
         for (String slot : slots) {
-            if (slot.equalsIgnoreCase("helmet")) slot = "slot0";
-            if (slot.equalsIgnoreCase("chestplate")) slot = "slot1";
-            if (slot.equalsIgnoreCase("leggings")) slot = "slot2";
-            if (slot.equalsIgnoreCase("boots")) slot = "slot3";
+            String newSlot = slot;
+            if (slot.equalsIgnoreCase("helmet")) newSlot = "slot0";
+            if (slot.equalsIgnoreCase("chestplate")) newSlot = "slot1";
+            if (slot.equalsIgnoreCase("leggings")) newSlot = "slot2";
+            if (slot.equalsIgnoreCase("boots")) newSlot = "slot3";
             
-            parseItem(config, path + "." + slot, armour, slot);
+            parseItem(config, path + "." + newSlot, armour, slot);
         }
 
         return armour;
@@ -146,7 +142,7 @@ public class CoreClassManager implements ClassManager {
             if (slotId < 0 || slotId > INV_SIZE - 1) return;
             api.getMessenger().log(Level.INFO, "In range");
             if (type == null) return;
-            api.getMessenger().log(Level.INFO, "Type not null");
+            api.getMessenger().log(Level.INFO, "Type is:" + type);
             mat = Material.getMaterial(type.toUpperCase());
             if (mat == null) return;
             
