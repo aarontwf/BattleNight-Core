@@ -87,7 +87,7 @@ public class CoreClassManager implements ClassManager {
         Set<String> slots = section.getKeys(false);
         
         for (String slot : slots) {
-            parseItem(config, path, items, slot);
+            parseItem(config, path + "." + slot, items, slot);
         }
         
         return items;
@@ -111,7 +111,7 @@ public class CoreClassManager implements ClassManager {
             if (slot.equalsIgnoreCase("leggings")) newSlot = "slot2";
             if (slot.equalsIgnoreCase("boots")) newSlot = "slot3";
             
-            parseItem(config, path + "." + newSlot, armour, slot);
+            parseItem(config, path + "." + newSlot, armour, newSlot);
         }
 
         return armour;
