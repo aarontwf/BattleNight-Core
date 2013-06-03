@@ -144,6 +144,8 @@ public class CoreClassManager implements ClassManager {
             mat = Material.getMaterial(type.toUpperCase());
             if (mat == null) return;
             
+            api.getMessenger().log(Level.INFO, "Strange: " + mat.toString());
+            
             items.get(slotId).setType(mat);
             items.get(slotId).setAmount(amount);
             items.get(slotId).setDurability(data);
