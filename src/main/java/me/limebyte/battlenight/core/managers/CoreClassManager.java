@@ -129,6 +129,9 @@ public class CoreClassManager implements ClassManager {
             String name = config.getString(path + ".name");
             String lore = config.getString(path + ".lore");
             
+            api.getMessenger().log(Level.INFO, "Path is: " + path);
+            api.getMessenger().log(Level.INFO, "Slot is: " + slot);
+            
             int slotId;
             Material mat;
             Map<Enchantment, Integer> encs = new HashMap<Enchantment, Integer>();
