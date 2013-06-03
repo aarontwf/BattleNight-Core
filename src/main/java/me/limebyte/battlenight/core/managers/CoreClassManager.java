@@ -137,6 +137,7 @@ public class CoreClassManager implements ClassManager {
             } catch(NumberFormatException ex) {
                 return;
             }
+            api.getMessenger().log(Level.INFO, "Slot ID: " + slotId);
             if (slotId < 0 || slotId > INV_SIZE - 1) return;
             
             if (type == null) return;
