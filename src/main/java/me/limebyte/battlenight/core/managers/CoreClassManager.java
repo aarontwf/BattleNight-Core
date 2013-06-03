@@ -111,7 +111,7 @@ public class CoreClassManager implements ClassManager {
             if (slot.equalsIgnoreCase("leggings")) newSlot = "slot2";
             if (slot.equalsIgnoreCase("boots")) newSlot = "slot3";
             
-            parseItem(config, path + "." + newSlot, armour, newSlot);
+            parseItem(config, path + "." + slot, armour, newSlot);
         }
 
         return armour;
