@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.util.PlayerClass;
+import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.SimplePlayerClass;
@@ -89,6 +90,10 @@ public class CoreClassManager implements ClassManager {
             parseItem(section, items, slot);
         }
 
+        for (ItemStack stack : items) {
+            BattleNight.instance.getLogger().log(Level.INFO, "Loaded " + stack.getType());
+        }
+        
         return items;
     }
     
