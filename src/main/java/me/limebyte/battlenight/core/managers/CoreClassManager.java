@@ -143,7 +143,7 @@ public class CoreClassManager implements ClassManager {
             api.getMessenger().log(Level.INFO, "In range");
             if (type == null) return;
             api.getMessenger().log(Level.INFO, "Type is:" + type);
-            mat = Material.getMaterial(type.toUpperCase());
+            mat = getMaterial(type);
             if (mat == null) return;
             
             api.getMessenger().log(Level.INFO, "Got: " + mat.toString());
@@ -290,4 +290,18 @@ public class CoreClassManager implements ClassManager {
         loadClasses();
         saveClasses();
     }
+
+    private Material getMaterial(String mat) {
+        Material material = Material.AIR;
+        try {
+            int id = Integer.parseInt(mat);
+            Material byID = Material.getMaterial(id);
+            if (byID != null) material = byID;
+        } catch(NumberFormatException ex) {
+            Material byName = Material.getMaterial(mat);
+            if (byName != null) material = byName;
+        }
+        return material;
+    }
+
 }
