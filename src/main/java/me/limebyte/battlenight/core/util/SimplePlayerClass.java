@@ -49,7 +49,7 @@ public class SimplePlayerClass implements PlayerClass {
         Metadata.set(player, "class", name);
         
         // Main Inventory
-        inv.setContents((ItemStack[]) items.toArray());
+        inv.setContents(items.toArray(new ItemStack[items.size()]));
 
         // Armour
         inv.setHelmet(armour.get(0));
