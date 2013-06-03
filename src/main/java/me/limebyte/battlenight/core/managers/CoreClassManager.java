@@ -17,6 +17,7 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.SimplePlayerClass;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -82,8 +83,9 @@ public class CoreClassManager implements ClassManager {
             items.add(new ItemStack(Material.AIR, 1));
         }
         
-        if (!config.contains(path)) return items;
-        Set<String> slots = config.getConfigurationSection(path).getKeys(false);
+        ConfigurationSection section = config.getConfigurationSection(path);
+        if (section == null) return items;
+        Set<String> slots = section.getKeys(false);
         
         for (String slot : slots) {
             parseItem(config, path, items, slot);
@@ -103,8 +105,9 @@ public class CoreClassManager implements ClassManager {
             armour.add(new ItemStack(Material.AIR, 1));
         }
         
-        if (path == null) return armour;
-        Set<String> slots = config.getConfigurationSection(path).getKeys(false);
+        ConfigurationSection section = config.getConfigurationSection(path);
+        if (section == null) return armour;
+        Set<String> slots = section.getKeys(false);
         
         for (String slot : slots) {
             if (slot.equalsIgnoreCase("helmet")) slot = "slot0";
