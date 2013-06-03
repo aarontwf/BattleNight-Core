@@ -1,28 +1,149 @@
 # BattleNight Version: ${project.version}
 # Classes Configuration File
 
-Classes:
+classes:
     Scout:
-        Armour: none, none, none, 309e(2~4)
-        Items: 268e(19~2), 373:8262, none, none, none, none, none, none, 373:8226x3
+        items: 
+            slot0:
+                type: wood_sword
+                enchantments: 19~2
+            slot1:
+                type: potion
+                data: 8262
+        armour:
+            boots:
+                type: iron_boots
+                enchantments: 2~4
+        effects: speed~2, jump
     Pyro:
-        Armour: 298e(1~4), 299e(1~4), 300e(1~4), 301e(1~4)
-        Items: 268e(20~2), 259, none, 46x2, none, none, none, none, 373:8195
+        items: 
+            slot0:
+                type: wood_sword
+                enchantments: 20~2
+            slot1:
+                type: flint_and_steel
+            slot3:
+                type: tnt
+                amount: 2
+        armour:
+            helmet:
+                type: leather_helmet
+                enchantments: 1~4
+            chestplate:
+                type: leather_chestplate
+                enchantments: 1~4
+            leggings:
+                type: leather_leggings
+                enchantments: 1~4
+            boots:
+                type: leather_boots
+                enchantments: 1~4
+        effects: fire_resistance
     Tank:
-        Armour: 310e(3~3), 311e(3~3), 312e(3~3), 313e(3~3)
-        Items: '268'
+        items:
+            slot0:
+                type: wood_sword
+        armour:
+            helmet:
+                type: diamond_helmet
+                enchantments: 3~3
+            chestplate:
+                type: diamond_chestplate
+                enchantments: 3~3
+            leggings:
+                type: diamond_leggings
+                enchantments: 3~3
+            boots:
+                type: diamond_boots
+                enchantments: 3~3
+        effects: slow
     Swordsman:
-        Armour: none, none, none, none
-        Items: 276e(16~1)
+        items:
+            slot0:
+                type: diamond_sword
+                enchantments: 16~1
     Archer:
-        Armour: 302e(4~2), 303e(4~2), 304e(4~2), 305e(4~2)
-        Items: 261e(49~1), 368x4, none, none, none, none, none, none, 262x64
+        items:
+            slot0:
+                type: bow
+                enchantments: 49~1
+            slot1:
+                type: ender_pearl
+                amount: 4
+            slot8:
+                type: arrow
+                amount: 64
+        armour:
+            helmet:
+                type: chainmail_helmet
+                enchantments: 4~2
+            chestplate:
+                type: chainmail_chestplate
+                enchantments: 4~2
+            leggings:
+                type: chainmail_leggings
+                enchantments: 4~2
+            boots:
+                type: chainmail_boots
+                enchantments: 4~2
     Medic:
-        Armour: 298e(0~2), none, none, none
-        Items: 283e(19~2), 322x4, none, none, none, none, 373:16389, 373:16389, 373:16385
+        items:
+            slot0:
+                type: 283
+                enchantments: 19~2
+            slot1:
+                type: 322
+                amount: 4
+            slot7:
+                type: potion
+                data: 16389
+                amount: 2
+            slot8:
+                type: potion
+                data: 16385
+        armour:
+            helmet:
+                type: leather_helmet
+                enchantments: 0~2
     Magician:
-        Armour: 306, 307, 308, 309e(2~4)
-        Items: 272, 368x16, none, none, none, 373:16386, 373:16396x3, 373:16388, 373:16458
+        items:
+            slot0:
+                type: 272
+            slot1:
+                type: 368
+                amount: 16
+            slot5:
+                type: potion
+                data: 16386
+            slot6:
+                type: potion
+                data: 16396
+                amount: 3
+            slot7:
+                type: potion
+                data: 16388
+            slot8:
+                type: potion
+                data: 16458
+        armour:
+            helmet:
+                type: iron_helmet
+            chestplate:
+                type: iron_chestplate
+            leggings:
+                type: iron_leggings
+            boots:
+                type: iron_boots
+                enchantments: 2~4
     Spy:
-        Armour: 306e(5~3), none, none, none
-        Items: 267, none, none, none, none, none, none, 373:8258, 373:8206
+        items:
+            slot0:
+                type: iron_sword
+            slot1:
+                type: potion
+                data: 8206
+        armour:
+            helmet:
+                type: iron_helmet
+                enchantments: 5~3
+        effects: speed

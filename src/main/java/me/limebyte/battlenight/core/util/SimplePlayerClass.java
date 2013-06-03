@@ -15,19 +15,22 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.potion.PotionEffect;
 
 public class SimplePlayerClass implements PlayerClass {
     private String name;
     private Permission permission;
     private List<ItemStack> items, armour;
+    private List<PotionEffect> effects;
     private HashMap<String, Boolean> permissions;
 
     private static final int LAST_INV_SLOT = 35;
 
-    public SimplePlayerClass(String name, List<ItemStack> items, List<ItemStack> armour) {
+    public SimplePlayerClass(String name, List<ItemStack> items, List<ItemStack> armour, List<PotionEffect> effects) {
         this.name = name;
         this.items = items;
         this.armour = armour;
+        this.effects = effects;
         permissions = new HashMap<String, Boolean>();
 
         String perm = "battlenight.class." + name.toLowerCase();
@@ -59,6 +62,9 @@ public class SimplePlayerClass implements PlayerClass {
         inv.setLeggings(armour.get(2));
         inv.setBoots(armour.get(3));
 
+        // Effects
+        player.addPotionEffects(effects);
+        
         // Permissions
         PermissionAttachment perms = player.addAttachment(BattleNight.instance);
         for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
@@ -67,13 +73,18 @@ public class SimplePlayerClass implements PlayerClass {
     }
 
     @Override
+    public List<ItemStack> getItems() {
+        return items;
+    }
+
+    @Override
     public List<ItemStack> getArmour() {
         return armour;
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        return items;
+    public List<PotionEffect> getEffects() {
+        return effects;
     }
 
     @Override
