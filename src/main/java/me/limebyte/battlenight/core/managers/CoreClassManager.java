@@ -137,10 +137,11 @@ public class CoreClassManager implements ClassManager {
             } catch(NumberFormatException ex) {
                 return;
             }
-            api.getMessenger().log(Level.INFO, "Slot ID: " + slotId);
-            if (slotId < 0 || slotId > INV_SIZE - 1) return;
             
+            if (slotId < 0 || slotId > INV_SIZE - 1) return;
+            api.getMessenger().log(Level.INFO, "In range");
             if (type == null) return;
+            api.getMessenger().log(Level.INFO, "Type not null");
             mat = Material.getMaterial(type.toUpperCase());
             if (mat == null) return;
             
