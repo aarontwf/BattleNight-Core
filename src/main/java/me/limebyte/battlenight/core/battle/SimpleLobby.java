@@ -95,6 +95,7 @@ public class SimpleLobby implements Lobby {
         
         players.remove(player.getName());
         
+        scoreboard.removePlayer(player);
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
 
