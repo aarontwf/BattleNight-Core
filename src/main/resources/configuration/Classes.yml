@@ -3,7 +3,7 @@
 
 classes:
     Scout:
-        items: 
+        items:
             slot0:
                 type: wood_sword
                 enchantments: 19~2
@@ -16,7 +16,7 @@ classes:
                 enchantments: 2~4
         effects: speed~2, jump
     Pyro:
-        items: 
+        items:
             slot0:
                 type: wood_sword
                 enchantments: 20~2
@@ -89,10 +89,10 @@ classes:
     Medic:
         items:
             slot0:
-                type: 283
+                type: gold_sword
                 enchantments: 19~2
             slot1:
-                type: 322
+                type: golden_apple
                 amount: 4
             slot7:
                 type: potion
@@ -108,9 +108,9 @@ classes:
     Magician:
         items:
             slot0:
-                type: 272
+                type: stone_sword
             slot1:
-                type: 368
+                type: ender_pearl
                 amount: 16
             slot5:
                 type: potion

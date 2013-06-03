@@ -292,14 +292,13 @@ public class CoreClassManager implements ClassManager {
     }
 
     private Material getMaterial(String mat) {
-        Material material = Material.AIR;
-        try {
-            int id = Integer.parseInt(mat);
-            Material byID = Material.getMaterial(id);
-            if (byID != null) material = byID;
-        } catch(NumberFormatException ex) {
-            Material byName = Material.getMaterial(mat);
-            if (byName != null) material = byName;
+        Material material = Material.getMaterial(mat);
+        if (material == null) {
+            try {
+                int id = Integer.parseInt(mat);
+                material = Material.getMaterial(id);
+            } catch(Exception ex) {
+            }
         }
         return material;
     }

@@ -24,8 +24,6 @@ public class SimplePlayerClass implements PlayerClass {
     private List<PotionEffect> effects;
     private HashMap<String, Boolean> permissions;
 
-    private static final int LAST_INV_SLOT = 35;
-
     public SimplePlayerClass(String name, List<ItemStack> items, List<ItemStack> armour, List<PotionEffect> effects) {
         this.name = name;
         this.items = items;
@@ -58,7 +56,9 @@ public class SimplePlayerClass implements PlayerClass {
         inv.setBoots(armour.get(3));
 
         // Effects
-        player.addPotionEffects(effects);
+        for (PotionEffect effect : effects) {
+            player.addPotionEffect(effect, true);
+        }
         
         // Permissions
         PermissionAttachment perms = player.addAttachment(BattleNight.instance);
