@@ -17,7 +17,6 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.SimplePlayerClass;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -57,10 +56,10 @@ public class CoreClassManager implements ClassManager {
         ConfigManager.reload(configFile);
         FileConfiguration config = ConfigManager.get(configFile);
         for (String className : config.getConfigurationSection("classes").getKeys(false)) {
-            ConfigurationSection items = config.getConfigurationSection("classes." + className + ".items");
-            ConfigurationSection armour = config.getConfigurationSection("classes." + className + ".armour");
+            String items = "classes." + className + ".items";
+            String armour = "classes." + className + ".armour";
             String effects = config.getString("classes." + className + ".effects");
-            classes.add(new SimplePlayerClass(className, parseItems(items), parseArmour(armour), parseEffects(effects)));
+            classes.add(new SimplePlayerClass(className, parseItems(config, items), parseArmour(config, armour), parseEffects(effects)));
         }
     }
     
@@ -76,18 +75,18 @@ public class CoreClassManager implements ClassManager {
         ConfigManager.save(configFile);
     }
 
-    private List<ItemStack> parseItems(ConfigurationSection section) {
+    private List<ItemStack> parseItems(FileConfiguration config, String path) {
         List<ItemStack> items = new ArrayList<ItemStack>();
         
         for (int i = 0; i < INV_SIZE; i++) {
             items.add(new ItemStack(Material.AIR, 1));
         }
         
-        if (section == null) return items;
-        Set<String> slots = section.getKeys(false);
+        if (!config.contains(path)) return items;
+        Set<String> slots = config.getConfigurationSection(path).getKeys(false);
         
         for (String slot : slots) {
-            parseItem(section, items, slot);
+            parseItem(config, path, items, slot);
         }
 
         for (ItemStack stack : items) {
@@ -97,15 +96,15 @@ public class CoreClassManager implements ClassManager {
         return items;
     }
     
-    private List<ItemStack> parseArmour(ConfigurationSection section) {
+    private List<ItemStack> parseArmour(FileConfiguration config, String path) {
         List<ItemStack> armour = new ArrayList<ItemStack>();
         
         for (int i = 0; i < 4; i++) {
             armour.add(new ItemStack(Material.AIR, 1));
         }
         
-        if (section == null) return armour;
-        Set<String> slots = section.getKeys(false);
+        if (path == null) return armour;
+        Set<String> slots = config.getConfigurationSection(path).getKeys(false);
         
         for (String slot : slots) {
             if (slot.equalsIgnoreCase("helmet")) slot = "slot0";
@@ -113,19 +112,19 @@ public class CoreClassManager implements ClassManager {
             if (slot.equalsIgnoreCase("leggings")) slot = "slot2";
             if (slot.equalsIgnoreCase("boots")) slot = "slot3";
             
-            parseItem(section, armour, slot);
+            parseItem(config, path + "." + slot, armour, slot);
         }
 
         return armour;
     }
     
-    private void parseItem(ConfigurationSection section, List<ItemStack> items, String slot) {
-            String type = section.getString("type");
-            short data = (short) section.getInt("data");
-            int amount = section.getInt("amount", 1);
-            String enchantments = section.getString("enchantments");
-            String name = section.getString("name");
-            String lore = section.getString("lore");
+    private void parseItem(FileConfiguration config, String path, List<ItemStack> items, String slot) {
+            String type = config.getString(path + ".type");
+            short data = (short) config.getInt(path + ".data");
+            int amount = config.getInt(path + ".amount", 1);
+            String enchantments = config.getString(path + ".enchantments");
+            String name = config.getString(path + ".name");
+            String lore = config.getString(path + ".lore");
             
             int slotId;
             Material mat;
@@ -145,7 +144,7 @@ public class CoreClassManager implements ClassManager {
             mat = Material.getMaterial(type.toUpperCase());
             if (mat == null) return;
             
-            api.getMessenger().log(Level.INFO, "Strange: " + mat.toString());
+            api.getMessenger().log(Level.INFO, "Got: " + mat.toString());
             
             items.get(slotId).setType(mat);
             items.get(slotId).setAmount(amount);
