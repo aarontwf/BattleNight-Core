@@ -288,7 +288,7 @@ public class CoreClassManager implements ClassManager {
     }
 
     private Material getMaterial(String mat) {
-        Material material = Material.getMaterial(mat);
+        Material material = Material.getMaterial(mat.toUpperCase());
         if (material == null) {
             try {
                 int id = Integer.parseInt(mat);
