@@ -24,7 +24,7 @@ classes:
                 type: flint_and_steel
             slot3:
                 type: tnt
-                amount: 2
+                amount: 8
         armour:
             helmet:
                 type: leather_helmet
@@ -93,18 +93,19 @@ classes:
                 enchantments: 19~2
             slot1:
                 type: golden_apple
-                amount: 4
             slot7:
                 type: potion
                 data: 16389
-                amount: 2
+                amount: 8
             slot8:
                 type: potion
                 data: 16385
+                amount: 2
         armour:
             helmet:
                 type: leather_helmet
                 enchantments: 0~2
+                colour: 177, 93, 155
     Magician:
         items:
             slot0:
