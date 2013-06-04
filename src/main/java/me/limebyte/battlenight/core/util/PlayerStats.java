@@ -40,17 +40,21 @@ public class PlayerStats {
     }
 
     public void addKill(boolean assist) {
+        int streakBonus = killStreak * killStreak;
+        int killScore = 10 + streakBonus;
+
         if (assist) {
             assists++;
-            score += 5;
+            killScore = killScore / 2;
         } else {
             kills++;
-            score += 10 + killStreak ^ 2;
         }
+
+        score = score + killScore;
         killStreak++;
 
         SimpleBattle battle = (SimpleBattle) BattleNight.instance.getAPI().getBattleManager().getBattle();
-        battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name));
+        battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name), score);
     }
 
     public void addDeath(boolean suicide) {
@@ -59,7 +63,7 @@ public class PlayerStats {
         if (suicide) score -= 5;
 
         SimpleBattle battle = (SimpleBattle) BattleNight.instance.getAPI().getBattleManager().getBattle();
-        battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name));
+        battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name), score);
     }
 
     public int getKills() {

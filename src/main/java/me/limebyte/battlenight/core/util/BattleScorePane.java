@@ -10,17 +10,17 @@ public class BattleScorePane extends SimpleScorePane {
 
     private Battle battle;
     private boolean teamed = false;
-    
+
     private static final String TITLE_TIME = TITLE_PREFIX + "Battle (%1$TM:%1$TS)";
     private static final String TITLE_NO_TIME = TITLE_PREFIX + "Battle";
-    
+
     public BattleScorePane(Battle battle) {
         super();
-        
+
         this.battle = battle;
         teamed = battle instanceof TeamedBattle;
     }
-    
+
     public void addTeam(me.limebyte.battlenight.api.battle.Team team, boolean friendlyFire) {
         if (!teamed) return;
 
@@ -31,11 +31,11 @@ public class BattleScorePane extends SimpleScorePane {
         t.setAllowFriendlyFire(friendlyFire);
         t.setCanSeeFriendlyInvisibles(true);
     }
-    
+
     @Override
     public void addPlayer(Player player) {
         super.addPlayer(player);
-        
+
         if (teamed) {
             String teamName = ((TeamedBattle) battle).getTeam(player).getName();
             for (Team team : scoreboard.getTeams()) {
@@ -47,9 +47,8 @@ public class BattleScorePane extends SimpleScorePane {
             }
         }
     }
-    
-    public void updateScores(Player player) {
-        int score = PlayerStats.get(player.getName()).getScore();
+
+    public void updateScores(Player player, int score) {
         sidebar.getScore(player).setScore(score);
     }
 
