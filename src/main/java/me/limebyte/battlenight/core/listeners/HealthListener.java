@@ -82,13 +82,13 @@ public class HealthListener extends APIRelatedListener {
         if (event.isCancelled()) return;
         if (battle != null && battle.isInProgress()) {
             if (event.getDamage() >= player.getHealth()) {
-                event.setCancelled(true);
                 player.getWorld().playSound(player.getLocation(), Sound.HURT, 20f, 1.5F);
                 Player killer = player.getKiller();
                 DamageCause cause = event.getCause();
 
                 killFeed(player, killer, cause);
                 battle.respawn(player);
+                event.setCancelled(true);
 
                 PlayerStats stats = PlayerStats.get(player.getName());
                 boolean suicide = true;

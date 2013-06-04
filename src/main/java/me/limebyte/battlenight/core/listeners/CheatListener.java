@@ -4,6 +4,7 @@ import java.util.List;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
@@ -35,10 +36,9 @@ public class CheatListener extends APIRelatedListener {
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        Battle battle = getAPI().getBattleManager().getBattle();
+        Lobby lobby = getAPI().getLobby();
 
-        if (battle.isInProgress()) return;
-        if (battle.containsPlayer(player)) {
+        if (lobby.contains(player)) {
             event.setCancelled(true);
             getAPI().getMessenger().tell(player, Message.NO_CHEATING);
         }
@@ -47,9 +47,10 @@ public class CheatListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
+        Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattleManager().getBattle();
 
-        if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
+        if (lobby.contains(player) || getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
             event.setCancelled(true);
         }
 
@@ -102,13 +103,15 @@ public class CheatListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
+        Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattleManager().getBattle();
+
         if (battle.containsPlayer(player)) {
             event.setCancelled(true);
             getAPI().getMessenger().tell(player, Message.NO_CHEATING);
         }
 
-        if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
+        if (lobby.contains(player) || getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
             event.setCancelled(true);
         }
     }
@@ -116,7 +119,10 @@ public class CheatListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        if (getAPI().getBattleManager().getBattle().containsPlayer(player) && !SafeTeleporter.telePass.contains(player.getName())) {
+        Lobby lobby = getAPI().getLobby();
+        Battle battle = getAPI().getBattleManager().getBattle();
+
+        if ((lobby.contains(player) || battle.containsPlayer(player)) && !SafeTeleporter.telePass.contains(player.getName())) {
             switch (event.getCause()) {
                 case COMMAND:
                     if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
@@ -158,14 +164,13 @@ public class CheatListener extends APIRelatedListener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        Battle battle = getAPI().getBattleManager().getBattle();
-        if (battle.isInProgress()) return;
+        Lobby lobby = getAPI().getLobby();
         Projectile projectile = event.getEntity();
+
         if (projectile.getShooter() instanceof Player) {
             Player thrower = (Player) projectile.getShooter();
-            if (battle.containsPlayer(thrower)) {
+            if (lobby.contains(thrower)) {
                 event.setCancelled(true);
-                getAPI().getMessenger().tell(thrower, Message.NO_CHEATING);
             }
         }
     }

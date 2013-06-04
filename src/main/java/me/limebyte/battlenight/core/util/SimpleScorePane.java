@@ -46,6 +46,8 @@ public class SimpleScorePane implements ScorePane {
         Score score = sidebar.getScore(player);
         score.setScore(score.getScore() + 1); // Hacky but it works
         score.setScore(0);
+
+        player.setHealth(player.getHealth());
     }
 
     public void removePlayer(Player player) {
