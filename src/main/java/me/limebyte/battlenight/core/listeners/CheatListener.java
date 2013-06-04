@@ -122,42 +122,44 @@ public class CheatListener extends APIRelatedListener {
         Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattleManager().getBattle();
 
-        if ((lobby.contains(player) || battle.containsPlayer(player)) && !SafeTeleporter.telePass.contains(player.getName())) {
-            switch (event.getCause()) {
-                case COMMAND:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
+        if (lobby.contains(player) || battle.containsPlayer(player)) {
+            if (!SafeTeleporter.telePass.contains(player.getName())) {
+                switch (event.getCause()) {
+                    case COMMAND:
+                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
+                            event.setCancelled(true);
+                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                        }
+                        break;
+                    case PLUGIN:
+                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Plugins", false)) {
+                            event.setCancelled(true);
+                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                        }
+                        break;
+                    case ENDER_PEARL:
+                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
+                            event.setCancelled(true);
+                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                        }
+                        break;
+                    case NETHER_PORTAL:
+                    case END_PORTAL:
+                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", true)) {
+                            event.setCancelled(true);
+                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                        }
+                        break;
+                    case UNKNOWN:
+                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", true)) {
+                            event.setCancelled(true);
+                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                        }
+                        break;
+                    default:
                         event.setCancelled(true);
-                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
-                    }
-                    break;
-                case PLUGIN:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Plugins", false)) {
-                        event.setCancelled(true);
-                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
-                    }
-                    break;
-                case ENDER_PEARL:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
-                        event.setCancelled(true);
-                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
-                    }
-                    break;
-                case NETHER_PORTAL:
-                case END_PORTAL:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", true)) {
-                        event.setCancelled(true);
-                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
-                    }
-                    break;
-                case UNKNOWN:
-                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", true)) {
-                        event.setCancelled(true);
-                        getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
-                    }
-                    break;
-                default:
-                    event.setCancelled(true);
-                    break;
+                        break;
+                }
             }
         }
     }
