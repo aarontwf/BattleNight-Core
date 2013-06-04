@@ -31,7 +31,7 @@ public class PlayerStats {
     }
 
     public static PlayerStats get(String name) {
-        synchronized(PlayerStats.class) {
+        synchronized (PlayerStats.class) {
             if (players.get(name) == null) {
                 players.put(name, new PlayerStats(name));
             }
@@ -45,7 +45,7 @@ public class PlayerStats {
             score += 5;
         } else {
             kills++;
-            score += 10 + killStreak;
+            score += 10 + killStreak ^ 2;
         }
         killStreak++;
 
@@ -57,7 +57,7 @@ public class PlayerStats {
         killStreak = 0;
         deaths++;
         if (suicide) score -= 5;
-        
+
         SimpleBattle battle = (SimpleBattle) BattleNight.instance.getAPI().getBattleManager().getBattle();
         battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name));
     }
