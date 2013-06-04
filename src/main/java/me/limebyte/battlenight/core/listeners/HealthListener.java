@@ -14,6 +14,7 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.PlayerStats;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -82,6 +83,7 @@ public class HealthListener extends APIRelatedListener {
         if (battle != null && battle.isInProgress()) {
             if (event.getDamage() >= player.getHealth()) {
                 event.setCancelled(true);
+                player.getWorld().playSound(player.getLocation(), Sound.HURT, 20f, 1.5F);
                 Player killer = player.getKiller();
                 DamageCause cause = event.getCause();
 
@@ -94,6 +96,7 @@ public class HealthListener extends APIRelatedListener {
                 if (killer != null && killer != player) {
                     PlayerStats.get(killer.getName()).addKill(false);
                     battle.addKill(killer);
+                    killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 20f, 1.5f);
                     suicide = false;
                 }
 
@@ -172,11 +175,11 @@ public class HealthListener extends APIRelatedListener {
         int leadingScore = 0;
         Set<String> leaders = (battle).leadingPlayers;
         Player leader = Bukkit.getPlayerExact(leaders.iterator().next());
-        
+
         if (leader != null) {
             leadingScore = PlayerStats.get(leader.getName()).getScore();
         }
-        
+
         if (leadingScore > stats.getScore()) return;
         if (leadingScore < stats.getScore()) leaders.clear();
         leaders.add(leader.getName());
