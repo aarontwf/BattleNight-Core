@@ -22,6 +22,7 @@ import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.util.BattleScorePane;
 import me.limebyte.battlenight.core.util.BattleTimer;
+import me.limebyte.battlenight.core.util.PlayerStats;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -70,9 +71,9 @@ public abstract class SimpleBattle implements Battle {
     public boolean addPlayer(Player player) {
         getPlayers().add(player.getName());
         getScoreboard().addPlayer(player);
-        
+
         api.getSpectatorManager().addTarget(player);
-        
+
         if (!arena.getTexturePack().isEmpty()) {
             player.setTexturePack(arena.getTexturePack());
         }
@@ -169,6 +170,7 @@ public abstract class SimpleBattle implements Battle {
         getPlayers().remove(player.getName());
         getScoreboard().removePlayer(player);
         api.getSpectatorManager().removeTarget(player);
+        PlayerStats.get(player.getName()).reset();
 
         if (shouldEnd()) {
             stop();
@@ -215,7 +217,8 @@ public abstract class SimpleBattle implements Battle {
 
         Messenger messenger = api.getMessenger();
 
-        // TODO messenger.tellEveryone(Message.NOT_ENOUGH_PLAYERS, getMinPlayers() - getPlayers().size());
+        // TODO messenger.tellEveryone(Message.NOT_ENOUGH_PLAYERS,
+        // getMinPlayers() - getPlayers().size());
 
         leadingPlayers = new HashSet<String>(players);
 
@@ -248,12 +251,13 @@ public abstract class SimpleBattle implements Battle {
                 continue;
             }
 
+            PlayerStats.get(player.getName()).reset();
             api.getSpectatorManager().removeTarget(player);
-            
+
             getScoreboard().removePlayer(player);
-            
+
             ((SimpleLobby) api.getLobby()).addPlayerFromBattle(player);
-            
+
             pIt.remove();
         }
 
@@ -267,7 +271,7 @@ public abstract class SimpleBattle implements Battle {
         }
 
         api.getBattleManager().getNewBattle();
-        
+
         leadingPlayers.clear();
         arena = null;
         inProgress = false;
