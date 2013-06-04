@@ -82,7 +82,7 @@ public class HealthListener extends APIRelatedListener {
         if (event.isCancelled()) return;
         if (battle != null && battle.isInProgress()) {
             if (event.getDamage() >= player.getHealth()) {
-                player.getWorld().playSound(player.getLocation(), Sound.HURT_FLESH, 20f, 0f);
+                player.getWorld().playSound(player.getLocation(), Sound.HURT_FLESH, 20f, 1f);
                 Player killer = player.getKiller();
                 DamageCause cause = event.getCause();
 
@@ -96,7 +96,7 @@ public class HealthListener extends APIRelatedListener {
                 if (killer != null && killer != player) {
                     PlayerStats.get(killer.getName()).addKill(false);
                     battle.addKill(killer);
-                    killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 20f, 0f);
+                    killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 20f, 1f);
                     suicide = false;
                 }
 
