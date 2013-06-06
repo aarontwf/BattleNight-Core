@@ -1,6 +1,5 @@
 package me.limebyte.battlenight.core.util;
 
-import java.util.List;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -271,7 +270,6 @@ public class SimpleMessenger implements Messenger {
         else if (obj instanceof Location) return describeLocation((Location) obj);
         else if (obj instanceof World) return ((World) obj).getName();
         else if (obj instanceof SimpleTeam) return ((SimpleTeam) obj).getColour() + ((SimpleTeam) obj).getDisplayName();
-        else if (obj instanceof List<?>) return ((List<?>) obj).toString().replaceAll("[,]([^,]*)$", " and $1").replaceAll("\\[|\\]", "");
         else if (obj instanceof SimpleArena) return ((SimpleArena) obj).getDisplayName();
         return obj.toString();
     }

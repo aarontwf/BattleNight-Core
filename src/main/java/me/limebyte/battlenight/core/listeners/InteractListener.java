@@ -43,16 +43,16 @@ public class InteractListener extends APIRelatedListener {
                             Metadata.set(player, "ready", true);
                             messenger.tellLobby(Message.PLAYER_IS_READY, player);
                         }
-                        
+
                         if (lobby.isStarting()) return;
-                        
+
                         Set<String> waiting = new HashSet<String>(lobby.getPlayers());
                         Iterator<String> it = waiting.iterator();
-                        while(it.hasNext()) {
+                        while (it.hasNext()) {
                             Player p = Bukkit.getPlayerExact(it.next());
                             if (p == null || Metadata.getBoolean(p, "ready")) it.remove();
                         }
-                        
+
                         if (waiting.isEmpty()) {
                             try {
                                 lobby.startBattle();
@@ -60,7 +60,8 @@ public class InteractListener extends APIRelatedListener {
                                 messenger.tellLobby(e.getMessage());
                             }
                         } else {
-                            messenger.tellLobby(Message.WAITING_FOR_PLAYERS, waiting);
+                            String list = waiting.toString().replaceAll("[,]([^,]*)$", " and $1");
+                            messenger.tellLobby(Message.WAITING_FOR_PLAYERS, list.replaceAll("\\[|\\]", ""));
                         }
                     } else {
                         messenger.tell(player, Message.NO_CLASS);
