@@ -24,8 +24,10 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.tosort.UpdateChecker;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,6 +46,10 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
     public void onDisable() {
         SignListener.cleanSigns();
         getAPI().getBattleManager().getBattle().stop();
+        for (String name : api.getLobby().getPlayers()) {
+            Player player = Bukkit.getPlayerExact(name);
+            api.getLobby().removePlayer(player);
+        }
         api.getArenaManager().saveArenas();
 
         PluginDescriptionFile pdfFile = getDescription();
