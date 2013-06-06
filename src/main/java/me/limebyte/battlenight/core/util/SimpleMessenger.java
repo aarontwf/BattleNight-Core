@@ -67,17 +67,17 @@ public class SimpleMessenger implements Messenger {
         String name = player.getName();
         Battle battle = api.getBattleManager().getBattle();
         ChatColor colour = ChatColor.WHITE;
-        
+
         if (battle != null && battle.containsPlayer(player)) {
             if (battle instanceof SimpleTeamedBattle) {
                 Team team = ((SimpleTeamedBattle) battle).getTeam(player);
                 if (team != null) colour = team.getColour();
             }
-        } else if (!api.getLobby().getPlayers().contains(player.getName())){
+        } else if (!api.getLobby().getPlayers().contains(player.getName())) {
             colour = ChatColor.DARK_GRAY;
         }
 
-        return colour + name;
+        return colour + name + ChatColor.RESET;
     }
 
     @Override
@@ -261,28 +261,17 @@ public class SimpleMessenger implements Messenger {
     }
 
     private String describeObject(Object obj) {
-        if (obj instanceof ComplexEntityPart)
-            return describeObject(((ComplexEntityPart) obj).getParent());
-        else if (obj instanceof Item)
-            return describeMaterial(((Item) obj).getItemStack().getType());
-        else if (obj instanceof ItemStack)
-            return describeMaterial(((ItemStack) obj).getType());
-        else if (obj instanceof Player)
-            return getColouredName((Player) obj);
-        else if (obj instanceof Entity)
-            return describeEntity((Entity) obj);
-        else if (obj instanceof Block)
-            return describeMaterial(((Block) obj).getType());
-        else if (obj instanceof Material)
-            return describeMaterial((Material) obj);
-        else if (obj instanceof Location)
-            return describeLocation((Location) obj);
-        else if (obj instanceof World)
-            return ((World) obj).getName();
-        else if (obj instanceof SimpleTeam)
-            return ((SimpleTeam) obj).getColour() + ((SimpleTeam) obj).getDisplayName();
-        else if (obj instanceof List<?>)
-            return ((List<?>) obj).toString().replaceAll("[,]([^,]*)$", " and $1").replaceAll("\\[|\\]", "");
+        if (obj instanceof ComplexEntityPart) return describeObject(((ComplexEntityPart) obj).getParent());
+        else if (obj instanceof Item) return describeMaterial(((Item) obj).getItemStack().getType());
+        else if (obj instanceof ItemStack) return describeMaterial(((ItemStack) obj).getType());
+        else if (obj instanceof Player) return getColouredName((Player) obj);
+        else if (obj instanceof Entity) return describeEntity((Entity) obj);
+        else if (obj instanceof Block) return describeMaterial(((Block) obj).getType());
+        else if (obj instanceof Material) return describeMaterial((Material) obj);
+        else if (obj instanceof Location) return describeLocation((Location) obj);
+        else if (obj instanceof World) return ((World) obj).getName();
+        else if (obj instanceof SimpleTeam) return ((SimpleTeam) obj).getColour() + ((SimpleTeam) obj).getDisplayName();
+        else if (obj instanceof List<?>) return ((List<?>) obj).toString().replaceAll("[,]([^,]*)$", " and $1").replaceAll("\\[|\\]", "");
         else if (obj instanceof SimpleArena) return ((SimpleArena) obj).getDisplayName();
         return obj.toString();
     }
