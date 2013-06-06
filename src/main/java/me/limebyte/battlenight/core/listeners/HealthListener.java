@@ -151,7 +151,7 @@ public class HealthListener extends APIRelatedListener {
             Vector playerVec = playerLoc.getDirection();
             Vector killerVec = killerLoc.getDirection();
             float angle = playerVec.angle(killerVec);
-            double range = 2 * Math.PI / 3;
+            double range = Math.PI / 3;
             if (angle <= range) return BACKSTAB;
 
             return null;
