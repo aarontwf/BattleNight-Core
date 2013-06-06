@@ -92,6 +92,7 @@ public class PlayerData {
         player.setExp(0);
         player.setFallDistance(0);
         player.setFireTicks(0);
+        player.setFlySpeed(0.1F);
         player.setFoodLevel(20);
         if (player.getGameMode() != GameMode.SURVIVAL) {
             player.setGameMode(GameMode.SURVIVAL);

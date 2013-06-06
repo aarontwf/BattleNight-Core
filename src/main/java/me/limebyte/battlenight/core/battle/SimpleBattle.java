@@ -20,9 +20,9 @@ import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.util.BattlePlayer;
 import me.limebyte.battlenight.core.util.BattleScorePane;
 import me.limebyte.battlenight.core.util.BattleTimer;
-import me.limebyte.battlenight.core.util.PlayerStats;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -170,7 +170,7 @@ public abstract class SimpleBattle implements Battle {
         getPlayers().remove(player.getName());
         getScoreboard().removePlayer(player);
         api.getSpectatorManager().removeTarget(player);
-        PlayerStats.get(player.getName()).reset();
+        BattlePlayer.get(player.getName()).getStats().reset();
 
         if (shouldEnd()) {
             stop();
@@ -251,7 +251,10 @@ public abstract class SimpleBattle implements Battle {
                 continue;
             }
 
-            PlayerStats.get(player.getName()).reset();
+            BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+            bPlayer.revive();
+            bPlayer.getStats().reset();
+
             api.getSpectatorManager().removeTarget(player);
 
             getScoreboard().removePlayer(player);
