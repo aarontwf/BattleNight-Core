@@ -13,6 +13,8 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * Represents a BattleNight sub-command, which executes various tasks upon user
  * input
@@ -31,6 +33,7 @@ public abstract class BattleNightCommand {
         this.name = name;
         label = name.toLowerCase();
         aliases = new ArrayList<String>();
+        primaryChoices = ImmutableList.of();
         description = "";
         usageMessage = "/bn " + label;
     }
@@ -47,11 +50,11 @@ public abstract class BattleNightCommand {
     public List<String> getAliases() {
         return aliases;
     }
-    
+
     public List<String> getPrimaryChoices() {
         return primaryChoices;
     }
-    
+
     public void setPrimaryChoices(List<String> primaryChoices) {
         this.primaryChoices = primaryChoices;
     }
@@ -201,16 +204,14 @@ public abstract class BattleNightCommand {
         if (ConfigManager.get(Config.MAIN).getBoolean("UsePermissions", false) && sender instanceof Player) {
             String permission = getPermission().getBukkitPerm();
 
-            if (sender.hasPermission(permission))
-                return true;
+            if (sender.hasPermission(permission)) return true;
             else {
                 messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
                 return false;
             }
         } else {
             if (getPermission().isOpPerm()) {
-                if (sender.isOp())
-                    return true;
+                if (sender.isOp()) return true;
                 else {
                     messenger.tell(sender, Message.NO_PERMISSION_COMMAND);
                     return false;
