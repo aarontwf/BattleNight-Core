@@ -206,7 +206,6 @@ public class CoreClassManager implements ClassManager {
 
     private List<PotionEffect> parseEffects(String effects) {
         List<PotionEffect> parsedEffects = new ArrayList<PotionEffect>();
-
         if (effects != null) {
             String[] split = effects.split(", ");
             for (String s : split) {
@@ -251,7 +250,7 @@ public class CoreClassManager implements ClassManager {
             if (!enchantments.isEmpty()) {
                 String rawEnchantments = "";
                 for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-                    rawEnchantments += ", " + enchantment.getKey().getId() + "~" + enchantment.getValue();
+                    rawEnchantments += ", " + enchantment.getKey().getName().toLowerCase() + "~" + enchantment.getValue();
                 }
                 config.set(path + slot + ".enchantments", rawEnchantments.substring(2));
             }
@@ -307,7 +306,7 @@ public class CoreClassManager implements ClassManager {
     }
 
     private Enchantment getEnchantment(String enc) {
-        Enchantment enchantment = Enchantment.getByName(enc);
+        Enchantment enchantment = Enchantment.getByName(enc.toUpperCase());
         if (enchantment == null) {
             try {
                 int id = Integer.parseInt(enc);

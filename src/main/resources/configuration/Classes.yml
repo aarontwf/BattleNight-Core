@@ -42,7 +42,7 @@ classes:
     Tank:
         items:
             slot0:
-                type: wood_sword
+                type: stone_sword
         armour:
             helmet:
                 type: diamond_helmet
@@ -67,6 +67,7 @@ classes:
             slot0:
                 type: bow
                 enchantments: 49~1
+                name: Long Bow
             slot1:
                 type: ender_pearl
                 amount: 4
@@ -91,6 +92,7 @@ classes:
             slot0:
                 type: gold_sword
                 enchantments: 19~2
+                name: Rusty Syringe
             slot1:
                 type: golden_apple
             slot7:
@@ -110,6 +112,7 @@ classes:
         items:
             slot0:
                 type: stone_sword
+                name: Stone Staff
             slot1:
                 type: ender_pearl
                 amount: 16
@@ -119,7 +122,7 @@ classes:
             slot6:
                 type: potion
                 data: 16396
-                amount: 3
+                amount: 6
             slot7:
                 type: potion
                 data: 16388
@@ -140,11 +143,8 @@ classes:
         items:
             slot0:
                 type: iron_sword
+                name: Dagger
             slot1:
                 type: potion
                 data: 8206
-        armour:
-            helmet:
-                type: iron_helmet
-                enchantments: 5~3
-        effects: speed
+        effects: speed, water_breathing
