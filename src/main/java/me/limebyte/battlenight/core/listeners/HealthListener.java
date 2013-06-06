@@ -12,6 +12,7 @@ import me.limebyte.battlenight.core.util.BattlePlayer;
 import me.limebyte.battlenight.core.util.PlayerStats;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -24,6 +25,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.util.Vector;
 
 public class HealthListener extends APIRelatedListener {
 
@@ -58,6 +60,12 @@ public class HealthListener extends APIRelatedListener {
                 event.setCancelled(true);
                 DamageCause cause = event.getCause();
                 if (killer == null) killer = player.getKiller();
+                Accolade accolade = Accolade.get(player, killer);
+                if (accolade != null) {
+                    if (accolade == Accolade.BACKSTAB) {
+                        api.getMessenger().tellBattle("BACKSTAB!!!");
+                    }
+                }
 
                 BattlePlayer bPlayer = BattlePlayer.get(player.getName());
                 PlayerStats stats = bPlayer.getStats();
@@ -130,6 +138,24 @@ public class HealthListener extends APIRelatedListener {
         if (leadingScore > stats.getScore()) return;
         if (leadingScore < stats.getScore()) leaders.clear();
         leaders.add(leader.getName());
+    }
+
+    public enum Accolade {
+        BACKSTAB;
+
+        private static Accolade get(Player player, Player killer) {
+            Location playerLoc = player.getLocation();
+            Location killerLoc = killer.getLocation();
+
+            // Backstab
+            Vector playerVec = playerLoc.getDirection();
+            Vector killerVec = killerLoc.getDirection();
+            float angle = playerVec.angle(killerVec);
+            double range = 2 * Math.PI / 3;
+            if (angle <= range) return BACKSTAB;
+
+            return null;
+        }
     }
 
 }
