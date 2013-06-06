@@ -64,6 +64,7 @@ public class HealthListener extends APIRelatedListener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
+        Player killer = getKiller(event);
         BattleNightAPI api = getAPI();
         Battle battle = api.getBattleManager().getBattle();
 
@@ -76,14 +77,13 @@ public class HealthListener extends APIRelatedListener {
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            subEvent.setCancelled(!canBeDamaged(player, battle, subEvent));
+            subEvent.setCancelled(!canBeDamaged(player, killer, battle));
         }
 
         if (event.isCancelled()) return;
         if (battle != null && battle.isInProgress()) {
             if (event.getDamage() >= player.getHealth()) {
                 player.getWorld().playSound(player.getLocation(), Sound.HURT_FLESH, 20f, 1f);
-                Player killer = player.getKiller();
                 DamageCause cause = event.getCause();
 
                 killFeed(player, killer, cause);
@@ -123,20 +123,8 @@ public class HealthListener extends APIRelatedListener {
         }
     }
 
-    private boolean canBeDamaged(Player damaged, Battle battle, EntityDamageByEntityEvent event) {
-        Entity eDamager = event.getDamager();
-        Player damager;
-
-        if (eDamager instanceof Projectile) {
-            LivingEntity shooter = ((Projectile) eDamager).getShooter();
-            if (shooter instanceof Player) {
-                damager = (Player) shooter;
-            } else return true;
-        } else {
-            if (eDamager instanceof Player) {
-                damager = (Player) eDamager;
-            } else return true;
-        }
+    private boolean canBeDamaged(Player damaged, Player damager, Battle battle) {
+        if (damager == null) return true;
 
         if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName())) return false;
 
@@ -154,6 +142,20 @@ public class HealthListener extends APIRelatedListener {
         }
 
         return true;
+    }
+
+    private Player getKiller(EntityDamageEvent event) {
+        Player killer = null;
+        if (event instanceof EntityDamageByEntityEvent) {
+            Entity damager = ((EntityDamageByEntityEvent) event).getDamager();
+            if (damager instanceof Projectile) {
+                LivingEntity shooter = ((Projectile) damager).getShooter();
+                if (shooter instanceof Player) killer = (Player) shooter;
+            } else {
+                if (damager instanceof Player) killer = (Player) damager;
+            }
+        }
+        return killer;
     }
 
     private void killFeed(Player player, Player killer, DamageCause cause) {
