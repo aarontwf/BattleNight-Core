@@ -85,6 +85,7 @@ public class HealthListener extends APIRelatedListener {
             if (event.getDamage() >= player.getHealth()) {
                 player.getWorld().playSound(player.getLocation(), Sound.HURT_FLESH, 20f, 1f);
                 DamageCause cause = event.getCause();
+                if (killer == null) killer = player.getKiller();
 
                 killFeed(player, killer, cause);
                 battle.respawn(player);
