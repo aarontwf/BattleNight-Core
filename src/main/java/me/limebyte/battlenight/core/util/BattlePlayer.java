@@ -22,9 +22,9 @@ public class BattlePlayer {
     private static final int RESPAWN_TIME = 2;
     private static Map<String, BattlePlayer> players = new HashMap<String, BattlePlayer>();
 
-    private static final Map<Enum<?>, String> deathCauses;
+    private static final Map<DamageCause, String> deathCauses;
     static {
-        deathCauses = new HashMap<Enum<?>, String>();
+        deathCauses = new HashMap<DamageCause, String>();
         deathCauses.put(DamageCause.BLOCK_EXPLOSION, "was blown up");
         deathCauses.put(DamageCause.CONTACT, "was pricked");
         deathCauses.put(DamageCause.CUSTOM, "was damaged by unknown");
@@ -47,7 +47,6 @@ public class BattlePlayer {
         deathCauses.put(DamageCause.THORNS, "was pricked");
         deathCauses.put(DamageCause.VOID, "fell into the void");
         deathCauses.put(DamageCause.WITHER, "withered away");
-        deathCauses.put(Accolade.BACKSTAB, "was backstabbed");
     }
 
     private String name;
@@ -158,8 +157,8 @@ public class BattlePlayer {
     private static void killFeed(Player player, Player killer, DamageCause cause, Accolade accolade) {
         Messenger messenger = BattleNight.instance.getAPI().getMessenger();
 
-        String causeMsg = deathCauses.get(accolade);
-        if (causeMsg == null) deathCauses.get(cause);
+        String causeMsg = deathCauses.get(cause);
+        if (accolade != null) causeMsg = accolade.getDeathMessage();
         if (causeMsg == null) causeMsg = "died";
 
         String deathMessage = messenger.getColouredName(player) + " " + causeMsg;

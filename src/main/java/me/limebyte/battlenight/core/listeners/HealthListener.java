@@ -121,7 +121,17 @@ public class HealthListener extends APIRelatedListener {
     }
 
     public enum Accolade {
-        BACKSTAB;
+        BACKSTAB("was backstabbed");
+
+        private String deathMessage;
+
+        private Accolade(String deathMessage) {
+            this.deathMessage = deathMessage;
+        }
+
+        public String getDeathMessage() {
+            return deathMessage;
+        }
 
         private static Accolade get(Player player, Player killer) {
             Location playerLoc = player.getLocation();
