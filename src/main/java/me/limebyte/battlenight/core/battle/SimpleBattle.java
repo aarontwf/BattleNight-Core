@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.battle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -260,7 +261,7 @@ public abstract class SimpleBattle implements Battle {
     protected String getWinMessage() {
         String message;
 
-        Set<String> leading = new HashSet<String>();
+        List<String> leading = new ArrayList<String>();
         int leadingScore = Integer.MIN_VALUE;
         Map<String, BattlePlayer> bPlayers = BattlePlayer.getPlayers();
 
@@ -278,9 +279,9 @@ public abstract class SimpleBattle implements Battle {
         if (leading.isEmpty()) {
             message = Message.DRAW.getMessage();
         } else if (leading.size() == 1) {
-            message = api.getMessenger().format(Message.PLAYER_WON, leading.toArray()[0]);
+            message = api.getMessenger().format(Message.PLAYER_WON, leading.get(0), leadingScore);
         } else {
-            message = api.getMessenger().format(Message.PLAYER_WON, leading);
+            message = api.getMessenger().format(Message.PLAYER_WON, leading, leadingScore);
         }
 
         return message;

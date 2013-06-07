@@ -155,7 +155,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         String message;
 
         List<Team> leading = new ArrayList<Team>();
-        List<Team> losers = new ArrayList<Team>();
         for (Team team : teams) {
             if (leading.isEmpty()) {
                 leading.add(team);
@@ -166,13 +165,9 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             int leadScore = inLead.getScore();
             int teamScore = team.getScore();
 
-            if (leadScore > teamScore) {
-                losers.add(team);
-                continue;
-            }
+            if (leadScore > teamScore) continue;
 
             if (leadScore < teamScore) {
-                losers.addAll(leading);
                 leading.clear();
             }
 
@@ -182,9 +177,9 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         if (leading.isEmpty() || leading.size() == getTeams().size()) {
             message = Message.DRAW.getMessage();
         } else if (leading.size() == 1) {
-            message = messenger.format(Message.TEAM_WON, leading.get(0), leading.get(0).getScore(), losers.get(0).getScore());
+            message = messenger.format(Message.TEAM_WON, leading.get(0), leading.get(0).getScore());
         } else {
-            message = messenger.format(Message.TEAM_WON, leading, leading.get(0).getScore(), losers.get(0).getScore());
+            message = messenger.format(Message.TEAM_WON, leading, leading.get(0).getScore());
         }
 
         return message;
