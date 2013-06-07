@@ -32,9 +32,15 @@ public class HealthListener extends APIRelatedListener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        Player killer = getKiller(event);
+        Player damager = getKiller(event);
         BattleNightAPI api = getAPI();
         Battle battle = api.getBattleManager().getBattle();
+
+        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        if (!bPlayer.isAlive()) {
+            event.setCancelled(true);
+            return;
+        }
 
         if (api.getSpectatorManager().getSpectators().contains(player.getName())) {
             event.setCancelled(true);
@@ -45,7 +51,7 @@ public class HealthListener extends APIRelatedListener {
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            subEvent.setCancelled(!canBeDamaged(player, killer, battle));
+            subEvent.setCancelled(!canBeDamaged(player, damager, battle));
         }
 
         if (event.isCancelled()) return;
@@ -54,11 +60,10 @@ public class HealthListener extends APIRelatedListener {
                 player.getWorld().playSound(player.getLocation(), Sound.HURT_FLESH, 20f, 1f);
                 event.setCancelled(true);
                 DamageCause cause = event.getCause();
-                if (killer == null) killer = player.getKiller();
-                Accolade accolade = Accolade.get(player, killer);
+                if (damager == null) damager = player.getKiller();
+                Accolade accolade = Accolade.get(player, damager);
 
-                BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-                bPlayer.kill(killer, cause, accolade);
+                bPlayer.kill(damager, cause, accolade);
             }
         }
     }
@@ -79,6 +84,9 @@ public class HealthListener extends APIRelatedListener {
 
     private boolean canBeDamaged(Player damaged, Player damager, Battle battle) {
         if (damager == null) return true;
+
+        BattlePlayer bDamager = BattlePlayer.get(damager.getName());
+        if (!bDamager.isAlive()) return false;
 
         if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName())) return false;
 

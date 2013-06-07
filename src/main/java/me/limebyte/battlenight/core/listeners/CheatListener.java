@@ -9,6 +9,7 @@ import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.util.BattlePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -38,6 +39,9 @@ public class CheatListener extends APIRelatedListener {
         Player player = (Player) event.getEntity();
         Lobby lobby = getAPI().getLobby();
 
+        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        if (!bPlayer.isAlive()) event.setCancelled(true);
+
         if (lobby.contains(player)) {
             event.setCancelled(true);
             getAPI().getMessenger().tell(player, Message.NO_CHEATING);
@@ -49,6 +53,9 @@ public class CheatListener extends APIRelatedListener {
         Player player = (Player) event.getWhoClicked();
         Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattleManager().getBattle();
+
+        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        if (!bPlayer.isAlive()) event.setCancelled(true);
 
         if (lobby.contains(player) || getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
             event.setCancelled(true);
@@ -105,6 +112,9 @@ public class CheatListener extends APIRelatedListener {
         Player player = event.getPlayer();
         Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattleManager().getBattle();
+
+        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        if (!bPlayer.isAlive()) event.setCancelled(true);
 
         if (battle.containsPlayer(player)) {
             event.setCancelled(true);
@@ -171,6 +181,10 @@ public class CheatListener extends APIRelatedListener {
 
         if (projectile.getShooter() instanceof Player) {
             Player thrower = (Player) projectile.getShooter();
+
+            BattlePlayer bPlayer = BattlePlayer.get(thrower.getName());
+            if (!bPlayer.isAlive()) event.setCancelled(true);
+
             if (lobby.contains(thrower)) {
                 event.setCancelled(true);
             }

@@ -11,6 +11,7 @@ import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.util.BattlePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -31,6 +32,9 @@ public class InteractListener extends APIRelatedListener {
         Action action = event.getAction();
         Player player = event.getPlayer();
         Lobby lobby = getAPI().getLobby();
+
+        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        if (!bPlayer.isAlive()) event.setCancelled(true);
 
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
