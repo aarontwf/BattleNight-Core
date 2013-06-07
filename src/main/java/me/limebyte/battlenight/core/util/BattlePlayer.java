@@ -6,6 +6,7 @@ import java.util.Map;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.listeners.HealthListener.Accolade;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 
 import org.bukkit.Bukkit;
@@ -21,9 +22,9 @@ public class BattlePlayer {
     private static final int RESPAWN_TIME = 2;
     private static Map<String, BattlePlayer> players = new HashMap<String, BattlePlayer>();
 
-    private static final Map<DamageCause, String> deathCauses;
+    private static final Map<Enum<?>, String> deathCauses;
     static {
-        deathCauses = new HashMap<DamageCause, String>();
+        deathCauses = new HashMap<Enum<?>, String>();
         deathCauses.put(DamageCause.BLOCK_EXPLOSION, "was blown up");
         deathCauses.put(DamageCause.CONTACT, "was pricked");
         deathCauses.put(DamageCause.CUSTOM, "was damaged by unknown");
@@ -46,6 +47,7 @@ public class BattlePlayer {
         deathCauses.put(DamageCause.THORNS, "was pricked");
         deathCauses.put(DamageCause.VOID, "fell into the void");
         deathCauses.put(DamageCause.WITHER, "withered away");
+        deathCauses.put(Accolade.BACKSTAB, "was backstabbed");
     }
 
     private String name;
@@ -83,7 +85,7 @@ public class BattlePlayer {
         return alive;
     }
 
-    public void kill(Player killer, DamageCause cause) {
+    public void kill(Player killer, DamageCause cause, Accolade accolade) {
         if (!alive) return;
         alive = false;
         Player player = Bukkit.getPlayerExact(name);
@@ -92,18 +94,15 @@ public class BattlePlayer {
         }
 
         boolean suicide = true;
-        Battle battle = BattleNight.instance.getAPI().getBattleManager().getBattle();
 
         if (killer != null && killer != player) {
             BattlePlayer.get(killer.getName()).getStats().addKill(false);
-            battle.addKill(killer);
             killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 20f, 1f);
             suicide = false;
         }
 
-        killFeed(player, killer, cause);
+        killFeed(player, killer, cause, accolade);
         stats.addDeath(suicide);
-        battle.addDeath(player);
         player.setAllowFlight(true);
         player.setFlying(true);
         player.setFlySpeed(0);
@@ -156,10 +155,11 @@ public class BattlePlayer {
         }
     }
 
-    private static void killFeed(Player player, Player killer, DamageCause cause) {
+    private static void killFeed(Player player, Player killer, DamageCause cause, Accolade accolade) {
         Messenger messenger = BattleNight.instance.getAPI().getMessenger();
 
-        String causeMsg = deathCauses.get(cause);
+        String causeMsg = deathCauses.get(accolade);
+        if (causeMsg == null) deathCauses.get(cause);
         if (causeMsg == null) causeMsg = "died";
 
         String deathMessage = messenger.getColouredName(player) + " " + causeMsg;

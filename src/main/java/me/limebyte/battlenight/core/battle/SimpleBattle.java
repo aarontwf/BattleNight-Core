@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.battle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
@@ -17,7 +18,6 @@ import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Timer;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.SignListener;
-import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
@@ -41,7 +41,6 @@ public abstract class SimpleBattle implements Battle {
     protected boolean inProgress = false;
 
     private HashSet<String> players = new HashSet<String>();
-    public Set<String> leadingPlayers = new HashSet<String>();
 
     public SimpleBattle(BattleNightAPI api, int duration, int minPlayers, int maxPlayers) {
         this.api = api;
@@ -51,20 +50,6 @@ public abstract class SimpleBattle implements Battle {
 
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
-    }
-
-    /* --------------- */
-    /* General Methods */
-    /* --------------- */
-
-    @Override
-    public void addDeath(Player player) {
-        // TODO Remove
-    }
-
-    @Override
-    public void addKill(Player player) {
-        // TODO Remove
     }
 
     @Override
@@ -89,36 +74,6 @@ public abstract class SimpleBattle implements Battle {
     public Arena getArena() {
         return arena;
     }
-
-    @Override
-    public int getDeaths(Player player) {
-        return Metadata.getInt(player, "deaths");
-    }
-
-    /* --------------- */
-    /* Utility Methods */
-    /* --------------- */
-
-    @Override
-    public double getKDR(Player player) {
-        // TODO Remove
-        return 0;
-    }
-
-    @Override
-    public int getKills(Player player) {
-        // TODO Remove
-        return 0;
-    }
-
-    @Override
-    public Set<String> getLeadingPlayers() {
-        return leadingPlayers;
-    }
-
-    /* ------------------- */
-    /* Getters and Setters */
-    /* ------------------- */
 
     @Override
     public int getMaxPlayers() {
@@ -149,16 +104,6 @@ public abstract class SimpleBattle implements Battle {
     @Override
     public boolean isInProgress() {
         return inProgress;
-    }
-
-    @Override
-    public boolean onStart() {
-        return true;
-    }
-
-    @Override
-    public boolean onStop() {
-        return true;
     }
 
     @Override
@@ -217,11 +162,6 @@ public abstract class SimpleBattle implements Battle {
 
         Messenger messenger = api.getMessenger();
 
-        // TODO messenger.tellEveryone(Message.NOT_ENOUGH_PLAYERS,
-        // getMinPlayers() - getPlayers().size());
-
-        leadingPlayers = new HashSet<String>(players);
-
         teleportAllToSpawn();
 
         timer.start();
@@ -275,7 +215,6 @@ public abstract class SimpleBattle implements Battle {
 
         api.getBattleManager().getNewBattle();
 
-        leadingPlayers.clear();
         arena = null;
         inProgress = false;
         return true;
@@ -320,7 +259,21 @@ public abstract class SimpleBattle implements Battle {
 
     protected String getWinMessage() {
         String message;
-        Set<String> leading = getLeadingPlayers();
+
+        Set<String> leading = new HashSet<String>();
+        int leadingScore = Integer.MIN_VALUE;
+        Map<String, BattlePlayer> bPlayers = BattlePlayer.getPlayers();
+
+        for (String name : players) {
+            int score = bPlayers.get(name).getStats().getScore();
+            if (score < leadingScore) continue;
+
+            if (score > leadingScore) {
+                leading.clear();
+                leadingScore = score;
+            }
+            leading.add(name);
+        }
 
         if (leading.isEmpty()) {
             message = Message.DRAW.getMessage();

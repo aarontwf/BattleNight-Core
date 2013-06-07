@@ -1,8 +1,15 @@
 package me.limebyte.battlenight.core.battle;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import me.limebyte.battlenight.api.battle.Team;
+import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.util.BattlePlayer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class SimpleTeam implements Team {
 
@@ -10,9 +17,7 @@ public class SimpleTeam implements Team {
     private String displayName;
     private ChatColor colour;
     private boolean ready = false;
-    private int kills = 0;
-    private int deaths = 0;
-    private int size = 0;
+    private HashSet<String> players = new HashSet<String>();
 
     public SimpleTeam(String name) {
         this(name, ChatColor.WHITE);
@@ -24,48 +29,16 @@ public class SimpleTeam implements Team {
         this.colour = colour;
     }
 
-    public void addDeath() {
-        deaths++;
-    }
-
-    public void addKill() {
-        kills++;
-    }
-
     public ChatColor getColour() {
         return colour;
-    }
-
-    public int getDeaths() {
-        return deaths;
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public double getKDR() {
-        if (kills > deaths) {
-            if (deaths == 0) return kills;
-            return kills / deaths;
-        }
-        if (kills < deaths) {
-            if (kills == 0) return -deaths;
-            return 0 - kills / deaths;
-        }
-        return 0;
-    }
-
-    public int getKills() {
-        return kills;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public int getSize() {
-        return size;
     }
 
     public boolean isReady() {
@@ -76,16 +49,8 @@ public class SimpleTeam implements Team {
         this.colour = colour;
     }
 
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
-    }
-
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
-    }
-
-    public void setKills(int kills) {
-        this.kills = kills;
     }
 
     public void setReady(boolean ready) {
@@ -97,19 +62,36 @@ public class SimpleTeam implements Team {
         return colour + name;
     }
 
-    protected void decrementSize() {
-        size--;
-    }
-
-    protected void incrementSize() {
-        size++;
-    }
-
     protected void reset(SimpleBattle battle) {
         ready = false;
-        kills = 0;
-        deaths = 0;
-        size = 0;
+        players.clear();
+    }
+
+    @Override
+    public int getScore() {
+        int score = 0;
+        Map<String, BattlePlayer> bPlayers = BattlePlayer.getPlayers();
+        for (String name : players) {
+            score += bPlayers.get(name).getStats().getScore();
+        }
+        return score;
+    }
+
+    @Override
+    public Set<String> getPlayers() {
+        return players;
+    }
+
+    @Override
+    public void addPlayer(Player player) {
+        players.add(player.getName());
+        Metadata.set(player, "team", name);
+    }
+
+    @Override
+    public void removePlayer(Player player) {
+        players.add(player.getName());
+        Metadata.remove(player, "team");
     }
 
 }

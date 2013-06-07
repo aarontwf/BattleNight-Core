@@ -1,17 +1,12 @@
 package me.limebyte.battlenight.core.listeners;
 
-import java.util.Set;
-
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.core.battle.SimpleBattle;
 import me.limebyte.battlenight.core.battle.SimpleTeamedBattle;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.BattlePlayer;
-import me.limebyte.battlenight.core.util.PlayerStats;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -61,18 +56,9 @@ public class HealthListener extends APIRelatedListener {
                 DamageCause cause = event.getCause();
                 if (killer == null) killer = player.getKiller();
                 Accolade accolade = Accolade.get(player, killer);
-                if (accolade != null) {
-                    if (accolade == Accolade.BACKSTAB) {
-                        api.getMessenger().tellBattle("BACKSTAB!!!");
-                    }
-                }
 
                 BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-                PlayerStats stats = bPlayer.getStats();
-
-                bPlayer.kill(killer, cause);
-
-                updateLeaders((SimpleBattle) battle, stats);
+                bPlayer.kill(killer, cause, accolade);
             }
         }
     }
@@ -124,20 +110,6 @@ public class HealthListener extends APIRelatedListener {
             }
         }
         return killer;
-    }
-
-    private void updateLeaders(SimpleBattle battle, PlayerStats stats) {
-        int leadingScore = 0;
-        Set<String> leaders = (battle).leadingPlayers;
-        Player leader = Bukkit.getPlayerExact(leaders.iterator().next());
-
-        if (leader != null) {
-            leadingScore = BattlePlayer.get(leader.getName()).getStats().getScore();
-        }
-
-        if (leadingScore > stats.getScore()) return;
-        if (leadingScore < stats.getScore()) leaders.clear();
-        leaders.add(leader.getName());
     }
 
     public enum Accolade {

@@ -26,22 +26,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
     }
 
     @Override
-    public void addDeath(Player player) {
-        Team team = getTeam(player);
-        if (team != null) {
-            team.addDeath();
-        }
-    }
-
-    @Override
-    public void addKill(Player player) {
-        Team team = getTeam(player);
-        if (team != null) {
-            team.addKill();
-        }
-    }
-
-    @Override
     public boolean addPlayer(Player player) {
         if (!assignTeam(player)) return false;
         boolean worked = super.addPlayer(player);
@@ -67,33 +51,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
 
     public boolean areEnemies(Player player1, Player player2) {
         return !getTeam(player1).getName().equals(getTeam(player2).getName());
-    }
-
-    public List<Team> getLeadingTeams() {
-        if (teams.size() == 0) return null;
-
-        List<Team> leading = new ArrayList<Team>();
-        for (Team team : teams) {
-            if (leading.isEmpty()) {
-                leading.add(team);
-                continue;
-            }
-
-            Team inLead = leading.get(0);
-            double leadKD = inLead.getKDR();
-            double teamKD = team.getKDR();
-
-            if (leadKD > teamKD) {
-                continue;
-            }
-            if (leadKD < teamKD) {
-                leading.clear();
-            }
-
-            leading.add(team);
-        }
-
-        return leading;
     }
 
     public Team getTeam(Player player) {
@@ -127,15 +84,14 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         if (prevTeam != null) {
             for (Team t : teams) {
                 if (t.getName().equals(prevTeam)) {
-                    if (t instanceof SimpleTeam) ((SimpleTeam) t).decrementSize();
+                    if (t instanceof SimpleTeam) ((SimpleTeam) t).removePlayer(player);
                     break;
                 }
             }
         }
 
         if (team != null) {
-            Metadata.set(player, "team", team.getName());
-            if (team instanceof SimpleTeam) ((SimpleTeam) team).incrementSize();
+            team.addPlayer(player);
         } else {
             Metadata.remove(player, "team");
         }
@@ -145,7 +101,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
     public boolean shouldEnd() {
         if (!isInProgress()) return false;
         for (Team team : getTeams()) {
-            if (team.getSize() < 1) return true;
+            if (team.getPlayers().size() < 1) return true;
         }
         return false;
     }
@@ -184,7 +140,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
 
         Team smallest = null;
         for (Team team : teams) {
-            if (smallest == null || team.getSize() < smallest.getSize()) {
+            if (smallest == null || team.getPlayers().size() < smallest.getPlayers().size()) {
                 smallest = team;
             }
         }
@@ -197,14 +153,38 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
     protected String getWinMessage() {
         Messenger messenger = api.getMessenger();
         String message;
-        List<Team> leading = getLeadingTeams();
+
+        List<Team> leading = new ArrayList<Team>();
+        List<Team> losers = new ArrayList<Team>();
+        for (Team team : teams) {
+            if (leading.isEmpty()) {
+                leading.add(team);
+                continue;
+            }
+
+            Team inLead = leading.get(0);
+            int leadScore = inLead.getScore();
+            int teamScore = team.getScore();
+
+            if (leadScore > teamScore) {
+                losers.add(team);
+                continue;
+            }
+
+            if (leadScore < teamScore) {
+                losers.addAll(leading);
+                leading.clear();
+            }
+
+            leading.add(team);
+        }
 
         if (leading.isEmpty() || leading.size() == getTeams().size()) {
             message = Message.DRAW.getMessage();
         } else if (leading.size() == 1) {
-            message = messenger.format(Message.TEAM_WON, leading.get(0));
+            message = messenger.format(Message.TEAM_WON, leading.get(0), leading.get(0).getScore(), losers.get(0).getScore());
         } else {
-            message = messenger.format(Message.TEAM_WON, leading);
+            message = messenger.format(Message.TEAM_WON, leading, leading.get(0).getScore(), losers.get(0).getScore());
         }
 
         return message;
