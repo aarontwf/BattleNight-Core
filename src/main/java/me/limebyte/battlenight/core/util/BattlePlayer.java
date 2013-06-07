@@ -163,7 +163,7 @@ public class BattlePlayer {
 
         String deathMessage = messenger.getColouredName(player) + " " + causeMsg;
 
-        if (killer != null) {
+        if (killer != null && player.getName() != killer.getName()) {
             deathMessage += " by " + messenger.getColouredName(killer);
         }
 

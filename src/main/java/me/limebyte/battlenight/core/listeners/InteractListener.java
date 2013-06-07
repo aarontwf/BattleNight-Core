@@ -64,7 +64,7 @@ public class InteractListener extends APIRelatedListener {
                                 messenger.tellLobby(e.getMessage());
                             }
                         } else {
-                            String list = waiting.toString().replaceAll("[,]([^,]*)$", " and $1");
+                            String list = waiting.toString().replaceAll("[,]([^,]*)$", " and$1");
                             messenger.tellLobby(Message.WAITING_FOR_PLAYERS, list.replaceAll("\\[|\\]", ""));
                         }
                     } else {
