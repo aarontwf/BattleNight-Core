@@ -9,4 +9,9 @@ public class FFABattle extends SimpleBattle {
         super(api, duration, minPlayers, maxPlayers);
     }
 
+    @Override
+    public String getType() {
+        return "Free for All";
+    }
+
 }

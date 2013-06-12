@@ -64,14 +64,6 @@ public class SimpleLobby implements Lobby {
             return;
         }
 
-        if (arena == null) {
-            if (arenas.getReadyArenas(1).isEmpty()) {
-                messenger.tell(player, Message.NO_ARENAS);
-                return;
-            }
-            arena = arenas.getRandomArena(1);
-        }
-
         players.add(player.getName());
 
         PlayerData.store(player);
@@ -132,34 +124,32 @@ public class SimpleLobby implements Lobby {
             return;
         }
 
-        if (arena == null) {
-            if (arenas.getReadyArenas(1).isEmpty()) {
-                messenger.tell(player, Message.NO_ARENAS);
-                return;
-            }
-            arena = arenas.getRandomArena(1);
-        }
-
         players.add(player.getName());
 
         PlayerData.reset(player);
         SafeTeleporter.tp(player, arenas.getLounge());
         scoreboard.addPlayer(player);
 
-        messenger.tell(player, Message.JOINED_LOBBY, arena);
+        messenger.tell(player, Message.JOINED_LOBBY);
         messenger.tellLobby(Message.PLAYER_JOINED_LOBBY, player);
     }
 
     @Override
     public void startBattle() {
+        Messenger messenger = api.getMessenger();
         BattleManager manager = api.getBattleManager();
         Battle battle = manager.getBattle();
+        ArenaManager arenas = api.getArenaManager();
 
         if (battle.isInProgress()) throw new IllegalStateException("Battle in progress!");
         if (players.size() < battle.getMinPlayers()) throw new IllegalStateException("Not enough players!");
+        if (arenas.getReadyArenas(1).isEmpty()) throw new IllegalStateException("No arenas!");
+
+        arena = arenas.getRandomArena(1);
+        battle.setArena(arena);
+        messenger.tellLobby(Message.ARENA_CHOSEN, battle.getType(), arena);
 
         starting = true;
-        battle.setArena(arena);
         startCountdown();
     }
 

@@ -15,4 +15,9 @@ public class TDMBattle extends SimpleTeamedBattle {
         addTeam(new SimpleTeam("Red", ChatColor.RED));
     }
 
+    @Override
+    public String getType() {
+        return "Team Deathmatch";
+    }
+
 }
