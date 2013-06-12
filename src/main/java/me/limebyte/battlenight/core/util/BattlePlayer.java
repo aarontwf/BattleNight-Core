@@ -25,28 +25,28 @@ public class BattlePlayer {
     private static final Map<DamageCause, String> deathCauses;
     static {
         deathCauses = new HashMap<DamageCause, String>();
-        deathCauses.put(DamageCause.BLOCK_EXPLOSION, "was blown up");
-        deathCauses.put(DamageCause.CONTACT, "was pricked");
-        deathCauses.put(DamageCause.CUSTOM, "was damaged by unknown");
-        deathCauses.put(DamageCause.DROWNING, "drowned");
-        deathCauses.put(DamageCause.ENTITY_ATTACK, "was slain");
-        deathCauses.put(DamageCause.ENTITY_EXPLOSION, "was blown up");
-        deathCauses.put(DamageCause.FALL, "fell to their death");
-        deathCauses.put(DamageCause.FALLING_BLOCK, "was crushed");
-        deathCauses.put(DamageCause.FIRE, "was set afire");
-        deathCauses.put(DamageCause.FIRE_TICK, "was burnt");
-        deathCauses.put(DamageCause.LAVA, "tried to swim in lava");
-        deathCauses.put(DamageCause.LIGHTNING, "was struck by lightning");
-        deathCauses.put(DamageCause.MAGIC, "was killed by magic");
-        deathCauses.put(DamageCause.MELTING, "melted away");
-        deathCauses.put(DamageCause.POISON, "was poisoned");
-        deathCauses.put(DamageCause.PROJECTILE, "was shot");
-        deathCauses.put(DamageCause.STARVATION, "starved");
-        deathCauses.put(DamageCause.SUFFOCATION, "suffocated");
-        deathCauses.put(DamageCause.SUICIDE, "commited suicide");
-        deathCauses.put(DamageCause.THORNS, "was pricked");
-        deathCauses.put(DamageCause.VOID, "fell into the void");
-        deathCauses.put(DamageCause.WITHER, "withered away");
+        deathCauses.put(DamageCause.BLOCK_EXPLOSION, "$p blew up.");
+        deathCauses.put(DamageCause.CONTACT, "$p was pricked to death.");
+        deathCauses.put(DamageCause.CUSTOM, "$p was killed by an unknown source.");
+        deathCauses.put(DamageCause.DROWNING, "$p drowned.");
+        deathCauses.put(DamageCause.ENTITY_ATTACK, "$k killed $p.");
+        deathCauses.put(DamageCause.ENTITY_EXPLOSION, "$p blew up.");
+        deathCauses.put(DamageCause.FALL, "$p fell to their death.");
+        deathCauses.put(DamageCause.FALLING_BLOCK, "$p was crushed.");
+        deathCauses.put(DamageCause.FIRE, "$p burnt to a crisp.");
+        deathCauses.put(DamageCause.FIRE_TICK, "$p burnt to a crisp.");
+        deathCauses.put(DamageCause.LAVA, "$p tried to swim in lava.");
+        deathCauses.put(DamageCause.LIGHTNING, "$p got struck by lightning.");
+        deathCauses.put(DamageCause.MAGIC, "$k killed $p with magic.");
+        deathCauses.put(DamageCause.MELTING, "$p melted away.");
+        deathCauses.put(DamageCause.POISON, "$k poisoned $p.");
+        deathCauses.put(DamageCause.PROJECTILE, "$k shot $p.");
+        deathCauses.put(DamageCause.STARVATION, "$p starved.");
+        deathCauses.put(DamageCause.SUFFOCATION, "$p suffocated.");
+        deathCauses.put(DamageCause.SUICIDE, "$p commited suicide.");
+        deathCauses.put(DamageCause.THORNS, "$k pricked $p to death.");
+        deathCauses.put(DamageCause.VOID, "$p fell into the void.");
+        deathCauses.put(DamageCause.WITHER, "$p withered away.");
     }
 
     private String name;
@@ -159,15 +159,15 @@ public class BattlePlayer {
 
         String causeMsg = deathCauses.get(cause);
         if (accolade != null) causeMsg = accolade.getDeathMessage();
-        if (causeMsg == null) causeMsg = "died";
+        if (causeMsg == null) causeMsg = "$p died.";
 
-        String deathMessage = messenger.getColouredName(player) + " " + causeMsg;
+        String deathMessage = causeMsg.replace("$p", messenger.getColouredName(player));
 
-        if (killer != null && player.getName() != killer.getName()) {
-            deathMessage += " by " + messenger.getColouredName(killer);
+        if (killer != null) {
+            deathMessage = deathMessage.replace("$k", messenger.getColouredName(killer));
         }
 
-        messenger.tellBattle(deathMessage + ".");
+        messenger.tellBattle(deathMessage);
     }
 
 }

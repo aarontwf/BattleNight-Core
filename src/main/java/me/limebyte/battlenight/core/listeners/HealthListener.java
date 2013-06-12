@@ -61,7 +61,7 @@ public class HealthListener extends APIRelatedListener {
                 event.setCancelled(true);
                 DamageCause cause = event.getCause();
                 if (damager == null) damager = player.getKiller();
-                Accolade accolade = Accolade.get(player, damager);
+                Accolade accolade = Accolade.get(player, damager, cause);
 
                 bPlayer.kill(damager, cause, accolade);
             }
@@ -121,7 +121,7 @@ public class HealthListener extends APIRelatedListener {
     }
 
     public enum Accolade {
-        BACKSTAB("was backstabbed");
+        BACKSTAB("$k backstabbed $p.");
 
         private String deathMessage;
 
@@ -133,16 +133,18 @@ public class HealthListener extends APIRelatedListener {
             return deathMessage;
         }
 
-        private static Accolade get(Player player, Player killer) {
+        private static Accolade get(Player player, Player killer, DamageCause cause) {
             Location playerLoc = player.getLocation();
             Location killerLoc = killer.getLocation();
 
             // Backstab
-            Vector playerVec = playerLoc.getDirection();
-            Vector killerVec = killerLoc.getDirection();
-            float angle = playerVec.angle(killerVec);
-            double range = Math.PI / 3;
-            if (angle <= range) return BACKSTAB;
+            if (cause == DamageCause.ENTITY_ATTACK) {
+                Vector playerVec = playerLoc.getDirection();
+                Vector killerVec = killerLoc.getDirection();
+                float angle = playerVec.angle(killerVec);
+                double range = Math.PI / 3;
+                if (angle <= range) return BACKSTAB;
+            }
 
             return null;
         }
