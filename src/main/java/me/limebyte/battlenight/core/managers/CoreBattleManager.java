@@ -17,7 +17,7 @@ public class CoreBattleManager implements BattleManager {
 
     public CoreBattleManager(BattleNightAPI api) {
         this.api = api;
-        
+
         Battle battle = getNewBattle(getBattleType());
         setBattle(battle != null ? battle : getNewBattle("ffa"));
     }
@@ -26,7 +26,7 @@ public class CoreBattleManager implements BattleManager {
     public Battle getBattle() {
         return battle;
     }
-    
+
     @Override
     public void setBattle(Battle battle) throws IllegalStateException {
         if (battle != null && battle.isInProgress()) throw new IllegalStateException("Battle in progress!");
@@ -36,19 +36,19 @@ public class CoreBattleManager implements BattleManager {
     @Override
     public Battle getNewBattle() {
         Battle battle = getNewBattle(getBattleType());
-        setBattle(battle != null ? battle : getNewBattle("ffa"));
+        setBattle(battle != null ? battle : getNewBattle("FFA"));
         return getBattle();
     }
-    
+
     @Override
     public Battle getNewBattle(String id) {
         int duration = getDuration();
         int minPlayers = getMinPlayers();
         int maxPlayers = getMaxPlayers();
-        
-        if (id.equalsIgnoreCase("ffa")) return new FFABattle(api, duration, minPlayers, maxPlayers);
-        if (id.equalsIgnoreCase("tdm")) return new TDMBattle(api, duration, minPlayers, maxPlayers);
-        
+
+        if (id.equalsIgnoreCase("FFA")) return new FFABattle(api, duration, minPlayers, maxPlayers);
+        if (id.equalsIgnoreCase("TDM")) return new TDMBattle(api, duration, minPlayers, maxPlayers);
+
         return null;
     }
 
@@ -71,7 +71,7 @@ public class CoreBattleManager implements BattleManager {
     }
 
     private String getBattleType() {
-        return ConfigManager.get(Config.MAIN).getString("Battle.Type", "TDM");
+        return ConfigManager.get(Config.MAIN).getString("Battle.Type", "FFA");
     }
 
     @Override

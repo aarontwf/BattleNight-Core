@@ -142,6 +142,8 @@ public class SimpleLobby implements Lobby {
         ArenaManager arenas = api.getArenaManager();
 
         if (battle.isInProgress()) throw new IllegalStateException("Battle in progress!");
+        battle = manager.getNewBattle();
+
         if (players.size() < battle.getMinPlayers()) throw new IllegalStateException("Not enough players!");
         if (arenas.getReadyArenas(1).isEmpty()) throw new IllegalStateException("No arenas!");
 
