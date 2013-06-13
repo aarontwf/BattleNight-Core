@@ -130,6 +130,8 @@ public class SimpleLobby implements Lobby {
         SafeTeleporter.tp(player, arenas.getLounge());
         scoreboard.addPlayer(player);
 
+        api.getPlayerClass(player).equip(player);
+
         messenger.tell(player, Message.JOINED_LOBBY);
         messenger.tellLobby(Message.PLAYER_JOINED_LOBBY, player);
     }
@@ -152,7 +154,12 @@ public class SimpleLobby implements Lobby {
         messenger.tellLobby(Message.ARENA_CHOSEN, battle.getType(), arena);
 
         starting = true;
-        startCountdown();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                startCountdown();
+            }
+        }.runTaskLater(BattleNight.instance, 5L);
     }
 
     private void startCountdown() {
