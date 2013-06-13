@@ -134,11 +134,10 @@ public class HealthListener extends APIRelatedListener {
         }
 
         private static Accolade get(Player player, Player killer, DamageCause cause) {
-            Location playerLoc = player.getLocation();
-            Location killerLoc = killer.getLocation();
-
             // Backstab
-            if (cause == DamageCause.ENTITY_ATTACK) {
+            if (cause == DamageCause.ENTITY_ATTACK && killer != null) {
+                Location playerLoc = player.getLocation();
+                Location killerLoc = killer.getLocation();
                 Vector playerVec = playerLoc.getDirection();
                 Vector killerVec = killerLoc.getDirection();
                 float angle = playerVec.angle(killerVec);
