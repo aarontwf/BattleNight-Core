@@ -6,7 +6,7 @@ import java.util.Map;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.listeners.HealthListener.Accolade;
+import me.limebyte.battlenight.core.listeners.HealthListener.DeathCause;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 
 import org.bukkit.Bukkit;
@@ -84,7 +84,7 @@ public class BattlePlayer {
         return alive;
     }
 
-    public void kill(Player killer, DamageCause cause, Accolade accolade) {
+    public void kill(Player killer, DamageCause cause, DeathCause accolade) {
         if (!alive) return;
         alive = false;
         Player player = Bukkit.getPlayerExact(name);
@@ -154,11 +154,11 @@ public class BattlePlayer {
         }
     }
 
-    private static void killFeed(Player player, Player killer, DamageCause cause, Accolade accolade) {
+    private static void killFeed(Player player, Player killer, DamageCause cause, DeathCause accolade) {
         Messenger messenger = BattleNight.instance.getAPI().getMessenger();
 
         String causeMsg = deathCauses.get(cause);
-        if (accolade != null) causeMsg = accolade.getDeathMessage();
+        if (accolade != null) causeMsg = accolade.getMessage();
         if (causeMsg == null) causeMsg = "$p died.";
 
         String deathMessage = causeMsg.replace("$p", messenger.getColouredName(player));

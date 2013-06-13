@@ -8,6 +8,7 @@ import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.BattlePlayer;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -20,6 +21,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class HealthListener extends APIRelatedListener {
@@ -61,7 +63,7 @@ public class HealthListener extends APIRelatedListener {
                 event.setCancelled(true);
                 DamageCause cause = event.getCause();
                 if (damager == null) damager = player.getKiller();
-                Accolade accolade = Accolade.get(player, damager, cause);
+                DeathCause accolade = DeathCause.get(player, damager, cause);
 
                 bPlayer.kill(damager, cause, accolade);
             }
@@ -120,32 +122,48 @@ public class HealthListener extends APIRelatedListener {
         return killer;
     }
 
-    public enum Accolade {
-        BACKSTAB("$k backstabbed $p.");
+    public enum DeathCause {
+        PUNCH("$k punched $p"),
+        STAB("$k stabbed $p."),
+        BACKSTAB("$k backstabbed $p."),
+        SHOT("$k shot $p.");
 
         private String deathMessage;
 
-        private Accolade(String deathMessage) {
+        private DeathCause(String deathMessage) {
             this.deathMessage = deathMessage;
         }
 
-        public String getDeathMessage() {
+        public String getMessage() {
             return deathMessage;
         }
 
-        private static Accolade get(Player player, Player killer, DamageCause cause) {
-            // Backstab
+        private static DeathCause get(Player player, Player killer, DamageCause cause) {
             if (cause == DamageCause.ENTITY_ATTACK && killer != null) {
-                Location playerLoc = player.getLocation();
-                Location killerLoc = killer.getLocation();
-                Vector playerVec = playerLoc.getDirection();
-                Vector killerVec = killerLoc.getDirection();
-                float angle = playerVec.angle(killerVec);
-                double range = Math.PI / 3;
-                if (angle <= range) return BACKSTAB;
+                ItemStack weapon = killer.getItemInHand();
+
+                if (weapon != null && isSword(weapon.getType())) {
+                    // Stab and Backstab
+                    Location playerLoc = player.getLocation();
+                    Location killerLoc = killer.getLocation();
+                    Vector playerVec = playerLoc.getDirection();
+                    Vector killerVec = killerLoc.getDirection();
+                    float angle = playerVec.angle(killerVec);
+                    double range = Math.PI / 3;
+                    return angle <= range ? BACKSTAB : STAB;
+                } else if (weapon == null || weapon.getType() == Material.AIR) {
+                    // Punch
+                    return PUNCH;
+                } else if (cause == DamageCause.PROJECTILE) {
+                    return SHOT;
+                }
             }
 
             return null;
+        }
+
+        private static boolean isSword(Material material) {
+            return false;
         }
     }
 
