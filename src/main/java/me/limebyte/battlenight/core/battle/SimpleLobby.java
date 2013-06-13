@@ -75,7 +75,7 @@ public class SimpleLobby implements Lobby {
             api.setPlayerClass(player, api.getClassManager().getRandomClass());
         }
 
-        messenger.tell(player, Message.JOINED_LOBBY, arena);
+        messenger.tell(player, Message.JOINED_LOBBY);
         messenger.tellLobby(Message.PLAYER_JOINED_LOBBY, player);
 
     }
