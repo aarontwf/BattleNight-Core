@@ -149,3 +149,25 @@ classes:
                 type: potion
                 data: 8206
         effects: speed, water_breathing
+    Miner:
+        items:
+            slot0:
+                type: diamond_pickaxe
+            slot1:
+                type: potion
+                data: 8225
+                amount: 4
+        armour:
+            helmet:
+                type: leather_helmet
+                enchantments: 0~2
+            chestplate:
+                type: leather_chestplate
+                enchantments: 0~2
+            leggings:
+                type: leather_leggings
+                enchantments: 0~2
+            boots:
+                type: leather_boots
+                enchantments: 0~2
+        effects: dig_speed~2
