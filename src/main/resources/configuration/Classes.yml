@@ -183,7 +183,7 @@ classes:
 
     Dwarf:
         items:
-            slot1:
+            slot0:
                 type: diamond_axe
                 enchantments: 16~6
         armour:
@@ -195,4 +195,4 @@ classes:
                 type: leather_leggings
             boots:
                 type: leather_boots
-        effects: speed~3, slow_digging~2
+        effects: speed~3, slow_digging~6
