@@ -111,8 +111,8 @@ classes:
     Magician:
         items:
             slot0:
-                type: stone_sword
-                name: Stone Staff
+                type: stick
+                name: Magic Staff
             slot1:
                 type: ender_pearl
                 amount: 16
@@ -122,10 +122,11 @@ classes:
             slot6:
                 type: potion
                 data: 16396
-                amount: 6
+                amount: 32
             slot7:
                 type: potion
                 data: 16388
+                amount: 8
             slot8:
                 type: potion
                 data: 16458
