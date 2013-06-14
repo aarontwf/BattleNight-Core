@@ -66,14 +66,13 @@ classes:
         items:
             slot0:
                 type: bow
-                enchantments: 49~1
+                enchantments: 49~2, 51~1
                 name: Long Bow
             slot1:
                 type: ender_pearl
                 amount: 4
             slot8:
                 type: arrow
-                amount: 64
         armour:
             helmet:
                 type: chainmail_helmet
