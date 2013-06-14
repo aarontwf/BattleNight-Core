@@ -15,10 +15,12 @@ public class UpdateChecker {
     private static final String UPDATE_URL = "https://raw.github.com/BattleNight/BattleNight-Core/master/version.txt";
     private BattleNightAPI api;
     private String version;
+    private boolean snapshot;
 
     public UpdateChecker(BattleNightAPI api, PluginDescriptionFile pdf) {
         this.api = api;
-        version = removeSuffix(pdf.getVersion());
+        this.version = pdf.getVersion();
+        this.snapshot = removeSuffix();
     }
 
     public void check() {
@@ -40,7 +42,7 @@ public class UpdateChecker {
     }
 
     private boolean isNewer(String latestVersion) {
-        if (version.equals(latestVersion)) return false;
+        if (version.equals(latestVersion)) return snapshot ? true : false;
 
         String[] verInts = version.split(".");
         String[] testInts = latestVersion.split(".");
@@ -57,7 +59,9 @@ public class UpdateChecker {
         return false;
     }
 
-    private String removeSuffix(String version) {
-        return version.split("-")[0];
+    private boolean removeSuffix() {
+        boolean snapshot = version.contains("-");
+        version = version.split("-")[0];
+        return snapshot;
     }
 }
