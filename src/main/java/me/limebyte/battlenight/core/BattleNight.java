@@ -52,6 +52,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         }
         api.getArenaManager().saveArenas();
 
+        getServer().getScheduler().cancelTasks(this);
+
         PluginDescriptionFile pdfFile = getDescription();
         api.getMessenger().log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
     }
