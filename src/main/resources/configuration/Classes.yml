@@ -161,7 +161,8 @@ classes:
         items:
             slot0:
                 type: diamond_pickaxe
-                enchantments: 16~3
+                enchantments: 16~2
+                name: Sharpened Pick
             slot1:
                 type: potion
                 data: 8225
@@ -186,6 +187,7 @@ classes:
             slot0:
                 type: diamond_axe
                 enchantments: 16~4
+                name: Battle Axe
         armour:
             helmet:
                 type: leather_helmet
