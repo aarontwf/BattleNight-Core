@@ -112,6 +112,7 @@ classes:
             slot0:
                 type: stick
                 name: Magic Staff
+                enchantments: 16~4, 19~1
             slot1:
                 type: ender_pearl
                 amount: 16
