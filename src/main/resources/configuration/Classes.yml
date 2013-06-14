@@ -15,6 +15,7 @@ classes:
                 type: iron_boots
                 enchantments: 2~4
         effects: speed~2, jump~2
+
     Pyro:
         items:
             slot0:
@@ -39,6 +40,7 @@ classes:
                 type: leather_boots
                 enchantments: 1~4
         effects: fire_resistance
+
     Tank:
         items:
             slot0:
@@ -57,11 +59,13 @@ classes:
                 type: diamond_boots
                 enchantments: 3~3
         effects: slow
+
     Swordsman:
         items:
             slot0:
                 type: diamond_sword
                 enchantments: 16~1
+
     Archer:
         items:
             slot0:
@@ -86,6 +90,7 @@ classes:
             boots:
                 type: chainmail_boots
                 enchantments: 4~2
+
     Medic:
         items:
             slot0:
@@ -107,6 +112,7 @@ classes:
                 type: leather_helmet
                 enchantments: 0~2
                 colour: 177, 93, 155
+
     Magician:
         items:
             slot0:
@@ -140,6 +146,7 @@ classes:
             boots:
                 type: iron_boots
                 enchantments: 2~4
+
     Spy:
         items:
             slot0:
@@ -149,10 +156,12 @@ classes:
                 type: potion
                 data: 8206
         effects: speed, water_breathing
+
     Miner:
         items:
             slot0:
                 type: diamond_pickaxe
+                enchantments: 16~2
             slot1:
                 type: potion
                 data: 8225
@@ -170,4 +179,20 @@ classes:
             boots:
                 type: leather_boots
                 enchantments: 0~2
-        effects: dig_speed~2
+        effects: fast_digging~2
+
+    Dwarf:
+        items:
+            slot1:
+                type: diamond_axe
+                enchantments: 16~6
+        armour:
+            helmet:
+                type: leather_helmet
+            chestplate:
+                type: leather_chestplate
+            leggings:
+                type: leather_leggings
+            boots:
+                type: leather_boots
+        effects: speed~3, slow_digging~2
