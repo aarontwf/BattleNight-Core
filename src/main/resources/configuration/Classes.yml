@@ -161,7 +161,7 @@ classes:
         items:
             slot0:
                 type: diamond_pickaxe
-                enchantments: 16~2
+                enchantments: 16~3
             slot1:
                 type: potion
                 data: 8225
@@ -169,23 +169,23 @@ classes:
         armour:
             helmet:
                 type: leather_helmet
-                enchantments: 0~2
+                enchantments: 0~3
             chestplate:
                 type: leather_chestplate
-                enchantments: 0~2
+                enchantments: 0~3
             leggings:
                 type: leather_leggings
-                enchantments: 0~2
+                enchantments: 0~3
             boots:
                 type: leather_boots
-                enchantments: 0~2
+                enchantments: 0~3
         effects: fast_digging~2
 
     Dwarf:
         items:
             slot0:
                 type: diamond_axe
-                enchantments: 16~6
+                enchantments: 16~4
         armour:
             helmet:
                 type: leather_helmet
@@ -195,4 +195,4 @@ classes:
                 type: leather_leggings
             boots:
                 type: leather_boots
-        effects: speed~3, slow_digging~6
+        effects: speed~2, slow_digging~8
