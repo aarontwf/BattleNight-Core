@@ -5,7 +5,7 @@ classes:
     Scout:
         items:
             slot0:
-                type: wood_sword
+                type: stone_sword
                 enchantments: 19~2
             slot1:
                 type: potion
@@ -14,7 +14,7 @@ classes:
             boots:
                 type: iron_boots
                 enchantments: 2~4
-        effects: speed~2, jump
+        effects: speed~2, jump~2
     Pyro:
         items:
             slot0:
