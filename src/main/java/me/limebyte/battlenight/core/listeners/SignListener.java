@@ -1,9 +1,6 @@
 package me.limebyte.battlenight.core.listeners;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ClassManager;
@@ -29,52 +26,9 @@ import org.bukkit.potion.PotionEffect;
 public class SignListener extends APIRelatedListener {
 
     private static final String LINE = "----------";
-    public static HashMap<Sign, ArrayList<String>> classSigns = new HashMap<Sign, ArrayList<String>>();
 
     public SignListener(BattleNightAPI api) {
         super(api);
-    }
-
-    public static void cleanSigns() {
-        Iterator<Sign> it = classSigns.keySet().iterator();
-
-        while (it.hasNext()) {
-            Sign sign = it.next();
-            sign.setLine(2, "");
-            sign.setLine(3, "");
-            it.remove();
-        }
-    }
-
-    public static void cleanSigns(Player player) {
-        String name = player.getName();
-        Iterator<Entry<Sign, ArrayList<String>>> it = classSigns.entrySet().iterator();
-
-        while (it.hasNext()) {
-            Entry<Sign, ArrayList<String>> entry = it.next();
-            ArrayList<String> names = entry.getValue();
-            if (!names.contains(name)) continue;
-
-            Sign sign = entry.getKey();
-            names.remove(name);
-            sign.setLine(2, names.size() > 0 ? names.get(0) : "");
-            sign.setLine(3, names.size() > 1 ? names.get(1) : "");
-        }
-    }
-
-    private static void addName(Player player, Sign sign) {
-        if (!classSigns.containsKey(sign)) classSigns.put(sign, new ArrayList<String>());
-
-        cleanSigns(player);
-        classSigns.get(sign).add(player.getName());
-        refreshNames(sign);
-    }
-
-    private static void refreshNames(Sign sign) {
-        if (!classSigns.containsKey(sign)) return;
-        ArrayList<String> names = classSigns.get(sign);
-        sign.setLine(2, names.size() > 0 ? names.get(0) : "");
-        sign.setLine(3, names.size() > 1 ? names.get(1) : "");
     }
 
     private static void reset(Player player) {
@@ -110,14 +64,12 @@ public class SignListener extends APIRelatedListener {
                     sign.setLine(3, "");
                     sign.update();
                 }
-                
+
                 if (getAPI().getLobby().getPlayers().contains(player.getName())) {
                     if (classes.containsKey(title)) {
                         PlayerClass playerClass = classes.get(title);
 
                         if (player.hasPermission(playerClass.getPermission())) {
-                            addName(player, sign);
-
                             if (Metadata.getPlayerClass(player) != playerClass) {
                                 ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                             }

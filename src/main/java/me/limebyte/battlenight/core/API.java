@@ -12,7 +12,6 @@ import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.battle.SimpleLobby;
 import me.limebyte.battlenight.core.commands.BattleNightCommand;
 import me.limebyte.battlenight.core.commands.CommandManager;
-import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.managers.CoreArenaManager;
 import me.limebyte.battlenight.core.managers.CoreBattleManager;
 import me.limebyte.battlenight.core.managers.CoreClassManager;
@@ -34,7 +33,7 @@ public class API implements BattleNightAPI {
     private ClassManager classManager;
     private MusicManager musicManager;
     private SpectatorManager spectatorManager;
-    
+
     private Lobby lobby;
 
     public API(BattleNight plugin) {
@@ -66,7 +65,7 @@ public class API implements BattleNightAPI {
     public ClassManager getClassManager() {
         return classManager;
     }
-    
+
     @Override
     public Lobby getLobby() {
         return lobby;
@@ -104,7 +103,6 @@ public class API implements BattleNightAPI {
             playerClass.equip(player);
         } else {
             Metadata.remove(player, "class");
-            SignListener.cleanSigns(player);
         }
     }
 

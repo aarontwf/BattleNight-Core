@@ -44,7 +44,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
     @Override
     public void onDisable() {
-        SignListener.cleanSigns();
         getAPI().getBattleManager().getBattle().stop();
         for (String name : api.getLobby().getPlayers()) {
             Player player = Bukkit.getPlayerExact(name);

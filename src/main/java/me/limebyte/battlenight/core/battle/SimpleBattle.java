@@ -18,7 +18,6 @@ import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Timer;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
@@ -169,7 +168,6 @@ public abstract class SimpleBattle implements Battle {
 
         messenger.tellBattle(Message.BATTLE_STARTED);
 
-        SignListener.cleanSigns();
         return true;
     }
 
