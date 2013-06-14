@@ -163,7 +163,7 @@ public class HealthListener extends APIRelatedListener {
         }
 
         private static boolean isSword(Material material) {
-            return false;
+            return material.toString().contains("SWORD");
         }
     }
 
