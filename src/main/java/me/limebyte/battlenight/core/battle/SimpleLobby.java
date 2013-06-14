@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class SimpleLobby implements Lobby {
 
+    private static final int START_DELAY = 5;
     private static final int COUNTDOWN = 5;
 
     private BattleNightAPI api;
@@ -159,7 +160,7 @@ public class SimpleLobby implements Lobby {
             public void run() {
                 startCountdown();
             }
-        }.runTaskLater(BattleNight.instance, 5L);
+        }.runTaskLater(BattleNight.instance, START_DELAY * 20L);
     }
 
     private void startCountdown() {
