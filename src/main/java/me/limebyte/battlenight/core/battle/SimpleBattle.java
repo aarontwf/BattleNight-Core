@@ -34,7 +34,7 @@ public abstract class SimpleBattle implements Battle {
     public BattleNightAPI api;
 
     private BattleTimer timer;
-    private BattleScorePane scoreboard;
+    protected BattleScorePane scoreboard;
     private int minPlayers;
     private int maxPlayers;
 
@@ -47,7 +47,7 @@ public abstract class SimpleBattle implements Battle {
         this.api = api;
 
         timer = new BattleTimer(api, this, duration);
-        scoreboard = new BattleScorePane(this);
+        scoreboard = new BattleScorePane(this, false);
 
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -153,8 +153,7 @@ public abstract class SimpleBattle implements Battle {
     }
 
     public boolean shouldEnd() {
-        int constraint = inProgress ? 2 : 1;
-        return getPlayers().size() < constraint;
+        return getPlayers().size() < minPlayers;
     }
 
     @Override

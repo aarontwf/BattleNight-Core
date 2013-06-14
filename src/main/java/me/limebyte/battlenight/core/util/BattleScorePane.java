@@ -2,6 +2,8 @@ package me.limebyte.battlenight.core.util;
 
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.TeamedBattle;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -14,21 +16,21 @@ public class BattleScorePane extends SimpleScorePane {
     private static final String TITLE_TIME = TITLE_PREFIX + "Battle (%1$TM:%1$TS)";
     private static final String TITLE_NO_TIME = TITLE_PREFIX + "Battle";
 
-    public BattleScorePane(Battle battle) {
+    public BattleScorePane(Battle battle, boolean teamed) {
         super();
 
         this.battle = battle;
-        teamed = battle instanceof TeamedBattle;
+        this.teamed = teamed;
     }
 
-    public void addTeam(me.limebyte.battlenight.api.battle.Team team, boolean friendlyFire) {
+    public void addTeam(me.limebyte.battlenight.api.battle.Team team) {
         if (!teamed) return;
 
         Team t = scoreboard.registerNewTeam("bn_team_" + team.getName());
         t.setDisplayName(team.getDisplayName() + " Team");
         t.setPrefix(team.getColour().toString());
 
-        t.setAllowFriendlyFire(friendlyFire);
+        t.setAllowFriendlyFire(ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false));
         t.setCanSeeFriendlyInvisibles(true);
     }
 

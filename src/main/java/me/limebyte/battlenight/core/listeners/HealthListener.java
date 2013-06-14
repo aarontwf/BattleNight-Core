@@ -2,7 +2,6 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.core.battle.SimpleTeamedBattle;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.BattlePlayer;
@@ -91,19 +90,7 @@ public class HealthListener extends APIRelatedListener {
         if (!bDamager.isAlive()) return false;
 
         if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName())) return false;
-
         if (getAPI().getLobby().contains(damaged)) return false;
-
-        if (battle.containsPlayer(damager)) {
-            if (damager == damaged) return true;
-
-            if (battle instanceof SimpleTeamedBattle) {
-                if (((SimpleTeamedBattle) battle).areEnemies(damager, damaged)) return true;
-                return ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false);
-            }
-
-            return true;
-        }
 
         return true;
     }
