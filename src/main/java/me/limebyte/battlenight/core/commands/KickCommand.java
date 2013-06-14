@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
+import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 
@@ -24,6 +25,7 @@ public class KickCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         Messenger messenger = api.getMessenger();
+        Lobby lobby = api.getLobby();
 
         if (args.length < 1) {
             messenger.tell(sender, Message.SPECIFY_PLAYER);
@@ -34,13 +36,13 @@ public class KickCommand extends BattleNightCommand {
         Player player = Bukkit.getPlayerExact(args[0]);
 
         if (player != null) {
+            String reason = null;
+
+            if (args.length > 1) {
+                reason = createString(args, 1);
+            }
+
             if (api.getBattleManager().getBattle().containsPlayer(player)) {
-                String reason = null;
-
-                if (args.length > 1) {
-                    reason = createString(args, 1);
-                }
-
                 api.getBattleManager().getBattle().removePlayer(player);
 
                 if (reason != null) {
@@ -51,6 +53,15 @@ public class KickCommand extends BattleNightCommand {
                     messenger.tellBattleExcept(player, Message.PLAYER_KICKED, player);
                 }
 
+                return true;
+            } else if (lobby.getPlayers().contains(player.getName())) {
+                if (reason != null) {
+                    messenger.tell(player, Message.REASONED_KICK, reason);
+                    messenger.tellLobby(Message.PLAYER_REASONED_KICKED, player, reason);
+                } else {
+                    messenger.tell(player, Message.KICKED);
+                    messenger.tellLobby(Message.PLAYER_KICKED, player);
+                }
                 return true;
             } else {
                 messenger.tell(sender, Message.PLAYER_NOT_IN_BATTLE, args[0]);
