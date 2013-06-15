@@ -34,7 +34,7 @@ public class SimpleScorePane implements ScorePane {
 
         health = scoreboard.registerNewObjective("bn_belowname", "health");
         health.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        health.setDisplayName(ChatColor.LIGHT_PURPLE + "\u2665");
+        health.setDisplayName(ChatColor.RED + "\u2764");
     }
 
     public void addPlayer(Player player) {
