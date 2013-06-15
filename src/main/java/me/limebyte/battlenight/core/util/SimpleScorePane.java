@@ -18,7 +18,7 @@ public class SimpleScorePane implements ScorePane {
 
     protected Scoreboard scoreboard;
     protected Objective sidebar;
-    protected Objective belowName;
+    protected Objective health;
 
     private static Map<String, Scoreboard> scoreboards = new HashMap<String, Scoreboard>();
 
@@ -32,9 +32,9 @@ public class SimpleScorePane implements ScorePane {
         sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
         sidebar.setDisplayName(LOBBY_TITLE);
 
-        belowName = scoreboard.registerNewObjective("bn_belowname", "health");
-        belowName.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        belowName.setDisplayName("/ 20");
+        health = scoreboard.registerNewObjective("bn_belowname", "health");
+        health.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        health.setDisplayName(ChatColor.LIGHT_PURPLE + "\u2665");
     }
 
     public void addPlayer(Player player) {
