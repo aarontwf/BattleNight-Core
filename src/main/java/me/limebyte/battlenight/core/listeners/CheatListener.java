@@ -132,8 +132,13 @@ public class CheatListener extends APIRelatedListener {
         Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattleManager().getBattle();
 
-        if (lobby.contains(player) || battle.containsPlayer(player)) {
-            if (!SafeTeleporter.telePass.contains(player.getName())) {
+        if (!SafeTeleporter.telePass.contains(player.getName())) {
+            if (lobby.contains(player)) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if (battle.containsPlayer(player)) {
                 switch (event.getCause()) {
                     case COMMAND:
                         if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
