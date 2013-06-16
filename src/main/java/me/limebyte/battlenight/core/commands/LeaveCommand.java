@@ -39,8 +39,7 @@ public class LeaveCommand extends BattleNightCommand {
             } else if (lobby.getPlayers().contains(player.getName())) {
                 lobby.removePlayer(player);
                 return true;
-            }
-            else if (spectators.getSpectators().contains(player.getName())) {
+            } else if (spectators.getSpectators().contains(player.getName())) {
                 spectators.removeSpectator(player);
                 return true;
             } else {

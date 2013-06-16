@@ -12,7 +12,9 @@ import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.util.BattlePlayer;
 import me.limebyte.battlenight.core.util.BattleScorePane;
 
 import org.bukkit.Location;
@@ -71,8 +73,19 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
 
     @Override
     public boolean removePlayer(Player player) {
+        if (!containsPlayer(player)) return false;
         setTeam(player, null);
-        return super.removePlayer(player);
+
+        PlayerData.reset(player);
+        PlayerData.restore(player, true, false);
+        api.setPlayerClass(player, null);
+        getPlayers().remove(player.getName());
+        getScoreboard().removePlayer(player);
+        api.getSpectatorManager().removeTarget(player);
+        BattlePlayer.get(player.getName()).getStats().reset();
+
+        if (shouldEnd()) stop();
+        return true;
     }
 
     public boolean removeTeam(Team team) {
@@ -86,7 +99,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         if (prevTeam != null) {
             for (Team t : teams) {
                 if (t.getName().equals(prevTeam)) {
-                    if (t instanceof SimpleTeam) ((SimpleTeam) t).removePlayer(player);
+                    if (t instanceof SimpleTeam) t.removePlayer(player);
                     break;
                 }
             }
