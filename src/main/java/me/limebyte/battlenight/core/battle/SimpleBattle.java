@@ -211,8 +211,6 @@ public abstract class SimpleBattle implements Battle {
             spectatorManager.removeSpectator(player);
         }
 
-        api.getBattleManager().getNewBattle();
-
         arena = null;
         inProgress = false;
         return true;
@@ -317,7 +315,6 @@ public abstract class SimpleBattle implements Battle {
     }
 
     protected Player toPlayer(String name) {
-        Player player = Bukkit.getPlayerExact(name);
-        return player;
+        return Bukkit.getPlayerExact(name);
     }
 }
