@@ -55,16 +55,6 @@ public class SignListener extends APIRelatedListener {
                     classes.put(clazz.getName(), clazz);
                 }
 
-                // For old signs
-                if (classes.containsKey(sign.getLine(0))) {
-                    title = sign.getLine(0);
-                    sign.setLine(0, "");
-                    sign.setLine(1, title);
-                    sign.setLine(2, LINE);
-                    sign.setLine(3, "");
-                    sign.update();
-                }
-
                 if (getAPI().getLobby().getPlayers().contains(player.getName())) {
                     if (classes.containsKey(title)) {
                         PlayerClass playerClass = classes.get(title);
@@ -96,19 +86,17 @@ public class SignListener extends APIRelatedListener {
             classes.put(clazz.getName(), clazz);
         }
 
-        if (classes != null) {
-            if (classes.containsKey(title)) {
-                if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
-                    getAPI().getMessenger().tell(player, Message.UNSUCCESSFUL_SIGN, title);
-                    return;
-                }
-
-                e.setLine(0, "");
-                e.setLine(1, title);
-                e.setLine(2, LINE);
-                e.setLine(3, "");
-                getAPI().getMessenger().tell(player, Message.SUCCESSFUL_SIGN, title);
+        if (classes.containsKey(title)) {
+            if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
+                getAPI().getMessenger().tell(player, Message.UNSUCCESSFUL_SIGN, title);
+                return;
             }
+
+            e.setLine(0, "");
+            e.setLine(1, title);
+            e.setLine(2, LINE);
+            e.setLine(3, "");
+            getAPI().getMessenger().tell(player, Message.SUCCESSFUL_SIGN, title);
         }
     }
 }
