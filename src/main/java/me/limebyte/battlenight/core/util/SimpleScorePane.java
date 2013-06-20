@@ -5,6 +5,7 @@ import java.util.Map;
 
 import me.limebyte.battlenight.api.battle.ScorePane;
 
+import me.limebyte.battlenight.core.tosort.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -33,7 +34,9 @@ public class SimpleScorePane implements ScorePane {
         sidebar.setDisplayName(LOBBY_TITLE);
 
         health = scoreboard.registerNewObjective("bn_belowname", "health");
-        health.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        if (ConfigManager.get(ConfigManager.Config.MAIN).getBoolean("Scoreboard.DisplayHealth", true)) {
+            health.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        }
         health.setDisplayName(ChatColor.RED + "\u2764");
     }
 

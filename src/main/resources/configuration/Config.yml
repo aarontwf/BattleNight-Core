@@ -19,6 +19,8 @@ Teleportation:
     Unknown: true
 Particles:
     ClassSelection: smoke
+Scoreboard:
+    DisplayHealth: true
 Commands:
     Block: true
     Whitelist:
