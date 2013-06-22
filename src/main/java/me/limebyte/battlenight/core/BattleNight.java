@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.BattleNightPlugin;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleArena;
 import me.limebyte.battlenight.core.battle.SimpleWaypoint;
@@ -44,10 +45,10 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
     @Override
     public void onDisable() {
-        getAPI().getBattleManager().getBattle().stop();
-        for (String name : api.getLobby().getPlayers()) {
+        Battle battle = getAPI().getBattleManager().getBattle();
+        for (String name : battle.getPlayers()) {
             Player player = Bukkit.getPlayerExact(name);
-            api.getLobby().removePlayer(player);
+            battle.removePlayer(player);
         }
         api.getArenaManager().saveArenas();
 
