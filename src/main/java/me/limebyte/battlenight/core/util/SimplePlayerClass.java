@@ -45,7 +45,7 @@ public class SimplePlayerClass implements PlayerClass {
 
         // Set it
         Metadata.set(player, "class", name);
-        
+
         // Main Inventory
         inv.setContents(items.toArray(new ItemStack[items.size()]));
 
@@ -59,11 +59,14 @@ public class SimplePlayerClass implements PlayerClass {
         for (PotionEffect effect : effects) {
             player.addPotionEffect(effect, true);
         }
-        
+
         // Permissions
-        PermissionAttachment perms = player.addAttachment(BattleNight.instance);
-        for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
-            perms.setPermission(entry.getKey(), entry.getValue());
+        try {
+            PermissionAttachment perms = player.addAttachment(BattleNight.instance);
+            for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+                perms.setPermission(entry.getKey(), entry.getValue());
+            }
+        } catch (Exception e) {
         }
     }
 
