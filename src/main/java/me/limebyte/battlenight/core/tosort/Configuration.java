@@ -54,15 +54,13 @@ public class Configuration {
         InputStream defConfigStream = BattleNight.instance.getResource(fileName);
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            fileConfig.setDefaults(defConfig);
             fileConfig.options().indent(4);
-            fileConfig.options().copyDefaults(!file.exists() || copyDefaults);
+            if (!file.exists() || copyDefaults) fileConfig.setDefaults(defConfig);
         }
     }
 
     public void save() {
-        if (fileConfig == null || file == null)
-            return;
+        if (fileConfig == null || file == null) return;
         else {
             try {
                 get().save(file);
