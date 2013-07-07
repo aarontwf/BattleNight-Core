@@ -55,7 +55,8 @@ public class Configuration {
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfig.options().indent(4);
-            if (!file.exists() || copyDefaults) fileConfig.setDefaults(defConfig);
+            fileConfig.options().copyDefaults(!file.exists() || copyDefaults);
+            if (copyDefaults || !fileConfig.contains("classes")) fileConfig.setDefaults(defConfig);
         }
     }
 

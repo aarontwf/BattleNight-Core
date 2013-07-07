@@ -43,7 +43,7 @@ public class PlayerData {
     private float flySpeed;
     private int foodLevel;
     private int gameMode;
-    private int health;
+    private double health;
     private ItemStack[] invItems;
     private ItemStack[] invArmour;
     private int level;

@@ -12,31 +12,29 @@ import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.util.LobbyTimer;
 import me.limebyte.battlenight.core.util.SimpleScorePane;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class SimpleLobby implements Lobby {
-
-    private static final int START_DELAY = 5;
-    private static final int COUNTDOWN = 5;
 
     private BattleNightAPI api;
     private Set<String> players;
     private Arena arena;
     private SimpleScorePane scoreboard;
     private boolean starting = false;
+    private LobbyTimer timer;
 
     public SimpleLobby(BattleNightAPI api) {
         this.api = api;
         players = new HashSet<String>();
         scoreboard = new SimpleScorePane();
+        timer = new LobbyTimer(api, this, 10L);
     }
 
     @Override
@@ -155,32 +153,10 @@ public class SimpleLobby implements Lobby {
         messenger.tellLobby(Message.ARENA_CHOSEN, battle.getType(), arena);
 
         starting = true;
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                startCountdown();
-            }
-        }.runTaskLater(BattleNight.instance, START_DELAY * 20L);
+        timer.start();
     }
 
-    private void startCountdown() {
-        new BukkitRunnable() {
-            int count = COUNTDOWN;
-            Messenger messenger = api.getMessenger();
-
-            @Override
-            public void run() {
-                if (count <= 0) {
-                    this.cancel();
-                    start();
-                }
-                messenger.tellLobby(Message.LOBBY_COUNTDOWN, count);
-                count--;
-            }
-        }.runTaskTimer(BattleNight.instance, 0, 20);
-    }
-
-    private void start() {
+    public void start() {
         BattleManager manager = api.getBattleManager();
         Battle battle = manager.getBattle();
 
