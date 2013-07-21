@@ -64,7 +64,7 @@ public class SimpleMessenger implements Messenger {
     @Override
     public String getColouredName(Player player) {
         String name = player.getName();
-        Battle battle = api.getBattleManager().getBattle();
+        Battle battle = api.getBattle();
         ChatColor colour = ChatColor.WHITE;
 
         if (battle != null && battle.containsPlayer(player)) {
@@ -86,7 +86,8 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void playSong(Song battleEnd) {
-        for (String name : api.getBattleManager().getBattle().getPlayers()) {
+        if (api.getBattle() == null) return;
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
                 battleEnd.play(p);
@@ -96,7 +97,8 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void playSound(Sound sound, float pitch) {
-        for (String name : api.getBattleManager().getBattle().getPlayers()) {
+        if (api.getBattle() == null) return;
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
                 p.playSound(p.getLocation(), sound, 20f, pitch);
@@ -142,7 +144,8 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void tellBattle(Page page) {
-        for (String name : api.getBattleManager().getBattle().getPlayers()) {
+        if (api.getBattle() == null) return;
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
                 tell(p, page);
@@ -152,7 +155,8 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void tellBattle(String message) {
-        for (String name : api.getBattleManager().getBattle().getPlayers()) {
+        if (api.getBattle() == null) return;
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
                 tell(p, message);
@@ -177,7 +181,8 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void tellBattleExcept(Player player, Page page) {
-        for (String name : api.getBattleManager().getBattle().getPlayers()) {
+        if (api.getBattle() == null) return;
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) {
                 tell(p, page);
@@ -187,7 +192,8 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void tellBattleExcept(Player player, String message) {
-        for (String name : api.getBattleManager().getBattle().getPlayers()) {
+        if (api.getBattle() == null) return;
+        for (String name : api.getBattle().getPlayers()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) {
                 tell(p, message);

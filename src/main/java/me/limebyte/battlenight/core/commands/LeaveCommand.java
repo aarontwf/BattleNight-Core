@@ -27,11 +27,11 @@ public class LeaveCommand extends BattleNightCommand {
         Messenger messenger = api.getMessenger();
 
         if (sender instanceof Player) {
-            Battle battle = api.getBattleManager().getBattle();
+            Battle battle = api.getBattle();
             Lobby lobby = api.getLobby();
             Player player = (Player) sender;
 
-            if (battle.containsPlayer(player)) {
+            if (battle != null && battle.containsPlayer(player)) {
                 return battle.removePlayer(player);
             } else if (lobby.getPlayers().contains(player.getName())) {
                 lobby.removePlayer(player);

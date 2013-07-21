@@ -42,8 +42,8 @@ public class KickCommand extends BattleNightCommand {
                 reason = createString(args, 1);
             }
 
-            if (api.getBattleManager().getBattle().containsPlayer(player)) {
-                api.getBattleManager().getBattle().removePlayer(player);
+            if (api.getBattle() != null && api.getBattle().containsPlayer(player)) {
+                api.getBattle().removePlayer(player);
 
                 if (reason != null) {
                     messenger.tell(player, Message.REASONED_KICK, reason);

@@ -7,55 +7,56 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
-import me.limebyte.battlenight.api.battle.ScorePane;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.api.managers.BattleManager;
+import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
+import me.limebyte.battlenight.core.battle.battles.FFABattle;
+import me.limebyte.battlenight.core.battle.battles.TDMBattle;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.util.LobbyTimer;
-import me.limebyte.battlenight.core.util.SimpleScorePane;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 
 public class SimpleLobby implements Lobby {
 
     private BattleNightAPI api;
     private Set<String> players;
     private Arena arena;
-    private SimpleScorePane scoreboard;
     private boolean starting = false;
     private LobbyTimer timer;
 
     public SimpleLobby(BattleNightAPI api) {
         this.api = api;
         players = new HashSet<String>();
-        scoreboard = new SimpleScorePane();
         timer = new LobbyTimer(api, this, 10L);
     }
 
     @Override
     public void addPlayer(Player player) {
         Messenger messenger = api.getMessenger();
-        Battle battle = api.getBattleManager().getBattle();
+        Battle battle = api.getBattle();
 
         if (players.contains(player.getName())) {
             messenger.tell(player, Message.ALREADY_IN_LOBBY);
             return;
         }
 
-        if (battle.containsPlayer(player)) {
-            messenger.tell(player, Message.ALREADY_IN_BATTLE);
-            return;
-        }
+        if (battle != null) {
+            if (battle.containsPlayer(player)) {
+                messenger.tell(player, Message.ALREADY_IN_BATTLE);
+                return;
+            }
 
-        if (players.size() >= battle.getMaxPlayers()) {
-            messenger.tell(player, Message.BATTLE_FULL);
-            return;
+            if (players.size() >= battle.getMaxPlayers()) {
+                messenger.tell(player, Message.BATTLE_FULL);
+                return;
+            }
         }
 
         ArenaManager arenas = api.getArenaManager();
@@ -69,7 +70,7 @@ public class SimpleLobby implements Lobby {
         PlayerData.store(player);
         PlayerData.reset(player);
         SafeTeleporter.tp(player, arenas.getLounge());
-        scoreboard.addPlayer(player);
+        api.getScoreManager().addPlayer(player);
 
         if (starting) {
             api.setPlayerClass(player, api.getClassManager().getRandomClass());
@@ -91,7 +92,7 @@ public class SimpleLobby implements Lobby {
 
         players.remove(player.getName());
 
-        scoreboard.removePlayer(player);
+        api.getScoreManager().removePlayer(player);
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
 
@@ -129,7 +130,6 @@ public class SimpleLobby implements Lobby {
 
         PlayerData.reset(player);
         SafeTeleporter.tp(player, arenas.getLounge());
-        scoreboard.addPlayer(player);
 
         api.getPlayerClass(player).equip(player);
 
@@ -140,12 +140,11 @@ public class SimpleLobby implements Lobby {
     @Override
     public void startBattle() {
         Messenger messenger = api.getMessenger();
-        BattleManager manager = api.getBattleManager();
-        Battle battle = manager.getBattle();
+        Battle battle = api.getBattle();
         ArenaManager arenas = api.getArenaManager();
 
-        if (battle.isInProgress()) throw new IllegalStateException("Battle in progress!");
-        battle = manager.getNewBattle();
+        if (battle != null && battle.isInProgress()) throw new IllegalStateException("Battle in progress!");
+        battle = getNewBattle();
 
         if (players.size() < battle.getMinPlayers()) throw new IllegalStateException("Not enough players!");
         if (arenas.getReadyArenas(1).isEmpty()) throw new IllegalStateException("No arenas!");
@@ -153,20 +152,19 @@ public class SimpleLobby implements Lobby {
         arena = arenas.getRandomArena(1);
         battle.setArena(arena);
         messenger.tellLobby(Message.ARENA_CHOSEN, battle.getType(), arena);
+        api.getScoreManager().setState(ScoreboardState.BATTLE);
 
         starting = true;
         timer.start();
     }
 
     public void start() {
-        BattleManager manager = api.getBattleManager();
-        Battle battle = manager.getBattle();
+        Battle battle = api.getBattle();
 
         for (String name : players) {
             Player player = Bukkit.getPlayerExact(name);
             if (player == null) continue;
 
-            scoreboard.removePlayer(player);
             Metadata.remove(player, "ready");
             Metadata.remove(player, "voted");
             battle.addPlayer(player);
@@ -182,13 +180,21 @@ public class SimpleLobby implements Lobby {
         return starting;
     }
 
-    @Override
-    public ScorePane getScorePane() {
-        return scoreboard;
-    }
+    private Battle getNewBattle() {
+        String id = ConfigManager.get(Config.MAIN).getString("Battle.Type", "FFA");
 
-    public Scoreboard getScoreboard() {
-        return scoreboard.getScoreboard();
+        int duration = ConfigManager.get(Config.MAIN).getInt("Battle.Duration", 300);
+        int minPlayers = ConfigManager.get(Config.MAIN).getInt("Battle.MinPlayers", 2);
+        int maxPlayers = ConfigManager.get(Config.MAIN).getInt("Battle.MaxPlayers", 0);
+
+        if (duration < 5) duration = 5;
+        if (minPlayers < 2) minPlayers = 2;
+        if (maxPlayers < 1) maxPlayers = Integer.MAX_VALUE;
+        if (minPlayers > maxPlayers) maxPlayers = minPlayers;
+
+        if (id.equalsIgnoreCase("TDM")) return new TDMBattle(api, duration, minPlayers, maxPlayers);
+
+        return new FFABattle(api, duration, minPlayers, maxPlayers);
     }
 
 }

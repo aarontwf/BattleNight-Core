@@ -1,7 +1,7 @@
 package me.limebyte.battlenight.core.util;
 
+import me.limebyte.battlenight.api.managers.ScoreManager;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.battle.SimpleBattle;
 
 import org.bukkit.Bukkit;
 
@@ -39,8 +39,8 @@ public class PlayerStats {
         score = score + killScore;
         killStreak++;
 
-        SimpleBattle battle = (SimpleBattle) BattleNight.instance.getAPI().getBattleManager().getBattle();
-        battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name), score);
+        ScoreManager scores = BattleNight.instance.getAPI().getScoreManager();
+        scores.updateScore(Bukkit.getPlayerExact(name), score);
     }
 
     public void addDeath(boolean suicide) {
@@ -48,8 +48,8 @@ public class PlayerStats {
         deaths++;
         if (suicide) score -= 5;
 
-        SimpleBattle battle = (SimpleBattle) BattleNight.instance.getAPI().getBattleManager().getBattle();
-        battle.getScoreboard().updateScores(Bukkit.getPlayerExact(name), score);
+        ScoreManager scores = BattleNight.instance.getAPI().getScoreManager();
+        scores.updateScore(Bukkit.getPlayerExact(name), score);
     }
 
     public int getKills() {

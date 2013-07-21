@@ -114,8 +114,8 @@ public class BattlePlayer {
         alive = true;
         Bukkit.getScheduler().cancelTask(respawnTaskID);
         Player player = Bukkit.getPlayerExact(name);
-        Battle battle = BattleNight.instance.getAPI().getBattleManager().getBattle();
-        battle.respawn(player);
+        Battle battle = BattleNight.instance.getAPI().getBattle();
+        if (battle != null) battle.respawn(player);
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.showPlayer(player);
         }

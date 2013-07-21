@@ -52,12 +52,12 @@ public class CheatListener extends APIRelatedListener {
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Lobby lobby = getAPI().getLobby();
-        Battle battle = getAPI().getBattleManager().getBattle();
+        Battle battle = getAPI().getBattle();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
         if (lobby.contains(player) || !bPlayer.isAlive()) event.setCancelled(true);
 
-        if (battle.containsPlayer(player) && event.getSlotType() == SlotType.OUTSIDE) {
+        if (battle != null && battle.containsPlayer(player) && event.getSlotType() == SlotType.OUTSIDE) {
             ItemStack cursor = event.getCursor();
             if (cursor != null && cursor.getType() != Material.AIR) {
                 event.setCancelled(true);
@@ -69,9 +69,9 @@ public class CheatListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        Battle battle = getAPI().getBattleManager().getBattle();
+        Battle battle = getAPI().getBattle();
 
-        if (!getAPI().getLobby().contains(player) && !battle.containsPlayer(player)) return;
+        if (!getAPI().getLobby().contains(player) && (battle != null && !battle.containsPlayer(player))) return;
         if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
         List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
@@ -106,10 +106,10 @@ public class CheatListener extends APIRelatedListener {
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Lobby lobby = getAPI().getLobby();
-        Battle battle = getAPI().getBattleManager().getBattle();
+        Battle battle = getAPI().getBattle();
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
 
-        if (!bPlayer.isAlive() || battle.containsPlayer(player) || lobby.contains(player)) {
+        if (!bPlayer.isAlive() || (battle != null && battle.containsPlayer(player)) || lobby.contains(player)) {
             event.setCancelled(true);
         }
     }
@@ -118,7 +118,7 @@ public class CheatListener extends APIRelatedListener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         Lobby lobby = getAPI().getLobby();
-        Battle battle = getAPI().getBattleManager().getBattle();
+        Battle battle = getAPI().getBattle();
 
         if (!SafeTeleporter.telePass.contains(player.getName())) {
             if (lobby.contains(player)) {
@@ -126,7 +126,7 @@ public class CheatListener extends APIRelatedListener {
                 return;
             }
 
-            if (battle.containsPlayer(player)) {
+            if (battle != null && battle.containsPlayer(player)) {
                 switch (event.getCause()) {
                     case COMMAND:
                         if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {

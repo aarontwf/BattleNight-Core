@@ -35,7 +35,7 @@ public class HealthListener extends APIRelatedListener {
         Player player = (Player) event.getEntity();
         Player damager = getKiller(event);
         BattleNightAPI api = getAPI();
-        Battle battle = api.getBattleManager().getBattle();
+        Battle battle = api.getBattle();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
         if (!bPlayer.isAlive()) {
@@ -43,7 +43,7 @@ public class HealthListener extends APIRelatedListener {
             return;
         }
 
-        if (!api.getLobby().contains(player) && !battle.containsPlayer(player)) return;
+        if (!api.getLobby().contains(player) && (battle != null && !battle.containsPlayer(player))) return;
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
@@ -70,7 +70,7 @@ public class HealthListener extends APIRelatedListener {
         Player player = (Player) event.getEntity();
 
         if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
-        if (!getAPI().getBattleManager().getBattle().containsPlayer(player)) return;
+        if (getAPI().getBattle() != null && !getAPI().getBattle().containsPlayer(player)) return;
 
         RegainReason reason = event.getRegainReason();
         if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {

@@ -32,7 +32,7 @@ public class BattleTimer extends SimpleTimer {
 
         if (time % 10 == 0) {
             long timeSec = time / 10;
-            battle.getScoreboard().updateTime(timeSec);
+            api.getScoreManager().updateTime(timeSec);
 
             if (timeSec <= COUNTDOWN_START) {
                 messenger.playSound(Sound.NOTE_PIANO, Note.convertPitch(18));

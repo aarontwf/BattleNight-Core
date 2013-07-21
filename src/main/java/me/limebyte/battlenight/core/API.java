@@ -1,20 +1,21 @@
 package me.limebyte.battlenight.core;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.managers.MusicManager;
+import me.limebyte.battlenight.api.managers.ScoreManager;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.battle.SimpleLobby;
 import me.limebyte.battlenight.core.commands.BattleNightCommand;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.managers.CoreArenaManager;
-import me.limebyte.battlenight.core.managers.CoreBattleManager;
 import me.limebyte.battlenight.core.managers.CoreClassManager;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
+import me.limebyte.battlenight.core.managers.CoreScoreManager;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.util.SimpleMessenger;
@@ -27,20 +28,21 @@ public class API implements BattleNightAPI {
 
     // Managers
     private ArenaManager arenaManager;
-    private BattleManager battleManager;
     private ClassManager classManager;
     private MusicManager musicManager;
+    private ScoreManager scoreboardManager;
 
     private Lobby lobby;
+    private Battle battle;
 
     public API(BattleNight plugin) {
         messenger = new SimpleMessenger(this);
 
         // Managers
         arenaManager = new CoreArenaManager(this);
-        battleManager = new CoreBattleManager(this);
         classManager = new CoreClassManager(this);
         musicManager = new CoreMusicManager(this, plugin);
+        scoreboardManager = new CoreScoreManager();
 
         lobby = new SimpleLobby(this);
 
@@ -50,11 +52,6 @@ public class API implements BattleNightAPI {
     @Override
     public ArenaManager getArenaManager() {
         return arenaManager;
-    }
-
-    @Override
-    public BattleManager getBattleManager() {
-        return battleManager;
     }
 
     @Override
@@ -68,6 +65,11 @@ public class API implements BattleNightAPI {
     }
 
     @Override
+    public Battle getBattle() {
+        return battle;
+    }
+
+    @Override
     public Messenger getMessenger() {
         return messenger;
     }
@@ -78,6 +80,11 @@ public class API implements BattleNightAPI {
     }
 
     @Override
+    public ScoreManager getScoreManager() {
+        return scoreboardManager;
+    }
+
+    @Override
     public PlayerClass getPlayerClass(Player player) {
         return Metadata.getPlayerClass(player);
     }
@@ -85,6 +92,11 @@ public class API implements BattleNightAPI {
     public void registerCommand(BattleNightCommand command) {
         CommandManager.registerCommand(command);
 
+    }
+
+    @Override
+    public void setBattle(Battle battle) {
+        this.battle = battle;
     }
 
     @Override

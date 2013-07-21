@@ -15,7 +15,6 @@ import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
-import me.limebyte.battlenight.core.util.BattleScorePane;
 
 import org.bukkit.entity.Player;
 
@@ -25,7 +24,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
 
     public SimpleTeamedBattle(BattleNightAPI api, int duration, int minPlayers, int maxPlayers) {
         super(api, duration, minPlayers, maxPlayers);
-        this.scoreboard = new BattleScorePane(this, true);
     }
 
     @Override
@@ -48,7 +46,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         }
         if (!teams.add(team)) return false;
         setMinPlayers(teams.size());
-        getScoreboard().addTeam(team);
+        api.getScoreManager().addTeam(team);
         return true;
     }
 
@@ -79,7 +77,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         PlayerData.restore(player, true, false);
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
-        getScoreboard().removePlayer(player);
+        api.getScoreManager().removePlayer(player);
         BattlePlayer.get(player.getName()).getStats().reset();
 
         if (shouldEnd()) stop();

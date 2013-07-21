@@ -20,10 +20,10 @@ public class DeathListener extends APIRelatedListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Battle battle = getAPI().getBattleManager().getBattle();
+        Battle battle = getAPI().getBattle();
         Player player = event.getEntity();
 
-        if (battle.containsPlayer(player)) {
+        if (battle != null && battle.containsPlayer(player)) {
             getAPI().getMessenger().debug(Level.WARNING, "Somehow " + player.getName() + " died...");
         }
     }

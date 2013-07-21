@@ -45,10 +45,10 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
 
     @Override
     public void onDisable() {
-        Battle battle = getAPI().getBattleManager().getBattle();
+        Battle battle = getAPI().getBattle();
         Lobby lobby = getAPI().getLobby();
 
-        battle.stop();
+        if (battle != null) battle.stop();
         for (String name : lobby.getPlayers()) {
             Player player = Bukkit.getPlayerExact(name);
             if (player != null) lobby.removePlayer(player);

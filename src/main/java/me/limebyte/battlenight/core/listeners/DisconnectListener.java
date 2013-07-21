@@ -30,9 +30,9 @@ public class DisconnectListener extends APIRelatedListener {
     private void removePlayer(PlayerEvent event) {
         Player player = event.getPlayer();
         Lobby lobby = getAPI().getLobby();
-        Battle battle = getAPI().getBattleManager().getBattle();
+        Battle battle = getAPI().getBattle();
 
         if (lobby.contains(player)) lobby.removePlayer(player);
-        battle.removePlayer(player);
+        if (battle != null) battle.removePlayer(player);
     }
 }

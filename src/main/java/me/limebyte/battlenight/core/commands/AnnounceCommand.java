@@ -23,10 +23,10 @@ public class AnnounceCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        Battle battle = api.getBattleManager().getBattle();
+        Battle battle = api.getBattle();
         Messenger messenger = api.getMessenger();
 
-        if (!battle.isInProgress()) {
+        if (battle != null && !battle.isInProgress()) {
             messenger.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
             return false;
         }

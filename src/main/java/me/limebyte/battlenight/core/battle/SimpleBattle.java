@@ -13,13 +13,13 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Timer;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
-import me.limebyte.battlenight.core.util.BattleScorePane;
 import me.limebyte.battlenight.core.util.BattleTimer;
 
 import org.bukkit.Bukkit;
@@ -30,7 +30,6 @@ public abstract class SimpleBattle implements Battle {
     public BattleNightAPI api;
 
     private BattleTimer timer;
-    protected BattleScorePane scoreboard;
     private int minPlayers;
     private int maxPlayers;
 
@@ -43,7 +42,6 @@ public abstract class SimpleBattle implements Battle {
         this.api = api;
 
         timer = new BattleTimer(api, this, duration);
-        scoreboard = new BattleScorePane(this, false);
 
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -52,7 +50,6 @@ public abstract class SimpleBattle implements Battle {
     @Override
     public boolean addPlayer(Player player) {
         getPlayers().add(player.getName());
-        getScoreboard().addPlayer(player);
 
         if (!arena.getTexturePack().isEmpty()) {
             player.setTexturePack(arena.getTexturePack());
@@ -108,7 +105,7 @@ public abstract class SimpleBattle implements Battle {
         PlayerData.restore(player, true, false);
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
-        getScoreboard().removePlayer(player);
+        api.getScoreManager().removePlayer(player);
         BattlePlayer.get(player.getName()).getStats().reset();
 
         if (shouldEnd()) {
@@ -187,12 +184,12 @@ public abstract class SimpleBattle implements Battle {
             bPlayer.revive();
             bPlayer.getStats().reset();
 
-            getScoreboard().removePlayer(player);
-
             ((SimpleLobby) api.getLobby()).addPlayerFromBattle(player);
 
             pIt.remove();
         }
+
+        api.getScoreManager().setState(ScoreboardState.VOTING);
 
         arena = null;
         inProgress = false;
@@ -226,11 +223,6 @@ public abstract class SimpleBattle implements Battle {
         }
 
         return message;
-    }
-
-    // TODO Add to API
-    public BattleScorePane getScoreboard() {
-        return scoreboard;
     }
 
     /* ------ */
