@@ -34,7 +34,7 @@ public class TeleportCommand extends BattleNightCommand {
             Player player = (Player) sender;
             Battle battle = api.getBattleManager().getBattle();
 
-            if (battle.containsPlayer(player) || api.getSpectatorManager().getSpectators().contains(player.getName())) {
+            if (battle.containsPlayer(player)) {
                 messenger.tell(sender, Message.NO_TELEPORTING);
                 return false;
             }

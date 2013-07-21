@@ -34,6 +34,5 @@ public class DisconnectListener extends APIRelatedListener {
 
         if (lobby.contains(player)) lobby.removePlayer(player);
         battle.removePlayer(player);
-        getAPI().getSpectatorManager().removeSpectator(player);
     }
 }

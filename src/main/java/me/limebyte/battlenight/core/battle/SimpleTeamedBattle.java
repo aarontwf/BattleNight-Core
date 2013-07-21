@@ -17,7 +17,6 @@ import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
 import me.limebyte.battlenight.core.util.BattleScorePane;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedBattle {
@@ -81,7 +80,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
         getScoreboard().removePlayer(player);
-        api.getSpectatorManager().removeTarget(player);
         BattlePlayer.get(player.getName()).getStats().reset();
 
         if (shouldEnd()) stop();
@@ -140,13 +138,6 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         }
 
         return result;
-    }
-
-    @Override
-    public Location toSpectator(Player player, boolean death) {
-        if (!containsPlayer(player)) return null;
-        setTeam(player, null);
-        return super.toSpectator(player, death);
     }
 
     private boolean assignTeam(Player player) {

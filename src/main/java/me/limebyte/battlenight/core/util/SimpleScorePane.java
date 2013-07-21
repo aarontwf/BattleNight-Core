@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.limebyte.battlenight.api.battle.ScorePane;
-
 import me.limebyte.battlenight.core.tosort.ConfigManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -65,6 +65,10 @@ public class SimpleScorePane implements ScorePane {
         Scoreboard board = scoreboards.get(name);
         if (board != null) player.setScoreboard(board);
         scoreboards.remove(name);
+    }
+
+    public Scoreboard getScoreboard() {
+        return scoreboard;
     }
 
 }

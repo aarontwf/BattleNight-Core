@@ -43,11 +43,6 @@ public class HealthListener extends APIRelatedListener {
             return;
         }
 
-        if (api.getSpectatorManager().getSpectators().contains(player.getName())) {
-            event.setCancelled(true);
-            return;
-        }
-
         if (!api.getLobby().contains(player) && !battle.containsPlayer(player)) return;
 
         if (event instanceof EntityDamageByEntityEvent) {
@@ -89,7 +84,6 @@ public class HealthListener extends APIRelatedListener {
         BattlePlayer bDamager = BattlePlayer.get(damager.getName());
         if (!bDamager.isAlive()) return false;
 
-        if (getAPI().getSpectatorManager().getSpectators().contains(damager.getName())) return false;
         if (getAPI().getLobby().contains(damaged)) return false;
 
         return true;

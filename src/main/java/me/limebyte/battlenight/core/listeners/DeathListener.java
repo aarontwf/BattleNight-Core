@@ -5,8 +5,6 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
-import me.limebyte.battlenight.api.managers.SpectatorManager;
-import me.limebyte.battlenight.core.tosort.PlayerData;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,15 +32,9 @@ public class DeathListener extends APIRelatedListener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         Lobby lobby = getAPI().getLobby();
-        SpectatorManager spectatorManager = getAPI().getSpectatorManager();
 
         if (lobby.contains(player)) {
             lobby.removePlayer(player);
-        }
-
-        if (spectatorManager.getSpectators().contains(player.getName())) {
-            event.setRespawnLocation(PlayerData.getSavedLocation(player));
-            spectatorManager.removeSpectator(player);
         }
     }
 

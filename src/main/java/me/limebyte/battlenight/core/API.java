@@ -6,7 +6,6 @@ import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.BattleManager;
 import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.managers.MusicManager;
-import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.battle.SimpleLobby;
@@ -16,7 +15,6 @@ import me.limebyte.battlenight.core.managers.CoreArenaManager;
 import me.limebyte.battlenight.core.managers.CoreBattleManager;
 import me.limebyte.battlenight.core.managers.CoreClassManager;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
-import me.limebyte.battlenight.core.managers.CoreSpectatorManager;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.util.SimpleMessenger;
@@ -32,7 +30,6 @@ public class API implements BattleNightAPI {
     private BattleManager battleManager;
     private ClassManager classManager;
     private MusicManager musicManager;
-    private SpectatorManager spectatorManager;
 
     private Lobby lobby;
 
@@ -44,7 +41,6 @@ public class API implements BattleNightAPI {
         battleManager = new CoreBattleManager(this);
         classManager = new CoreClassManager(this);
         musicManager = new CoreMusicManager(this, plugin);
-        spectatorManager = new CoreSpectatorManager(this);
 
         lobby = new SimpleLobby(this);
 
@@ -84,11 +80,6 @@ public class API implements BattleNightAPI {
     @Override
     public PlayerClass getPlayerClass(Player player) {
         return Metadata.getPlayerClass(player);
-    }
-
-    @Override
-    public SpectatorManager getSpectatorManager() {
-        return spectatorManager;
     }
 
     public void registerCommand(BattleNightCommand command) {

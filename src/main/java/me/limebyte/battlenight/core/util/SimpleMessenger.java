@@ -92,25 +92,11 @@ public class SimpleMessenger implements Messenger {
                 battleEnd.play(p);
             }
         }
-
-        for (String name : api.getSpectatorManager().getSpectators()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null) {
-                battleEnd.play(p);
-            }
-        }
     }
 
     @Override
     public void playSound(Sound sound, float pitch) {
         for (String name : api.getBattleManager().getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null) {
-                p.playSound(p.getLocation(), sound, 20f, pitch);
-            }
-        }
-
-        for (String name : api.getSpectatorManager().getSpectators()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
                 p.playSound(p.getLocation(), sound, 20f, pitch);
@@ -162,25 +148,11 @@ public class SimpleMessenger implements Messenger {
                 tell(p, page);
             }
         }
-
-        for (String name : api.getSpectatorManager().getSpectators()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null) {
-                tell(p, page);
-            }
-        }
     }
 
     @Override
     public void tellBattle(String message) {
         for (String name : api.getBattleManager().getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null) {
-                tell(p, message);
-            }
-        }
-
-        for (String name : api.getSpectatorManager().getSpectators()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null) {
                 tell(p, message);
@@ -211,25 +183,11 @@ public class SimpleMessenger implements Messenger {
                 tell(p, page);
             }
         }
-
-        for (String name : api.getSpectatorManager().getSpectators()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null && player != p) {
-                tell(p, page);
-            }
-        }
     }
 
     @Override
     public void tellBattleExcept(Player player, String message) {
         for (String name : api.getBattleManager().getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
-            if (p != null && player != p) {
-                tell(p, message);
-            }
-        }
-
-        for (String name : api.getSpectatorManager().getSpectators()) {
             Player p = Bukkit.getPlayerExact(name);
             if (p != null && player != p) {
                 tell(p, message);

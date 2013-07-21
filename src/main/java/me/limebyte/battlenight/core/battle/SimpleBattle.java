@@ -13,11 +13,9 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Waypoint;
-import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Timer;
-import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.PlayerData;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
@@ -25,7 +23,6 @@ import me.limebyte.battlenight.core.util.BattleScorePane;
 import me.limebyte.battlenight.core.util.BattleTimer;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public abstract class SimpleBattle implements Battle {
@@ -56,8 +53,6 @@ public abstract class SimpleBattle implements Battle {
     public boolean addPlayer(Player player) {
         getPlayers().add(player.getName());
         getScoreboard().addPlayer(player);
-
-        api.getSpectatorManager().addTarget(player);
 
         if (!arena.getTexturePack().isEmpty()) {
             player.setTexturePack(arena.getTexturePack());
@@ -114,7 +109,6 @@ public abstract class SimpleBattle implements Battle {
         api.setPlayerClass(player, null);
         getPlayers().remove(player.getName());
         getScoreboard().removePlayer(player);
-        api.getSpectatorManager().removeTarget(player);
         BattlePlayer.get(player.getName()).getStats().reset();
 
         if (shouldEnd()) {
@@ -193,8 +187,6 @@ public abstract class SimpleBattle implements Battle {
             bPlayer.revive();
             bPlayer.getStats().reset();
 
-            api.getSpectatorManager().removeTarget(player);
-
             getScoreboard().removePlayer(player);
 
             ((SimpleLobby) api.getLobby()).addPlayerFromBattle(player);
@@ -202,55 +194,9 @@ public abstract class SimpleBattle implements Battle {
             pIt.remove();
         }
 
-        SpectatorManager spectatorManager = api.getSpectatorManager();
-        for (String name : spectatorManager.getSpectators()) {
-            Player player = toPlayer(name);
-            if (player == null) {
-                continue;
-            }
-            spectatorManager.removeSpectator(player);
-        }
-
         arena = null;
         inProgress = false;
         return true;
-    }
-
-    public Location toSpectator(Player player, boolean death) {
-        if (!containsPlayer(player)) return null;
-        Messenger messenger = api.getMessenger();
-
-        messenger.debug(Level.INFO, "To spectator " + player.getName());
-        Location loc;
-
-        api.setPlayerClass(player, null);
-        getPlayers().remove(player.getName());
-        api.getSpectatorManager().removeTarget(player);
-        if (!death) {
-            PlayerData.reset(player);
-        }
-
-        if (shouldEnd()) {
-            loc = PlayerData.getSavedLocation(player);
-            if (!death) {
-                PlayerData.restore(player, true, false);
-            }
-
-            String winMessage = getWinMessage();
-            messenger.tell(player, winMessage);
-            messenger.tellBattle(winMessage);
-
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BattleNight.instance, new Runnable() {
-                @Override
-                public void run() {
-                    stop();
-                }
-            }, 1L);
-        } else {
-            loc = api.getSpectatorManager().addSpectator(player, false);
-            messenger.tellBattle(player.getDisplayName() + " is now a spectator.");
-        }
-        return loc;
     }
 
     protected String getWinMessage() {

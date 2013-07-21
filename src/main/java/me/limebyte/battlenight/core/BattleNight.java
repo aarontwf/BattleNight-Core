@@ -20,7 +20,6 @@ import me.limebyte.battlenight.core.listeners.DisconnectListener;
 import me.limebyte.battlenight.core.listeners.HealthListener;
 import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
-import me.limebyte.battlenight.core.listeners.SpectatorListener;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.SafeTeleporter;
@@ -107,7 +106,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new InteractListener(api), this);
         pm.registerEvents(new SafeTeleporter(), this);
         pm.registerEvents(new SignListener(api), this);
-        pm.registerEvents(new SpectatorListener(api), this);
 
         if (ConfigManager.get(Config.MAIN).getBoolean("UpdateCheck", true)) {
             new UpdateChecker(api, pdf).check();

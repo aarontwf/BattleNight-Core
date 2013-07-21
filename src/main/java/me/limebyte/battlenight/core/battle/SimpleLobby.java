@@ -20,6 +20,7 @@ import me.limebyte.battlenight.core.util.SimpleScorePane;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 
 public class SimpleLobby implements Lobby {
 
@@ -97,6 +98,7 @@ public class SimpleLobby implements Lobby {
         Metadata.remove(player, "ready");
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
+        Metadata.remove(player, "voted");
     }
 
     @Override
@@ -166,12 +168,12 @@ public class SimpleLobby implements Lobby {
 
             scoreboard.removePlayer(player);
             Metadata.remove(player, "ready");
+            Metadata.remove(player, "voted");
             battle.addPlayer(player);
         }
         battle.start();
 
         players.clear();
-
         starting = false;
     }
 
@@ -181,8 +183,12 @@ public class SimpleLobby implements Lobby {
     }
 
     @Override
-    public ScorePane getScoreboard() {
+    public ScorePane getScorePane() {
         return scoreboard;
+    }
+
+    public Scoreboard getScoreboard() {
+        return scoreboard.getScoreboard();
     }
 
 }

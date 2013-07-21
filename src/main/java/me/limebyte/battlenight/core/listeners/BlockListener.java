@@ -45,7 +45,6 @@ public class BlockListener extends APIRelatedListener {
         if (player == null) return false;
         Battle battle = getAPI().getBattleManager().getBattle();
         if (battle.containsPlayer(player) && !battle.isInProgress()) return true;
-        if (getAPI().getSpectatorManager().getSpectators().contains(player.getName())) return true;
         return false;
     }
 

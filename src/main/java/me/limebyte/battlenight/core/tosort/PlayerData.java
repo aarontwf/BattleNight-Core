@@ -9,7 +9,6 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Waypoint;
-import me.limebyte.battlenight.api.managers.SpectatorManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 import org.bukkit.Bukkit;
@@ -73,12 +72,7 @@ public class PlayerData {
 
     public static void reset(Player player) {
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            SpectatorManager manager = api.getSpectatorManager();
-            if (!player.canSee(p) && !manager.getSpectators().contains(p.getName())) {
-                player.showPlayer(p);
-            } else if (manager.getSpectators().contains(p.getName())) {
-                player.hidePlayer(player);
-            }
+            if (!player.canSee(p)) player.showPlayer(p);
         }
 
         for (PotionEffect effect : player.getActivePotionEffects()) {

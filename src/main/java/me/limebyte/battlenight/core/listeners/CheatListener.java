@@ -55,11 +55,7 @@ public class CheatListener extends APIRelatedListener {
         Battle battle = getAPI().getBattleManager().getBattle();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-        if (!bPlayer.isAlive()) event.setCancelled(true);
-
-        if (lobby.contains(player) || getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
-            event.setCancelled(true);
-        }
+        if (lobby.contains(player) || !bPlayer.isAlive()) event.setCancelled(true);
 
         if (battle.containsPlayer(player) && event.getSlotType() == SlotType.OUTSIDE) {
             ItemStack cursor = event.getCursor();
@@ -70,13 +66,12 @@ public class CheatListener extends APIRelatedListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        if (event.isCancelled()) return;
-
         Player player = event.getPlayer();
         Battle battle = getAPI().getBattleManager().getBattle();
-        if (!battle.containsPlayer(player) || !getAPI().getSpectatorManager().getSpectators().contains(player.getName())) return;
+
+        if (!getAPI().getLobby().contains(player) && !battle.containsPlayer(player)) return;
         if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
 
         List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
@@ -112,16 +107,9 @@ public class CheatListener extends APIRelatedListener {
         Player player = event.getPlayer();
         Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattleManager().getBattle();
-
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-        if (!bPlayer.isAlive()) event.setCancelled(true);
 
-        if (battle.containsPlayer(player)) {
-            event.setCancelled(true);
-            getAPI().getMessenger().tell(player, Message.NO_CHEATING);
-        }
-
-        if (lobby.contains(player) || getAPI().getSpectatorManager().getSpectators().contains(player.getName())) {
+        if (!bPlayer.isAlive() || battle.containsPlayer(player) || lobby.contains(player)) {
             event.setCancelled(true);
         }
     }
