@@ -35,7 +35,6 @@ public class CoreScoreManager implements ScoreManager {
 
         sidebar = scoreboard.registerNewObjective("bn_scores", "dummy");
         sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
-        sidebar.setDisplayName(state.getTitle());
 
         belowName = scoreboard.registerNewObjective("bn_belowname", "health");
         if (ConfigManager.get(ConfigManager.Config.MAIN).getBoolean("Scoreboard.DisplayHealth", true)) {
@@ -49,6 +48,8 @@ public class CoreScoreManager implements ScoreManager {
         votes.put("Arenas", 1);
         votes.put("Go", 2);
         votes.put("Here", 3);
+
+        setState(ScoreboardState.VOTING);
     }
 
     public void addPlayer(Player player) {
