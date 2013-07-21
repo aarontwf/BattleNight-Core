@@ -7,7 +7,7 @@ import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.HealthListener.DeathCause;
-import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Teleporter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -140,9 +140,9 @@ public class BattlePlayer {
         public void run() {
 
             if (moveUp) {
-                SafeTeleporter.telePass.add(player.getName());
+                Teleporter.telePass.add(player.getName());
                 player.teleport(player.getLocation().add(0, liftAmount, 0), TeleportCause.PLUGIN);
-                SafeTeleporter.telePass.remove(player.getName());
+                Teleporter.telePass.remove(player.getName());
             }
 
             if (timeRemaining <= 0) {

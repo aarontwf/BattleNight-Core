@@ -1,9 +1,7 @@
 package me.limebyte.battlenight.core.tosort;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
@@ -13,20 +11,15 @@ import me.limebyte.battlenight.core.BattleNight;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-public class SafeTeleporter implements Listener {
+public class Teleporter implements Listener {
 
     public static Set<String> telePass = new HashSet<String>();
     private static Queue<String> playerQueue = new LinkedList<String>();
     private static Queue<Location> locationQueue = new LinkedList<Location>();
     private static int taskID = 0;
-
-    private static Map<String, Location> teleporters = new HashMap<String, Location>();
 
     public static void queue(Player player, Location location) {
         playerQueue.add(player.getName());
@@ -51,45 +44,20 @@ public class SafeTeleporter implements Listener {
     }
 
     public static void tp(Player player, Location location) {
-        safeTP(player, location.clone());
-    }
-
-    public static void tp(Player player, Waypoint waypoint) {
-        tp(player, waypoint.getLocation().clone());
-    }
-
-    private static void safeTP(final Player player, Location location) {
         if (player.hasMetadata("NPC")) return;
-
-        Location loc = location;
-        loc.setY(loc.getY() + 0.5);
-
         String name = player.getName();
 
         telePass.add(name);
-        player.teleport(loc, TeleportCause.PLUGIN);
+        player.teleport(location, TeleportCause.PLUGIN);
         telePass.remove(name);
+    }
 
-        teleporters.put(name, loc);
+    public static void tp(Player player, Waypoint waypoint) {
+        tp(player, waypoint.getLocation());
     }
 
     private static void stopTeleporting() {
         Bukkit.getServer().getScheduler().cancelTask(taskID);
         taskID = 0;
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
-        Player player = event.getPlayer();
-        String name = player.getName();
-
-        if (teleporters.containsKey(name)) {
-            Location loc = teleporters.get(name);
-            teleporters.remove(name);
-
-            telePass.add(name);
-            player.teleport(loc, TeleportCause.PLUGIN);
-            telePass.remove(name);
-        }
     }
 }

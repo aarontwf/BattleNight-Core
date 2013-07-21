@@ -122,9 +122,9 @@ public class PlayerData {
         if (teleport) {
             Waypoint wp = api.getArenaManager().getExit();
             if (ConfigManager.get(Config.MAIN).getBoolean("ExitWaypoint", false) && wp.isSet()) {
-                SafeTeleporter.tp(player, wp.getLocation());
+                Teleporter.tp(player, wp.getLocation());
             } else {
-                SafeTeleporter.tp(player, data.location);
+                Teleporter.tp(player, data.location);
             }
         }
 

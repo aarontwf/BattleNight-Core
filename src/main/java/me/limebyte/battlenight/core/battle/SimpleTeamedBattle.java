@@ -13,7 +13,7 @@ import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
-import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Teleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
 
 import org.bukkit.entity.Player;
@@ -210,7 +210,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             if (player == null || !player.isOnline()) {
                 continue;
             }
-            SafeTeleporter.tp(player, spawns.get(Metadata.getString(player, "team")));
+            Teleporter.tp(player, spawns.get(Metadata.getString(player, "team")));
         }
     }
 }

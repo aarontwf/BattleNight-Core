@@ -17,7 +17,7 @@ import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.Metadata;
 import me.limebyte.battlenight.core.tosort.PlayerData;
-import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Teleporter;
 import me.limebyte.battlenight.core.util.LobbyTimer;
 
 import org.bukkit.Bukkit;
@@ -69,7 +69,7 @@ public class SimpleLobby implements Lobby {
 
         PlayerData.store(player);
         PlayerData.reset(player);
-        SafeTeleporter.tp(player, arenas.getLounge());
+        Teleporter.tp(player, arenas.getLounge());
         api.getScoreManager().addPlayer(player);
 
         if (starting) {
@@ -129,7 +129,7 @@ public class SimpleLobby implements Lobby {
         players.add(player.getName());
 
         PlayerData.reset(player);
-        SafeTeleporter.tp(player, arenas.getLounge());
+        Teleporter.tp(player, arenas.getLounge());
 
         api.getPlayerClass(player).equip(player);
 

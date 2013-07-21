@@ -18,7 +18,7 @@ import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Timer;
 import me.limebyte.battlenight.core.tosort.PlayerData;
-import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Teleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
 import me.limebyte.battlenight.core.util.BattleTimer;
 
@@ -121,7 +121,7 @@ public abstract class SimpleBattle implements Battle {
         api.getMessenger().debug(Level.INFO, "Respawning " + player.getName() + "...");
         PlayerData.reset(player);
         api.getPlayerClass(player).equip(player);
-        SafeTeleporter.tp(player, getArena().getRandomSpawnPoint());
+        Teleporter.tp(player, getArena().getRandomSpawnPoint());
     }
 
     @Override
@@ -245,11 +245,11 @@ public abstract class SimpleBattle implements Battle {
             }
 
             int id = random.nextInt(free.size());
-            SafeTeleporter.queue(player, free.get(id));
+            Teleporter.queue(player, free.get(id));
             free.remove(id);
         }
 
-        SafeTeleporter.startTeleporting();
+        Teleporter.startTeleporting();
     }
 
     protected Player toPlayer(String name) {

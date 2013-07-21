@@ -6,7 +6,7 @@ import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
-import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Teleporter;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -63,7 +63,7 @@ public class TeleportCommand extends BattleNightCommand {
                 messenger.tell(sender, Message.WAYPOINT_UNSET, waypoint);
                 return false;
             }
-            SafeTeleporter.tp(player, waypoint);
+            Teleporter.tp(player, waypoint);
             return true;
         } else {
             messenger.tell(sender, Message.PLAYER_ONLY);

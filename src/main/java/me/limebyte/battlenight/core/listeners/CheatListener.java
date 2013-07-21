@@ -8,7 +8,7 @@ import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Teleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
 
 import org.bukkit.Bukkit;
@@ -120,7 +120,7 @@ public class CheatListener extends APIRelatedListener {
         Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattle();
 
-        if (!SafeTeleporter.telePass.contains(player.getName())) {
+        if (!Teleporter.telePass.contains(player.getName())) {
             if (lobby.contains(player)) {
                 event.setCancelled(true);
                 return;

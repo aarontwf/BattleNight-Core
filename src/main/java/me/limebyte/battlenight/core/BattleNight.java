@@ -22,7 +22,7 @@ import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.SafeTeleporter;
+import me.limebyte.battlenight.core.tosort.Teleporter;
 import me.limebyte.battlenight.core.tosort.UpdateChecker;
 
 import org.bukkit.Bukkit;
@@ -104,7 +104,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new DeathListener(api), this);
         pm.registerEvents(new DisconnectListener(api), this);
         pm.registerEvents(new InteractListener(api), this);
-        pm.registerEvents(new SafeTeleporter(), this);
+        pm.registerEvents(new Teleporter(), this);
         pm.registerEvents(new SignListener(api), this);
 
         if (ConfigManager.get(Config.MAIN).getBoolean("UpdateCheck", true)) {
