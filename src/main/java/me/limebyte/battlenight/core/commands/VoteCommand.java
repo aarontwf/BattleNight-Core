@@ -35,18 +35,16 @@ public class VoteCommand extends BattleNightCommand {
             try {
                 int id = Integer.parseInt(args[0]);
                 Arena arena = api.getScoreManager().getVotableArenas().get(id);
-                if (arena != null) {
-                    arena.addVote();
-                    Metadata.set(player, "voted", true);
-                    return true;
-                }
-            } catch (NumberFormatException e) {
+                arena.addVote();
+                Metadata.set(player, "voted", true);
+                return true;
+            } catch (Exception e) {
                 api.getMessenger().tell(sender, Message.INVALID_ARENA);
             }
         } else {
             api.getMessenger().tell(sender, Message.PLAYER_ONLY);
-
         }
+
         return false;
     }
 
