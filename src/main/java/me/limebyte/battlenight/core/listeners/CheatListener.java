@@ -68,38 +68,38 @@ public class CheatListener extends APIRelatedListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
+
         Player player = event.getPlayer();
         Battle battle = getAPI().getBattle();
 
-        if (!getAPI().getLobby().contains(player) && (battle != null && !battle.containsPlayer(player))) return;
-        if (!ConfigManager.get(Config.MAIN).getBoolean("Commands.Block", true)) return;
+        if (getAPI().getLobby().contains(player) || (battle != null && battle.containsPlayer(player))) {
+            List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
+            whitelist.add("bn");
 
-        List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
-        whitelist.add("bn");
+            String[] cmdArg = event.getMessage().split(" ");
+            String cmdString = cmdArg[0].trim().substring(1).toLowerCase();
 
-        String[] cmdArg = event.getMessage().split(" ");
-        String cmdString = cmdArg[0].trim().substring(1).toLowerCase();
+            Command command = Bukkit.getServer().getPluginCommand(cmdString);
+            if (command != null) {
+                // Check if the command is listed
+                if (whitelist.contains(command.getLabel().toLowerCase())) return;
 
-        Command command = Bukkit.getServer().getPluginCommand(cmdString);
-        if (command != null) {
-            // Check if the command is listed
-            if (whitelist.contains(command.getLabel().toLowerCase())) return;
-
-            // Check if there are any aliases listed
-            if (!command.getAliases().isEmpty()) {
-                for (String alias : command.getAliases()) {
-                    if (whitelist.contains(alias.toLowerCase())) return;
+                // Check if there are any aliases listed
+                if (!command.getAliases().isEmpty()) {
+                    for (String alias : command.getAliases()) {
+                        if (whitelist.contains(alias.toLowerCase())) return;
+                    }
                 }
+            } else {
+                // Check if the command is listed
+                if (whitelist.contains(cmdString.toLowerCase())) return;
             }
-        } else {
-            // Check if the command is listed
-            if (whitelist.contains(cmdString.toLowerCase())) return;
-        }
 
-        // Its not listed so block it
-        event.setCancelled(true);
-        getAPI().getMessenger().tell(player, Message.NO_COMMAND);
-        return;
+            // Its not listed so block it
+            event.setCancelled(true);
+            getAPI().getMessenger().tell(player, Message.NO_COMMAND);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
