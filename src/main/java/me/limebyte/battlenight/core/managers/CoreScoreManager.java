@@ -67,7 +67,7 @@ public class CoreScoreManager implements ScoreManager {
 
     public void removePlayer(Player player) {
         players.remove(player.getName());
-        player.setScoreboard(scoreboard);
+        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         scoreboard.resetScores(player);
 
         Team team = scoreboard.getPlayerTeam(player);
