@@ -111,14 +111,7 @@ public class CoreScoreManager implements ScoreManager {
         if (state == ScoreboardState.VOTING) {
             sidebar.setDisplayName(state.getTitle());
             votableArenas = api.getArenaManager().getReadyArenas(1);
-
-            for (int i = 0; i < votableArenas.size(); i++) {
-                Arena arena = votableArenas.get(i);
-                OfflinePlayer vote = Bukkit.getOfflinePlayer((i + 1) + "/ " + arena.getDisplayName());
-                Score score = sidebar.getScore(vote);
-                score.setScore(1);
-                score.setScore(arena.getVotes());
-            }
+            updateVotes();
         } else {
             for (String name : players) {
                 Player player = Bukkit.getPlayerExact(name);
@@ -142,14 +135,15 @@ public class CoreScoreManager implements ScoreManager {
 
     @Override
     public void updateVotes() {
-        if (state == ScoreboardState.VOTING) {
-            List<Arena> arenas = api.getArenaManager().getReadyArenas(1);
-            for (int i = 0; i < arenas.size(); i++) {
-                Arena arena = arenas.get(i);
-                OfflinePlayer vote = Bukkit.getOfflinePlayer((i + 1) + "/ " + arena.getDisplayName());
-                sidebar.getScore(vote).setScore(arena.getVotes());
-            }
+        if (state != ScoreboardState.VOTING) return;
+
+        for (int i = 0; i < votableArenas.size(); i++) {
+            Arena arena = votableArenas.get(i);
+            String item = ChatColor.GOLD + "[$1]" + ChatColor.WHITE + " $2";
+            OfflinePlayer vote = Bukkit.getOfflinePlayer(api.getMessenger().format(item, i + 1, arena.getDisplayName()));
+            Score score = sidebar.getScore(vote);
+            score.setScore(1);
+            score.setScore(arena.getVotes());
         }
     }
-
 }
