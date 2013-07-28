@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
@@ -34,6 +35,8 @@ public class ReloadCommand extends BattleNightCommand {
 
             api.getArenaManager().saveArenas();
             api.getClassManager().reloadClasses();
+
+            api.getScoreManager().setState(ScoreboardState.VOTING);
 
             messenger.tell(sender, Message.RELOAD_SUCCESSFUL);
             return true;

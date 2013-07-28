@@ -1,11 +1,10 @@
 package me.limebyte.battlenight.core.managers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.managers.ScoreManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
@@ -22,15 +21,17 @@ import org.bukkit.scoreboard.Team;
 
 public class CoreScoreManager implements ScoreManager {
 
+    private BattleNightAPI api;
     private Scoreboard scoreboard;
     private Objective sidebar;
     private Objective belowName;
     private ScoreboardState state;
 
     private List<String> players;
-    private Map<String, Integer> votes;
+    private List<Arena> votableArenas;
 
-    public CoreScoreManager() {
+    public CoreScoreManager(BattleNightAPI api) {
+        this.api = api;
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         sidebar = scoreboard.registerNewObjective("bn_scores", "dummy");
@@ -43,11 +44,6 @@ public class CoreScoreManager implements ScoreManager {
         belowName.setDisplayName(ChatColor.RED + "\u2764");
 
         players = new ArrayList<String>();
-        votes = new HashMap<String, Integer>();
-        votes.put("Test", 0);
-        votes.put("Arenas", 1);
-        votes.put("Go", 2);
-        votes.put("Here", 3);
 
         setState(ScoreboardState.VOTING);
     }
@@ -95,6 +91,11 @@ public class CoreScoreManager implements ScoreManager {
         return players;
     }
 
+    @Override
+    public List<Arena> getVotableArenas() {
+        return votableArenas;
+    }
+
     public void setScoreboard(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
     }
@@ -109,11 +110,14 @@ public class CoreScoreManager implements ScoreManager {
 
         if (state == ScoreboardState.VOTING) {
             sidebar.setDisplayName(state.getTitle());
-            for (Entry<String, Integer> arena : votes.entrySet()) {
-                OfflinePlayer vote = Bukkit.getOfflinePlayer(arena.getKey());
+            votableArenas = api.getArenaManager().getReadyArenas(1);
+
+            for (int i = 0; i < votableArenas.size(); i++) {
+                Arena arena = votableArenas.get(i);
+                OfflinePlayer vote = Bukkit.getOfflinePlayer((i + 1) + "/ " + arena.getDisplayName());
                 Score score = sidebar.getScore(vote);
                 score.setScore(1);
-                score.setScore(arena.getValue());
+                score.setScore(arena.getVotes());
             }
         } else {
             for (String name : players) {
@@ -134,6 +138,18 @@ public class CoreScoreManager implements ScoreManager {
     public void updateTime(long time) {
         String name = String.format(state.getTitle(), time * 1000);
         sidebar.setDisplayName(name);
+    }
+
+    @Override
+    public void updateVotes() {
+        if (state == ScoreboardState.VOTING) {
+            List<Arena> arenas = api.getArenaManager().getReadyArenas(1);
+            for (int i = 0; i < arenas.size(); i++) {
+                Arena arena = arenas.get(i);
+                OfflinePlayer vote = Bukkit.getOfflinePlayer((i + 1) + "/ " + arena.getDisplayName());
+                sidebar.getScore(vote).setScore(arena.getVotes());
+            }
+        }
     }
 
 }

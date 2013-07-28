@@ -42,7 +42,7 @@ public class API implements BattleNightAPI {
         arenaManager = new CoreArenaManager(this);
         classManager = new CoreClassManager(this);
         musicManager = new CoreMusicManager(this, plugin);
-        scoreboardManager = new CoreScoreManager();
+        scoreboardManager = new CoreScoreManager(this);
 
         lobby = new SimpleLobby(this);
 

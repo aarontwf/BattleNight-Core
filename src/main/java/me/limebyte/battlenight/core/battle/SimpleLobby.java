@@ -1,6 +1,9 @@
 package me.limebyte.battlenight.core.battle;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -30,11 +33,13 @@ public class SimpleLobby implements Lobby {
     private Arena arena;
     private boolean starting = false;
     private LobbyTimer timer;
+    private Random random;
 
     public SimpleLobby(BattleNightAPI api) {
         this.api = api;
         players = new HashSet<String>();
         timer = new LobbyTimer(api, this, 10L);
+        this.random = new Random();
     }
 
     @Override
@@ -141,15 +146,26 @@ public class SimpleLobby implements Lobby {
     public void startBattle() {
         Messenger messenger = api.getMessenger();
         Battle battle = api.getBattle();
-        ArenaManager arenas = api.getArenaManager();
+        ArenaManager manager = api.getArenaManager();
 
         if (battle != null && battle.isInProgress()) throw new IllegalStateException("Battle in progress!");
         battle = getNewBattle();
 
         if (players.size() < battle.getMinPlayers()) throw new IllegalStateException("Not enough players!");
-        if (arenas.getReadyArenas(1).isEmpty()) throw new IllegalStateException("No arenas!");
+        if (manager.getReadyArenas(1).isEmpty()) throw new IllegalStateException("No arenas!");
 
-        arena = arenas.getRandomArena(1);
+        List<Arena> arenas = new ArrayList<Arena>();
+        int votes = 0;
+        for (Arena a : api.getScoreManager().getVotableArenas()) {
+            int v = a.getVotes();
+            if (v > votes) {
+                arenas.clear();
+                votes = v;
+            }
+            if (v == votes) arenas.add(a);
+        }
+
+        arena = arenas.get(random.nextInt(arenas.size()));
         battle.setArena(arena);
         messenger.tellLobby(Message.ARENA_CHOSEN, battle.getType(), arena);
         api.getScoreManager().setState(ScoreboardState.BATTLE);
@@ -170,8 +186,12 @@ public class SimpleLobby implements Lobby {
             battle.addPlayer(player);
         }
         battle.start();
-
         players.clear();
+
+        for (Arena arena : api.getArenaManager().getArenas()) {
+            arena.setVotes(0);
+        }
+
         starting = false;
     }
 

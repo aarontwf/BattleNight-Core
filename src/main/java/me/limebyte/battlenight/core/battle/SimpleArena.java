@@ -7,6 +7,7 @@ import java.util.Random;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.core.BattleNight;
 
 import org.bukkit.configuration.serialization.SerializableAs;
 
@@ -20,10 +21,12 @@ public class SimpleArena implements Arena {
     private boolean enabled = true;
     private String texturePack = "";
     private final Random RANDOM = new Random();
+    private int votes;
 
     public SimpleArena(String name) {
         this.name = name.toLowerCase();
         displayName = name;
+        this.votes = 0;
     }
 
     @SuppressWarnings("unchecked")
@@ -135,5 +138,28 @@ public class SimpleArena implements Arena {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int getVotes() {
+        return votes;
+    }
+
+    @Override
+    public void setVotes(int votes) {
+        this.votes = votes;
+        BattleNight.instance.getAPI().getScoreManager().updateVotes();
+    }
+
+    @Override
+    public void addVote() {
+        this.votes++;
+        BattleNight.instance.getAPI().getScoreManager().updateVotes();
+    }
+
+    @Override
+    public void removeVote() {
+        this.votes--;
+        BattleNight.instance.getAPI().getScoreManager().updateVotes();
     }
 }
