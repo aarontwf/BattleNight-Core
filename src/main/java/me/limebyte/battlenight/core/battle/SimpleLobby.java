@@ -109,7 +109,7 @@ public class SimpleLobby implements Lobby {
 
     @Override
     public Set<String> getPlayers() {
-        return new HashSet<String>(players);
+        return players;
     }
 
     @Override

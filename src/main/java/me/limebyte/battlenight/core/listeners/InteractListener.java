@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
+import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
@@ -32,6 +33,7 @@ public class InteractListener extends APIRelatedListener {
         Action action = event.getAction();
         Player player = event.getPlayer();
         Lobby lobby = getAPI().getLobby();
+        Battle battle = getAPI().getBattle();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
         if (!bPlayer.isAlive()) event.setCancelled(true);
@@ -43,29 +45,35 @@ public class InteractListener extends APIRelatedListener {
                 if (lobby.getPlayers().contains(player.getName())) {
                     Messenger messenger = getAPI().getMessenger();
                     if (getAPI().getPlayerClass(player) != null) {
-                        if (!Metadata.getBoolean(player, "ready")) {
-                            Metadata.set(player, "ready", true);
-                            messenger.tellLobby(Message.PLAYER_IS_READY, player);
-                        }
 
-                        if (lobby.isStarting()) return;
-
-                        Set<String> waiting = new HashSet<String>(lobby.getPlayers());
-                        Iterator<String> it = waiting.iterator();
-                        while (it.hasNext()) {
-                            Player p = Bukkit.getPlayerExact(it.next());
-                            if (p == null || Metadata.getBoolean(p, "ready")) it.remove();
-                        }
-
-                        if (waiting.isEmpty()) {
-                            try {
-                                lobby.startBattle();
-                            } catch (IllegalStateException e) {
-                                messenger.tellLobby(e.getMessage());
-                            }
+                        if (battle != null && battle.isInProgress()) {
+                            battle.addPlayer(player);
+                            lobby.getPlayers().remove(player.getName());
                         } else {
-                            String list = waiting.toString().replaceAll("[,]([^,]*)$", " and$1");
-                            messenger.tellLobby(Message.WAITING_FOR_PLAYERS, list.replaceAll("\\[|\\]", ""));
+                            if (!Metadata.getBoolean(player, "ready")) {
+                                Metadata.set(player, "ready", true);
+                                messenger.tellLobby(Message.PLAYER_IS_READY, player);
+                            }
+
+                            if (lobby.isStarting()) return;
+
+                            Set<String> waiting = new HashSet<String>(lobby.getPlayers());
+                            Iterator<String> it = waiting.iterator();
+                            while (it.hasNext()) {
+                                Player p = Bukkit.getPlayerExact(it.next());
+                                if (p == null || Metadata.getBoolean(p, "ready")) it.remove();
+                            }
+
+                            if (waiting.isEmpty()) {
+                                try {
+                                    lobby.startBattle();
+                                } catch (IllegalStateException e) {
+                                    messenger.tellLobby(e.getMessage());
+                                }
+                            } else {
+                                String list = waiting.toString().replaceAll("[,]([^,]*)$", " and$1");
+                                messenger.tellLobby(Message.WAITING_FOR_PLAYERS, list.replaceAll("\\[|\\]", ""));
+                            }
                         }
                     } else {
                         messenger.tell(player, Message.NO_CLASS);
