@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core.commands;
 
 import me.limebyte.battlenight.api.battle.Arena;
+import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.core.tosort.Metadata;
 
@@ -27,6 +28,17 @@ public class VoteCommand extends BattleNightCommand {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
+
+            if (!api.getLobby().contains(player)) {
+                api.getMessenger().tell(sender, Message.NOT_IN_LOBBY);
+                return false;
+            }
+
+            if (api.getScoreManager().getState() != ScoreboardState.VOTING) {
+                api.getMessenger().tell(sender, ChatColor.RED + "Voting has ended.");
+                return false;
+            }
+
             if (Metadata.getBoolean(player, "voted")) {
                 api.getMessenger().tell(sender, ChatColor.RED + "You have already voted!");
                 return false;
@@ -47,5 +59,4 @@ public class VoteCommand extends BattleNightCommand {
 
         return false;
     }
-
 }
