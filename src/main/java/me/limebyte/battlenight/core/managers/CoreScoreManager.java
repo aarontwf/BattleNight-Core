@@ -70,13 +70,14 @@ public class CoreScoreManager implements ScoreManager {
         if (Metadata.getBoolean(player, "voted")) {
             getVotableArenas().get(Metadata.getInt(player, "vote")).removeVote();
         }
-        
+
         Team team = scoreboard.getPlayerTeam(player);
         if (team != null) team.removePlayer(player);
     }
 
     public void addTeam(me.limebyte.battlenight.api.battle.Team team) {
-        Team t = scoreboard.registerNewTeam("bn_team_" + team.getName());
+        Team t = scoreboard.getTeam("bn_team_" + team.getName());
+        if (t == null) t = scoreboard.registerNewTeam("bn_team_" + team.getName());
         t.setDisplayName(team.getDisplayName() + " Team");
         t.setPrefix(team.getColour().toString());
 
