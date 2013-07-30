@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
@@ -73,8 +74,11 @@ public class SimpleLobby implements Lobby {
         players.add(player.getName());
 
         PlayerData.store(player);
+        api.getMessenger().log(Level.INFO, "Saved");
         PlayerData.reset(player);
+        api.getMessenger().log(Level.INFO, "Resest");
         Teleporter.tp(player, arenas.getLounge());
+        api.getMessenger().log(Level.INFO, "Teleported");
         api.getScoreManager().addPlayer(player);
 
         if (starting) {
