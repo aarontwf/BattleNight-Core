@@ -114,7 +114,7 @@ public class CoreScoreManager implements ScoreManager {
         }
 
         if (state == ScoreboardState.VOTING) {
-            sidebar.setDisplayName("  " + state.getTitle() + "  ");
+            sidebar.setDisplayName(state.getTitle());
             votableArenas = api.getArenaManager().getReadyArenas(1);
             updateVotes();
         } else {
