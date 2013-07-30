@@ -114,8 +114,9 @@ public class CoreScoreManager implements ScoreManager {
             scoreboard.resetScores(player);
         }
 
+        sidebar.setDisplayName(ChatColor.BOLD + "" + ChatColor.AQUA + state.getTitle());
+        
         if (state == ScoreboardState.VOTING) {
-            sidebar.setDisplayName(state.getTitle());
             votableArenas = api.getArenaManager().getReadyArenas(1);
             updateVotes();
         } else {
@@ -135,8 +136,8 @@ public class CoreScoreManager implements ScoreManager {
     }
 
     public void updateTime(long time) {
-        String name = String.format(state.getTitle(), time * 1000);
-        sidebar.setDisplayName(name);
+        String name = String.format(state.getCountdown(), time * 1000);
+        sidebar.setDisplayName(ChatColor.BOLD + "" + ChatColor.AQUA + name);
     }
 
     @Override
