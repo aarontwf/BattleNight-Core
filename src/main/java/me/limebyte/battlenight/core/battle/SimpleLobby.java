@@ -100,7 +100,7 @@ public class SimpleLobby implements Lobby {
         api.getScoreManager().removePlayer(player);
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
-
+        
         Metadata.remove(player, "ready");
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
@@ -183,6 +183,7 @@ public class SimpleLobby implements Lobby {
 
             Metadata.remove(player, "ready");
             Metadata.remove(player, "voted");
+            Metadata.remove(player, "vote");
             battle.addPlayer(player);
         }
         battle.start();

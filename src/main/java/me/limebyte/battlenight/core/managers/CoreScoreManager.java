@@ -8,6 +8,7 @@ import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.managers.ScoreManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
+import me.limebyte.battlenight.core.tosort.Metadata;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -66,6 +67,10 @@ public class CoreScoreManager implements ScoreManager {
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         scoreboard.resetScores(player);
 
+        if (Metadata.getBoolean(player, "voted")) {
+            getVotableArenas().get(Metadata.getInt(player, "vote")).removeVote();
+        }
+        
         Team team = scoreboard.getPlayerTeam(player);
         if (team != null) team.removePlayer(player);
     }
