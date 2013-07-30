@@ -146,7 +146,8 @@ public class CoreScoreManager implements ScoreManager {
         for (int i = 0; i < votableArenas.size(); i++) {
             Arena arena = votableArenas.get(i);
             String item = ChatColor.GOLD + "[$1]" + ChatColor.WHITE + " $2";
-            OfflinePlayer vote = Bukkit.getOfflinePlayer(api.getMessenger().format(item, i + 1, arena.getDisplayName()));
+            item = api.getMessenger().format(item, i + 1, arena.getDisplayName());
+            OfflinePlayer vote = Bukkit.getOfflinePlayer(item.length() > 16 ? item.substring(0, 16) : item);
             Score score = sidebar.getScore(vote);
             score.setScore(1);
             score.setScore(arena.getVotes());
