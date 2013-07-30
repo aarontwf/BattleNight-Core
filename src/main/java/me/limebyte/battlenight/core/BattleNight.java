@@ -1,6 +1,7 @@
 package me.limebyte.battlenight.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -48,12 +49,13 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         Battle battle = getAPI().getBattle();
         Lobby lobby = getAPI().getLobby();
 
+        api.getArenaManager().saveArenas();
+        
         if (battle != null) battle.stop();
-        for (String name : lobby.getPlayers()) {
+        for (String name : new ArrayList<String>(lobby.getPlayers())) {
             Player player = Bukkit.getPlayerExact(name);
             if (player != null) lobby.removePlayer(player);
         }
-        api.getArenaManager().saveArenas();
 
         getServer().getScheduler().cancelTasks(this);
 
