@@ -12,6 +12,7 @@ import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.tosort.Teleporter;
 import me.limebyte.battlenight.core.util.BattlePlayer;
 
 import org.bukkit.Bukkit;
@@ -47,7 +48,11 @@ public class InteractListener extends APIRelatedListener {
                     if (getAPI().getPlayerClass(player) != null) {
 
                         if (battle != null && battle.isInProgress()) {
+                            Metadata.remove(player, "ready");
+                            Metadata.remove(player, "voted");
+                            Metadata.remove(player, "vote");
                             battle.addPlayer(player);
+                            Teleporter.tp(player, battle.getArena().getRandomSpawnPoint());
                             lobby.getPlayers().remove(player.getName());
                         } else {
                             if (!Metadata.getBoolean(player, "ready")) {
