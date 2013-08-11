@@ -19,8 +19,8 @@ public class CoreArenaManager implements ArenaManager {
     private List<Arena> arenas = new ArrayList<Arena>();
     private static final Config configFile = Config.ARENAS;
 
-    private SimpleWaypoint lounge = new SimpleWaypoint();
-    private SimpleWaypoint exit = new SimpleWaypoint();
+    private SimpleWaypoint lobby = new SimpleWaypoint("Lobby");
+    private SimpleWaypoint exit = new SimpleWaypoint("Exit");
 
     private static Arena lastArena;
     private static Random random = new Random();
@@ -60,7 +60,7 @@ public class CoreArenaManager implements ArenaManager {
 
     @Override
     public SimpleWaypoint getLounge() {
-        return lounge;
+        return lobby;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class CoreArenaManager implements ArenaManager {
         api.getMessenger().debug(Level.INFO, "Loading arenas...");
         ConfigManager.reload(configFile);
 
-        lounge = (SimpleWaypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lounge);
+        lobby = (SimpleWaypoint) ConfigManager.get(configFile).get("Waypoint.Lounge", lobby);
         exit = (SimpleWaypoint) ConfigManager.get(configFile).get("Waypoint.Exit", exit);
         arenas = (List<Arena>) ConfigManager.get(configFile).getList("Arenas", arenas);
     }
@@ -120,7 +120,7 @@ public class CoreArenaManager implements ArenaManager {
     @Override
     public void saveArenas() {
         api.getMessenger().debug(Level.INFO, "Saving arenas...");
-        ConfigManager.get(configFile).set("Waypoint.Lounge", lounge);
+        ConfigManager.get(configFile).set("Waypoint.Lounge", lobby);
         ConfigManager.get(configFile).set("Waypoint.Exit", exit);
         ConfigManager.get(configFile).set("Arenas", arenas);
         ConfigManager.save(configFile);

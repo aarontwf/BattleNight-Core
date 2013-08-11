@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>me.limebyte</groupId>
 			<artifactId>BattleNight-API</artifactId>
-			<version>1.9.0</version>
+			<version>1.9.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

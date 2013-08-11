@@ -14,12 +14,27 @@ import org.bukkit.configuration.serialization.SerializableAs;
 public class SimpleWaypoint implements Waypoint {
 
     private Location location;
+    private String name;
     private static final String LOC_SEP = ", ";
 
+    public SimpleWaypoint(String name) {
+        this.name = name;
+    }
+    
     public static SimpleWaypoint deserialize(Map<String, Object> map) {
-        SimpleWaypoint waypoint = new SimpleWaypoint();
+        String name = (String) map.get("Name");
+        SimpleWaypoint waypoint = new SimpleWaypoint(name != null ? name : "Existing");
+        
         waypoint.setLocation(parseLocation((String) map.get("Location")));
         return waypoint;
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("Location", parseLocation(location));
+        map.put("Name", name);
+        return map;
     }
 
     private static String parseLocation(Location loc) {
@@ -52,19 +67,22 @@ public class SimpleWaypoint implements Waypoint {
         return location.clone();
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
     public boolean isSet() {
         return location != null;
     }
 
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("Location", parseLocation(location));
-        return map;
-    }
-
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

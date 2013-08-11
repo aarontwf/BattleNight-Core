@@ -22,7 +22,7 @@ public class SetCommand extends BattleNightCommand {
         setDescription("Sets a BattleNight waypoint.");
         setUsage("/bn set <waypoint> [x] [y] [z] [world]");
         setPermission(CommandPermission.ADMIN);
-        setPrimaryChoices(ImmutableList.of("lounge", "exit"));
+        setPrimaryChoices(ImmutableList.of("lobby", "exit"));
     }
 
     private Location parseArgsToLocation(String[] args) {
@@ -52,15 +52,12 @@ public class SetCommand extends BattleNightCommand {
             return false;
         } else {
             Waypoint waypoint = null;
-            String name = "";
             ArenaManager manager = api.getArenaManager();
 
-            if (args[0].equalsIgnoreCase("lounge")) {
+            if (args[0].equalsIgnoreCase("lobby")) {
                 waypoint = manager.getLounge();
-                name = "Lounge";
             } else if (args[0].equalsIgnoreCase("exit")) {
                 waypoint = manager.getExit();
-                name = "Exit";
             }
 
             if (waypoint != null) {
@@ -68,7 +65,7 @@ public class SetCommand extends BattleNightCommand {
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
                         waypoint.setLocation(player.getLocation());
-                        messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, name);
+                        messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, waypoint.getName());
                     } else {
                         messenger.tell(sender, Message.SPECIFY_COORDINATE);
                         messenger.tell(sender, Message.USAGE, getUsage());
@@ -78,12 +75,12 @@ public class SetCommand extends BattleNightCommand {
                     Player player = (Player) sender;
                     Location loc = parseArgsToLocation(args, player.getWorld());
                     waypoint.setLocation(loc);
-                    messenger.tell(sender, Message.WAYPOINT_SET_THIS_WORLD, name, loc);
+                    messenger.tell(sender, Message.WAYPOINT_SET_THIS_WORLD, waypoint.getName(), loc);
                 } else if (args.length == 5) {
                     if (Bukkit.getWorld(args[4]) != null) {
                         Location loc = parseArgsToLocation(args);
                         waypoint.setLocation(loc);
-                        messenger.tell(sender, Message.WAYPOINT_SET, name, loc, loc.getWorld());
+                        messenger.tell(sender, Message.WAYPOINT_SET, waypoint.getName(), loc, loc.getWorld());
                     } else {
                         messenger.tell(sender, Message.CANT_FIND_WORLD, args[4]);
                         return false;
