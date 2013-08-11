@@ -11,9 +11,9 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.MusicManager;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Song;
-import me.limebyte.battlenight.core.tosort.Note;
-import me.limebyte.battlenight.core.tosort.UtilDataInput;
-import me.limebyte.battlenight.core.util.SimpleSong;
+import me.limebyte.battlenight.core.music.Note;
+import me.limebyte.battlenight.core.music.SimpleSong;
+import me.limebyte.battlenight.core.music.UtilDataInput;
 
 import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;

@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.tosort;
+package me.limebyte.battlenight.core.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,8 +19,8 @@ public class UpdateChecker {
 
     public UpdateChecker(BattleNightAPI api, PluginDescriptionFile pdf) {
         this.api = api;
-        this.version = pdf.getVersion();
-        this.snapshot = removeSuffix();
+        version = pdf.getVersion();
+        snapshot = removeSuffix();
     }
 
     public void check() {

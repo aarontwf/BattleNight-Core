@@ -40,7 +40,10 @@ public class ConfigManager {
     }
 
     public enum Config {
-        MAIN(mainConfig), CLASSES(classesConfig), METRICS(metricsConfig), ARENAS(arenasConfig);
+        MAIN(mainConfig),
+        CLASSES(classesConfig),
+        METRICS(metricsConfig),
+        ARENAS(arenasConfig);
 
         private Configuration config;
 

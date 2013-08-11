@@ -43,6 +43,18 @@ public class CoreClassManager implements ClassManager {
     }
 
     @Override
+    public List<PlayerClass> getClasses() {
+        return classes;
+    }
+
+    @Override
+    public PlayerClass getRandomClass() {
+        Random random = new Random();
+        int classNum = random.nextInt(classes.size());
+        return classes.get(classNum);
+    }
+
+    @Override
     public void loadClasses() {
         api.getMessenger().debug(Level.INFO, "Loading classes...");
         ConfigManager.reload(configFile);
@@ -53,6 +65,12 @@ public class CoreClassManager implements ClassManager {
             String effects = config.getString("classes." + className + ".effects");
             classes.add(new SimplePlayerClass(className, parseItems(config, items), parseArmour(config, armour), parseEffects(effects)));
         }
+    }
+
+    @Override
+    public void reloadClasses() {
+        loadClasses();
+        saveClasses();
     }
 
     @Override
@@ -67,40 +85,125 @@ public class CoreClassManager implements ClassManager {
         ConfigManager.save(configFile);
     }
 
-    @Override
-    public void reloadClasses() {
-        loadClasses();
-        saveClasses();
-    }
+    private void createEffects(FileConfiguration config, String path, List<PotionEffect> effects) {
+        if (effects.isEmpty()) return;
 
-    @Override
-    public List<PlayerClass> getClasses() {
-        return classes;
-    }
-
-    @Override
-    public PlayerClass getRandomClass() {
-        Random random = new Random();
-        int classNum = random.nextInt(classes.size());
-        return classes.get(classNum);
-    }
-
-    private List<ItemStack> parseItems(FileConfiguration config, String path) {
-        List<ItemStack> items = new ArrayList<ItemStack>();
-
-        for (int i = 0; i < INV_SIZE; i++) {
-            items.add(new ItemStack(Material.AIR, 1));
+        String effectList = "";
+        for (PotionEffect effect : effects) {
+            effectList += ", " + effect.getType().getName().toLowerCase();
+            int level = effect.getAmplifier() + 1;
+            effectList += "~" + level;
         }
+        config.set(path, effectList.substring(2));
+    }
 
-        ConfigurationSection section = config.getConfigurationSection(path);
-        if (section == null) return items;
-        Set<String> slots = section.getKeys(false);
+    private void createItems(FileConfiguration config, String path, List<ItemStack> items, boolean armour) {
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack item = items.get(i);
 
-        for (String slot : slots) {
-            parseItem(config, path + "." + slot, items, slot);
+            String slot = ".slot" + i;
+
+            if (armour) {
+                slot = slot.replace("slot0", "helmet");
+                slot = slot.replace("slot1", "chestplate");
+                slot = slot.replace("slot2", "leggings");
+                slot = slot.replace("slot3", "boots");
+            }
+
+            if (item.getType() == Material.AIR) {
+                continue;
+            }
+            String type = item.getType().toString().toLowerCase();
+            short data = item.getDurability();
+            int amount = item.getAmount();
+            Map<Enchantment, Integer> enchantments = item.getEnchantments();
+
+            config.set(path + slot + ".type", type);
+            if (data != 0) {
+                config.set(path + slot + ".data", data);
+            }
+            if (amount > 1) {
+                config.set(path + slot + ".amount", amount);
+            }
+
+            if (!enchantments.isEmpty()) {
+                String rawEnchantments = "";
+                for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+                    rawEnchantments += ", " + enchantment.getKey().getName().toLowerCase() + "~" + enchantment.getValue();
+                }
+                config.set(path + slot + ".enchantments", rawEnchantments.substring(2));
+            }
+
+            if (item.hasItemMeta()) {
+                ItemMeta meta = item.getItemMeta();
+
+                if (meta instanceof LeatherArmorMeta) {
+                    LeatherArmorMeta lam = (LeatherArmorMeta) meta;
+                    Color colour = lam.getColor();
+                    if (colour != Bukkit.getServer().getItemFactory().getDefaultLeatherColor()) {
+                        String rgb = colour.getRed() + ", " + colour.getGreen() + ", " + colour.getBlue();
+                        config.set(path + slot + ".colour", rgb);
+                    }
+                }
+
+                if (meta.hasDisplayName()) {
+                    config.set(path + slot + ".name", meta.getDisplayName());
+                }
+
+                if (meta.hasLore()) {
+                    String lore = "";
+                    for (String loreItem : meta.getLore()) {
+                        lore += ", " + loreItem;
+                    }
+                    config.set(path + slot + ".lore", lore.substring(2));
+                }
+            }
         }
+    }
 
-        return items;
+    private Color getColour(String colour) {
+        String[] rgb = colour.split(", ");
+
+        Color color = null;
+        try {
+            int r = Integer.parseInt(rgb[0]);
+            int g = Integer.parseInt(rgb[1]);
+            int b = Integer.parseInt(rgb[2]);
+            color = Color.fromRGB(r, g, b);
+        } catch (Exception ex) {
+            return null;
+        }
+        return color;
+    }
+
+    private Enchantment getEnchantment(String enc) {
+        Enchantment enchantment = Enchantment.getByName(enc.toUpperCase());
+        if (enchantment == null) {
+            try {
+                int id = Integer.parseInt(enc);
+                Enchantment fromId = Enchantment.getById(id);
+                if (fromId != null) {
+                    enchantment = fromId;
+                }
+            } catch (NumberFormatException ex) {
+            }
+        }
+        return enchantment;
+    }
+
+    private Material getMaterial(String mat) {
+        Material material = Material.getMaterial(mat.toUpperCase());
+        if (material == null) {
+            try {
+                int id = Integer.parseInt(mat);
+                Material fromId = Material.getMaterial(id);
+                if (fromId != null) {
+                    material = fromId;
+                }
+            } catch (NumberFormatException ex) {
+            }
+        }
+        return material;
     }
 
     private List<ItemStack> parseArmour(FileConfiguration config, String path) {
@@ -116,15 +219,47 @@ public class CoreClassManager implements ClassManager {
 
         for (String slot : slots) {
             String newSlot = slot;
-            if (slot.equalsIgnoreCase("helmet")) newSlot = "slot0";
-            if (slot.equalsIgnoreCase("chestplate")) newSlot = "slot1";
-            if (slot.equalsIgnoreCase("leggings")) newSlot = "slot2";
-            if (slot.equalsIgnoreCase("boots")) newSlot = "slot3";
+            if (slot.equalsIgnoreCase("helmet")) {
+                newSlot = "slot0";
+            }
+            if (slot.equalsIgnoreCase("chestplate")) {
+                newSlot = "slot1";
+            }
+            if (slot.equalsIgnoreCase("leggings")) {
+                newSlot = "slot2";
+            }
+            if (slot.equalsIgnoreCase("boots")) {
+                newSlot = "slot3";
+            }
 
             parseItem(config, path + "." + slot, armour, newSlot);
         }
 
         return armour;
+    }
+
+    private List<PotionEffect> parseEffects(String effects) {
+        List<PotionEffect> parsedEffects = new ArrayList<PotionEffect>();
+        if (effects != null) {
+            String[] split = effects.split(", ");
+            for (String s : split) {
+                String[] effLvl = s.split("~");
+                PotionEffectType type = PotionEffectType.getByName(effLvl[0].toUpperCase());
+                if (type == null) {
+                    type = PotionEffectType.getById(Integer.parseInt(effLvl[0]));
+                    if (type == null) {
+                        continue;
+                    }
+                }
+                int level = 0;
+                if (effLvl.length > 1) {
+                    level = Integer.parseInt(effLvl[1]) - 1;
+                }
+                parsedEffects.add(new PotionEffect(type, Integer.MAX_VALUE, level, true));
+            }
+        }
+
+        return parsedEffects;
     }
 
     private void parseItem(FileConfiguration config, String path, List<ItemStack> items, String slot) {
@@ -161,10 +296,14 @@ public class CoreClassManager implements ClassManager {
 
             for (String s : enchantment) {
                 String[] encLvl = s.split("~");
-                if (encLvl.length == 0) continue;
+                if (encLvl.length == 0) {
+                    continue;
+                }
 
                 Enchantment enc = getEnchantment(encLvl[0]);
-                if (enc == null) continue;
+                if (enc == null) {
+                    continue;
+                }
 
                 int lvl = enc.getStartLevel();
                 if (encLvl.length > 1) {
@@ -199,137 +338,30 @@ public class CoreClassManager implements ClassManager {
                 lam.setColor(getColour(colour));
             }
         }
-        if (name != null) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
-        if (!lre.isEmpty()) meta.setLore(lre);
+        if (name != null) {
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        }
+        if (!lre.isEmpty()) {
+            meta.setLore(lre);
+        }
         items.get(slotId).setItemMeta(meta);
     }
 
-    private List<PotionEffect> parseEffects(String effects) {
-        List<PotionEffect> parsedEffects = new ArrayList<PotionEffect>();
-        if (effects != null) {
-            String[] split = effects.split(", ");
-            for (String s : split) {
-                String[] effLvl = s.split("~");
-                PotionEffectType type = PotionEffectType.getByName(effLvl[0].toUpperCase());
-                if (type == null) {
-                    type = PotionEffectType.getById(Integer.parseInt(effLvl[0]));
-                    if (type == null) continue;
-                }
-                int level = 0;
-                if (effLvl.length > 1) level = Integer.parseInt(effLvl[1]) - 1;
-                parsedEffects.add(new PotionEffect(type, Integer.MAX_VALUE, level, true));
-            }
+    private List<ItemStack> parseItems(FileConfiguration config, String path) {
+        List<ItemStack> items = new ArrayList<ItemStack>();
+
+        for (int i = 0; i < INV_SIZE; i++) {
+            items.add(new ItemStack(Material.AIR, 1));
         }
 
-        return parsedEffects;
-    }
+        ConfigurationSection section = config.getConfigurationSection(path);
+        if (section == null) return items;
+        Set<String> slots = section.getKeys(false);
 
-    private void createItems(FileConfiguration config, String path, List<ItemStack> items, boolean armour) {
-        for (int i = 0; i < items.size(); i++) {
-            ItemStack item = items.get(i);
-
-            String slot = ".slot" + i;
-
-            if (armour) {
-                slot = slot.replace("slot0", "helmet");
-                slot = slot.replace("slot1", "chestplate");
-                slot = slot.replace("slot2", "leggings");
-                slot = slot.replace("slot3", "boots");
-            }
-
-            if (item.getType() == Material.AIR) continue;
-            String type = item.getType().toString().toLowerCase();
-            short data = item.getDurability();
-            int amount = item.getAmount();
-            Map<Enchantment, Integer> enchantments = item.getEnchantments();
-
-            config.set(path + slot + ".type", type);
-            if (data != 0) config.set(path + slot + ".data", data);
-            if (amount > 1) config.set(path + slot + ".amount", amount);
-
-            if (!enchantments.isEmpty()) {
-                String rawEnchantments = "";
-                for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-                    rawEnchantments += ", " + enchantment.getKey().getName().toLowerCase() + "~" + enchantment.getValue();
-                }
-                config.set(path + slot + ".enchantments", rawEnchantments.substring(2));
-            }
-
-            if (item.hasItemMeta()) {
-                ItemMeta meta = item.getItemMeta();
-
-                if (meta instanceof LeatherArmorMeta) {
-                    LeatherArmorMeta lam = (LeatherArmorMeta) meta;
-                    Color colour = lam.getColor();
-                    if (colour != Bukkit.getServer().getItemFactory().getDefaultLeatherColor()) {
-                        String rgb = colour.getRed() + ", " + colour.getGreen() + ", " + colour.getBlue();
-                        config.set(path + slot + ".colour", rgb);
-                    }
-                }
-
-                if (meta.hasDisplayName()) config.set(path + slot + ".name", meta.getDisplayName());
-
-                if (meta.hasLore()) {
-                    String lore = "";
-                    for (String loreItem : meta.getLore()) {
-                        lore += ", " + loreItem;
-                    }
-                    config.set(path + slot + ".lore", lore.substring(2));
-                }
-            }
+        for (String slot : slots) {
+            parseItem(config, path + "." + slot, items, slot);
         }
-    }
 
-    private void createEffects(FileConfiguration config, String path, List<PotionEffect> effects) {
-        if (effects.isEmpty()) return;
-
-        String effectList = "";
-        for (PotionEffect effect : effects) {
-            effectList += ", " + effect.getType().getName().toLowerCase();
-            int level = effect.getAmplifier() + 1;
-            effectList += "~" + level;
-        }
-        config.set(path, effectList.substring(2));
-    }
-
-    private Material getMaterial(String mat) {
-        Material material = Material.getMaterial(mat.toUpperCase());
-        if (material == null) {
-            try {
-                int id = Integer.parseInt(mat);
-                Material fromId = Material.getMaterial(id);
-                if (fromId != null) material = fromId;
-            } catch (NumberFormatException ex) {
-            }
-        }
-        return material;
-    }
-
-    private Enchantment getEnchantment(String enc) {
-        Enchantment enchantment = Enchantment.getByName(enc.toUpperCase());
-        if (enchantment == null) {
-            try {
-                int id = Integer.parseInt(enc);
-                Enchantment fromId = Enchantment.getById(id);
-                if (fromId != null) enchantment = fromId;
-            } catch (NumberFormatException ex) {
-            }
-        }
-        return enchantment;
-    }
-
-    private Color getColour(String colour) {
-        String[] rgb = colour.split(", ");
-
-        Color color = null;
-        try {
-            int r = Integer.parseInt(rgb[0]);
-            int g = Integer.parseInt(rgb[1]);
-            int b = Integer.parseInt(rgb[2]);
-            color = Color.fromRGB(r, g, b);
-        } catch (Exception ex) {
-            return null;
-        }
-        return color;
+        return items;
     }
 }

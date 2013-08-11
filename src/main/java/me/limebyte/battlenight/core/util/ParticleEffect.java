@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.tosort;
+package me.limebyte.battlenight.core.util;
 
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -45,7 +45,15 @@ public class ParticleEffect {
     }
 
     private enum Direction {
-        SOUTH_EAST(0), SOUTH(1), SOUTH_WEST(2), EAST(3), UP(4), WEST(5), NORTH_EAST(6), NORTH(7), NORTH_WEST(8);
+        SOUTH_EAST(0),
+        SOUTH(1),
+        SOUTH_WEST(2),
+        EAST(3),
+        UP(4),
+        WEST(5),
+        NORTH_EAST(6),
+        NORTH(7),
+        NORTH_WEST(8);
 
         private int value;
 

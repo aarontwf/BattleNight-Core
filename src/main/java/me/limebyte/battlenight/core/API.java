@@ -16,9 +16,9 @@ import me.limebyte.battlenight.core.managers.CoreArenaManager;
 import me.limebyte.battlenight.core.managers.CoreClassManager;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
 import me.limebyte.battlenight.core.managers.CoreScoreManager;
-import me.limebyte.battlenight.core.tosort.Metadata;
-import me.limebyte.battlenight.core.tosort.PlayerData;
-import me.limebyte.battlenight.core.util.SimpleMessenger;
+import me.limebyte.battlenight.core.util.chat.SimpleMessenger;
+import me.limebyte.battlenight.core.util.player.Metadata;
+import me.limebyte.battlenight.core.util.player.PlayerData;
 
 import org.bukkit.entity.Player;
 
@@ -30,7 +30,7 @@ public class API implements BattleNightAPI {
     private ArenaManager arenaManager;
     private ClassManager classManager;
     private MusicManager musicManager;
-    private ScoreManager scoreboardManager;
+    private ScoreManager scoreManager;
 
     private Lobby lobby;
     private Battle battle;
@@ -42,7 +42,7 @@ public class API implements BattleNightAPI {
         arenaManager = new CoreArenaManager(this);
         classManager = new CoreClassManager(this);
         musicManager = new CoreMusicManager(this, plugin);
-        scoreboardManager = new CoreScoreManager(this);
+        scoreManager = new CoreScoreManager(this);
 
         lobby = new SimpleLobby(this);
 
@@ -52,6 +52,11 @@ public class API implements BattleNightAPI {
     @Override
     public ArenaManager getArenaManager() {
         return arenaManager;
+    }
+
+    @Override
+    public Battle getBattle() {
+        return battle;
     }
 
     @Override
@@ -65,11 +70,6 @@ public class API implements BattleNightAPI {
     }
 
     @Override
-    public Battle getBattle() {
-        return battle;
-    }
-
-    @Override
     public Messenger getMessenger() {
         return messenger;
     }
@@ -80,13 +80,13 @@ public class API implements BattleNightAPI {
     }
 
     @Override
-    public ScoreManager getScoreManager() {
-        return scoreboardManager;
+    public PlayerClass getPlayerClass(Player player) {
+        return Metadata.getPlayerClass(player);
     }
 
     @Override
-    public PlayerClass getPlayerClass(Player player) {
-        return Metadata.getPlayerClass(player);
+    public ScoreManager getScoreManager() {
+        return scoreManager;
     }
 
     public void registerCommand(BattleNightCommand command) {

@@ -1,7 +1,6 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.util.chat;
 
 import java.util.List;
-
 
 public class ListPage extends StandardPage {
 

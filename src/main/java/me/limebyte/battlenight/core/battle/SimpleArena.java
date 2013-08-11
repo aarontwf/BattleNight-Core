@@ -26,7 +26,7 @@ public class SimpleArena implements Arena {
     public SimpleArena(String name) {
         this.name = name.toLowerCase();
         displayName = name;
-        this.votes = 0;
+        votes = 0;
     }
 
     @SuppressWarnings("unchecked")
@@ -57,6 +57,12 @@ public class SimpleArena implements Arena {
     public int addSpawnPoint(Waypoint waypoint) {
         spawnPoints.add(waypoint);
         return spawnPoints.size() - 1;
+    }
+
+    @Override
+    public void addVote() {
+        votes++;
+        BattleNight.instance.getAPI().getScoreManager().updateVotes();
     }
 
     @Override
@@ -95,6 +101,11 @@ public class SimpleArena implements Arena {
     }
 
     @Override
+    public int getVotes() {
+        return votes;
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -107,6 +118,12 @@ public class SimpleArena implements Arena {
     @Override
     public void removeSpawnPoint(Waypoint waypoint) {
         spawnPoints.remove(waypoint);
+    }
+
+    @Override
+    public void removeVote() {
+        votes--;
+        BattleNight.instance.getAPI().getScoreManager().updateVotes();
     }
 
     @Override
@@ -136,30 +153,13 @@ public class SimpleArena implements Arena {
     }
 
     @Override
-    public String toString() {
-        return name;
-    }
-
-    @Override
-    public int getVotes() {
-        return votes;
-    }
-
-    @Override
     public void setVotes(int votes) {
         this.votes = votes;
         BattleNight.instance.getAPI().getScoreManager().updateVotes();
     }
 
     @Override
-    public void addVote() {
-        this.votes++;
-        BattleNight.instance.getAPI().getScoreManager().updateVotes();
-    }
-
-    @Override
-    public void removeVote() {
-        this.votes--;
-        BattleNight.instance.getAPI().getScoreManager().updateVotes();
+    public String toString() {
+        return name;
     }
 }

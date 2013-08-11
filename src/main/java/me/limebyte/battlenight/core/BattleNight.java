@@ -10,7 +10,6 @@ import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleArena;
-import me.limebyte.battlenight.core.battle.SimpleWaypoint;
 import me.limebyte.battlenight.core.commands.BattleNightTabCompleter;
 import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
@@ -23,8 +22,9 @@ import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Teleporter;
-import me.limebyte.battlenight.core.tosort.UpdateChecker;
+import me.limebyte.battlenight.core.util.SimpleWaypoint;
+import me.limebyte.battlenight.core.util.Teleporter;
+import me.limebyte.battlenight.core.util.UpdateChecker;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -50,11 +50,15 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         Lobby lobby = getAPI().getLobby();
 
         api.getArenaManager().saveArenas();
-        
-        if (battle != null) battle.stop();
+
+        if (battle != null) {
+            battle.stop();
+        }
         for (String name : new ArrayList<String>(lobby.getPlayers())) {
             Player player = Bukkit.getPlayerExact(name);
-            if (player != null) lobby.removePlayer(player);
+            if (player != null) {
+                lobby.removePlayer(player);
+            }
         }
 
         getServer().getScheduler().cancelTasks(this);
@@ -62,8 +66,6 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         PluginDescriptionFile pdfFile = getDescription();
         api.getMessenger().log(Level.INFO, "Version " + pdfFile.getVersion() + " has been disabled.");
     }
-
-    /** Events **/
 
     @Override
     public void onEnable() {

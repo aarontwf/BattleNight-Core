@@ -9,8 +9,8 @@ import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Metadata;
-import me.limebyte.battlenight.core.tosort.ParticleEffect;
+import me.limebyte.battlenight.core.util.ParticleEffect;
+import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;

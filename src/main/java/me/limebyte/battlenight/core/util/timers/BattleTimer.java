@@ -1,10 +1,10 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.util.timers;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleBattle;
 import me.limebyte.battlenight.core.managers.CoreMusicManager;
-import me.limebyte.battlenight.core.tosort.Note;
+import me.limebyte.battlenight.core.music.Note;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;

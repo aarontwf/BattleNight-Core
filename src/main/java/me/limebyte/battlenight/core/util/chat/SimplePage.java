@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.util.chat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +45,7 @@ public class SimplePage implements Page {
         return length;
     }
 
+    @Override
     public String[] getPage() {
         List<String> page = new ArrayList<String>();
         page.add(header);
@@ -53,10 +54,12 @@ public class SimplePage implements Page {
         return page.toArray(new String[page.size()]);
     }
 
+    @Override
     public int getWidth() {
         return pageWidth;
     }
 
+    @Override
     public void setWidth(int width) {
         pageWidth = width;
     }

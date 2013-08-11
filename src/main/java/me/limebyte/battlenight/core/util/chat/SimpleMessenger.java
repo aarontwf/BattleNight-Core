@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.util.chat;
 
 import java.util.logging.Level;
 
@@ -48,6 +48,11 @@ public class SimpleMessenger implements Messenger {
     }
 
     @Override
+    public void debug(Level level, String message, Object... args) {
+        debug(level, format(message, args));
+    }
+
+    @Override
     public String format(Message message, Object... args) {
         return format(message.getMessage(), args);
     }
@@ -70,7 +75,9 @@ public class SimpleMessenger implements Messenger {
         if (battle != null && battle.containsPlayer(player)) {
             if (battle instanceof SimpleTeamedBattle) {
                 Team team = ((SimpleTeamedBattle) battle).getTeam(player);
-                if (team != null) colour = team.getColour();
+                if (team != null) {
+                    colour = team.getColour();
+                }
             }
         } else if (!api.getLobby().getPlayers().contains(player.getName())) {
             colour = ChatColor.DARK_GRAY;
@@ -82,6 +89,11 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void log(Level level, String message) {
         BattleNight.instance.getLogger().log(level, message);
+    }
+
+    @Override
+    public void log(Level level, String message, Object... args) {
+        log(level, format(message, args));
     }
 
     @Override
@@ -207,47 +219,6 @@ public class SimpleMessenger implements Messenger {
 
     }
 
-    private String describeEntity(Entity entity) {
-        if (entity instanceof Player) return ((Player) entity).getName();
-
-        return entity.getType().toString().toLowerCase().replace("_", " ");
-    }
-
-    private String describeLocation(Location loc) {
-        return loc.getX() + ", " + loc.getY() + ", " + loc.getZ();
-    }
-
-    private String describeMaterial(Material material) {
-        if (material == Material.INK_SACK) return "dye";
-
-        return material.toString().toLowerCase().replace("_", " ");
-    }
-
-    private String describeObject(Object obj) {
-        if (obj instanceof ComplexEntityPart) return describeObject(((ComplexEntityPart) obj).getParent());
-        else if (obj instanceof Item) return describeMaterial(((Item) obj).getItemStack().getType());
-        else if (obj instanceof ItemStack) return describeMaterial(((ItemStack) obj).getType());
-        else if (obj instanceof Player) return getColouredName((Player) obj);
-        else if (obj instanceof Entity) return describeEntity((Entity) obj);
-        else if (obj instanceof Block) return describeMaterial(((Block) obj).getType());
-        else if (obj instanceof Material) return describeMaterial((Material) obj);
-        else if (obj instanceof Location) return describeLocation((Location) obj);
-        else if (obj instanceof World) return ((World) obj).getName();
-        else if (obj instanceof SimpleTeam) return ((SimpleTeam) obj).getColour() + ((SimpleTeam) obj).getDisplayName();
-        else if (obj instanceof SimpleArena) return ((SimpleArena) obj).getDisplayName();
-        return obj.toString();
-    }
-
-    @Override
-    public void debug(Level level, String message, Object... args) {
-        debug(level, format(message, args));
-    }
-
-    @Override
-    public void log(Level level, String message, Object... args) {
-        log(level, format(message, args));
-    }
-
     @Override
     public void tellLobby(Message message) {
         tellLobby(message.getMessage());
@@ -281,6 +252,37 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void tellLobby(String message, Object... args) {
         tellLobby(format(message, args));
+    }
+
+    private String describeEntity(Entity entity) {
+        if (entity instanceof Player) return ((Player) entity).getName();
+
+        return entity.getType().toString().toLowerCase().replace("_", " ");
+    }
+
+    private String describeLocation(Location loc) {
+        return loc.getX() + ", " + loc.getY() + ", " + loc.getZ();
+    }
+
+    private String describeMaterial(Material material) {
+        if (material == Material.INK_SACK) return "dye";
+
+        return material.toString().toLowerCase().replace("_", " ");
+    }
+
+    private String describeObject(Object obj) {
+        if (obj instanceof ComplexEntityPart) return describeObject(((ComplexEntityPart) obj).getParent());
+        else if (obj instanceof Item) return describeMaterial(((Item) obj).getItemStack().getType());
+        else if (obj instanceof ItemStack) return describeMaterial(((ItemStack) obj).getType());
+        else if (obj instanceof Player) return getColouredName((Player) obj);
+        else if (obj instanceof Entity) return describeEntity((Entity) obj);
+        else if (obj instanceof Block) return describeMaterial(((Block) obj).getType());
+        else if (obj instanceof Material) return describeMaterial((Material) obj);
+        else if (obj instanceof Location) return describeLocation((Location) obj);
+        else if (obj instanceof World) return ((World) obj).getName();
+        else if (obj instanceof SimpleTeam) return ((SimpleTeam) obj).getColour() + ((SimpleTeam) obj).getDisplayName();
+        else if (obj instanceof SimpleArena) return ((SimpleArena) obj).getDisplayName();
+        return obj.toString();
     }
 
 }

@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.util.player;
 
 import me.limebyte.battlenight.api.managers.ScoreManager;
 import me.limebyte.battlenight.core.BattleNight;
@@ -18,11 +18,22 @@ public class PlayerStats {
 
     public PlayerStats(String name) {
         this.name = name;
-        this.kills = 0;
-        this.assists = 0;
-        this.killStreak = 0;
-        this.deaths = 0;
-        this.score = 0;
+        kills = 0;
+        assists = 0;
+        killStreak = 0;
+        deaths = 0;
+        score = 0;
+    }
+
+    public void addDeath(boolean suicide) {
+        killStreak = 0;
+        deaths++;
+        if (suicide) {
+            score -= 5;
+        }
+
+        ScoreManager scores = BattleNight.instance.getAPI().getScoreManager();
+        scores.updateScore(Bukkit.getPlayerExact(name), score);
     }
 
     public void addKill(boolean assist) {
@@ -43,29 +54,20 @@ public class PlayerStats {
         scores.updateScore(Bukkit.getPlayerExact(name), score);
     }
 
-    public void addDeath(boolean suicide) {
-        killStreak = 0;
-        deaths++;
-        if (suicide) score -= 5;
+    public int getAssists() {
+        return assists;
+    }
 
-        ScoreManager scores = BattleNight.instance.getAPI().getScoreManager();
-        scores.updateScore(Bukkit.getPlayerExact(name), score);
+    public int getDeaths() {
+        return deaths;
     }
 
     public int getKills() {
         return kills;
     }
 
-    public int getAssists() {
-        return assists;
-    }
-
     public int getKillStreak() {
         return killStreak;
-    }
-
-    public int getDeaths() {
-        return deaths;
     }
 
     public int getScore() {
@@ -73,11 +75,11 @@ public class PlayerStats {
     }
 
     public void reset() {
-        this.kills = 0;
-        this.assists = 0;
-        this.killStreak = 0;
-        this.deaths = 0;
-        this.score = 0;
+        kills = 0;
+        assists = 0;
+        killStreak = 0;
+        deaths = 0;
+        score = 0;
     }
 
 }

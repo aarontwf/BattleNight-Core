@@ -9,9 +9,9 @@ import java.util.logging.Level;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.core.battle.SimpleWaypoint;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
+import me.limebyte.battlenight.core.util.SimpleWaypoint;
 
 public class CoreArenaManager implements ArenaManager {
 

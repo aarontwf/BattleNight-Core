@@ -8,8 +8,8 @@ import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Teleporter;
-import me.limebyte.battlenight.core.util.BattlePlayer;
+import me.limebyte.battlenight.core.util.Teleporter;
+import me.limebyte.battlenight.core.util.player.BattlePlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,7 +40,9 @@ public class CheatListener extends APIRelatedListener {
         Lobby lobby = getAPI().getLobby();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-        if (!bPlayer.isAlive()) event.setCancelled(true);
+        if (!bPlayer.isAlive()) {
+            event.setCancelled(true);
+        }
 
         if (lobby.contains(player)) {
             event.setCancelled(true);
@@ -55,7 +57,9 @@ public class CheatListener extends APIRelatedListener {
         Battle battle = getAPI().getBattle();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-        if (lobby.contains(player) || !bPlayer.isAlive()) event.setCancelled(true);
+        if (lobby.contains(player) || !bPlayer.isAlive()) {
+            event.setCancelled(true);
+        }
 
         if (battle != null && battle.containsPlayer(player) && event.getSlotType() == SlotType.OUTSIDE) {
             ItemStack cursor = event.getCursor();
@@ -73,7 +77,7 @@ public class CheatListener extends APIRelatedListener {
         Player player = event.getPlayer();
         Battle battle = getAPI().getBattle();
 
-        if (getAPI().getLobby().contains(player) || (battle != null && battle.containsPlayer(player))) {
+        if (getAPI().getLobby().contains(player) || battle != null && battle.containsPlayer(player)) {
             List<String> whitelist = ConfigManager.get(Config.MAIN).getStringList("Commands.Whitelist");
             whitelist.add("bn");
 
@@ -109,7 +113,7 @@ public class CheatListener extends APIRelatedListener {
         Battle battle = getAPI().getBattle();
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
 
-        if (!bPlayer.isAlive() || (battle != null && battle.containsPlayer(player)) || lobby.contains(player)) {
+        if (!bPlayer.isAlive() || battle != null && battle.containsPlayer(player) || lobby.contains(player)) {
             event.setCancelled(true);
         }
     }
@@ -176,7 +180,9 @@ public class CheatListener extends APIRelatedListener {
             Player thrower = (Player) projectile.getShooter();
 
             BattlePlayer bPlayer = BattlePlayer.get(thrower.getName());
-            if (!bPlayer.isAlive()) event.setCancelled(true);
+            if (!bPlayer.isAlive()) {
+                event.setCancelled(true);
+            }
 
             if (lobby.contains(thrower)) {
                 event.setCancelled(true);

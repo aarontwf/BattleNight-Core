@@ -8,7 +8,7 @@ import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.managers.ScoreManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -49,6 +49,7 @@ public class CoreScoreManager implements ScoreManager {
         setState(ScoreboardState.VOTING);
     }
 
+    @Override
     public void addPlayer(Player player) {
         players.add(player.getName());
         player.setScoreboard(scoreboard);
@@ -62,6 +63,40 @@ public class CoreScoreManager implements ScoreManager {
         }
     }
 
+    @Override
+    public void addTeam(me.limebyte.battlenight.api.battle.Team team) {
+        Team t = scoreboard.getTeam("bn_team_" + team.getName());
+        if (t == null) {
+            t = scoreboard.registerNewTeam("bn_team_" + team.getName());
+        }
+        t.setDisplayName(team.getDisplayName() + " Team");
+        t.setPrefix(team.getColour().toString());
+
+        t.setAllowFriendlyFire(ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false));
+        t.setCanSeeFriendlyInvisibles(true);
+    }
+
+    @Override
+    public List<String> getPlayers() {
+        return players;
+    }
+
+    @Override
+    public Scoreboard getScoreboard() {
+        return scoreboard;
+    }
+
+    @Override
+    public ScoreboardState getState() {
+        return state;
+    }
+
+    @Override
+    public List<Arena> getVotableArenas() {
+        return votableArenas;
+    }
+
+    @Override
     public void removePlayer(Player player) {
         players.remove(player.getName());
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
@@ -72,40 +107,17 @@ public class CoreScoreManager implements ScoreManager {
         }
 
         Team team = scoreboard.getPlayerTeam(player);
-        if (team != null) team.removePlayer(player);
-    }
-
-    public void addTeam(me.limebyte.battlenight.api.battle.Team team) {
-        Team t = scoreboard.getTeam("bn_team_" + team.getName());
-        if (t == null) t = scoreboard.registerNewTeam("bn_team_" + team.getName());
-        t.setDisplayName(team.getDisplayName() + " Team");
-        t.setPrefix(team.getColour().toString());
-
-        t.setAllowFriendlyFire(ConfigManager.get(Config.MAIN).getBoolean("FriendlyFire", false));
-        t.setCanSeeFriendlyInvisibles(true);
-    }
-
-    public Scoreboard getScoreboard() {
-        return scoreboard;
-    }
-
-    public ScoreboardState getState() {
-        return state;
-    }
-
-    public List<String> getPlayers() {
-        return players;
+        if (team != null) {
+            team.removePlayer(player);
+        }
     }
 
     @Override
-    public List<Arena> getVotableArenas() {
-        return votableArenas;
-    }
-
     public void setScoreboard(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
     }
 
+    @Override
     public void setState(ScoreboardState state) {
         if (this.state == state) return;
         this.state = state;
@@ -115,14 +127,16 @@ public class CoreScoreManager implements ScoreManager {
         }
 
         sidebar.setDisplayName(ChatColor.BOLD + "" + ChatColor.AQUA + state.getTitle());
-        
+
         if (state == ScoreboardState.VOTING) {
             votableArenas = api.getArenaManager().getReadyArenas(1);
             updateVotes();
         } else {
             for (String name : players) {
                 Player player = Bukkit.getPlayerExact(name);
-                if (player == null) continue;
+                if (player == null) {
+                    continue;
+                }
 
                 Score score = sidebar.getScore(player);
                 score.setScore(1);
@@ -131,10 +145,12 @@ public class CoreScoreManager implements ScoreManager {
         }
     }
 
+    @Override
     public void updateScore(Player player, int score) {
         sidebar.getScore(player).setScore(score);
     }
 
+    @Override
     public void updateTime(long time) {
         String name = String.format(state.getCountdown(), time * 1000);
         sidebar.setDisplayName(ChatColor.BOLD + "" + ChatColor.AQUA + name);

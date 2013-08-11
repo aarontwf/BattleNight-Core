@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.tosort;
+package me.limebyte.battlenight.core.util.player;
 
 import java.util.List;
 

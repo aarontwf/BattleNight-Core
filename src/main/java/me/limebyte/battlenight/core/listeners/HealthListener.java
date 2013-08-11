@@ -4,7 +4,7 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.util.BattlePlayer;
+import me.limebyte.battlenight.core.util.player.BattlePlayer;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,7 +43,7 @@ public class HealthListener extends APIRelatedListener {
             return;
         }
 
-        if (!api.getLobby().contains(player) && (battle != null && !battle.containsPlayer(player))) return;
+        if (!api.getLobby().contains(player) && battle != null && !battle.containsPlayer(player)) return;
 
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
@@ -56,7 +56,9 @@ public class HealthListener extends APIRelatedListener {
                 player.getWorld().playSound(player.getLocation(), Sound.HURT_FLESH, 1f, 1f);
                 event.setCancelled(true);
                 DamageCause cause = event.getCause();
-                if (damager == null) damager = player.getKiller();
+                if (damager == null) {
+                    damager = player.getKiller();
+                }
                 DeathCause accolade = DeathCause.get(player, damager, cause);
 
                 bPlayer.kill(damager, cause, accolade);
@@ -95,9 +97,13 @@ public class HealthListener extends APIRelatedListener {
             Entity damager = ((EntityDamageByEntityEvent) event).getDamager();
             if (damager instanceof Projectile) {
                 LivingEntity shooter = ((Projectile) damager).getShooter();
-                if (shooter instanceof Player) killer = (Player) shooter;
+                if (shooter instanceof Player) {
+                    killer = (Player) shooter;
+                }
             } else {
-                if (damager instanceof Player) killer = (Player) damager;
+                if (damager instanceof Player) {
+                    killer = (Player) damager;
+                }
             }
         }
         return killer;
@@ -115,10 +121,6 @@ public class HealthListener extends APIRelatedListener {
             this.deathMessage = deathMessage;
         }
 
-        public String getMessage() {
-            return deathMessage;
-        }
-
         private static DeathCause get(Player player, Player killer, DamageCause cause) {
             if (cause == DamageCause.ENTITY_ATTACK && killer != null) {
                 ItemStack weapon = killer.getItemInHand();
@@ -132,12 +134,9 @@ public class HealthListener extends APIRelatedListener {
                     float angle = playerVec.angle(killerVec);
                     double range = Math.PI / 3;
                     return angle <= range ? BACKSTAB : STAB;
-                } else if (weapon == null || weapon.getType() == Material.AIR) {
-                    // Punch
-                    return PUNCH;
-                } else if (cause == DamageCause.PROJECTILE) {
-                    return SHOT;
-                }
+                } else if (weapon == null || weapon.getType() == Material.AIR) // Punch
+                return PUNCH;
+                else if (cause == DamageCause.PROJECTILE) return SHOT;
             }
 
             return null;
@@ -145,6 +144,10 @@ public class HealthListener extends APIRelatedListener {
 
         private static boolean isSword(Material material) {
             return material.toString().contains("SWORD");
+        }
+
+        public String getMessage() {
+            return deathMessage;
         }
     }
 

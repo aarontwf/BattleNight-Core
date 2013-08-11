@@ -11,10 +11,10 @@ import me.limebyte.battlenight.api.battle.TeamedBattle;
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
-import me.limebyte.battlenight.core.tosort.Metadata;
-import me.limebyte.battlenight.core.tosort.PlayerData;
-import me.limebyte.battlenight.core.tosort.Teleporter;
-import me.limebyte.battlenight.core.util.BattlePlayer;
+import me.limebyte.battlenight.core.util.Teleporter;
+import me.limebyte.battlenight.core.util.player.BattlePlayer;
+import me.limebyte.battlenight.core.util.player.Metadata;
+import me.limebyte.battlenight.core.util.player.PlayerData;
 
 import org.bukkit.entity.Player;
 
@@ -39,6 +39,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         return worked;
     }
 
+    @Override
     public boolean addTeam(Team team) {
         String name = team.getName();
         for (Team t : teams) {
@@ -50,10 +51,12 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         return true;
     }
 
+    @Override
     public boolean areEnemies(Player player1, Player player2) {
         return !getTeam(player1).getName().equals(getTeam(player2).getName());
     }
 
+    @Override
     public Team getTeam(Player player) {
         String teamName = Metadata.getString(player, "team");
         if (teamName != null) {
@@ -64,6 +67,7 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         return null;
     }
 
+    @Override
     public List<Team> getTeams() {
         return teams;
     }
@@ -80,33 +84,43 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         api.getScoreManager().removePlayer(player);
         BattlePlayer.get(player.getName()).getStats().reset();
 
-        if (shouldEnd()) stop();
+        if (shouldEnd()) {
+            stop();
+        }
         return true;
     }
 
+    @Override
     public boolean removeTeam(Team team) {
         if (!teams.remove(team)) return false;
         setMinPlayers(teams.size());
         return true;
     }
 
+    @Override
     public void setTeam(Player player, Team team) {
         String prevTeam = Metadata.getString(player, "team");
         if (prevTeam != null) {
             for (Team t : teams) {
                 if (t.getName().equals(prevTeam)) {
-                    if (t instanceof SimpleTeam) t.removePlayer(player);
+                    if (t instanceof SimpleTeam) {
+                        t.removePlayer(player);
+                    }
                     break;
                 }
             }
             org.bukkit.scoreboard.Team t = api.getScoreManager().getScoreboard().getPlayerTeam(player);
-            if (t != null) t.removePlayer(player);
+            if (t != null) {
+                t.removePlayer(player);
+            }
         }
 
         if (team != null) {
             team.addPlayer(player);
             org.bukkit.scoreboard.Team t = api.getScoreManager().getScoreboard().getTeam("bn_team_" + team.getName());
-            if (t != null) t.addPlayer(player);
+            if (t != null) {
+                t.addPlayer(player);
+            }
         } else {
             Metadata.remove(player, "team");
         }
@@ -136,7 +150,9 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             if (team == null) {
                 continue;
             }
-            if (team instanceof SimpleTeam) ((SimpleTeam) team).reset(this);
+            if (team instanceof SimpleTeam) {
+                ((SimpleTeam) team).reset(this);
+            }
         }
 
         return result;
@@ -172,7 +188,9 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             int leadScore = inLead.getScore();
             int teamScore = team.getScore();
 
-            if (leadScore > teamScore) continue;
+            if (leadScore > teamScore) {
+                continue;
+            }
 
             if (leadScore < teamScore) {
                 leading.clear();

@@ -6,7 +6,7 @@ import java.util.List;
 
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.api.managers.ArenaManager;
-import me.limebyte.battlenight.core.util.ListPage;
+import me.limebyte.battlenight.core.util.chat.ListPage;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

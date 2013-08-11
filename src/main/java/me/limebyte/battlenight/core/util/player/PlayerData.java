@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.tosort;
+package me.limebyte.battlenight.core.util.player;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,7 +9,9 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
+import me.limebyte.battlenight.core.util.Teleporter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -72,7 +74,9 @@ public class PlayerData {
 
     public static void reset(Player player) {
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (!player.canSee(p)) player.showPlayer(p);
+            if (!player.canSee(p)) {
+                player.showPlayer(p);
+            }
         }
 
         for (PotionEffect effect : player.getActivePotionEffects()) {

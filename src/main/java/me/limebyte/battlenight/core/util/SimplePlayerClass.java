@@ -6,7 +6,7 @@ import java.util.Map;
 
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
-import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -71,11 +71,6 @@ public class SimplePlayerClass implements PlayerClass {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
     public List<ItemStack> getArmour() {
         return armour;
     }
@@ -83,6 +78,11 @@ public class SimplePlayerClass implements PlayerClass {
     @Override
     public List<PotionEffect> getEffects() {
         return effects;
+    }
+
+    @Override
+    public List<ItemStack> getItems() {
+        return items;
     }
 
     @Override

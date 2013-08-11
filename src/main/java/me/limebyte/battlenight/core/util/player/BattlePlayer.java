@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.util;
+package me.limebyte.battlenight.core.util.player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.HealthListener.DeathCause;
-import me.limebyte.battlenight.core.tosort.Teleporter;
+import me.limebyte.battlenight.core.util.Teleporter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -57,8 +57,8 @@ public class BattlePlayer {
 
     private BattlePlayer(String name) {
         this.name = name;
-        this.stats = new PlayerStats(name);
-        this.alive = true;
+        stats = new PlayerStats(name);
+        alive = true;
     }
 
     public static BattlePlayer get(String name) {
@@ -70,6 +70,26 @@ public class BattlePlayer {
 
     public static Map<String, BattlePlayer> getPlayers() {
         return players;
+    }
+
+    private static void killFeed(Player player, Player killer, DamageCause cause, DeathCause accolade) {
+        Messenger messenger = BattleNight.instance.getAPI().getMessenger();
+
+        String causeMsg = deathCauses.get(cause);
+        if (accolade != null) {
+            causeMsg = accolade.getMessage();
+        }
+        if (causeMsg == null) {
+            causeMsg = "$p died.";
+        }
+
+        String deathMessage = causeMsg.replace("$p", messenger.getColouredName(player));
+
+        if (killer != null) {
+            deathMessage = deathMessage.replace("$k", messenger.getColouredName(killer));
+        }
+
+        messenger.tellBattle(deathMessage);
     }
 
     public String getName() {
@@ -115,7 +135,9 @@ public class BattlePlayer {
         Bukkit.getScheduler().cancelTask(respawnTaskID);
         Player player = Bukkit.getPlayerExact(name);
         Battle battle = BattleNight.instance.getAPI().getBattle();
-        if (battle != null) battle.respawn(player);
+        if (battle != null) {
+            battle.respawn(player);
+        }
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.showPlayer(player);
         }
@@ -131,9 +153,9 @@ public class BattlePlayer {
 
         public RespawnTask(Player player) {
             this.player = player;
-            this.timeRemaining = RESPAWN_TIME * 20;
-            this.liftAmount = liftHeight / timeRemaining;
-            this.moveUp = player.getEyeLocation().clone().add(0, liftHeight, 0).getBlock().isEmpty();
+            timeRemaining = RESPAWN_TIME * 20;
+            liftAmount = liftHeight / timeRemaining;
+            moveUp = player.getEyeLocation().clone().add(0, liftHeight, 0).getBlock().isEmpty();
         }
 
         @Override
@@ -152,22 +174,6 @@ public class BattlePlayer {
 
             timeRemaining--;
         }
-    }
-
-    private static void killFeed(Player player, Player killer, DamageCause cause, DeathCause accolade) {
-        Messenger messenger = BattleNight.instance.getAPI().getMessenger();
-
-        String causeMsg = deathCauses.get(cause);
-        if (accolade != null) causeMsg = accolade.getMessage();
-        if (causeMsg == null) causeMsg = "$p died.";
-
-        String deathMessage = causeMsg.replace("$p", messenger.getColouredName(player));
-
-        if (killer != null) {
-            deathMessage = deathMessage.replace("$k", messenger.getColouredName(killer));
-        }
-
-        messenger.tellBattle(deathMessage);
     }
 
 }

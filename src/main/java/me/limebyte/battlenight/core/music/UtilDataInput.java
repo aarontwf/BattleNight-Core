@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.tosort;
+package me.limebyte.battlenight.core.music;
 
 import java.io.DataInput;
 import java.io.DataInputStream;

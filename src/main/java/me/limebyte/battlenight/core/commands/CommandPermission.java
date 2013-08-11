@@ -2,7 +2,9 @@ package me.limebyte.battlenight.core.commands;
 
 public enum CommandPermission {
 
-    USER("battlenight.user", false), MODERATOR("battlenight.moderator", true), ADMIN("battlenight.admin", true);
+    USER("battlenight.user", false),
+    MODERATOR("battlenight.moderator", true),
+    ADMIN("battlenight.admin", true);
 
     private String permission;
     private boolean op;

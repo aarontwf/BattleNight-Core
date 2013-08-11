@@ -11,9 +11,9 @@ import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
-import me.limebyte.battlenight.core.tosort.Metadata;
-import me.limebyte.battlenight.core.tosort.Teleporter;
-import me.limebyte.battlenight.core.util.BattlePlayer;
+import me.limebyte.battlenight.core.util.Teleporter;
+import me.limebyte.battlenight.core.util.player.BattlePlayer;
+import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -37,7 +37,9 @@ public class InteractListener extends APIRelatedListener {
         Battle battle = getAPI().getBattle();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-        if (!bPlayer.isAlive()) event.setCancelled(true);
+        if (!bPlayer.isAlive()) {
+            event.setCancelled(true);
+        }
 
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
@@ -66,7 +68,9 @@ public class InteractListener extends APIRelatedListener {
                             Iterator<String> it = waiting.iterator();
                             while (it.hasNext()) {
                                 Player p = Bukkit.getPlayerExact(it.next());
-                                if (p == null || Metadata.getBoolean(p, "ready")) it.remove();
+                                if (p == null || Metadata.getBoolean(p, "ready")) {
+                                    it.remove();
+                                }
                             }
 
                             if (waiting.isEmpty()) {

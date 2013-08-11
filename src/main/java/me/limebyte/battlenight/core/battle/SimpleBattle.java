@@ -17,10 +17,10 @@ import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.Timer;
-import me.limebyte.battlenight.core.tosort.PlayerData;
-import me.limebyte.battlenight.core.tosort.Teleporter;
-import me.limebyte.battlenight.core.util.BattlePlayer;
-import me.limebyte.battlenight.core.util.BattleTimer;
+import me.limebyte.battlenight.core.util.Teleporter;
+import me.limebyte.battlenight.core.util.player.BattlePlayer;
+import me.limebyte.battlenight.core.util.player.PlayerData;
+import me.limebyte.battlenight.core.util.timers.BattleTimer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -205,7 +205,9 @@ public abstract class SimpleBattle implements Battle {
 
         for (String name : players) {
             int score = bPlayers.get(name).getStats().getScore();
-            if (score < leadingScore) continue;
+            if (score < leadingScore) {
+                continue;
+            }
 
             if (score > leadingScore) {
                 leading.clear();

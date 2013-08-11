@@ -51,14 +51,6 @@ public abstract class BattleNightCommand {
         return aliases;
     }
 
-    public List<String> getPrimaryChoices() {
-        return primaryChoices;
-    }
-
-    public void setPrimaryChoices(List<String> primaryChoices) {
-        this.primaryChoices = primaryChoices;
-    }
-
     /**
      * Gets a brief description of this command
      * 
@@ -93,6 +85,10 @@ public abstract class BattleNightCommand {
      */
     public CommandPermission getPermission() {
         return permission;
+    }
+
+    public List<String> getPrimaryChoices() {
+        return primaryChoices;
     }
 
     /**
@@ -174,6 +170,10 @@ public abstract class BattleNightCommand {
      */
     public void setPermission(CommandPermission permission) {
         this.permission = permission;
+    }
+
+    public void setPrimaryChoices(List<String> primaryChoices) {
+        this.primaryChoices = primaryChoices;
     }
 
     /**

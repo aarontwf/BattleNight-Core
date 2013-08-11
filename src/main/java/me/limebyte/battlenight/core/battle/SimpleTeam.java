@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import me.limebyte.battlenight.api.battle.Team;
-import me.limebyte.battlenight.core.tosort.Metadata;
-import me.limebyte.battlenight.core.util.BattlePlayer;
+import me.limebyte.battlenight.core.util.player.BattlePlayer;
+import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -29,42 +29,30 @@ public class SimpleTeam implements Team {
         this.colour = colour;
     }
 
+    @Override
+    public void addPlayer(Player player) {
+        players.add(player.getName());
+        Metadata.set(player, "team", name);
+    }
+
+    @Override
     public ChatColor getColour() {
         return colour;
     }
 
+    @Override
     public String getDisplayName() {
         return displayName;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
-    public boolean isReady() {
-        return ready;
-    }
-
-    public void setColour(ChatColor colour) {
-        this.colour = colour;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public void setReady(boolean ready) {
-        this.ready = ready;
-    }
-
     @Override
-    public String toString() {
-        return colour + name;
-    }
-
-    protected void reset(SimpleBattle battle) {
-        ready = false;
-        players.clear();
+    public Set<String> getPlayers() {
+        return players;
     }
 
     @Override
@@ -78,20 +66,39 @@ public class SimpleTeam implements Team {
     }
 
     @Override
-    public Set<String> getPlayers() {
-        return players;
-    }
-
-    @Override
-    public void addPlayer(Player player) {
-        players.add(player.getName());
-        Metadata.set(player, "team", name);
+    public boolean isReady() {
+        return ready;
     }
 
     @Override
     public void removePlayer(Player player) {
         players.add(player.getName());
         Metadata.remove(player, "team");
+    }
+
+    @Override
+    public void setColour(ChatColor colour) {
+        this.colour = colour;
+    }
+
+    @Override
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Override
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
+    @Override
+    public String toString() {
+        return colour + name;
+    }
+
+    protected void reset(SimpleBattle battle) {
+        ready = false;
+        players.clear();
     }
 
 }

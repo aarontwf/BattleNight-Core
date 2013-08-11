@@ -3,7 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
-import me.limebyte.battlenight.core.tosort.Metadata;
+import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -22,9 +22,7 @@ public class VoteCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        if (args.length < 1) {
-            return false;
-        }
+        if (args.length < 1) return false;
 
         if (sender instanceof Player) {
             Player player = (Player) sender;

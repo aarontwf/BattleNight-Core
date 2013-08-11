@@ -20,7 +20,9 @@ public class EndCommand extends BattleNightCommand {
 
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
-        if (api.getBattle() != null) api.getBattle().stop();
+        if (api.getBattle() != null) {
+            api.getBattle().stop();
+        }
         api.getMessenger().tell(sender, Message.BATTLE_ENDED);
         return true;
     }

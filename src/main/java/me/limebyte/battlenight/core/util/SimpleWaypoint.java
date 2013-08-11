@@ -1,4 +1,4 @@
-package me.limebyte.battlenight.core.battle;
+package me.limebyte.battlenight.core.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,21 +20,13 @@ public class SimpleWaypoint implements Waypoint {
     public SimpleWaypoint(String name) {
         this.name = name;
     }
-    
+
     public static SimpleWaypoint deserialize(Map<String, Object> map) {
         String name = (String) map.get("Name");
         SimpleWaypoint waypoint = new SimpleWaypoint(name != null ? name : "Existing");
-        
+
         waypoint.setLocation(parseLocation((String) map.get("Location")));
         return waypoint;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("Location", parseLocation(location));
-        map.put("Name", name);
-        return map;
     }
 
     private static String parseLocation(Location loc) {
@@ -63,6 +55,7 @@ public class SimpleWaypoint implements Waypoint {
         return new Location(w, x, y, z, yaw, pitch);
     }
 
+    @Override
     public Location getLocation() {
         return location.clone();
     }
@@ -72,10 +65,20 @@ public class SimpleWaypoint implements Waypoint {
         return name;
     }
 
+    @Override
     public boolean isSet() {
         return location != null;
     }
 
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("Location", parseLocation(location));
+        map.put("Name", name);
+        return map;
+    }
+
+    @Override
     public void setLocation(Location location) {
         this.location = location;
     }

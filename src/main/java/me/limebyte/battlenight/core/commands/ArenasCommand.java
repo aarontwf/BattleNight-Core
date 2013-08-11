@@ -10,8 +10,8 @@ import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleArena;
-import me.limebyte.battlenight.core.battle.SimpleWaypoint;
-import me.limebyte.battlenight.core.util.ListPage;
+import me.limebyte.battlenight.core.util.SimpleWaypoint;
+import me.limebyte.battlenight.core.util.chat.ListPage;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
