@@ -70,7 +70,7 @@ public class HealthListener extends APIRelatedListener {
         Player player = (Player) event.getEntity();
 
         if (!ConfigManager.get(Config.MAIN).getBoolean("StopHealthRegen", true)) return;
-        if (getAPI().getBattle() != null && !getAPI().getBattle().containsPlayer(player)) return;
+        if (getAPI().getBattle() == null || !getAPI().getBattle().containsPlayer(player)) return;
 
         RegainReason reason = event.getRegainReason();
         if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {
