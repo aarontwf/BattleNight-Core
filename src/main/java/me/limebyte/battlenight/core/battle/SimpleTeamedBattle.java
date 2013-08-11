@@ -99,10 +99,14 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
                     break;
                 }
             }
+            org.bukkit.scoreboard.Team t = api.getScoreManager().getScoreboard().getPlayerTeam(player);
+            if (t != null) t.removePlayer(player);
         }
 
         if (team != null) {
             team.addPlayer(player);
+            org.bukkit.scoreboard.Team t = api.getScoreManager().getScoreboard().getTeam("bn_team_" + team.getName());
+            if (t != null) t.addPlayer(player);
         } else {
             Metadata.remove(player, "team");
         }
