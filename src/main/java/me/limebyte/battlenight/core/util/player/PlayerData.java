@@ -49,6 +49,7 @@ public class PlayerData {
     private ItemStack[] invArmour;
     private int level;
     private Location location;
+    private double maxHealth;
     private String playerListName;
     private long playerTimeOffset;
     private int remainingAir;
@@ -95,10 +96,11 @@ public class PlayerData {
         if (player.getGameMode() != GameMode.SURVIVAL) {
             player.setGameMode(GameMode.SURVIVAL);
         }
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(20);
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
         player.setLevel(0);
+        player.setMaxHealth(20);
         String pListName = ChatColor.GRAY + "[BN] " + player.getName();
         player.setPlayerListName(pListName.length() < 16 ? pListName : pListName.substring(0, 16));
         player.resetPlayerTime();
@@ -162,6 +164,7 @@ public class PlayerData {
             player.setGameMode(gamemode);
         }
 
+        player.setMaxHealth(data.maxHealth);
         player.setHealth(data.health);
         player.getInventory().setContents(data.invItems);
         player.getInventory().setArmorContents(data.invArmour);
@@ -220,6 +223,7 @@ public class PlayerData {
         data.invArmour = player.getInventory().getArmorContents();
         data.level = player.getLevel();
         data.location = player.getLocation().clone();
+        data.maxHealth = player.getMaxHealth();
         data.playerListName = player.getPlayerListName();
         data.playerTimeOffset = player.getPlayerTimeOffset();
         data.remainingAir = player.getRemainingAir();

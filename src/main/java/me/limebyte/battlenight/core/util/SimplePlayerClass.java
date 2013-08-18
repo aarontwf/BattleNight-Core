@@ -23,13 +23,15 @@ public class SimplePlayerClass implements PlayerClass {
     private List<ItemStack> items, armour;
     private List<PotionEffect> effects;
     private HashMap<String, Boolean> permissions;
+    private double maxHealth;
 
-    public SimplePlayerClass(String name, List<ItemStack> items, List<ItemStack> armour, List<PotionEffect> effects) {
+    public SimplePlayerClass(String name, List<ItemStack> items, List<ItemStack> armour, List<PotionEffect> effects, double maxHealth) {
         this.name = name;
         this.items = items;
         this.armour = armour;
         this.effects = effects;
-        permissions = new HashMap<String, Boolean>();
+        this.permissions = new HashMap<String, Boolean>();
+        this.maxHealth = maxHealth;
 
         String perm = "battlenight.class." + name.toLowerCase();
         permission = new Permission(perm, "Permission for the class: " + name + ".", PermissionDefault.TRUE);
@@ -68,6 +70,9 @@ public class SimplePlayerClass implements PlayerClass {
             }
         } catch (Exception e) {
         }
+
+        player.setMaxHealth(maxHealth);
+        player.setHealth(maxHealth);
     }
 
     @Override
@@ -83,6 +88,11 @@ public class SimplePlayerClass implements PlayerClass {
     @Override
     public List<ItemStack> getItems() {
         return items;
+    }
+
+    @Override
+    public double getMaxHealth() {
+        return maxHealth;
     }
 
     @Override

@@ -60,10 +60,12 @@ public class CoreClassManager implements ClassManager {
         ConfigManager.reload(configFile);
         FileConfiguration config = ConfigManager.get(configFile);
         for (String className : config.getConfigurationSection("classes").getKeys(false)) {
-            String items = "classes." + className + ".items";
-            String armour = "classes." + className + ".armour";
-            String effects = config.getString("classes." + className + ".effects");
-            classes.add(new SimplePlayerClass(className, parseItems(config, items), parseArmour(config, armour), parseEffects(effects)));
+            String path = "classes." + className + ".";
+            String items = path + "items";
+            String armour = path + "armour";
+            String effects = config.getString(path + "effects");
+            double maxHealth = config.getDouble(path + "max-health", 20);
+            classes.add(new SimplePlayerClass(className, parseItems(config, items), parseArmour(config, armour), parseEffects(effects), maxHealth));
         }
     }
 
@@ -81,6 +83,7 @@ public class CoreClassManager implements ClassManager {
             createItems(config, "classes." + c.getName() + ".items", c.getItems(), false);
             createItems(config, "classes." + c.getName() + ".armour", c.getArmour(), true);
             createEffects(config, "classes." + c.getName() + ".effects", c.getEffects());
+            config.set("classes." + c.getName() + ".max-health", c.getMaxHealth());
         }
         ConfigManager.save(configFile);
     }
