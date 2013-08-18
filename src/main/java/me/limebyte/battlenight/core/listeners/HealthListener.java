@@ -37,31 +37,31 @@ public class HealthListener extends APIRelatedListener {
         BattleNightAPI api = getAPI();
         Battle battle = api.getBattle();
 
-        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-        if (!bPlayer.isAlive()) {
-            event.setCancelled(true);
-            return;
-        }
-
-        if (!api.getLobby().contains(player) && battle != null && !battle.containsPlayer(player)) return;
-
-        if (event instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            subEvent.setCancelled(!canBeDamaged(player, damager, battle));
-        }
-
-        if (event.isCancelled()) return;
-        if (battle != null && battle.isInProgress()) {
-            if (event.getDamage() >= player.getHealth()) {
-                player.getWorld().playSound(player.getLocation(), Sound.HURT_FLESH, 1f, 1f);
+        if (api.getLobby().contains(player) || (battle != null && battle.containsPlayer(player))) {
+            BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+            if (!bPlayer.isAlive()) {
                 event.setCancelled(true);
-                DamageCause cause = event.getCause();
-                if (damager == null) {
-                    damager = player.getKiller();
-                }
-                DeathCause accolade = DeathCause.get(player, damager, cause);
+                return;
+            }
 
-                bPlayer.kill(damager, cause, accolade);
+            if (event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                subEvent.setCancelled(!canBeDamaged(player, damager, battle));
+            }
+
+            if (event.isCancelled()) return;
+            if (battle != null && battle.isInProgress()) {
+                if (event.getDamage() >= player.getHealth()) {
+                    player.getWorld().playSound(player.getLocation(), Sound.HURT_FLESH, 1f, 1f);
+                    event.setCancelled(true);
+                    DamageCause cause = event.getCause();
+                    if (damager == null) {
+                        damager = player.getKiller();
+                    }
+                    DeathCause accolade = DeathCause.get(player, damager, cause);
+
+                    bPlayer.kill(damager, cause, accolade);
+                }
             }
         }
     }
