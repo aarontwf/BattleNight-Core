@@ -12,6 +12,7 @@ import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.Teleporter;
+import me.limebyte.battlenight.core.util.Util;
 import me.limebyte.battlenight.core.util.player.BattlePlayer;
 import me.limebyte.battlenight.core.util.player.Metadata;
 
@@ -44,7 +45,7 @@ public class InteractListener extends APIRelatedListener {
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
             Block block = event.getClickedBlock();
 
-            if (block.getTypeId() == ConfigManager.get(Config.MAIN).getInt("ReadyBlock", 42)) {
+            if (block.getType() == Util.getMaterial(ConfigManager.get(Config.MAIN).getString("ReadyBlock", "iron-block"))) {
                 if (lobby.getPlayers().contains(player.getName())) {
                     Messenger messenger = getAPI().getMessenger();
                     if (getAPI().getPlayerClass(player) != null) {

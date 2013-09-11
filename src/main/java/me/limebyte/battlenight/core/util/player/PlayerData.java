@@ -43,7 +43,7 @@ public class PlayerData {
     private int fireTicks;
     private float flySpeed;
     private int foodLevel;
-    private int gameMode;
+    private GameMode gameMode;
     private double health;
     private ItemStack[] invItems;
     private ItemStack[] invArmour;
@@ -159,7 +159,7 @@ public class PlayerData {
         player.setFlySpeed(data.flySpeed);
         player.setFoodLevel(data.foodLevel);
 
-        GameMode gamemode = GameMode.getByValue(data.gameMode);
+        GameMode gamemode = data.gameMode;
         if (player.getGameMode() != gamemode) {
             player.setGameMode(gamemode);
         }
@@ -217,7 +217,7 @@ public class PlayerData {
         data.fireTicks = player.getFireTicks();
         data.flySpeed = player.getFlySpeed();
         data.foodLevel = player.getFoodLevel();
-        data.gameMode = player.getGameMode().getValue();
+        data.gameMode = player.getGameMode();
         data.health = player.getHealth();
         data.invItems = player.getInventory().getContents();
         data.invArmour = player.getInventory().getArmorContents();

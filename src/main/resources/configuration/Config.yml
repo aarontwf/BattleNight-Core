@@ -7,7 +7,7 @@ Battle:
     MinPlayers: 2
     MaxPlayers: 0
 UsePermissions: false
-ReadyBlock: 42
+ReadyBlock: iron-block
 FriendlyFire: false
 StopHealthRegen: true
 ExitWaypoint: false

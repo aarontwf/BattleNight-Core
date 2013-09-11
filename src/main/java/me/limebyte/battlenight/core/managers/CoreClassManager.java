@@ -14,6 +14,7 @@ import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.SimplePlayerClass;
+import me.limebyte.battlenight.core.util.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,7 +94,7 @@ public class CoreClassManager implements ClassManager {
 
         String effectList = "";
         for (PotionEffect effect : effects) {
-            effectList += ", " + effect.getType().getName().toLowerCase();
+            effectList += ", " + Util.getName(effect.getType());
             int level = effect.getAmplifier() + 1;
             effectList += "~" + level;
         }
@@ -113,26 +114,19 @@ public class CoreClassManager implements ClassManager {
                 slot = slot.replace("slot3", "boots");
             }
 
-            if (item.getType() == Material.AIR) {
-                continue;
-            }
-            String type = item.getType().toString().toLowerCase();
+            if (item.getType() == Material.AIR) continue;
             short data = item.getDurability();
             int amount = item.getAmount();
             Map<Enchantment, Integer> enchantments = item.getEnchantments();
 
-            config.set(path + slot + ".type", type);
-            if (data != 0) {
-                config.set(path + slot + ".data", data);
-            }
-            if (amount > 1) {
-                config.set(path + slot + ".amount", amount);
-            }
+            config.set(path + slot + ".type", Util.getName(item.getType()));
+            if (data != 0) config.set(path + slot + ".data", data);
+            if (amount > 1) config.set(path + slot + ".amount", amount);
 
             if (!enchantments.isEmpty()) {
                 String rawEnchantments = "";
                 for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-                    rawEnchantments += ", " + enchantment.getKey().getName().toLowerCase() + "~" + enchantment.getValue();
+                    rawEnchantments += ", " + Util.getName(enchantment.getKey()) + "~" + enchantment.getValue();
                 }
                 config.set(path + slot + ".enchantments", rawEnchantments.substring(2));
             }
@@ -179,36 +173,6 @@ public class CoreClassManager implements ClassManager {
         return color;
     }
 
-    private Enchantment getEnchantment(String enc) {
-        Enchantment enchantment = Enchantment.getByName(enc.toUpperCase());
-        if (enchantment == null) {
-            try {
-                int id = Integer.parseInt(enc);
-                Enchantment fromId = Enchantment.getById(id);
-                if (fromId != null) {
-                    enchantment = fromId;
-                }
-            } catch (NumberFormatException ex) {
-            }
-        }
-        return enchantment;
-    }
-
-    private Material getMaterial(String mat) {
-        Material material = Material.getMaterial(mat.toUpperCase());
-        if (material == null) {
-            try {
-                int id = Integer.parseInt(mat);
-                Material fromId = Material.getMaterial(id);
-                if (fromId != null) {
-                    material = fromId;
-                }
-            } catch (NumberFormatException ex) {
-            }
-        }
-        return material;
-    }
-
     private List<ItemStack> parseArmour(FileConfiguration config, String path) {
         List<ItemStack> armour = new ArrayList<ItemStack>();
 
@@ -247,13 +211,9 @@ public class CoreClassManager implements ClassManager {
             String[] split = effects.split(", ");
             for (String s : split) {
                 String[] effLvl = s.split("~");
-                PotionEffectType type = PotionEffectType.getByName(effLvl[0].toUpperCase());
-                if (type == null) {
-                    type = PotionEffectType.getById(Integer.parseInt(effLvl[0]));
-                    if (type == null) {
-                        continue;
-                    }
-                }
+                PotionEffectType type = Util.getPotionEffect(effLvl[0]);
+                if (type == null) continue;
+
                 int level = 0;
                 if (effLvl.length > 1) {
                     level = Integer.parseInt(effLvl[1]) - 1;
@@ -287,7 +247,7 @@ public class CoreClassManager implements ClassManager {
 
         if (slotId < 0 || slotId > INV_SIZE - 1) return;
         if (type == null) return;
-        mat = getMaterial(type);
+        mat = Util.getMaterial(type);
         if (mat == null) return;
 
         items.get(slotId).setType(mat);
@@ -299,14 +259,10 @@ public class CoreClassManager implements ClassManager {
 
             for (String s : enchantment) {
                 String[] encLvl = s.split("~");
-                if (encLvl.length == 0) {
-                    continue;
-                }
+                if (encLvl.length == 0) continue;
 
-                Enchantment enc = getEnchantment(encLvl[0]);
-                if (enc == null) {
-                    continue;
-                }
+                Enchantment enc = Util.getEnchantment(encLvl[0]);
+                if (enc == null) continue;
 
                 int lvl = enc.getStartLevel();
                 if (encLvl.length > 1) {

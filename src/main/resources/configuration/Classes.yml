@@ -6,21 +6,20 @@ classes:
         items:
             slot0:
                 type: stone_sword
-                enchantments: 19~2
+                enchantments: knockback~2
             slot1:
                 type: potion
                 data: 8262
         armour:
             boots:
                 type: iron_boots
-                enchantments: 2~4
+                enchantments: protection_fall~4
         effects: speed~2, jump~2
-
     Pyro:
         items:
             slot0:
                 type: wood_sword
-                enchantments: 20~2
+                enchantments: fire_aspect~2
             slot1:
                 type: flint_and_steel
             slot3:
@@ -29,18 +28,17 @@ classes:
         armour:
             helmet:
                 type: leather_helmet
-                enchantments: 1~4
+                enchantments: protection_fire~4
             chestplate:
                 type: leather_chestplate
-                enchantments: 1~4
+                enchantments: protection_fire~4
             leggings:
                 type: leather_leggings
-                enchantments: 1~4
+                enchantments: protection_fire~4
             boots:
                 type: leather_boots
-                enchantments: 1~4
-        effects: fire_resistance
-
+                enchantments: protection_fire~4
+        effects: fire_resistance~1
     Tank:
         items:
             slot0:
@@ -48,29 +46,27 @@ classes:
         armour:
             helmet:
                 type: diamond_helmet
-                enchantments: 3~3
+                enchantments: protection_explosions~3
             chestplate:
                 type: diamond_chestplate
-                enchantments: 3~3
+                enchantments: protection_explosions~3
             leggings:
                 type: diamond_leggings
-                enchantments: 3~3
+                enchantments: protection_explosions~3
             boots:
                 type: diamond_boots
-                enchantments: 3~3
-        effects: slow
-
+                enchantments: protection_explosions~3
+        effects: slow~1
     Swordsman:
         items:
             slot0:
                 type: diamond_sword
-                enchantments: 16~1
-
+                enchantments: damage_all~1
     Archer:
         items:
             slot0:
                 type: bow
-                enchantments: 49~2, 51~1
+                enchantments: arrow_infinite~1, arrow_knockback~2
                 name: Long Bow
             slot1:
                 type: ender_pearl
@@ -80,22 +76,21 @@ classes:
         armour:
             helmet:
                 type: chainmail_helmet
-                enchantments: 4~2
+                enchantments: protection_projectile~2
             chestplate:
                 type: chainmail_chestplate
-                enchantments: 4~2
+                enchantments: protection_projectile~2
             leggings:
                 type: chainmail_leggings
-                enchantments: 4~2
+                enchantments: protection_projectile~2
             boots:
                 type: chainmail_boots
-                enchantments: 4~2
-
+                enchantments: protection_projectile~2
     Medic:
         items:
             slot0:
                 type: gold_sword
-                enchantments: 19~2
+                enchantments: knockback~2
                 name: Rusty Syringe
             slot1:
                 type: golden_apple
@@ -110,15 +105,14 @@ classes:
         armour:
             helmet:
                 type: leather_helmet
-                enchantments: 0~2
+                enchantments: protection_environmental~2
                 colour: 177, 93, 155
-
     Magician:
         items:
             slot0:
                 type: stick
                 name: Magic Staff
-                enchantments: 16~4, 19~1
+                enchantments: damage_all~4, knockback~1
             slot1:
                 type: ender_pearl
                 amount: 16
@@ -145,8 +139,7 @@ classes:
                 type: iron_leggings
             boots:
                 type: iron_boots
-                enchantments: 2~4
-
+                enchantments: protection_fall~4
     Spy:
         items:
             slot0:
@@ -155,13 +148,12 @@ classes:
             slot1:
                 type: potion
                 data: 8206
-        effects: speed, water_breathing
-
+        effects: speed~1, water_breathing~1
     Miner:
         items:
             slot0:
                 type: diamond_pickaxe
-                enchantments: 16~2
+                enchantments: damage_all~2
                 name: Sharpened Pick
             slot1:
                 type: potion
@@ -170,23 +162,22 @@ classes:
         armour:
             helmet:
                 type: leather_helmet
-                enchantments: 0~3
+                enchantments: protection_environmental~3
             chestplate:
                 type: leather_chestplate
-                enchantments: 0~3
+                enchantments: protection_environmental~3
             leggings:
                 type: leather_leggings
-                enchantments: 0~3
+                enchantments: protection_environmental~3
             boots:
                 type: leather_boots
-                enchantments: 0~3
+                enchantments: protection_environmental~3
         effects: fast_digging~2
-
     Dwarf:
         items:
             slot0:
                 type: diamond_axe
-                enchantments: 16~3
+                enchantments: damage_all~3
                 name: Battle Axe
         armour:
             helmet:
