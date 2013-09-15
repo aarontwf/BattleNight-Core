@@ -1,2 +1,2 @@
-1.9.1
-http://dev.bukkit.org/bukkit-plugins/battlenight/files/31-battle-night-v1-9-1/
+1.9.2
+http://dev.bukkit.org/bukkit-plugins/battlenight/files/32-battle-night-v1-9-2/
