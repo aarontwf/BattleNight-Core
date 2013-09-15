@@ -16,7 +16,7 @@ import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.listeners.BlockListener;
 import me.limebyte.battlenight.core.listeners.CheatListener;
 import me.limebyte.battlenight.core.listeners.DeathListener;
-import me.limebyte.battlenight.core.listeners.DisconnectListener;
+import me.limebyte.battlenight.core.listeners.ConnectionListener;
 import me.limebyte.battlenight.core.listeners.HealthListener;
 import me.limebyte.battlenight.core.listeners.InteractListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
@@ -106,13 +106,13 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new CheatListener(api), this);
         pm.registerEvents(new HealthListener(api), this);
         pm.registerEvents(new DeathListener(api), this);
-        pm.registerEvents(new DisconnectListener(api), this);
+        pm.registerEvents(new ConnectionListener(api), this);
         pm.registerEvents(new InteractListener(api), this);
         pm.registerEvents(new Teleporter(), this);
         pm.registerEvents(new SignListener(api), this);
 
         if (ConfigManager.get(Config.MAIN).getBoolean("UpdateCheck", true)) {
-            new UpdateChecker(api, pdf).check();
+            UpdateChecker.check(api, pdf);
         }
 
         // Enable Message

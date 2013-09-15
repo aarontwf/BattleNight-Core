@@ -12,28 +12,32 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 public class UpdateChecker {
 
-    private static final String UPDATE_URL = "https://raw.github.com/BattleNight/BattleNight-Core/master/version.txt";
-    private BattleNightAPI api;
-    private String version;
-    private boolean snapshot;
+    private static final String VERSION_URL = "https://raw.github.com/BattleNight/BattleNight-Core/master/version.txt";
+    private static final String UPDATE_MESSAGE = "A new version of BattleNight has been released.  You can download v%s from %s.";
 
-    public UpdateChecker(BattleNightAPI api, PluginDescriptionFile pdf) {
-        this.api = api;
-        version = pdf.getVersion();
-        snapshot = removeSuffix();
-    }
+    private static String version;
+    private static boolean snapshot;
 
-    public void check() {
+    private static boolean updateAvailable = false;
+    private static String updateMessage;
+
+    public static void check(BattleNightAPI api, PluginDescriptionFile pdf) {
+        UpdateChecker.version = pdf.getVersion();
+        UpdateChecker.snapshot = removeSuffix();
+
         Messenger messenger = api.getMessenger();
 
         try {
-            URL update = new URL(UPDATE_URL);
+            URL update = new URL(VERSION_URL);
             BufferedReader in = new BufferedReader(new InputStreamReader(update.openStream()));
             String latestVersion = in.readLine().trim();
+            String downloadURL = in.readLine().trim();
             in.close();
 
             if (isNewer(latestVersion)) {
-                messenger.log(Level.INFO, "Update v" + latestVersion + " available!");
+                updateAvailable = true;
+                updateMessage = String.format(UPDATE_MESSAGE, latestVersion, downloadURL);
+                messenger.log(Level.INFO, updateMessage);
             }
         } catch (Exception e) {
             messenger.debug(Level.WARNING, "Failed to check for updates.");
@@ -41,7 +45,7 @@ public class UpdateChecker {
         }
     }
 
-    private boolean isNewer(String latestVersion) {
+    private static boolean isNewer(String latestVersion) {
         if (version.equals(latestVersion)) return snapshot ? true : false;
 
         String[] verInts = version.split(".");
@@ -59,9 +63,17 @@ public class UpdateChecker {
         return false;
     }
 
-    private boolean removeSuffix() {
+    private static boolean removeSuffix() {
         boolean snapshot = version.contains("-");
         version = version.split("-")[0];
         return snapshot;
+    }
+
+    public static boolean isUpdateAvailable() {
+        return updateAvailable;
+    }
+
+    public static String getUpdateMessage() {
+        return updateMessage;
     }
 }
