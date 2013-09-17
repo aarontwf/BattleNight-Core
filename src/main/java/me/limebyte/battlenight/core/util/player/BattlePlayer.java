@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.event.battle.BattleDeathEvent;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.HealthListener.DeathCause;
@@ -104,7 +105,7 @@ public class BattlePlayer {
         return alive;
     }
 
-    public void kill(Player killer, DamageCause cause, DeathCause accolade) {
+    public void kill(Battle battle, Player killer, DamageCause cause, DeathCause accolade) {
         if (!alive) return;
         alive = false;
         Player player = Bukkit.getPlayerExact(name);
@@ -127,17 +128,20 @@ public class BattlePlayer {
         player.setFlySpeed(0);
         BukkitTask task = new RespawnTask(player).runTaskTimer(BattleNight.instance, 0L, 1L);
         respawnTaskID = task.getTaskId();
+
+        Bukkit.getPluginManager().callEvent(new BattleDeathEvent(battle, player, killer));
     }
 
     public void revive() {
         if (alive) return;
         alive = true;
+
         Bukkit.getScheduler().cancelTask(respawnTaskID);
         Player player = Bukkit.getPlayerExact(name);
         Battle battle = BattleNight.instance.getAPI().getBattle();
-        if (battle != null) {
-            battle.respawn(player);
-        }
+
+        if (battle != null) battle.respawn(player);
+
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.showPlayer(player);
         }

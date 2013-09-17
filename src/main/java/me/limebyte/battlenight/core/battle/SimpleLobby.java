@@ -11,6 +11,8 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
+import me.limebyte.battlenight.api.event.lobby.LobbyJoinEvent;
+import me.limebyte.battlenight.api.event.lobby.LobbyLeaveEvent;
 import me.limebyte.battlenight.api.managers.ArenaManager;
 import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
@@ -88,6 +90,7 @@ public class SimpleLobby implements Lobby {
         messenger.tell(player, Message.JOINED_LOBBY);
         messenger.tellLobby(Message.PLAYER_JOINED_LOBBY, player);
 
+        Bukkit.getPluginManager().callEvent(new LobbyJoinEvent(this, player));
     }
 
     @Override
@@ -124,6 +127,8 @@ public class SimpleLobby implements Lobby {
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
         Metadata.remove(player, "voted");
+
+        Bukkit.getPluginManager().callEvent(new LobbyLeaveEvent(this, player));
     }
 
     public void start() {

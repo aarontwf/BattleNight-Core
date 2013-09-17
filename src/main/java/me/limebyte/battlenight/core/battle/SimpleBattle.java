@@ -13,6 +13,9 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Waypoint;
+import me.limebyte.battlenight.api.event.battle.BattleEndEvent;
+import me.limebyte.battlenight.api.event.battle.BattleRespawnEvent;
+import me.limebyte.battlenight.api.event.battle.BattleStartEvent;
 import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
@@ -121,7 +124,10 @@ public abstract class SimpleBattle implements Battle {
         api.getMessenger().debug(Level.INFO, "Respawning " + player.getName() + "...");
         PlayerData.reset(player);
         api.getPlayerClass(player).equip(player);
-        Teleporter.tp(player, getArena().getRandomSpawnPoint());
+
+        BattleRespawnEvent event = new BattleRespawnEvent(this, player, getArena().getRandomSpawnPoint());
+        Bukkit.getPluginManager().callEvent(event);
+        Teleporter.tp(player, event.getWaypoint());
     }
 
     @Override
@@ -157,6 +163,7 @@ public abstract class SimpleBattle implements Battle {
         timer.start();
         inProgress = true;
 
+        Bukkit.getPluginManager().callEvent(new BattleStartEvent(this));
         messenger.tellBattle(Message.BATTLE_STARTED);
 
         return true;
@@ -193,6 +200,8 @@ public abstract class SimpleBattle implements Battle {
 
         arena = null;
         inProgress = false;
+
+        Bukkit.getPluginManager().callEvent(new BattleEndEvent(this));
         return true;
     }
 

@@ -60,7 +60,7 @@ public class HealthListener extends APIRelatedListener {
                     }
                     DeathCause accolade = DeathCause.get(player, damager, cause);
 
-                    bPlayer.kill(damager, cause, accolade);
+                    bPlayer.kill(battle, damager, cause, accolade);
                 }
             }
         }
