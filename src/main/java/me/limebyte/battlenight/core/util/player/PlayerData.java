@@ -96,6 +96,7 @@ public class PlayerData {
         if (player.getGameMode() != GameMode.SURVIVAL) {
             player.setGameMode(GameMode.SURVIVAL);
         }
+        player.setMaxHealth(20);
         player.setHealth(20);
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
