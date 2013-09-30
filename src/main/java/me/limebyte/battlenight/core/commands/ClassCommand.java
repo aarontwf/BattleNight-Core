@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Lobby;
+import me.limebyte.battlenight.api.managers.ClassManager;
 import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
@@ -49,7 +50,9 @@ public class ClassCommand extends BattleNightCommand {
             return false;
         }
 
-        PlayerClass playerClass = api.getClassManager().getPlayerClass(args[0]);
+        ClassManager manager = api.getClassManager();
+        boolean random = args[0].equalsIgnoreCase("random");
+        PlayerClass playerClass = random ? manager.getRandomClass() : manager.getPlayerClass(args[0]);
 
         if (playerClass == null) {
             messenger.tell(sender, Message.INVALID_CLASS);
