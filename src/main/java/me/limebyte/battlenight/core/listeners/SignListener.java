@@ -20,8 +20,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 
 public class SignListener extends APIRelatedListener {
 
@@ -29,14 +27,6 @@ public class SignListener extends APIRelatedListener {
 
     public SignListener(BattleNightAPI api) {
         super(api);
-    }
-
-    private static void reset(Player player) {
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            player.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
-        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -49,23 +39,16 @@ public class SignListener extends APIRelatedListener {
                 Sign sign = (Sign) block.getState();
                 String title = sign.getLine(1);
 
-                HashMap<String, PlayerClass> classes = new HashMap<String, PlayerClass>();
-                ClassManager manager = BattleNight.instance.getAPI().getClassManager();
-                for (PlayerClass clazz : manager.getClasses()) {
-                    classes.put(clazz.getName(), clazz);
-                }
-
                 if (getAPI().getLobby().getPlayers().contains(player.getName())) {
-                    if (classes.containsKey(title)) {
-                        PlayerClass playerClass = classes.get(title);
+                    PlayerClass playerClass = getAPI().getClassManager().getPlayerClass(title);
 
+                    if (playerClass != null) {
                         if (player.hasPermission(playerClass.getPermission())) {
                             if (Metadata.getPlayerClass(player) != playerClass) {
                                 ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                             }
 
-                            reset(player);
-                            getAPI().setPlayerClass(player, classes.get(title));
+                            getAPI().setPlayerClass(player, playerClass);
                         } else {
                             getAPI().getMessenger().tell(player, Message.NO_PERMISSION_CLASS);
                         }

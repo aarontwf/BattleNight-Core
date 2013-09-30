@@ -58,6 +58,10 @@ public class SimplePlayerClass implements PlayerClass {
         inv.setBoots(armour.get(3));
 
         // Effects
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.addPotionEffect(new PotionEffect(effect.getType(), 0, 0), true);
+        }
+
         for (PotionEffect effect : effects) {
             player.addPotionEffect(effect, true);
         }

@@ -102,7 +102,6 @@ public class API implements BattleNightAPI {
     @Override
     public void setPlayerClass(Player player, PlayerClass playerClass) {
         if (playerClass != null) {
-            Metadata.set(player, "class", playerClass.getName());
             playerClass.equip(player);
         } else {
             Metadata.remove(player, "class");

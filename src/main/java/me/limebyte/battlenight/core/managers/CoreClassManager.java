@@ -29,13 +29,15 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.google.common.collect.Maps;
+
 public class CoreClassManager implements ClassManager {
 
     private static final Config configFile = Config.CLASSES;
     private static final int MAX_ENCHANT = 1000;
     private static final int INV_SIZE = 36;
 
-    private List<PlayerClass> classes = new ArrayList<PlayerClass>();
+    private Map<String, PlayerClass> classes = Maps.newHashMap();
     private BattleNightAPI api;
 
     public CoreClassManager(BattleNightAPI api) {
@@ -45,7 +47,7 @@ public class CoreClassManager implements ClassManager {
 
     @Override
     public List<PlayerClass> getClasses() {
-        return classes;
+        return new ArrayList<PlayerClass>(classes.values());
     }
 
     @Override
@@ -59,6 +61,8 @@ public class CoreClassManager implements ClassManager {
     public void loadClasses() {
         api.getMessenger().debug(Level.INFO, "Loading classes...");
         ConfigManager.reload(configFile);
+        classes.clear();
+
         FileConfiguration config = ConfigManager.get(configFile);
         for (String className : config.getConfigurationSection("classes").getKeys(false)) {
             String path = "classes." + className + ".";
@@ -66,7 +70,7 @@ public class CoreClassManager implements ClassManager {
             String armour = path + "armour";
             String effects = config.getString(path + "effects");
             double maxHealth = config.getDouble(path + "max-health", 20);
-            classes.add(new SimplePlayerClass(className, parseItems(config, items), parseArmour(config, armour), parseEffects(effects), maxHealth));
+            classes.put(className, new SimplePlayerClass(className, parseItems(config, items), parseArmour(config, armour), parseEffects(effects), maxHealth));
         }
     }
 
@@ -80,7 +84,7 @@ public class CoreClassManager implements ClassManager {
     public void saveClasses() {
         api.getMessenger().debug(Level.INFO, "Saving classes...");
         FileConfiguration config = ConfigManager.get(configFile);
-        for (PlayerClass c : classes) {
+        for (PlayerClass c : classes.values()) {
             createItems(config, "classes." + c.getName() + ".items", c.getItems(), false);
             createItems(config, "classes." + c.getName() + ".armour", c.getArmour(), true);
             createEffects(config, "classes." + c.getName() + ".effects", c.getEffects());
@@ -322,5 +326,10 @@ public class CoreClassManager implements ClassManager {
         }
 
         return items;
+    }
+
+    @Override
+    public PlayerClass getPlayerClass(String className) {
+        return classes.get(className);
     }
 }
