@@ -22,6 +22,7 @@ import me.limebyte.battlenight.core.battle.battles.TDMBattle;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.Teleporter;
+import me.limebyte.battlenight.core.util.player.BattlePlayer;
 import me.limebyte.battlenight.core.util.player.Metadata;
 import me.limebyte.battlenight.core.util.player.PlayerData;
 import me.limebyte.battlenight.core.util.timers.LobbyTimer;
@@ -123,7 +124,8 @@ public class SimpleLobby implements Lobby {
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
 
-        Metadata.remove(player, "ready");
+        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        bPlayer.setReady(false);
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
         Metadata.remove(player, "voted");
@@ -140,7 +142,8 @@ public class SimpleLobby implements Lobby {
                 continue;
             }
 
-            Metadata.remove(player, "ready");
+            BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+            bPlayer.setReady(false);
             Metadata.remove(player, "voted");
             Metadata.remove(player, "vote");
             battle.addPlayer(player);

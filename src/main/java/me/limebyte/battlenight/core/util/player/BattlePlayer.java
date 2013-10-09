@@ -1,10 +1,16 @@
 package me.limebyte.battlenight.core.util.player;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
+import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.event.battle.BattleDeathEvent;
+import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.HealthListener.DeathCause;
@@ -54,12 +60,14 @@ public class BattlePlayer {
     private PlayerStats stats;
 
     private boolean alive;
+    private boolean ready;
     private int respawnTaskID;
 
     private BattlePlayer(String name) {
         this.name = name;
-        stats = new PlayerStats(name);
-        alive = true;
+        this.stats = new PlayerStats(name);
+        this.alive = true;
+        this.ready = false;
     }
 
     public static BattlePlayer get(String name) {
@@ -103,6 +111,58 @@ public class BattlePlayer {
 
     public boolean isAlive() {
         return alive;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        boolean changed = this.ready != ready;
+        this.ready = ready;
+        if (!ready) return;
+
+        BattleNightAPI api = BattleNight.instance.getAPI();
+        Messenger messenger = api.getMessenger();
+        Lobby lobby = api.getLobby();
+        Battle battle = api.getBattle();
+        Player player = Bukkit.getPlayerExact(name);
+
+        if (!lobby.contains(player)) return;
+
+        if (api.getPlayerClass(player) == null) {
+            messenger.tell(player, Message.NO_CLASS);
+            return;
+        }
+
+        if (battle != null && battle.isInProgress()) {
+            Metadata.remove(player, "voted");
+            Metadata.remove(player, "vote");
+            battle.addPlayer(player);
+            Teleporter.tp(player, battle.getArena().getRandomSpawnPoint());
+            lobby.getPlayers().remove(player.getName());
+        } else {
+            if (changed) messenger.tellLobby(Message.PLAYER_IS_READY, player);
+            if (!lobby.isStarting()) {
+                Set<String> waiting = new HashSet<String>(lobby.getPlayers());
+                Iterator<String> it = waiting.iterator();
+                while (it.hasNext()) {
+                    BattlePlayer p = BattlePlayer.get(it.next());
+                    if (p.isReady()) it.remove();
+                }
+
+                if (waiting.isEmpty()) {
+                    try {
+                        lobby.startBattle();
+                    } catch (IllegalStateException e) {
+                        messenger.tellLobby(e.getMessage());
+                    }
+                } else {
+                    String list = waiting.toString().replaceAll("[,]([^,]*)$", " and$1");
+                    messenger.tellLobby(Message.WAITING_FOR_PLAYERS, list.replaceAll("\\[|\\]", ""));
+                }
+            }
+        }
     }
 
     public void kill(Battle battle, Player killer, DamageCause cause, DeathCause accolade) {

@@ -26,6 +26,7 @@ public class CommandManager implements CommandExecutor {
         registerCommand(new JoinCommand());
         registerCommand(new KickCommand());
         registerCommand(new LeaveCommand());
+        registerCommand(new ReadyCommand());
         registerCommand(new ReloadCommand());
         registerCommand(new SetCommand());
         registerCommand(new TeleportCommand());
