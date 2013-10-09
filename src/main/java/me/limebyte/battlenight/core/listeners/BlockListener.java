@@ -2,6 +2,9 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
+import me.limebyte.battlenight.api.battle.Lobby;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,37 +19,32 @@ public class BlockListener extends APIRelatedListener {
         super(api);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!shouldPrevent(event.getPlayer())) return;
-        event.setCancelled(true);
+        event.setCancelled(shouldPrevent(event.getPlayer()));
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockDamage(BlockDamageEvent event) {
-        if (!shouldPrevent(event.getPlayer())) return;
-        event.setCancelled(true);
+        event.setCancelled(shouldPrevent(event.getPlayer()));
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event) {
-        Player player = event.getPlayer();
-        if (!shouldPrevent(player)) return;
-        event.setCancelled(true);
+        event.setCancelled(shouldPrevent(event.getPlayer()));
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!shouldPrevent(event.getPlayer())) return;
-        event.setCancelled(true);
+        event.setCancelled(shouldPrevent(event.getPlayer()));
     }
 
     private boolean shouldPrevent(Player player) {
+        Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattle();
-        if (player == null || battle == null) return false;
+        if (player == null) return false;
 
-        if (battle.containsPlayer(player) && !battle.isInProgress()) return true;
-        return false;
+        boolean inBattle = battle != null && battle.containsPlayer(player);
+        return lobby.contains(player) || (inBattle && ConfigManager.get(Config.MAIN).getBoolean("BlockProtection", true));
     }
-
 }

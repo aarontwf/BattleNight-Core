@@ -11,6 +11,7 @@ ReadyBlock: iron-block
 FriendlyFire: false
 StopHealthRegen: true
 ExitWaypoint: false
+BlockProtection: true
 Teleportation:
     EnderPearls: true
     Portals: true
