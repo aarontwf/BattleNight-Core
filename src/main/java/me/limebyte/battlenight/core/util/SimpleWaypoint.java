@@ -33,7 +33,7 @@ public class SimpleWaypoint implements Waypoint {
         if (loc == null) return "unset";
         String w = loc.getWorld().getName();
         double x = loc.getBlockX() + 0.5;
-        double y = loc.getBlockY();
+        double y = loc.getY();
         double z = loc.getBlockZ() + 0.5;
         float yaw = loc.getYaw();
         float pitch = loc.getPitch();

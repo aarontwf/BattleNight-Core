@@ -140,7 +140,7 @@ public class ArenasCommand extends BattleNightCommand {
                 return false;
             }
 
-            SimpleWaypoint point = new SimpleWaypoint("Spawn");
+            Waypoint point = new SimpleWaypoint("Spawn");
             point.setLocation(((Player) sender).getLocation());
             int index = arena.addSpawnPoint(point);
             messenger.tell(sender, Message.SPAWN_CREATED, index + 1, arena);
