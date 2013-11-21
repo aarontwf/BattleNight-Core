@@ -2,7 +2,6 @@ package me.limebyte.battlenight.core.listeners;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 
@@ -40,11 +39,10 @@ public class BlockListener extends APIRelatedListener {
     }
 
     private boolean shouldPrevent(Player player) {
-        Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattle();
         if (player == null) return false;
 
         boolean inBattle = battle != null && battle.containsPlayer(player);
-        return lobby.contains(player) || (inBattle && ConfigManager.get(Config.MAIN).getBoolean("BlockProtection", true));
+        return (inBattle && ConfigManager.get(Config.MAIN).getBoolean("BlockProtection", true));
     }
 }

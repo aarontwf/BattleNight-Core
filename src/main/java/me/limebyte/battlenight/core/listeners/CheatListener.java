@@ -37,27 +37,20 @@ public class CheatListener extends APIRelatedListener {
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        Lobby lobby = getAPI().getLobby();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
         if (!bPlayer.isAlive()) {
             event.setCancelled(true);
-        }
-
-        if (lobby.contains(player)) {
-            event.setCancelled(true);
-            getAPI().getMessenger().tell(player, Message.NO_CHEATING);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattle();
 
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
-        if (lobby.contains(player) || !bPlayer.isAlive()) {
+        if (!bPlayer.isAlive()) {
             event.setCancelled(true);
         }
 
@@ -109,11 +102,10 @@ public class CheatListener extends APIRelatedListener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattle();
         BattlePlayer bPlayer = BattlePlayer.get(player.getName());
 
-        if (!bPlayer.isAlive() || battle != null && battle.containsPlayer(player) || lobby.contains(player)) {
+        if (!bPlayer.isAlive() || battle != null && battle.containsPlayer(player)) {
             event.setCancelled(true);
         }
     }
@@ -173,7 +165,6 @@ public class CheatListener extends APIRelatedListener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        Lobby lobby = getAPI().getLobby();
         Projectile projectile = event.getEntity();
 
         if (projectile.getShooter() instanceof Player) {
@@ -181,10 +172,6 @@ public class CheatListener extends APIRelatedListener {
 
             BattlePlayer bPlayer = BattlePlayer.get(thrower.getName());
             if (!bPlayer.isAlive()) {
-                event.setCancelled(true);
-            }
-
-            if (lobby.contains(thrower)) {
                 event.setCancelled(true);
             }
         }

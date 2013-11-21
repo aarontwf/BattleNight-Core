@@ -4,13 +4,11 @@ import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
-import me.limebyte.battlenight.api.battle.Lobby;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class DeathListener extends APIRelatedListener {
 
@@ -25,16 +23,6 @@ public class DeathListener extends APIRelatedListener {
 
         if (battle != null && battle.containsPlayer(player)) {
             getAPI().getMessenger().debug(Level.WARNING, "Somehow " + player.getName() + " died...");
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        Lobby lobby = getAPI().getLobby();
-
-        if (lobby.contains(player)) {
-            lobby.removePlayer(player);
         }
     }
 

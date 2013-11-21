@@ -15,10 +15,11 @@ import me.limebyte.battlenight.core.commands.CommandManager;
 import me.limebyte.battlenight.core.hooks.Metrics;
 import me.limebyte.battlenight.core.listeners.BlockListener;
 import me.limebyte.battlenight.core.listeners.CheatListener;
-import me.limebyte.battlenight.core.listeners.DeathListener;
 import me.limebyte.battlenight.core.listeners.ConnectionListener;
+import me.limebyte.battlenight.core.listeners.DeathListener;
 import me.limebyte.battlenight.core.listeners.HealthListener;
 import me.limebyte.battlenight.core.listeners.InteractListener;
+import me.limebyte.battlenight.core.listeners.LobbyListener;
 import me.limebyte.battlenight.core.listeners.SignListener;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
@@ -108,6 +109,7 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         pm.registerEvents(new DeathListener(api), this);
         pm.registerEvents(new ConnectionListener(api), this);
         pm.registerEvents(new InteractListener(api), this);
+        pm.registerEvents(new LobbyListener(api), this);
         pm.registerEvents(new Teleporter(), this);
         pm.registerEvents(new SignListener(api), this);
 
