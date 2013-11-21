@@ -59,9 +59,9 @@ public class SignListener extends APIRelatedListener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onSignChange(SignChangeEvent e) {
-        Player player = e.getPlayer();
-        String title = e.getLine(0);
+    public void onSignChange(SignChangeEvent event) {
+        Player player = event.getPlayer();
+        String title = event.getLine(0);
 
         HashMap<String, PlayerClass> classes = new HashMap<String, PlayerClass>();
         ClassManager manager = BattleNight.instance.getAPI().getClassManager();
@@ -70,15 +70,15 @@ public class SignListener extends APIRelatedListener {
         }
 
         if (classes.containsKey(title)) {
-            if (!e.getLine(1).isEmpty() || !e.getLine(2).isEmpty() || !e.getLine(3).isEmpty()) {
+            if (!event.getLine(1).isEmpty() || !event.getLine(2).isEmpty() || !event.getLine(3).isEmpty()) {
                 getAPI().getMessenger().tell(player, Message.UNSUCCESSFUL_SIGN, title);
                 return;
             }
 
-            e.setLine(0, "");
-            e.setLine(1, title);
-            e.setLine(2, LINE);
-            e.setLine(3, "");
+            event.setLine(0, "");
+            event.setLine(1, title);
+            event.setLine(2, LINE);
+            event.setLine(3, "");
             getAPI().getMessenger().tell(player, Message.SUCCESSFUL_SIGN, title);
         }
     }

@@ -173,7 +173,7 @@ public class SimpleLobby implements Lobby {
 
         List<Arena> arenas = new ArrayList<Arena>();
         int votes = 0;
-        for (Arena a : api.getScoreManager().getVotableArenas()) {
+        for (Arena a : manager.getReadyArenas(1)) {
             int v = a.getVotes();
             if (v > votes) {
                 arenas.clear();

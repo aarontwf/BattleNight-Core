@@ -1,6 +1,8 @@
 # BattleNight Version: ${project.version}
 # Classes Configuration File
 
+permission-default: true
+
 classes:
     Scout:
         items:

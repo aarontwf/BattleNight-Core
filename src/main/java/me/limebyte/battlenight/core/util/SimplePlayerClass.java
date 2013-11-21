@@ -6,6 +6,8 @@ import java.util.Map;
 
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
+import me.limebyte.battlenight.core.tosort.ConfigManager;
+import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.Bukkit;
@@ -34,7 +36,8 @@ public class SimplePlayerClass implements PlayerClass {
         this.maxHealth = maxHealth;
 
         String perm = "battlenight.class." + name.toLowerCase();
-        permission = new Permission(perm, "Permission for the class: " + name + ".", PermissionDefault.TRUE);
+        String permDefault = ConfigManager.get(Config.CLASSES).getString("permission-default", "true").toUpperCase();
+        permission = new Permission(perm, "Permission for the class: " + name + ".", PermissionDefault.getByName(permDefault));
         try {
             Bukkit.getServer().getPluginManager().addPermission(permission);
         } catch (Exception e) {
