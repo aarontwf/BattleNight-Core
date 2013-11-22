@@ -17,7 +17,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -31,28 +30,26 @@ public class SignListener extends APIRelatedListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-            Block block = event.getClickedBlock();
-            Player player = event.getPlayer();
+        Block block = event.getClickedBlock();
+        Player player = event.getPlayer();
 
-            if (block.getState() instanceof Sign) {
-                Sign sign = (Sign) block.getState();
-                String title = sign.getLine(1);
+        if (block != null && block.getState() instanceof Sign) {
+            Sign sign = (Sign) block.getState();
+            String title = sign.getLine(1);
 
-                if (getAPI().getLobby().getPlayers().contains(player.getName())) {
-                    PlayerClass playerClass = getAPI().getClassManager().getPlayerClass(title);
+            if (getAPI().getLobby().getPlayers().contains(player.getName())) {
+                PlayerClass playerClass = getAPI().getClassManager().getPlayerClass(title);
 
-                    if (playerClass != null) {
-                        if (player.hasPermission(playerClass.getPermission())) {
-                            if (Metadata.getPlayerClass(player) != playerClass) {
-                                ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
-                            }
-
-                            getAPI().setPlayerClass(player, playerClass);
-                        } else {
-                            Messenger messenger = getAPI().getMessenger();
-                            messenger.tell(player, messenger.get("class.no-permission"));
+                if (playerClass != null) {
+                    if (player.hasPermission(playerClass.getPermission())) {
+                        if (Metadata.getPlayerClass(player) != playerClass) {
+                            ParticleEffect.classSelect(player, ConfigManager.get(Config.MAIN).getString("Particles.ClassSelection", "smoke"));
                         }
+
+                        getAPI().setPlayerClass(player, playerClass);
+                    } else {
+                        Messenger messenger = getAPI().getMessenger();
+                        messenger.tell(player, messenger.get("class.no-permission"));
                     }
                 }
             }
