@@ -136,7 +136,9 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void tell(CommandSender sender, String message) {
         if (message.isEmpty()) return;
-        sender.sendMessage(PREFIX + message);
+        for (String line : message.split("\n")) {
+            sender.sendMessage(PREFIX + line);
+        }
     }
 
     @Override
