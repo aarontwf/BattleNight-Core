@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
-import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 
 import org.bukkit.command.CommandSender;
@@ -36,11 +35,11 @@ public class LeaveCommand extends BattleNightCommand {
                 lobby.removePlayer(player);
                 return true;
             } else {
-                messenger.tell(sender, Message.NOT_IN_BATTLE);
+                messenger.tell(sender, messenger.get("battle.not-in"));
                 return false;
             }
         } else {
-            messenger.tell(sender, Message.PLAYER_ONLY);
+            messenger.tell(sender, messenger.get("command.player-only"));
             return false;
         }
     }

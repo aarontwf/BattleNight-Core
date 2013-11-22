@@ -5,7 +5,7 @@ import java.util.List;
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
-import me.limebyte.battlenight.api.util.Message;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
 import me.limebyte.battlenight.core.tosort.ConfigManager.Config;
 import me.limebyte.battlenight.core.util.Teleporter;
@@ -58,7 +58,8 @@ public class CheatListener extends APIRelatedListener {
             ItemStack cursor = event.getCursor();
             if (cursor != null && cursor.getType() != Material.AIR) {
                 event.setCancelled(true);
-                getAPI().getMessenger().tell(player, Message.NO_CHEATING);
+                Messenger messenger = getAPI().getMessenger();
+                messenger.tell(player, messenger.get("battle.no-cheating"));
             }
         }
     }
@@ -95,7 +96,8 @@ public class CheatListener extends APIRelatedListener {
 
             // Its not listed so block it
             event.setCancelled(true);
-            getAPI().getMessenger().tell(player, Message.NO_COMMAND);
+            Messenger messenger = getAPI().getMessenger();
+            messenger.tell(player, messenger.get("general.no-command"));
         }
     }
 
@@ -123,36 +125,38 @@ public class CheatListener extends APIRelatedListener {
             }
 
             if (battle != null && battle.containsPlayer(player)) {
+                Messenger messenger = getAPI().getMessenger();
+
                 switch (event.getCause()) {
                     case COMMAND:
                         if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
                             event.setCancelled(true);
-                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                            messenger.tell(player, messenger.get("general.no-teleport"));
                         }
                         break;
                     case PLUGIN:
                         if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Plugins", false)) {
                             event.setCancelled(true);
-                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                            messenger.tell(player, messenger.get("general.no-teleport"));
                         }
                         break;
                     case ENDER_PEARL:
                         if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
                             event.setCancelled(true);
-                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                            messenger.tell(player, messenger.get("general.no-teleport"));
                         }
                         break;
                     case NETHER_PORTAL:
                     case END_PORTAL:
                         if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", true)) {
                             event.setCancelled(true);
-                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                            messenger.tell(player, messenger.get("general.no-teleport"));
                         }
                         break;
                     case UNKNOWN:
                         if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", true)) {
                             event.setCancelled(true);
-                            getAPI().getMessenger().tell(player, Message.NO_TELEPORTING);
+                            messenger.tell(player, messenger.get("general.no-teleport"));
                         }
                         break;
                     default:

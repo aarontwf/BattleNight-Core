@@ -164,7 +164,7 @@ public abstract class SimpleBattle implements Battle {
         inProgress = true;
 
         Bukkit.getPluginManager().callEvent(new BattleStartEvent(this));
-        messenger.tellBattle(Message.BATTLE_STARTED);
+        messenger.tellBattle(messenger.get("battle.started"));
 
         return true;
     }

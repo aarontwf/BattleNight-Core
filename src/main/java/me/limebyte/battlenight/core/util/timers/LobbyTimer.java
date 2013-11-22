@@ -1,7 +1,6 @@
 package me.limebyte.battlenight.core.util.timers;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
-import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.battle.SimpleLobby;
 import me.limebyte.battlenight.core.music.Note;
@@ -29,7 +28,7 @@ public class LobbyTimer extends SimpleTimer {
 
             if (timeSec <= COUNTDOWN_START) {
                 messenger.playSound(Sound.NOTE_PIANO, Note.convertPitch(18));
-                messenger.tellLobby(Message.LOBBY_COUNTDOWN, timeSec);
+                messenger.tellLobby(messenger.get("lobby.countdown"), timeSec);
             }
         }
     }

@@ -35,13 +35,13 @@ public class TeleportCommand extends BattleNightCommand {
             Battle battle = api.getBattle();
 
             if (battle != null && battle.containsPlayer(player)) {
-                messenger.tell(sender, Message.NO_TELEPORTING);
+                messenger.tell(player, messenger.get("general.no-teleport"));
                 return false;
             }
 
             if (args.length < 1) {
                 messenger.tell(sender, Message.SPECIFY_WAYPOINT);
-                messenger.tell(sender, Message.USAGE, getUsage());
+                messenger.tell(sender, messenger.get("command.usage"), getUsage());
                 return false;
             }
 
@@ -66,7 +66,7 @@ public class TeleportCommand extends BattleNightCommand {
             Teleporter.tp(player, waypoint);
             return true;
         } else {
-            messenger.tell(sender, Message.PLAYER_ONLY);
+            messenger.tell(sender, messenger.get("command.player-only"));
             return false;
         }
     }

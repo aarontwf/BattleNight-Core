@@ -135,6 +135,7 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void tell(CommandSender sender, String message) {
+        if (message.isEmpty()) return;
         sender.sendMessage(PREFIX + message);
     }
 
@@ -283,6 +284,11 @@ public class SimpleMessenger implements Messenger {
         else if (obj instanceof SimpleTeam) return ((SimpleTeam) obj).getColour() + ((SimpleTeam) obj).getDisplayName();
         else if (obj instanceof SimpleArena) return ((SimpleArena) obj).getDisplayName();
         return obj.toString();
+    }
+
+    @Override
+    public String get(String name) {
+        return ChatColor.translateAlternateColorCodes('&', ConfigManager.get(Config.MESSAGES).getString(name, name));
     }
 
 }

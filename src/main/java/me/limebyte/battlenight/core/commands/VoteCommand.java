@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.commands;
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.managers.ScoreManager.ScoreboardState;
 import me.limebyte.battlenight.api.util.Message;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.ChatColor;
@@ -23,22 +24,23 @@ public class VoteCommand extends BattleNightCommand {
     @Override
     protected boolean onPerformed(CommandSender sender, String[] args) {
         if (args.length < 1) return false;
+        Messenger messenger = api.getMessenger();
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
             if (!api.getLobby().contains(player)) {
-                api.getMessenger().tell(sender, Message.NOT_IN_LOBBY);
+                messenger.tell(sender, messenger.get("lobby.not-in"));
                 return false;
             }
 
             if (api.getScoreManager().getState() != ScoreboardState.VOTING) {
-                api.getMessenger().tell(sender, ChatColor.RED + "Voting has ended.");
+                messenger.tell(sender, ChatColor.RED + "Voting has ended.");
                 return false;
             }
 
             if (Metadata.getBoolean(player, "voted")) {
-                api.getMessenger().tell(sender, ChatColor.RED + "You have already voted!");
+                messenger.tell(sender, ChatColor.RED + "You have already voted!");
                 return false;
             }
 
@@ -50,10 +52,10 @@ public class VoteCommand extends BattleNightCommand {
                 Metadata.set(player, "vote", id);
                 return true;
             } catch (Exception e) {
-                api.getMessenger().tell(sender, Message.INVALID_ARENA);
+                messenger.tell(sender, Message.INVALID_ARENA);
             }
         } else {
-            api.getMessenger().tell(sender, Message.PLAYER_ONLY);
+            messenger.tell(sender, messenger.get("command.player-only"));
         }
 
         return false;

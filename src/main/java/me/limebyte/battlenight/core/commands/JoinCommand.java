@@ -2,7 +2,7 @@ package me.limebyte.battlenight.core.commands;
 
 import java.util.Arrays;
 
-import me.limebyte.battlenight.api.util.Message;
+import me.limebyte.battlenight.api.util.Messenger;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,7 +25,8 @@ public class JoinCommand extends BattleNightCommand {
             api.getLobby().addPlayer((Player) sender);
             return true;
         } else {
-            api.getMessenger().tell(sender, Message.PLAYER_ONLY);
+            Messenger messenger = api.getMessenger();
+            messenger.tell(sender, messenger.get("command.player-only"));
             return false;
         }
     }

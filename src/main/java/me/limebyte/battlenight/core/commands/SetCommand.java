@@ -48,7 +48,7 @@ public class SetCommand extends BattleNightCommand {
 
         if (args.length < 1) {
             messenger.tell(sender, Message.SPECIFY_WAYPOINT);
-            messenger.tell(sender, Message.USAGE, getUsage());
+            messenger.tell(sender, messenger.get("command.usage"), getUsage());
             return false;
         } else {
             Waypoint waypoint = null;
@@ -68,7 +68,7 @@ public class SetCommand extends BattleNightCommand {
                         messenger.tell(sender, Message.WAYPOINT_SET_CURRENT_LOC, waypoint.getName());
                     } else {
                         messenger.tell(sender, Message.SPECIFY_COORDINATE);
-                        messenger.tell(sender, Message.USAGE, getUsage());
+                        messenger.tell(sender, messenger.get("command.usage"), getUsage());
                         return false;
                     }
                 } else if (args.length == 4 && sender instanceof Player) {
@@ -87,7 +87,7 @@ public class SetCommand extends BattleNightCommand {
                     }
                 } else {
                     messenger.tell(sender, Message.INCORRECT_USAGE);
-                    messenger.tell(sender, Message.USAGE, getUsage());
+                    messenger.tell(sender, messenger.get("command.usage"), getUsage());
                     return false;
                 }
                 return true;

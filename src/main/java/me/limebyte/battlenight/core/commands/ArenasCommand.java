@@ -119,7 +119,7 @@ public class ArenasCommand extends BattleNightCommand {
 
         if (args[0].equalsIgnoreCase("addspawn")) {
             if (!(sender instanceof Player)) {
-                messenger.tell(sender, Message.PLAYER_ONLY);
+                messenger.tell(sender, messenger.get("command.player-only"));
                 return false;
             }
 
@@ -248,7 +248,7 @@ public class ArenasCommand extends BattleNightCommand {
         }
 
         messenger.tell(sender, Message.INVALID_COMMAND);
-        messenger.tell(sender, Message.USAGE, getUsage());
+        messenger.tell(sender, messenger.get("command.usage"), getUsage());
         return false;
     }
 

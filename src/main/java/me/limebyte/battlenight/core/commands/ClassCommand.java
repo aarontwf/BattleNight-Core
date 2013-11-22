@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.managers.ClassManager;
-import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
@@ -33,20 +32,20 @@ public class ClassCommand extends BattleNightCommand {
         Lobby lobby = api.getLobby();
 
         if (!(sender instanceof Player)) {
-            api.getMessenger().tell(sender, Message.PLAYER_ONLY);
+            messenger.tell(sender, messenger.get("command.player-only"));
             return false;
         }
 
         Player player = (Player) sender;
 
         if (!lobby.contains(player)) {
-            messenger.tell(sender, Message.NOT_IN_LOBBY);
+            messenger.tell(sender, messenger.get("lobby.not-in"));
             return false;
         }
 
         if (args.length < 1) {
-            messenger.tell(sender, Message.SPECIFY_CLASS);
-            messenger.tell(sender, Message.USAGE, getUsage());
+            messenger.tell(sender, messenger.get("class.specify"));
+            messenger.tell(sender, messenger.get("command.usage"), getUsage());
             return false;
         }
 
@@ -55,7 +54,7 @@ public class ClassCommand extends BattleNightCommand {
         PlayerClass playerClass = random ? manager.getRandomClass() : manager.getPlayerClass(args[0]);
 
         if (playerClass == null) {
-            messenger.tell(sender, Message.INVALID_CLASS);
+            messenger.tell(sender, messenger.get("class.invalid"), args[0]);
             return false;
         }
 
@@ -67,7 +66,7 @@ public class ClassCommand extends BattleNightCommand {
             api.setPlayerClass(player, playerClass);
             return true;
         } else {
-            messenger.tell(player, Message.NO_PERMISSION_CLASS);
+            messenger.tell(player, messenger.get("class.no-permission"));
             return false;
         }
 

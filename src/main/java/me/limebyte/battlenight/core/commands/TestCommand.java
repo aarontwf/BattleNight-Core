@@ -23,7 +23,8 @@ public class TestCommand extends BattleNightCommand {
     @SuppressWarnings("unused")
     private boolean isNotPlayer(CommandSender sender) {
         if (!(sender instanceof Player)) {
-            api.getMessenger().tell(sender, Message.PLAYER_ONLY);
+            Messenger messenger = api.getMessenger();
+            messenger.tell(sender, messenger.get("command.player-only"));
             return true;
         }
         return false;
@@ -36,7 +37,7 @@ public class TestCommand extends BattleNightCommand {
         // Commands with 1 argument
         if (args.length < 1) {
             messenger.tell(sender, Message.SPECIFY_TEST);
-            messenger.tell(sender, Message.USAGE, getUsage());
+            messenger.tell(sender, messenger.get("command.usage"), getUsage());
             return false;
         }
 

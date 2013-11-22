@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.managers.ClassManager;
-import me.limebyte.battlenight.api.util.Message;
+import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.api.util.PlayerClass;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.tosort.ConfigManager;
@@ -50,7 +50,8 @@ public class SignListener extends APIRelatedListener {
 
                             getAPI().setPlayerClass(player, playerClass);
                         } else {
-                            getAPI().getMessenger().tell(player, Message.NO_PERMISSION_CLASS);
+                            Messenger messenger = getAPI().getMessenger();
+                            messenger.tell(player, messenger.get("class.no-permission"));
                         }
                     }
                 }
@@ -70,8 +71,10 @@ public class SignListener extends APIRelatedListener {
         }
 
         if (classes.containsKey(title)) {
+            Messenger messenger = getAPI().getMessenger();
+
             if (!event.getLine(1).isEmpty() || !event.getLine(2).isEmpty() || !event.getLine(3).isEmpty()) {
-                getAPI().getMessenger().tell(player, Message.UNSUCCESSFUL_SIGN, title);
+                messenger.tell(player, messenger.get("class.sign-failed"), title);
                 return;
             }
 
@@ -79,7 +82,7 @@ public class SignListener extends APIRelatedListener {
             event.setLine(1, title);
             event.setLine(2, LINE);
             event.setLine(3, "");
-            getAPI().getMessenger().tell(player, Message.SUCCESSFUL_SIGN, title);
+            messenger.tell(player, messenger.get("class.sign-success"), title);
         }
     }
 }

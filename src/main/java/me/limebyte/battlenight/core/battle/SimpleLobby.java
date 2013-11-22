@@ -52,13 +52,13 @@ public class SimpleLobby implements Lobby {
         Battle battle = api.getBattle();
 
         if (players.contains(player.getName())) {
-            messenger.tell(player, Message.ALREADY_IN_LOBBY);
+            messenger.tell(player, messenger.get("lobby.already-joined"));
             return;
         }
 
         if (battle != null) {
             if (battle.containsPlayer(player)) {
-                messenger.tell(player, Message.ALREADY_IN_BATTLE);
+                messenger.tell(player, messenger.get("battle.already-joined"));
                 return;
             }
 
@@ -88,8 +88,8 @@ public class SimpleLobby implements Lobby {
             api.setPlayerClass(player, api.getClassManager().getRandomClass());
         }
 
-        messenger.tell(player, Message.JOINED_LOBBY);
-        messenger.tellLobby(Message.PLAYER_JOINED_LOBBY, player);
+        messenger.tell(player, messenger.get("lobby.join"));
+        messenger.tellLobby(messenger.get("lobby.player-join"), player);
 
         Bukkit.getPluginManager().callEvent(new LobbyJoinEvent(this, player));
     }
@@ -114,7 +114,7 @@ public class SimpleLobby implements Lobby {
         Messenger messenger = api.getMessenger();
 
         if (!players.contains(player.getName())) {
-            messenger.tell(player, Message.NOT_IN_LOBBY);
+            messenger.tell(player, messenger.get("lobby.not-in"));
             return;
         }
 
@@ -186,7 +186,7 @@ public class SimpleLobby implements Lobby {
 
         arena = arenas.get(random.nextInt(arenas.size()));
         battle.setArena(arena);
-        messenger.tellLobby(Message.ARENA_CHOSEN, battle.getType(), arena);
+        messenger.tellLobby(messenger.get("arena.chosen"), battle.getType(), arena);
         api.getScoreManager().setState(ScoreboardState.BATTLE);
 
         starting = true;
@@ -222,7 +222,7 @@ public class SimpleLobby implements Lobby {
         Messenger messenger = api.getMessenger();
 
         if (players.contains(player.getName())) {
-            messenger.tell(player, Message.ALREADY_IN_LOBBY);
+            messenger.tell(player, messenger.get("lobby.already-joined"));
             return;
         }
 
@@ -239,8 +239,8 @@ public class SimpleLobby implements Lobby {
 
         api.getPlayerClass(player).equip(player);
 
-        messenger.tell(player, Message.JOINED_LOBBY);
-        messenger.tellLobby(Message.PLAYER_JOINED_LOBBY, player);
+        messenger.tell(player, messenger.get("lobby.join"));
+        messenger.tellLobby(messenger.get("lobby.player-join"), player);
     }
 
 }

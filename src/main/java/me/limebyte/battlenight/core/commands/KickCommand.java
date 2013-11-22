@@ -29,7 +29,7 @@ public class KickCommand extends BattleNightCommand {
 
         if (args.length < 1) {
             messenger.tell(sender, Message.SPECIFY_PLAYER);
-            messenger.tell(sender, Message.USAGE, getUsage());
+            messenger.tell(sender, messenger.get("command.usage"), getUsage());
             return false;
         }
 

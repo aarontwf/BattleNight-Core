@@ -3,7 +3,6 @@ package me.limebyte.battlenight.core.commands;
 import java.util.Arrays;
 
 import me.limebyte.battlenight.api.battle.Lobby;
-import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.util.player.BattlePlayer;
 
@@ -28,14 +27,14 @@ public class ReadyCommand extends BattleNightCommand {
         Lobby lobby = api.getLobby();
 
         if (!(sender instanceof Player)) {
-            api.getMessenger().tell(sender, Message.PLAYER_ONLY);
+            messenger.tell(sender, messenger.get("command.player-only"));
             return false;
         }
 
         Player player = (Player) sender;
 
         if (!lobby.contains(player)) {
-            messenger.tell(sender, Message.NOT_IN_LOBBY);
+            messenger.tell(sender, messenger.get("lobby.not-in"));
             return false;
         }
 

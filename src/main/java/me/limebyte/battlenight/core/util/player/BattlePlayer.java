@@ -10,7 +10,6 @@ import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
 import me.limebyte.battlenight.api.battle.Lobby;
 import me.limebyte.battlenight.api.event.battle.BattleDeathEvent;
-import me.limebyte.battlenight.api.util.Message;
 import me.limebyte.battlenight.api.util.Messenger;
 import me.limebyte.battlenight.core.BattleNight;
 import me.limebyte.battlenight.core.listeners.HealthListener.DeathCause;
@@ -131,7 +130,7 @@ public class BattlePlayer {
         if (!lobby.contains(player)) return;
 
         if (api.getPlayerClass(player) == null) {
-            messenger.tell(player, Message.NO_CLASS);
+            messenger.tell(player, messenger.get("class.must-equip"));
             return;
         }
 
@@ -142,7 +141,7 @@ public class BattlePlayer {
             Teleporter.tp(player, battle.getArena().getRandomSpawnPoint());
             lobby.getPlayers().remove(player.getName());
         } else {
-            if (changed) messenger.tellLobby(Message.PLAYER_IS_READY, player);
+            if (changed) messenger.tellLobby(messenger.get("lobby.player-ready"), player);
             if (!lobby.isStarting()) {
                 Set<String> waiting = new HashSet<String>(lobby.getPlayers());
                 Iterator<String> it = waiting.iterator();
@@ -159,7 +158,7 @@ public class BattlePlayer {
                     }
                 } else {
                     String list = waiting.toString().replaceAll("[,]([^,]*)$", " and$1");
-                    messenger.tellLobby(Message.WAITING_FOR_PLAYERS, list.replaceAll("\\[|\\]", ""));
+                    messenger.tellLobby(messenger.get("lobby.waiting-for"), list.replaceAll("\\[|\\]", ""));
                 }
             }
         }

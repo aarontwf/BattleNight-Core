@@ -27,13 +27,13 @@ public class AnnounceCommand extends BattleNightCommand {
         Messenger messenger = api.getMessenger();
 
         if (battle != null && !battle.isInProgress()) {
-            messenger.tell(sender, Message.BATTLE_NOT_IN_PROGRESS);
+            messenger.tell(sender, messenger.get("battle.not-running"));
             return false;
         }
 
         if (args.length < 1) {
             messenger.tell(sender, Message.SPECIFY_MESSAGE);
-            messenger.tell(sender, Message.USAGE, getUsage());
+            messenger.tell(sender, messenger.get("command.usage"), getUsage());
             return false;
         }
 
