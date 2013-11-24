@@ -1,0 +1,29 @@
+package me.limebyte.battlenight.core.old;
+
+import java.util.Arrays;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginDescriptionFile;
+
+public class VersionCommand extends BattleNightCommand {
+
+    protected VersionCommand() {
+        super("Version");
+
+        setLabel("version");
+        setDescription("Gets the version of BattleNight running on the server.");
+        setAliases(Arrays.asList("ver", "about"));
+    }
+
+    @Override
+    protected boolean onPerformed(CommandSender sender, String[] args) {
+        PluginDescriptionFile pdf = BattleNight.instance.getDescription();
+
+        StandardPage page = new StandardPage("BattleNight Version Info", "This server is running BattleNight version " + pdf.getVersion() + ".  "
+                + "For more information about Battlenight and this version, please visit:\n" + ChatColor.BLUE + ChatColor.UNDERLINE + pdf.getWebsite());
+        api.getMessenger().tell(sender, page);
+        return true;
+    }
+
+}
