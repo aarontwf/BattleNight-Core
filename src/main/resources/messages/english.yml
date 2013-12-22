@@ -1,0 +1,19 @@
+# BattleNight Version: ${project.version}
+# English Message File
+
+plugin:
+    enable: 'Version $1 enabled successfully!'
+    disable: 'Version $1 has been disabled.'
+    reload: '&aReload complete.'
+    
+command:
+    general:
+        incorrect-usage: '&cIncorrect usage! &3Type /bn help for help.'
+        unknown: '&cUnknown command! &3Type /bn help for a list.'
+        no-permission: '&cYou do not have permission to perform this command!'
+        player-only: '&cThis command can only be run by a player!'
+        specify: '&cPlease specify a $1!'
+        non-existent: '&cA $1 by that name does not exist!'
+    test:
+        usage: '&3Usage: &7/$1 $2 <test> [args...]'
+        description: 'Runs the specified test.'

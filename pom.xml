@@ -1,131 +1,131 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
-	<!-- Project information -->
-	<name>BattleNight</name>
-	<groupId>me.limebyte</groupId>
-	<artifactId>battlenight.core</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
-	<url>http://dev.bukkit.org/server-mods/battlenight</url>
-	<inceptionYear>2011</inceptionYear>
-	<description>RPG Arena based PvP Battles.</description>
+    <modelVersion>4.0.0</modelVersion>
+    
+    <!-- Project information -->
+    <name>BattleNight Core</name>
+    <groupId>org.battlenight</groupId>
+    <artifactId>core</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <url>http://dev.bukkit.org/server-mods/battlenight</url>
+    <inceptionYear>2011</inceptionYear>
+    <description>RPG Arena based PvP Battles.</description>
 
-	<!-- Properties -->
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<githubRepo>BattleNight/BattleNight-Core</githubRepo>
-	</properties>
+    <!-- Properties -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <githubRepo>BattleNight/BattleNight-Core</githubRepo>
+        <github.global.server>github</github.global.server>
+    </properties>
   
-	<!-- License -->
-	<licenses>
-		<license>
-			<name>Attribution-NonCommercial-NoDerivs 3.0 Unported</name>
-			<url>http://creativecommons.org/licenses/by-nc-nd/3.0/</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	
-	<!-- Source code -->
-	<scm>
-		<developerConnection>scm:git:git@github.com:${githubRepo}.git</developerConnection>
-		<connection>scm:git:git://github.com/${githubRepo}.git</connection>
-		<url>https://github.com/${githubRepo}</url>
-	</scm>
-	
-	<!-- Issue management -->
-	<issueManagement>
-		<system>GitHub Issues</system>
-		<url>https://github.com/${githubRepo}/issues</url>
-	</issueManagement>
-	
-	<!-- Repositories -->
-	<repositories>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public</url>
-		</repository>
-		<repository>
-			<id>battlenight-repo</id>
-			<url>https://raw.github.com/BattleNight/BattleNight-API/repo/</url>
-		</repository>
-	</repositories>
+    <!-- License -->
+    <licenses>
+        <license>
+            <name>Attribution-NonCommercial-NoDerivs 3.0 Unported</name>
+            <url>http://creativecommons.org/licenses/by-nc-nd/3.0/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <!-- Source code -->
+    <scm>
+        <developerConnection>scm:git:git@github.com:${githubRepo}.git</developerConnection>
+        <connection>scm:git:git://github.com/${githubRepo}.git</connection>
+        <url>https://github.com/${githubRepo}</url>
+    </scm>
+    
+    <!-- Issue management -->
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/${githubRepo}/issues</url>
+    </issueManagement>
+    
+    <!-- Repositories -->
+    <repositories>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>battlenight-repo</id>
+            <url>https://raw.github.com/BattleNight/BattleNight-API/repo</url>
+        </repository>
+    </repositories>
 
-	<!-- Dependencies -->
-	<dependencies>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>LATEST</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>me.limebyte</groupId>
-			<artifactId>BattleNight-API</artifactId>
-			<version>2.1.0</version>
-		</dependency>
-	</dependencies>
+    <!-- Dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>LATEST</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.battlenight</groupId>
+            <artifactId>api</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
-	<!-- Build settings -->
-	<build>
-		<finalName>${project.name}</finalName>
-		<defaultGoal>clean package</defaultGoal>
-	
-		<!-- Resources -->
-		<resources>
-			<resource>
-				<targetPath>.</targetPath>
-				<directory>${basedir}/src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>*.yml</include>
-				</includes>
-			</resource>
-			<resource>
-				<targetPath>.</targetPath>
-				<directory>${basedir}/src/main/resources/configuration</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>*.yml</include>
-					<include>*.dat</include>
-				</includes>
-			</resource>
-			<resource>
-				<targetPath>music</targetPath>
-				<directory>${basedir}/src/main/resources/music</directory>
-				<filtering>false</filtering>
-				<includes>
-					<include>*.nbs</include>
-				</includes>
-			</resource>
-		</resources>
-		
-		<!-- Plugins -->
-		<plugins>
-			<!-- Compiler -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<showDeprecation>true</showDeprecation>
-				</configuration>
-			</plugin>
-			<!-- Dependency addition -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <!-- Build settings -->
+    <build>
+        <finalName>BattleNight</finalName>
+        <defaultGoal>clean package</defaultGoal>
+    
+        <!-- Resources -->
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/configuration</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.*</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/messages</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.*</include>
+                </includes>
+            </resource>
+        </resources>
+        
+        <!-- Plugins -->
+        <plugins>
+            <!-- Compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+            <!-- Dependency addition -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

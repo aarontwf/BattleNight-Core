@@ -1,0 +1,4 @@
+# BattleNight Version: ${project.version}
+# Main Configuration File
+
+debugging: false
