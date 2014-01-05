@@ -6,6 +6,7 @@ import java.util.List;
 import org.battlenight.api.Util;
 import org.battlenight.api.command.BattleNightCommand;
 import org.battlenight.api.configuration.ConfigFile;
+import org.battlenight.api.configuration.Configuration;
 import org.battlenight.api.message.Messenger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 
 public class TestCommand extends BattleNightCommand {
 
-    private static final List<String> PRIMARY_OPTIONS = ImmutableList.of("msg", "join", "set");
+    private static final List<String> PRIMARY_OPTIONS = ImmutableList.of("msg", "join", "leave", "set");
 
     public TestCommand() {
         super("Test");
@@ -48,6 +49,13 @@ public class TestCommand extends BattleNightCommand {
             }
 
             getApi().getLobby().addPlayer((Player) sender);
+        } else if (args[0].equalsIgnoreCase("leave")) {
+            if (!(sender instanceof Player)) {
+                messenger.send(sender, "command.general.player-only");
+                return true;
+            }
+
+            getApi().getLobby().removePlayer((Player) sender);
         } else if (args[0].equalsIgnoreCase("set")) {
             if (!(sender instanceof Player)) {
                 messenger.send(sender, "command.general.player-only");
@@ -60,7 +68,9 @@ public class TestCommand extends BattleNightCommand {
             }
 
             String location = Util.locationToString(((Player) sender).getLocation());
-            getApi().getConfiguration().get(ConfigFile.LOCATIONS).set(args[1], location);
+            Configuration config = getApi().getConfiguration();
+            config.get(ConfigFile.LOCATIONS).set(args[1], location);
+            config.save(ConfigFile.LOCATIONS);
         }
 
         return true;

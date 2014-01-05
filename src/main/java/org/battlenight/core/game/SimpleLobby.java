@@ -33,6 +33,7 @@ public class SimpleLobby implements Lobby {
 
         player.saveData();
         player.teleport(Util.locationFromString(spawn));
+        Util.reset(player);
         players.add(player.getName());
         plugin.getMessenger().send(player, "lobby.join");
     }
