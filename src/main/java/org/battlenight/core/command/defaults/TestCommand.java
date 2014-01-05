@@ -6,12 +6,13 @@ import java.util.List;
 import org.battlenight.api.command.BattleNightCommand;
 import org.battlenight.api.message.Messenger;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableList;
 
 public class TestCommand extends BattleNightCommand {
 
-    private static final List<String> PRIMARY_OPTIONS = ImmutableList.of("msg");
+    private static final List<String> PRIMARY_OPTIONS = ImmutableList.of("msg", "join");
 
     public TestCommand() {
         super("Test");
@@ -38,6 +39,13 @@ public class TestCommand extends BattleNightCommand {
             }
 
             messenger.send(sender, args[1], (Object[]) Arrays.copyOfRange(args, 2, args.length));
+        } else if (args[0].equalsIgnoreCase("join")) {
+            if (!(sender instanceof Player)) {
+                messenger.send(sender, "command.general.player-only");
+                return true;
+            }
+
+            getApi().getLobby().addPlayer((Player) sender);
         }
 
         return true;

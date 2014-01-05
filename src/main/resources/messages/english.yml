@@ -17,3 +17,8 @@ command:
     test:
         usage: '&3Usage: &7/$1 $2 <test> [args...]'
         description: 'Runs the specified test.'
+
+lobby:
+    not-setup: '&cThe lobby must be setup first.'
+    join: '&3Welcome to the BattleNight lobby!'
+    leave: ''
