@@ -3,10 +3,12 @@ package org.battlenight.core;
 import org.battlenight.api.BattleAPI;
 import org.battlenight.api.command.CommandManager;
 import org.battlenight.api.configuration.Configuration;
+import org.battlenight.api.game.GameTypeManager;
 import org.battlenight.api.game.Lobby;
 import org.battlenight.api.message.Messenger;
 import org.battlenight.core.command.SimpleCommandManager;
 import org.battlenight.core.configuration.SimpleConfiguration;
+import org.battlenight.core.game.SimpleGameTypeManager;
 import org.battlenight.core.game.SimpleLobby;
 import org.battlenight.core.message.SimpleMessenger;
 import org.bukkit.command.PluginCommand;
@@ -16,6 +18,7 @@ public class BattleNight extends JavaPlugin implements BattleAPI {
 
     private CommandManager commandManager;
     private Configuration configuration;
+    private GameTypeManager gameTypeManager;
     private Messenger messenger;
     private Lobby lobby;
 
@@ -23,11 +26,11 @@ public class BattleNight extends JavaPlugin implements BattleAPI {
     public void onEnable() {
         this.commandManager = new SimpleCommandManager(this);
         this.configuration = new SimpleConfiguration(this);
+        this.gameTypeManager = new SimpleGameTypeManager();
         this.messenger = new SimpleMessenger(this);
         // TODO Loadouts
         this.lobby = new SimpleLobby(this);
         // TODO Arenas
-        // TODO Battles
 
         PluginCommand command = getCommand("battlenight");
         command.setExecutor(commandManager);
@@ -52,6 +55,11 @@ public class BattleNight extends JavaPlugin implements BattleAPI {
         return configuration;
     }
 
+    @Override
+    public GameTypeManager getGameTypeManager() {
+    	return gameTypeManager;
+    }
+    
     @Override
     public Messenger getMessenger() {
         return messenger;
