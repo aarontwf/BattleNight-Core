@@ -1,11 +1,17 @@
 package org.battlenight.core.game;
 
+import java.util.List;
+
+import org.battlenight.api.game.Battle;
+import org.battlenight.api.game.type.GameType;
 import org.bukkit.entity.Player;
 
-public class SimpleBattle {
+public class SimpleBattle implements Battle {
 
-    public SimpleBattle() {
-        // TODO Auto-generated constructor stub
+    private GameType gameType;
+
+    public SimpleBattle(GameType gameType) {
+        this.gameType = gameType;
     }
 
     public void addPlayer(Player player) {
@@ -14,6 +20,16 @@ public class SimpleBattle {
 
     public void removePlayer(Player player) {
 
+    }
+
+    @Override
+    public List<String> getPlayers() {
+        return null;
+    }
+
+    @Override
+    public GameType getGameType() {
+        return gameType;
     }
 
 }

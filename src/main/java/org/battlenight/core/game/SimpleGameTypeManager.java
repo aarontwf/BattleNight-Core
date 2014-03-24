@@ -2,22 +2,38 @@ package org.battlenight.core.game;
 
 import java.util.Map;
 
-import org.battlenight.api.game.GameType;
-import org.battlenight.api.game.GameTypeManager;
+import org.battlenight.api.BattleAPI;
+import org.battlenight.api.game.type.GameType;
+import org.battlenight.api.game.type.GameTypeManager;
+import org.battlenight.core.game.type.CaptureTheFlag;
 
 import com.google.common.collect.Maps;
 
 public class SimpleGameTypeManager implements GameTypeManager {
 
-    private Map<String, GameType> gameTypes;
+    private BattleAPI api;
+    private Map<String, Class<? extends GameType>> gameTypes;
 
-    public SimpleGameTypeManager() {
+    public SimpleGameTypeManager(BattleAPI api) {
+        this.api = api;
         this.gameTypes = Maps.newHashMap();
+
+        register(CaptureTheFlag.class, "capture-the-flag");
     }
 
     @Override
     public GameType getGameType(String name) {
-        return gameTypes.get(name.toLowerCase());
+        if (!gameTypes.containsKey(name.toLowerCase())) return null;
+
+        GameType type = null;
+
+        try {
+            type = gameTypes.get(name.toLowerCase()).newInstance();
+        } catch (Exception e) {
+            api.getMessenger().logError("gametype.registration-failed", gameTypes.get(name.toLowerCase()));
+        }
+
+        return type;
     }
 
     /**
@@ -26,8 +42,8 @@ public class SimpleGameTypeManager implements GameTypeManager {
      * @param gameType
      *            the game type to register
      */
-    public void register(GameType gameType) {
-        gameTypes.put(gameType.getName().toLowerCase(), gameType);
+    public void register(Class<? extends GameType> clazz, String name) {
+        gameTypes.put(name.toLowerCase(), clazz);
     }
 
 }

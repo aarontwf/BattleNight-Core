@@ -17,7 +17,7 @@ public class SimpleConfiguration implements Configuration {
 
     // Storage Configurations
     private Config locations;
-    private Config arenas;
+    private Config maps;
 
     // Message Configurations
     private Config english;
@@ -28,7 +28,7 @@ public class SimpleConfiguration implements Configuration {
         loadouts = new StandardConfig(plugin, ConfigFile.LOADOUTS.getName(), false);
 
         locations = new DataConfig(plugin, ConfigFile.LOCATIONS.getName());
-        arenas = new DataConfig(plugin, ConfigFile.ARENAS.getName());
+        maps = new DataConfig(plugin, ConfigFile.MAPS.getName());
 
         english = new MessageConfig(plugin, ConfigFile.MSG_ENGLISH.getName(), true);
         custom = new MessageConfig(plugin, ConfigFile.MSG_CUSTOM.getName(), false);
@@ -66,8 +66,8 @@ public class SimpleConfiguration implements Configuration {
                 return loadouts;
             case LOCATIONS:
                 return locations;
-            case ARENAS:
-                return arenas;
+            case MAPS:
+                return maps;
             case MSG_ENGLISH:
                 return english;
             case MSG_CUSTOM:
