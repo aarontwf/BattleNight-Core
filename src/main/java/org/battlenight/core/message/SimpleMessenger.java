@@ -3,8 +3,10 @@ package org.battlenight.core.message;
 import java.util.logging.Logger;
 
 import org.battlenight.api.configuration.ConfigFile;
+import org.battlenight.api.game.Lobby;
 import org.battlenight.api.message.Messenger;
 import org.battlenight.core.BattleNight;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -75,6 +77,15 @@ public class SimpleMessenger implements Messenger {
     public void send(CommandSender sender, String path, Object... args) {
         String message = getMessage(path, args);
         if (!message.isEmpty()) sender.sendMessage(PREFIX + message);
+    }
+
+    @Override
+    public void sendLobby(String message, Object... args) {
+        Lobby lobby = plugin.getLobby();
+        for (String name : lobby.getPlayers()) {
+            Player player = Bukkit.getPlayerExact(name);
+            if (player != null) send(player, message, args);
+        }
     }
 
     private String describeObject(Object object) {
