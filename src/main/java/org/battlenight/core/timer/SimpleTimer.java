@@ -52,6 +52,8 @@ public abstract class SimpleTimer implements Timer {
 
     @Override
     public void start() {
+        if (running) return;
+        onTimeChange(timeRemaining);
         BukkitTask task = new TimerTask().runTaskTimer(plugin, 20, 20);
         taskID = task.getTaskId();
         running = true;
@@ -59,6 +61,7 @@ public abstract class SimpleTimer implements Timer {
 
     @Override
     public void stop() {
+        if (!running) return;
         Bukkit.getScheduler().cancelTask(taskID);
         running = false;
         timeRemaining = time;

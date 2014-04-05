@@ -30,7 +30,7 @@ public class SimpleMapManager implements MapManager {
     @Override
     public GameMap getRandomMap() {
         List<String> keys = new ArrayList<String>(maps.keySet());
-        return getMap(keys.get(api.getRandom().nextInt(keys.size())));
+        return keys.size() > 0 ? getMap(keys.get(api.getRandom().nextInt(keys.size()))) : null;
     }
 
     /**

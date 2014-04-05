@@ -48,7 +48,8 @@ public class TestCommand extends BattleNightCommand {
                 return true;
             }
 
-            getApi().getLobby().addPlayer((Player) sender);
+            Player player = (Player) sender;
+            getApi().getLobby().addPlayer(player);
         } else if (args[0].equalsIgnoreCase("leave")) {
             if (!(sender instanceof Player)) {
                 messenger.send(sender, "command.general.player-only");

@@ -30,14 +30,13 @@ public class SimpleLobby implements Lobby {
         this.battles = Lists.newArrayList();
         this.timer = new LobbyTimer(plugin, this, 120);
         this.players = Lists.newLinkedList();
-
-        timer.start();
     }
 
     @Override
     public void addPlayer(Player player) {
-        String spawn = plugin.getConfiguration().get(ConfigFile.LOCATIONS).getString("lobby.join");
+        if (players.contains(player.getUniqueId())) return;
 
+        String spawn = plugin.getConfiguration().get(ConfigFile.LOCATIONS).getString("lobby.join");
         if (spawn == null) {
             plugin.getMessenger().send(player, "lobby.not-setup");
             return;
@@ -49,22 +48,28 @@ public class SimpleLobby implements Lobby {
         players.add(player.getUniqueId());
         plugin.getMessenger().send(player, "lobby.join");
 
-        if (players.size() < 2) timer.start();
+        updateTimer();
     }
 
     @Override
     public void removePlayer(Player player) {
+        if (!players.contains(player.getUniqueId())) return;
         players.remove(player.getUniqueId());
         player.loadData();
         plugin.getMessenger().send(player, "lobby.leave");
 
-        if (players.size() < 1) timer.stop();
+        updateTimer();
     }
 
     public void startBattle() {
         if (players.isEmpty()) return;
 
         Battle battle = getNextBattle();
+        if (battle == null) {
+            updateTimer();
+            return;
+        }
+
         int max = battle.getGameType().getMaxPlayers();
 
         while (battle.getPlayers().size() < max && !players.isEmpty()) {
@@ -82,9 +87,22 @@ public class SimpleLobby implements Lobby {
         return battles;
     }
 
+    private void updateTimer() {
+        if (players.size() > 0) {
+            timer.start();
+        } else {
+            timer.stop();
+        }
+    }
+
     private Battle getNextBattle() {
         GameType type = plugin.getGameTypeManager().getRandomGameType();
         GameMap map = plugin.getMapManager().getRandomMap();
+
+        if (map == null) {
+            plugin.getMessenger().sendLobby("lobby.no-maps");
+            return null;
+        }
 
         Iterator<Battle> it = battles.iterator();
         while (it.hasNext()) {

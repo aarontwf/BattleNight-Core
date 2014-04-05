@@ -22,8 +22,9 @@ lobby:
     not-setup: '&cThe lobby must be setup first.'
     join: '&3Welcome to the BattleNight lobby!'
     leave: ''
-    countdown-minutes: '&3Starting in $1 minutes'
+    countdown-minutes: '&3Starting in $1 minute(s)'
     countdown-seconds: '&3Starting in $1!'
+    no-maps: '&cNo maps found! &7Restarting countdown...'
     
 gametype:
     registration-failed: '&cFailed to register the game type $1!'
