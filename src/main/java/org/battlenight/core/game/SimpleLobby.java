@@ -3,6 +3,7 @@ package org.battlenight.core.game;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 
 import org.battlenight.api.Util;
 import org.battlenight.api.configuration.ConfigFile;
@@ -22,7 +23,7 @@ public class SimpleLobby implements Lobby {
     private BattleNight plugin;
     private List<Battle> battles;
     private LobbyTimer timer;
-    private Queue<String> players;
+    private Queue<UUID> players;
 
     public SimpleLobby(BattleNight plugin) {
         this.plugin = plugin;
@@ -45,7 +46,7 @@ public class SimpleLobby implements Lobby {
         player.saveData();
         player.teleport(Util.locationFromString(spawn));
         Util.reset(player);
-        players.add(player.getName());
+        players.add(player.getUniqueId());
         plugin.getMessenger().send(player, "lobby.join");
 
         if (players.size() < 2) timer.start();
@@ -53,7 +54,7 @@ public class SimpleLobby implements Lobby {
 
     @Override
     public void removePlayer(Player player) {
-        players.remove(player.getName());
+        players.remove(player.getUniqueId());
         player.loadData();
         plugin.getMessenger().send(player, "lobby.leave");
 
@@ -67,12 +68,12 @@ public class SimpleLobby implements Lobby {
         int max = battle.getGameType().getMaxPlayers();
 
         while (battle.getPlayers().size() < max && !players.isEmpty()) {
-            battle.addPlayer(Bukkit.getPlayerExact(players.poll()));
+            battle.addPlayer(Bukkit.getPlayer(players.poll()));
         }
     }
 
     @Override
-    public Queue<String> getPlayers() {
+    public Queue<UUID> getPlayers() {
         return players;
     }
 

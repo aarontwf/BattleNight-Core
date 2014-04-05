@@ -1,6 +1,7 @@
 package org.battlenight.core.game;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.battlenight.api.game.Battle;
 import org.battlenight.api.game.type.GameType;
@@ -12,6 +13,7 @@ public class SimpleBattle implements Battle {
     private GameType gameType;
     private GameMap gameMap;
     private boolean inProgress;
+    private List<UUID> players;
 
     public SimpleBattle(GameType gameType, GameMap gameMap) {
         this.gameType = gameType;
@@ -20,16 +22,16 @@ public class SimpleBattle implements Battle {
     }
 
     public void addPlayer(Player player) {
-
+        players.add(player.getUniqueId());
     }
 
     public void removePlayer(Player player) {
-
+        players.remove(player.getUniqueId());
     }
 
     @Override
-    public List<String> getPlayers() {
-        return null;
+    public List<UUID> getPlayers() {
+        return players;
     }
 
     @Override

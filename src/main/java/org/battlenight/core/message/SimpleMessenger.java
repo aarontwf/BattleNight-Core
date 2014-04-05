@@ -1,5 +1,6 @@
 package org.battlenight.core.message;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.battlenight.api.configuration.ConfigFile;
@@ -82,8 +83,8 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void sendLobby(String message, Object... args) {
         Lobby lobby = plugin.getLobby();
-        for (String name : lobby.getPlayers()) {
-            Player player = Bukkit.getPlayerExact(name);
+        for (UUID uuid : lobby.getPlayers()) {
+            Player player = Bukkit.getPlayer(uuid);
             if (player != null) send(player, message, args);
         }
     }
