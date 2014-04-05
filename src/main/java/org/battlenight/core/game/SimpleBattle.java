@@ -11,9 +11,12 @@ public class SimpleBattle implements Battle {
 
     private GameType gameType;
     private GameMap gameMap;
+    private boolean inProgress;
 
-    public SimpleBattle(GameType gameType) {
+    public SimpleBattle(GameType gameType, GameMap gameMap) {
         this.gameType = gameType;
+        this.gameMap = gameMap;
+        this.inProgress = false;
     }
 
     public void addPlayer(Player player) {
@@ -37,6 +40,11 @@ public class SimpleBattle implements Battle {
     @Override
     public GameMap getGameMap() {
         return gameMap;
+    }
+
+    @Override
+    public boolean isInProgress() {
+        return inProgress;
     }
 
 }

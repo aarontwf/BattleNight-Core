@@ -1,11 +1,12 @@
-package org.battlenight.core.game;
+package org.battlenight.core.game.type;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.battlenight.api.BattleAPI;
 import org.battlenight.api.game.type.GameType;
 import org.battlenight.api.game.type.GameTypeManager;
-import org.battlenight.core.game.type.CaptureTheFlag;
 
 import com.google.common.collect.Maps;
 
@@ -34,6 +35,13 @@ public class SimpleGameTypeManager implements GameTypeManager {
         }
 
         return type;
+    }
+
+    @Override
+    public GameType getRandomGameType() {
+        List<String> types = new ArrayList<String>(gameTypes.keySet());
+        String name = types.get(api.getRandom().nextInt(types.size()));
+        return getGameType(name);
     }
 
     /**
