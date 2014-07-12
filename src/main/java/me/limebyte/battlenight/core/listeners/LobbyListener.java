@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class LobbyListener extends APIRelatedListener {
 
@@ -87,7 +88,7 @@ public class LobbyListener extends APIRelatedListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        Entity shooter = event.getEntity().getShooter();
+        ProjectileSource shooter = event.getEntity().getShooter();
         if (shooter instanceof Player) {
             if (isInLobby((Player) shooter)) event.setCancelled(true);
         }

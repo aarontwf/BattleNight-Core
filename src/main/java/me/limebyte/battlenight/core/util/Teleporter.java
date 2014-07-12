@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.UUID;
 
 import me.limebyte.battlenight.api.battle.Waypoint;
 import me.limebyte.battlenight.core.BattleNight;
@@ -16,13 +17,13 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class Teleporter implements Listener {
 
-    public static Set<String> telePass = new HashSet<String>();
-    private static Queue<String> playerQueue = new LinkedList<String>();
+    public static Set<UUID> telePass = new HashSet<UUID>();
+    private static Queue<UUID> playerQueue = new LinkedList<UUID>();
     private static Queue<Location> locationQueue = new LinkedList<Location>();
     private static int taskID = 0;
 
     public static void queue(Player player, Location location) {
-        playerQueue.add(player.getName());
+        playerQueue.add(player.getUniqueId());
         locationQueue.add(location);
     }
 
@@ -37,7 +38,7 @@ public class Teleporter implements Listener {
                 if (playerQueue.isEmpty()) {
                     stopTeleporting();
                 } else {
-                    tp(Bukkit.getPlayerExact(playerQueue.poll()), locationQueue.poll());
+                    tp(Bukkit.getPlayer(playerQueue.poll()), locationQueue.poll());
                 }
             }
         }, 0L, 10L);
@@ -45,11 +46,11 @@ public class Teleporter implements Listener {
 
     public static void tp(Player player, Location location) {
         if (player.hasMetadata("NPC")) return;
-        String name = player.getName();
+        UUID id = player.getUniqueId();
 
-        telePass.add(name);
+        telePass.add(id);
         player.teleport(location, TeleportCause.PLUGIN);
-        telePass.remove(name);
+        telePass.remove(id);
     }
 
     public static void tp(Player player, Waypoint waypoint) {

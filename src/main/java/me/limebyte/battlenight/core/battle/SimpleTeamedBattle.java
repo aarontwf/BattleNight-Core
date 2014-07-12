@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Team;
@@ -80,9 +81,9 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
         api.setPlayerClass(player, null);
-        getPlayers().remove(player.getName());
+        getPlayers().remove(player.getUniqueId());
         api.getScoreManager().removePlayer(player);
-        BattlePlayer.get(player.getName()).getStats().reset();
+        BattlePlayer.get(player.getUniqueId()).getStats().reset();
 
         if (shouldEnd()) {
             stop();
@@ -136,8 +137,8 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
 
     @Override
     public boolean stop() {
-        for (String name : getPlayers()) {
-            Player player = toPlayer(name);
+        for (UUID id : getPlayers()) {
+            Player player = toPlayer(id);
             if (player == null) {
                 continue;
             }
@@ -227,8 +228,8 @@ public abstract class SimpleTeamedBattle extends SimpleBattle implements TeamedB
             free.remove(id);
         }
 
-        for (String name : getPlayers()) {
-            Player player = toPlayer(name);
+        for (UUID id : getPlayers()) {
+            Player player = toPlayer(id);
             if (player == null || !player.isOnline()) {
                 continue;
             }

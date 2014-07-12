@@ -38,7 +38,7 @@ public class CheatListener extends APIRelatedListener {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
 
-        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
         if (!bPlayer.isAlive()) {
             event.setCancelled(true);
         }
@@ -49,7 +49,7 @@ public class CheatListener extends APIRelatedListener {
         Player player = (Player) event.getWhoClicked();
         Battle battle = getAPI().getBattle();
 
-        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
         if (!bPlayer.isAlive()) {
             event.setCancelled(true);
         }
@@ -105,7 +105,7 @@ public class CheatListener extends APIRelatedListener {
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Battle battle = getAPI().getBattle();
-        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
 
         if (!bPlayer.isAlive() || battle != null && battle.containsPlayer(player)) {
             event.setCancelled(true);
@@ -118,7 +118,7 @@ public class CheatListener extends APIRelatedListener {
         Lobby lobby = getAPI().getLobby();
         Battle battle = getAPI().getBattle();
 
-        if (!Teleporter.telePass.contains(player.getName())) {
+        if (!Teleporter.telePass.contains(player.getUniqueId())) {
             if (lobby.contains(player)) {
                 event.setCancelled(true);
                 return;
@@ -128,40 +128,40 @@ public class CheatListener extends APIRelatedListener {
                 Messenger messenger = getAPI().getMessenger();
 
                 switch (event.getCause()) {
-                    case COMMAND:
-                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
-                            event.setCancelled(true);
-                            messenger.tell(player, messenger.get("general.no-teleport"));
-                        }
-                        break;
-                    case PLUGIN:
-                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Plugins", false)) {
-                            event.setCancelled(true);
-                            messenger.tell(player, messenger.get("general.no-teleport"));
-                        }
-                        break;
-                    case ENDER_PEARL:
-                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
-                            event.setCancelled(true);
-                            messenger.tell(player, messenger.get("general.no-teleport"));
-                        }
-                        break;
-                    case NETHER_PORTAL:
-                    case END_PORTAL:
-                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", true)) {
-                            event.setCancelled(true);
-                            messenger.tell(player, messenger.get("general.no-teleport"));
-                        }
-                        break;
-                    case UNKNOWN:
-                        if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", true)) {
-                            event.setCancelled(true);
-                            messenger.tell(player, messenger.get("general.no-teleport"));
-                        }
-                        break;
-                    default:
+                case COMMAND:
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Commands", false)) {
                         event.setCancelled(true);
-                        break;
+                        messenger.tell(player, messenger.get("general.no-teleport"));
+                    }
+                    break;
+                case PLUGIN:
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Plugins", false)) {
+                        event.setCancelled(true);
+                        messenger.tell(player, messenger.get("general.no-teleport"));
+                    }
+                    break;
+                case ENDER_PEARL:
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.EnderPearls", true)) {
+                        event.setCancelled(true);
+                        messenger.tell(player, messenger.get("general.no-teleport"));
+                    }
+                    break;
+                case NETHER_PORTAL:
+                case END_PORTAL:
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Portals", true)) {
+                        event.setCancelled(true);
+                        messenger.tell(player, messenger.get("general.no-teleport"));
+                    }
+                    break;
+                case UNKNOWN:
+                    if (!ConfigManager.get(Config.MAIN).getBoolean("Teleportation.Unknown", true)) {
+                        event.setCancelled(true);
+                        messenger.tell(player, messenger.get("general.no-teleport"));
+                    }
+                    break;
+                default:
+                    event.setCancelled(true);
+                    break;
                 }
             }
         }
@@ -174,7 +174,7 @@ public class CheatListener extends APIRelatedListener {
         if (projectile.getShooter() instanceof Player) {
             Player thrower = (Player) projectile.getShooter();
 
-            BattlePlayer bPlayer = BattlePlayer.get(thrower.getName());
+            BattlePlayer bPlayer = BattlePlayer.get(thrower.getUniqueId());
             if (!bPlayer.isAlive()) {
                 event.setCancelled(true);
             }

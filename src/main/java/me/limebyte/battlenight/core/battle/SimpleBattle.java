@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -39,7 +40,7 @@ public abstract class SimpleBattle implements Battle {
     private Arena arena;
     protected boolean inProgress = false;
 
-    private HashSet<String> players = new HashSet<String>();
+    private HashSet<UUID> players = new HashSet<UUID>();
 
     public SimpleBattle(BattleNightAPI api, int duration, int minPlayers, int maxPlayers) {
         this.api = api;
@@ -52,17 +53,17 @@ public abstract class SimpleBattle implements Battle {
 
     @Override
     public boolean addPlayer(Player player) {
-        getPlayers().add(player.getName());
+        getPlayers().add(player.getUniqueId());
 
         if (!arena.getTexturePack().isEmpty()) {
-            player.setTexturePack(arena.getTexturePack());
+            player.setResourcePack(arena.getTexturePack());
         }
         return true;
     }
 
     @Override
     public boolean containsPlayer(Player player) {
-        return getPlayers().contains(player.getName());
+        return getPlayers().contains(player.getUniqueId());
     }
 
     @Override
@@ -84,7 +85,7 @@ public abstract class SimpleBattle implements Battle {
      * @return the players
      */
     @Override
-    public Set<String> getPlayers() {
+    public Set<UUID> getPlayers() {
         return players;
     }
 
@@ -107,9 +108,9 @@ public abstract class SimpleBattle implements Battle {
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
         api.setPlayerClass(player, null);
-        getPlayers().remove(player.getName());
+        getPlayers().remove(player.getUniqueId());
         api.getScoreManager().removePlayer(player);
-        BattlePlayer.get(player.getName()).getStats().reset();
+        BattlePlayer.get(player.getUniqueId()).getStats().reset();
 
         if (shouldEnd()) {
             stop();
@@ -121,7 +122,7 @@ public abstract class SimpleBattle implements Battle {
     public void respawn(Player player) {
         if (!containsPlayer(player)) return;
 
-        api.getMessenger().debug(Level.INFO, "Respawning " + player.getName() + "...");
+        api.getMessenger().debug(Level.INFO, "Respawning " + player.getDisplayName() + "...");
         PlayerData.reset(player);
         api.getPlayerClass(player).equip(player);
 
@@ -179,7 +180,7 @@ public abstract class SimpleBattle implements Battle {
             api.getMessenger().tellBattle(getWinMessage());
         }
 
-        Iterator<String> pIt = getPlayers().iterator();
+        Iterator<UUID> pIt = getPlayers().iterator();
         while (pIt.hasNext()) {
             Player player = toPlayer(pIt.next());
             if (player == null) {
@@ -187,7 +188,7 @@ public abstract class SimpleBattle implements Battle {
                 continue;
             }
 
-            BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+            BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
             bPlayer.revive();
             bPlayer.getStats().reset();
 
@@ -208,12 +209,12 @@ public abstract class SimpleBattle implements Battle {
     protected String getWinMessage() {
         String message;
 
-        List<String> leading = new ArrayList<String>();
+        List<UUID> leading = new ArrayList<UUID>();
         int leadingScore = Integer.MIN_VALUE;
-        Map<String, BattlePlayer> bPlayers = BattlePlayer.getPlayers();
+        Map<UUID, BattlePlayer> bPlayers = BattlePlayer.getPlayers();
 
-        for (String name : players) {
-            int score = bPlayers.get(name).getStats().getScore();
+        for (UUID uuid : players) {
+            int score = bPlayers.get(uuid).getStats().getScore();
             if (score < leadingScore) {
                 continue;
             }
@@ -222,13 +223,13 @@ public abstract class SimpleBattle implements Battle {
                 leading.clear();
                 leadingScore = score;
             }
-            leading.add(name);
+            leading.add(uuid);
         }
 
         if (leading.isEmpty()) {
             message = Message.DRAW.getMessage();
         } else if (leading.size() == 1) {
-            message = api.getMessenger().format(Message.PLAYER_WON, leading.get(0), leadingScore);
+            message = api.getMessenger().format(Message.PLAYER_WON, toPlayer(leading.get(0)).getDisplayName(), leadingScore);
         } else {
             message = api.getMessenger().format(Message.PLAYER_WON, leading, leadingScore);
         }
@@ -245,8 +246,8 @@ public abstract class SimpleBattle implements Battle {
         ArrayList<Waypoint> free = new ArrayList<Waypoint>(waypoints);
         Random random = new Random();
 
-        for (String name : getPlayers()) {
-            Player player = toPlayer(name);
+        for (UUID uuid : getPlayers()) {
+            Player player = toPlayer(uuid);
             if (player == null || !player.isOnline()) {
                 continue;
             }
@@ -263,7 +264,7 @@ public abstract class SimpleBattle implements Battle {
         Teleporter.startTeleporting();
     }
 
-    protected Player toPlayer(String name) {
-        return Bukkit.getPlayerExact(name);
+    protected Player toPlayer(UUID id) {
+        return Bukkit.getPlayer(id);
     }
 }

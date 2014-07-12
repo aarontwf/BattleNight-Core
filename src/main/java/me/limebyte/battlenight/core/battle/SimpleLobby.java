@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -33,7 +34,7 @@ import org.bukkit.entity.Player;
 public class SimpleLobby implements Lobby {
 
     private BattleNightAPI api;
-    private Set<String> players;
+    private Set<UUID> players;
     private Arena arena;
     private boolean starting = false;
     private LobbyTimer timer;
@@ -41,7 +42,7 @@ public class SimpleLobby implements Lobby {
 
     public SimpleLobby(BattleNightAPI api) {
         this.api = api;
-        players = new HashSet<String>();
+        players = new HashSet<UUID>();
         timer = new LobbyTimer(api, this, 10L);
         random = new Random();
     }
@@ -51,7 +52,7 @@ public class SimpleLobby implements Lobby {
         Messenger messenger = api.getMessenger();
         Battle battle = api.getBattle();
 
-        if (players.contains(player.getName())) {
+        if (players.contains(player.getUniqueId())) {
             messenger.tell(player, messenger.get("lobby.already-joined"));
             return;
         }
@@ -74,7 +75,7 @@ public class SimpleLobby implements Lobby {
             return;
         }
 
-        players.add(player.getName());
+        players.add(player.getUniqueId());
 
         PlayerData.store(player);
         api.getMessenger().log(Level.INFO, "Saved");
@@ -96,11 +97,11 @@ public class SimpleLobby implements Lobby {
 
     @Override
     public boolean contains(Player player) {
-        return players.contains(player.getName());
+        return players.contains(player.getUniqueId());
     }
 
     @Override
-    public Set<String> getPlayers() {
+    public Set<UUID> getPlayers() {
         return players;
     }
 
@@ -113,18 +114,18 @@ public class SimpleLobby implements Lobby {
     public void removePlayer(Player player) {
         Messenger messenger = api.getMessenger();
 
-        if (!players.contains(player.getName())) {
+        if (!players.contains(player.getUniqueId())) {
             messenger.tell(player, messenger.get("lobby.not-in"));
             return;
         }
 
-        players.remove(player.getName());
+        players.remove(player.getUniqueId());
 
         api.getScoreManager().removePlayer(player);
         PlayerData.reset(player);
         PlayerData.restore(player, true, false);
 
-        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
         bPlayer.setReady(false);
         Metadata.remove(player, "kills");
         Metadata.remove(player, "deaths");
@@ -136,13 +137,13 @@ public class SimpleLobby implements Lobby {
     public void start() {
         Battle battle = api.getBattle();
 
-        for (String name : players) {
-            Player player = Bukkit.getPlayerExact(name);
+        for (UUID id : players) {
+            Player player = Bukkit.getPlayer(id);
             if (player == null) {
                 continue;
             }
 
-            BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+            BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
             bPlayer.setReady(false);
             Metadata.remove(player, "voted");
             Metadata.remove(player, "vote");
@@ -221,7 +222,7 @@ public class SimpleLobby implements Lobby {
     protected void addPlayerFromBattle(Player player) {
         Messenger messenger = api.getMessenger();
 
-        if (players.contains(player.getName())) {
+        if (players.contains(player.getUniqueId())) {
             messenger.tell(player, messenger.get("lobby.already-joined"));
             return;
         }
@@ -232,7 +233,7 @@ public class SimpleLobby implements Lobby {
             return;
         }
 
-        players.add(player.getName());
+        players.add(player.getUniqueId());
 
         PlayerData.reset(player);
         Teleporter.tp(player, arenas.getLounge());

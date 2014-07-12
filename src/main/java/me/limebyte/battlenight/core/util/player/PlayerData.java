@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -24,9 +25,9 @@ import org.bukkit.util.Vector;
 
 public class PlayerData {
     public static BattleNightAPI api;
-    private static Map<String, PlayerData> storage = new HashMap<String, PlayerData>();
+    private static Map<UUID, PlayerData> storage = new HashMap<UUID, PlayerData>();
 
-    private Set<String> vanishedPlayers = new HashSet<String>();
+    private Set<UUID> vanishedPlayers = new HashSet<UUID>();
 
     private Collection<PotionEffect> potionEffects;
 
@@ -68,9 +69,9 @@ public class PlayerData {
     }
 
     public static Location getSavedLocation(Player player) {
-        String name = player.getName();
-        if (!storage.containsKey(name)) return null;
-        return storage.get(name).location;
+        UUID uuid = player.getUniqueId();
+        if (!storage.containsKey(uuid)) return null;
+        return storage.get(uuid).location;
     }
 
     public static void reset(Player player) {
@@ -118,13 +119,13 @@ public class PlayerData {
     }
 
     public static boolean restore(Player player, boolean teleport, boolean keepInMemory) {
-        String name = player.getName();
-        if (!storage.containsKey(name)) {
-            api.getMessenger().debug(Level.SEVERE, "Failed to restore " + name + "!");
+        UUID uuid = player.getUniqueId();
+        if (!storage.containsKey(uuid)) {
+            api.getMessenger().debug(Level.SEVERE, "Failed to restore " + player.getName() + "!");
             return false;
         }
 
-        PlayerData data = storage.get(name);
+        PlayerData data = storage.get(uuid);
 
         if (teleport) {
             Waypoint wp = api.getArenaManager().getExit();
@@ -136,7 +137,7 @@ public class PlayerData {
         }
 
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if (data.vanishedPlayers.contains(p.getName())) {
+            if (data.vanishedPlayers.contains(p.getUniqueId())) {
                 player.hidePlayer(p);
             } else {
                 player.showPlayer(p);
@@ -189,13 +190,13 @@ public class PlayerData {
         player.setSprinting(data.sprinting);
 
         if (!keepInMemory) {
-            storage.remove(name);
+            storage.remove(uuid);
         }
         return true;
     }
 
     public static boolean storageContains(Player player) {
-        return storage.containsKey(player.getName());
+        return storage.containsKey(player.getUniqueId());
     }
 
     public static void store(Player player) {
@@ -203,7 +204,7 @@ public class PlayerData {
 
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (!player.canSee(p)) {
-                data.vanishedPlayers.add(p.getName());
+                data.vanishedPlayers.add(p.getUniqueId());
             }
         }
 
@@ -238,6 +239,6 @@ public class PlayerData {
         data.sneaking = player.isSneaking();
         data.sprinting = player.isSprinting();
 
-        storage.put(player.getName(), data);
+        storage.put(player.getUniqueId(), data);
     }
 }

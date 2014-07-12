@@ -38,7 +38,7 @@ public class ReadyCommand extends BattleNightCommand {
             return false;
         }
 
-        BattlePlayer.get(player.getName()).setReady(true);
+        BattlePlayer.get(player.getUniqueId()).setReady(true);
         return true;
     }
 

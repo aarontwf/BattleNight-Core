@@ -3,6 +3,7 @@ package me.limebyte.battlenight.core.battle;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import me.limebyte.battlenight.api.battle.Team;
 import me.limebyte.battlenight.core.util.player.BattlePlayer;
@@ -17,7 +18,7 @@ public class SimpleTeam implements Team {
     private String displayName;
     private ChatColor colour;
     private boolean ready = false;
-    private HashSet<String> players = new HashSet<String>();
+    private HashSet<UUID> players = new HashSet<UUID>();
 
     public SimpleTeam(String name) {
         this(name, ChatColor.WHITE);
@@ -31,7 +32,7 @@ public class SimpleTeam implements Team {
 
     @Override
     public void addPlayer(Player player) {
-        players.add(player.getName());
+        players.add(player.getUniqueId());
         Metadata.set(player, "team", name);
     }
 
@@ -51,16 +52,16 @@ public class SimpleTeam implements Team {
     }
 
     @Override
-    public Set<String> getPlayers() {
+    public Set<UUID> getPlayers() {
         return players;
     }
 
     @Override
     public int getScore() {
         int score = 0;
-        Map<String, BattlePlayer> bPlayers = BattlePlayer.getPlayers();
-        for (String name : players) {
-            score += bPlayers.get(name).getStats().getScore();
+        Map<UUID, BattlePlayer> bPlayers = BattlePlayer.getPlayers();
+        for (UUID id : players) {
+            score += bPlayers.get(id).getStats().getScore();
         }
         return score;
     }
@@ -72,7 +73,7 @@ public class SimpleTeam implements Team {
 
     @Override
     public void removePlayer(Player player) {
-        players.add(player.getName());
+        players.add(player.getUniqueId());
         Metadata.remove(player, "team");
     }
 

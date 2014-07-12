@@ -10,7 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -21,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
 public class HealthListener extends APIRelatedListener {
@@ -38,7 +38,7 @@ public class HealthListener extends APIRelatedListener {
         Battle battle = api.getBattle();
 
         if (api.getLobby().contains(player) || (battle != null && battle.containsPlayer(player))) {
-            BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+            BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
             if (!bPlayer.isAlive()) {
                 event.setCancelled(true);
                 return;
@@ -83,7 +83,7 @@ public class HealthListener extends APIRelatedListener {
     private boolean canBeDamaged(Player damaged, Player damager, Battle battle) {
         if (damager == null) return true;
 
-        BattlePlayer bDamager = BattlePlayer.get(damager.getName());
+        BattlePlayer bDamager = BattlePlayer.get(damager.getUniqueId());
         if (!bDamager.isAlive()) return false;
 
         if (getAPI().getLobby().contains(damaged)) return false;
@@ -96,7 +96,7 @@ public class HealthListener extends APIRelatedListener {
         if (event instanceof EntityDamageByEntityEvent) {
             Entity damager = ((EntityDamageByEntityEvent) event).getDamager();
             if (damager instanceof Projectile) {
-                LivingEntity shooter = ((Projectile) damager).getShooter();
+                ProjectileSource shooter = ((Projectile) damager).getShooter();
                 if (shooter instanceof Player) {
                     killer = (Player) shooter;
                 }

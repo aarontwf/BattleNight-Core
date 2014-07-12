@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -55,8 +56,8 @@ public class BattleNight extends JavaPlugin implements BattleNightPlugin {
         if (battle != null) {
             battle.stop();
         }
-        for (String name : new ArrayList<String>(lobby.getPlayers())) {
-            Player player = Bukkit.getPlayerExact(name);
+        for (UUID uuid : new ArrayList<UUID>(lobby.getPlayers())) {
+            Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 lobby.removePlayer(player);
             }

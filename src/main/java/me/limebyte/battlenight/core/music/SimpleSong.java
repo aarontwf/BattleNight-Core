@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.music;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.util.Song;
@@ -16,11 +17,11 @@ public class SimpleSong implements Song {
 
     private ArrayList<Note> notes;
     private long length;
-    private HashMap<String, Integer> listeners;
+    private HashMap<UUID, Integer> listeners;
 
     public SimpleSong(BattleNightAPI api, long length) {
         notes = new ArrayList<Note>();
-        listeners = new HashMap<String, Integer>();
+        listeners = new HashMap<UUID, Integer>();
         this.length = length;
     }
 
@@ -30,7 +31,7 @@ public class SimpleSong implements Song {
 
     @Override
     public boolean isListening(Player player) {
-        return listeners.containsKey(player.getName());
+        return listeners.containsKey(player.getUniqueId());
     }
 
     @Override
@@ -42,15 +43,15 @@ public class SimpleSong implements Song {
     public void play(Player player) {
         stop(player);
         BukkitTask task = new MusicPlayer(player).runTaskTimer(BattleNight.instance, 0L, 2L);
-        listeners.put(player.getName(), task.getTaskId());
+        listeners.put(player.getUniqueId(), task.getTaskId());
     }
 
     @Override
     public void stop(Player player) {
         if (isListening(player)) {
-            String name = player.getName();
-            Bukkit.getServer().getScheduler().cancelTask(listeners.get(name));
-            listeners.remove(name);
+            UUID id = player.getUniqueId();
+            Bukkit.getServer().getScheduler().cancelTask(listeners.get(id));
+            listeners.remove(id);
         }
     }
 

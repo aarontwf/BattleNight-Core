@@ -2,6 +2,7 @@ package me.limebyte.battlenight.core.managers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Arena;
@@ -28,7 +29,7 @@ public class CoreScoreManager implements ScoreManager {
     private Objective belowName;
     private ScoreboardState state;
 
-    private List<String> players;
+    private List<UUID> players;
     private List<Arena> votableArenas;
 
     public CoreScoreManager(BattleNightAPI api) {
@@ -44,14 +45,14 @@ public class CoreScoreManager implements ScoreManager {
         }
         belowName.setDisplayName(ChatColor.RED + "\u2764");
 
-        players = new ArrayList<String>();
+        players = new ArrayList<UUID>();
 
         setState(ScoreboardState.VOTING);
     }
 
     @Override
     public void addPlayer(Player player) {
-        players.add(player.getName());
+        players.add(player.getUniqueId());
         player.setScoreboard(scoreboard);
         scoreboard.resetScores(player);
         player.setHealth(player.getHealth());
@@ -77,7 +78,7 @@ public class CoreScoreManager implements ScoreManager {
     }
 
     @Override
-    public List<String> getPlayers() {
+    public List<UUID> getPlayers() {
         return players;
     }
 
@@ -98,7 +99,7 @@ public class CoreScoreManager implements ScoreManager {
 
     @Override
     public void removePlayer(Player player) {
-        players.remove(player.getName());
+        players.remove(player.getUniqueId());
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         scoreboard.resetScores(player);
 
@@ -131,8 +132,8 @@ public class CoreScoreManager implements ScoreManager {
         if (state == ScoreboardState.VOTING) {
             updateVotes();
         } else {
-            for (String name : players) {
-                Player player = Bukkit.getPlayerExact(name);
+            for (UUID id : players) {
+                Player player = Bukkit.getPlayer(id);
                 if (player == null) {
                     continue;
                 }

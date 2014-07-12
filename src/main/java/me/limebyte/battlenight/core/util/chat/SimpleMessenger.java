@@ -1,5 +1,6 @@
 package me.limebyte.battlenight.core.util.chat;
 
+import java.util.UUID;
 import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
@@ -79,7 +80,7 @@ public class SimpleMessenger implements Messenger {
                     colour = team.getColour();
                 }
             }
-        } else if (!api.getLobby().getPlayers().contains(player.getName())) {
+        } else if (!api.getLobby().getPlayers().contains(player.getUniqueId())) {
             colour = ChatColor.DARK_GRAY;
         }
 
@@ -99,8 +100,8 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void playSong(Song battleEnd) {
         if (api.getBattle() == null) return;
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
+        for (UUID id : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayer(id);
             if (p != null) {
                 battleEnd.play(p);
             }
@@ -110,8 +111,8 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void playSound(Sound sound, float pitch) {
         if (api.getBattle() == null) return;
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
+        for (UUID id : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayer(id);
             if (p != null) {
                 p.playSound(p.getLocation(), sound, 20f, pitch);
             }
@@ -160,8 +161,8 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void tellBattle(Page page) {
         if (api.getBattle() == null) return;
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
+        for (UUID id : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayer(id);
             if (p != null) {
                 tell(p, page);
             }
@@ -171,8 +172,8 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void tellBattle(String message) {
         if (api.getBattle() == null) return;
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
+        for (UUID id : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayer(id);
             if (p != null) {
                 tell(p, message);
             }
@@ -197,8 +198,8 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void tellBattleExcept(Player player, Page page) {
         if (api.getBattle() == null) return;
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
+        for (UUID id : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayer(id);
             if (p != null && player != p) {
                 tell(p, page);
             }
@@ -208,8 +209,8 @@ public class SimpleMessenger implements Messenger {
     @Override
     public void tellBattleExcept(Player player, String message) {
         if (api.getBattle() == null) return;
-        for (String name : api.getBattle().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
+        for (UUID id : api.getBattle().getPlayers()) {
+            Player p = Bukkit.getPlayer(id);
             if (p != null && player != p) {
                 tell(p, message);
             }
@@ -234,8 +235,8 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void tellLobby(Page page) {
-        for (String name : api.getLobby().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
+        for (UUID id : api.getLobby().getPlayers()) {
+            Player p = Bukkit.getPlayer(id);
             if (p != null) {
                 tell(p, page);
             }
@@ -244,8 +245,8 @@ public class SimpleMessenger implements Messenger {
 
     @Override
     public void tellLobby(String message) {
-        for (String name : api.getLobby().getPlayers()) {
-            Player p = Bukkit.getPlayerExact(name);
+        for (UUID id : api.getLobby().getPlayers()) {
+            Player p = Bukkit.getPlayer(id);
             if (p != null) {
                 tell(p, message);
             }

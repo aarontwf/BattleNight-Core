@@ -24,7 +24,7 @@ public class InteractListener extends APIRelatedListener {
         Action action = event.getAction();
         Player player = event.getPlayer();
 
-        BattlePlayer bPlayer = BattlePlayer.get(player.getName());
+        BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
         if (!bPlayer.isAlive()) event.setCancelled(true);
 
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {

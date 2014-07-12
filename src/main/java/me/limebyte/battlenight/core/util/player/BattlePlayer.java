@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import me.limebyte.battlenight.api.BattleNightAPI;
 import me.limebyte.battlenight.api.battle.Battle;
@@ -26,7 +27,7 @@ import org.bukkit.scheduler.BukkitTask;
 public class BattlePlayer {
 
     private static final int RESPAWN_TIME = 2;
-    private static Map<String, BattlePlayer> players = new HashMap<String, BattlePlayer>();
+    private static Map<UUID, BattlePlayer> players = new HashMap<UUID, BattlePlayer>();
 
     private static final Map<DamageCause, String> deathCauses;
     static {
@@ -55,28 +56,28 @@ public class BattlePlayer {
         deathCauses.put(DamageCause.WITHER, "$p withered away.");
     }
 
-    private String name;
+    private UUID id;
     private PlayerStats stats;
 
     private boolean alive;
     private boolean ready;
     private int respawnTaskID;
 
-    private BattlePlayer(String name) {
-        this.name = name;
-        this.stats = new PlayerStats(name);
+    private BattlePlayer(UUID id) {
+        this.id = id;
+        this.stats = new PlayerStats(id);
         this.alive = true;
         this.ready = false;
     }
 
-    public static BattlePlayer get(String name) {
-        if (players.get(name) == null) {
-            players.put(name, new BattlePlayer(name));
+    public static BattlePlayer get(UUID id) {
+        if (players.get(id) == null) {
+            players.put(id, new BattlePlayer(id));
         }
-        return players.get(name);
+        return players.get(id);
     }
 
-    public static Map<String, BattlePlayer> getPlayers() {
+    public static Map<UUID, BattlePlayer> getPlayers() {
         return players;
     }
 
@@ -100,8 +101,8 @@ public class BattlePlayer {
         messenger.tellBattle(deathMessage);
     }
 
-    public String getName() {
-        return name;
+    public UUID getUUID() {
+        return this.id;
     }
 
     public PlayerStats getStats() {
@@ -125,7 +126,7 @@ public class BattlePlayer {
         Messenger messenger = api.getMessenger();
         Lobby lobby = api.getLobby();
         Battle battle = api.getBattle();
-        Player player = Bukkit.getPlayerExact(name);
+        Player player = Bukkit.getPlayer(id);
 
         if (!lobby.contains(player)) return;
 
@@ -139,12 +140,12 @@ public class BattlePlayer {
             Metadata.remove(player, "vote");
             battle.addPlayer(player);
             Teleporter.tp(player, battle.getArena().getRandomSpawnPoint());
-            lobby.getPlayers().remove(player.getName());
+            lobby.getPlayers().remove(player.getUniqueId());
         } else {
             if (changed) messenger.tellLobby(messenger.get("lobby.player-ready"), player);
             if (!lobby.isStarting()) {
-                Set<String> waiting = new HashSet<String>(lobby.getPlayers());
-                Iterator<String> it = waiting.iterator();
+                Set<UUID> waiting = new HashSet<UUID>(lobby.getPlayers());
+                Iterator<UUID> it = waiting.iterator();
                 while (it.hasNext()) {
                     BattlePlayer p = BattlePlayer.get(it.next());
                     if (p.isReady()) it.remove();
@@ -167,7 +168,7 @@ public class BattlePlayer {
     public void kill(Battle battle, Player killer, DamageCause cause, DeathCause accolade) {
         if (!alive) return;
         alive = false;
-        Player player = Bukkit.getPlayerExact(name);
+        Player player = Bukkit.getPlayer(id);
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.hidePlayer(player);
         }
@@ -175,7 +176,7 @@ public class BattlePlayer {
         boolean suicide = true;
 
         if (killer != null && killer != player) {
-            BattlePlayer.get(killer.getName()).getStats().addKill(false);
+            BattlePlayer.get(killer.getUniqueId()).getStats().addKill(false);
             killer.playSound(killer.getLocation(), Sound.LEVEL_UP, 20f, 1f);
             suicide = false;
         }
@@ -196,7 +197,7 @@ public class BattlePlayer {
         alive = true;
 
         Bukkit.getScheduler().cancelTask(respawnTaskID);
-        Player player = Bukkit.getPlayerExact(name);
+        Player player = Bukkit.getPlayer(id);
         Battle battle = BattleNight.instance.getAPI().getBattle();
 
         if (battle != null) battle.respawn(player);
@@ -225,9 +226,9 @@ public class BattlePlayer {
         public void run() {
 
             if (moveUp) {
-                Teleporter.telePass.add(player.getName());
+                Teleporter.telePass.add(player.getUniqueId());
                 player.teleport(player.getLocation().add(0, liftAmount, 0), TeleportCause.PLUGIN);
-                Teleporter.telePass.remove(player.getName());
+                Teleporter.telePass.remove(player.getUniqueId());
             }
 
             if (timeRemaining <= 0) {

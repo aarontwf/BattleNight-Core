@@ -1,5 +1,7 @@
 package me.limebyte.battlenight.core.util.player;
 
+import java.util.UUID;
+
 import me.limebyte.battlenight.api.managers.ScoreManager;
 import me.limebyte.battlenight.core.BattleNight;
 
@@ -7,7 +9,7 @@ import org.bukkit.Bukkit;
 
 public class PlayerStats {
 
-    private String name;
+    private UUID uuid;
 
     private int kills;
     private int assists;
@@ -16,8 +18,8 @@ public class PlayerStats {
 
     private int score;
 
-    public PlayerStats(String name) {
-        this.name = name;
+    public PlayerStats(UUID uuid) {
+        this.uuid = uuid;
         kills = 0;
         assists = 0;
         killStreak = 0;
@@ -33,7 +35,7 @@ public class PlayerStats {
         }
 
         ScoreManager scores = BattleNight.instance.getAPI().getScoreManager();
-        scores.updateScore(Bukkit.getPlayerExact(name), score);
+        scores.updateScore(Bukkit.getPlayer(uuid), score);
     }
 
     public void addKill(boolean assist) {
@@ -51,7 +53,7 @@ public class PlayerStats {
         killStreak++;
 
         ScoreManager scores = BattleNight.instance.getAPI().getScoreManager();
-        scores.updateScore(Bukkit.getPlayerExact(name), score);
+        scores.updateScore(Bukkit.getPlayer(uuid), score);
     }
 
     public int getAssists() {

@@ -37,7 +37,7 @@ public class SignListener extends APIRelatedListener {
             Sign sign = (Sign) block.getState();
             String title = sign.getLine(1);
 
-            if (getAPI().getLobby().getPlayers().contains(player.getName())) {
+            if (getAPI().getLobby().getPlayers().contains(player.getUniqueId())) {
                 PlayerClass playerClass = getAPI().getClassManager().getPlayerClass(title);
 
                 if (playerClass != null) {
