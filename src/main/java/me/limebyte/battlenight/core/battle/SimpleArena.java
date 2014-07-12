@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 
 import me.limebyte.battlenight.api.battle.Arena;
 import me.limebyte.battlenight.api.battle.Waypoint;
@@ -19,7 +20,7 @@ public class SimpleArena implements Arena {
     private String displayName;
     private ArrayList<Waypoint> spawnPoints = new ArrayList<Waypoint>();
     private boolean enabled = true;
-    private String texturePack = "";
+    private String resourcePack = "";
     private final Random RANDOM = new Random();
     private int votes;
 
@@ -34,7 +35,7 @@ public class SimpleArena implements Arena {
         Object displayName = map.get("DisplayName");
         Object spawnPoints = map.get("SpawnPoints");
         Object enabled = map.get("Enabled");
-        Object texturePack = map.get("TexturePack");
+        Object resourcePack = map.get("TexturePack");
 
         SimpleArena arena = new SimpleArena((String) map.get("Name"));
         if (displayName != null) {
@@ -46,8 +47,8 @@ public class SimpleArena implements Arena {
         if (enabled != null) {
             arena.enabled = (Boolean) enabled;
         }
-        if (texturePack != null) {
-            arena.texturePack = (String) texturePack;
+        if (resourcePack != null) {
+            arena.resourcePack = (String) resourcePack;
         }
 
         return arena;
@@ -97,7 +98,7 @@ public class SimpleArena implements Arena {
 
     @Override
     public String getTexturePack() {
-        return texturePack;
+        return resourcePack;
     }
 
     @Override
@@ -122,6 +123,10 @@ public class SimpleArena implements Arena {
 
     @Override
     public void removeVote() {
+        if (votes < 1) {
+            BattleNight.instance.getAPI().getMessenger().debug(Level.WARNING, "Somehow arena $1 got votes below zero.", displayName);
+            return;
+        }
         votes--;
         BattleNight.instance.getAPI().getScoreManager().updateVotes();
     }
@@ -133,7 +138,7 @@ public class SimpleArena implements Arena {
         map.put("DisplayName", displayName);
         map.put("SpawnPoints", spawnPoints);
         map.put("Enabled", enabled);
-        map.put("TexturePack", texturePack);
+        map.put("TexturePack", resourcePack);
         return map;
     }
 
@@ -149,7 +154,7 @@ public class SimpleArena implements Arena {
 
     @Override
     public void setTexturePack(String texturePack) {
-        this.texturePack = texturePack;
+        this.resourcePack = texturePack;
     }
 
     @Override

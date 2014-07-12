@@ -13,7 +13,6 @@ import me.limebyte.battlenight.core.util.player.Metadata;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -54,11 +53,11 @@ public class CoreScoreManager implements ScoreManager {
     public void addPlayer(Player player) {
         players.add(player.getUniqueId());
         player.setScoreboard(scoreboard);
-        scoreboard.resetScores(player);
+        scoreboard.resetScores(player.getName());
         player.setHealth(player.getHealth());
 
         if (state == ScoreboardState.BATTLE) {
-            Score score = sidebar.getScore(player);
+            Score score = sidebar.getScore(player.getName());
             score.setScore(1);
             score.setScore(0);
         }
@@ -101,7 +100,7 @@ public class CoreScoreManager implements ScoreManager {
     public void removePlayer(Player player) {
         players.remove(player.getUniqueId());
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-        scoreboard.resetScores(player);
+        scoreboard.resetScores(player.getName());
 
         if (Metadata.getBoolean(player, "voted")) {
             getVotableArenas().get(Metadata.getInt(player, "vote")).removeVote();
@@ -123,8 +122,8 @@ public class CoreScoreManager implements ScoreManager {
         if (this.state == state) return;
         this.state = state;
 
-        for (OfflinePlayer player : scoreboard.getPlayers()) {
-            scoreboard.resetScores(player);
+        for (String entries : scoreboard.getEntries()) {
+            scoreboard.resetScores(entries);
         }
 
         sidebar.setDisplayName(ChatColor.BOLD + "" + ChatColor.AQUA + state.getTitle());
@@ -138,7 +137,7 @@ public class CoreScoreManager implements ScoreManager {
                     continue;
                 }
 
-                Score score = sidebar.getScore(player);
+                Score score = sidebar.getScore(player.getName());
                 score.setScore(1);
                 score.setScore(0);
             }
@@ -147,7 +146,7 @@ public class CoreScoreManager implements ScoreManager {
 
     @Override
     public void updateScore(Player player, int score) {
-        sidebar.getScore(player).setScore(score);
+        sidebar.getScore(player.getName()).setScore(score);
     }
 
     @Override
@@ -165,7 +164,7 @@ public class CoreScoreManager implements ScoreManager {
             Arena arena = arenas.get(i);
             String item = ChatColor.GOLD + "$1." + ChatColor.WHITE + " $2";
             item = api.getMessenger().format(item, i + 1, arena.getDisplayName());
-            OfflinePlayer vote = Bukkit.getOfflinePlayer(item.length() > 16 ? item.substring(0, 16) : item);
+            String vote = item.length() > 16 ? item.substring(0, 16) : item;
             Score score = sidebar.getScore(vote);
             score.setScore(1);
             score.setScore(arena.getVotes());

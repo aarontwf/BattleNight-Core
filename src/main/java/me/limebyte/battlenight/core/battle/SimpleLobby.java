@@ -1,6 +1,5 @@
 package me.limebyte.battlenight.core.battle;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -170,9 +169,8 @@ public class SimpleLobby implements Lobby {
         api.setBattle(battle);
 
         if (players.size() < battle.getMinPlayers()) throw new IllegalStateException("Not enough players!");
-        if (manager.getReadyArenas(1).isEmpty()) throw new IllegalStateException("No arenas!");
 
-        List<Arena> arenas = new ArrayList<Arena>();
+        List<Arena> arenas = manager.getReadyArenas(1);
         int votes = 0;
         for (Arena a : manager.getReadyArenas(1)) {
             int v = a.getVotes();
@@ -184,6 +182,8 @@ public class SimpleLobby implements Lobby {
                 arenas.add(a);
             }
         }
+
+        if (arenas.isEmpty()) throw new IllegalStateException("No arenas!");
 
         arena = arenas.get(random.nextInt(arenas.size()));
         battle.setArena(arena);

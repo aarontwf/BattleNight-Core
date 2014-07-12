@@ -2,7 +2,9 @@ package me.limebyte.battlenight.core.tosort;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 
 import me.limebyte.battlenight.core.BattleNight;
 
@@ -51,7 +53,11 @@ public class Configuration {
         fileConfig = YamlConfiguration.loadConfiguration(file);
 
         // Look for non-existent defaults
-        InputStream defConfigStream = BattleNight.instance.getResource(fileName);
+        Reader defConfigStream = null;
+        try {
+            defConfigStream = new InputStreamReader(BattleNight.instance.getResource(fileName), "UTF8");
+        } catch (UnsupportedEncodingException e) {
+        }
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             fileConfig.options().indent(4);
