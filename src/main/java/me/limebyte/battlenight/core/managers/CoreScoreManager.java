@@ -159,9 +159,9 @@ public class CoreScoreManager implements ScoreManager {
     public void updateVotes() {
         if (state != ScoreboardState.VOTING) return;
 
-        List<Arena> arenas = api.getArenaManager().getReadyArenas(1);
-        for (int i = 0; i < arenas.size(); i++) {
-            Arena arena = arenas.get(i);
+        votableArenas = api.getArenaManager().getReadyArenas(1);
+        for (int i = votableArenas.size() - 1; i >= 0; i--) {
+            Arena arena = votableArenas.get(i);
             String item = ChatColor.GOLD + "$1." + ChatColor.WHITE + " $2";
             item = api.getMessenger().format(item, i + 1, arena.getDisplayName());
             String vote = item.length() > 16 ? item.substring(0, 16) : item;

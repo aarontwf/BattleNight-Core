@@ -145,10 +145,16 @@ public class BattlePlayer {
             if (changed) messenger.tellLobby(messenger.get("lobby.player-ready"), player);
             if (!lobby.isStarting()) {
                 Set<UUID> waiting = new HashSet<UUID>(lobby.getPlayers());
+                Set<String> names = new HashSet<String>();
                 Iterator<UUID> it = waiting.iterator();
                 while (it.hasNext()) {
-                    BattlePlayer p = BattlePlayer.get(it.next());
-                    if (p.isReady()) it.remove();
+                    UUID uuid = it.next();
+                    BattlePlayer p = BattlePlayer.get(uuid);
+                    if (p.isReady()) {
+                        it.remove();
+                    } else {
+                        names.add(Bukkit.getPlayer(uuid).getName());
+                    }
                 }
 
                 if (waiting.isEmpty()) {
@@ -158,7 +164,7 @@ public class BattlePlayer {
                         messenger.tellLobby(e.getMessage());
                     }
                 } else {
-                    String list = waiting.toString().replaceAll("[,]([^,]*)$", " and$1");
+                    String list = names.toString().replaceAll("[,]([^,]*)$", " and$1");
                     messenger.tellLobby(messenger.get("lobby.waiting-for"), list.replaceAll("\\[|\\]", ""));
                 }
             }
