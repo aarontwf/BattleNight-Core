@@ -52,7 +52,7 @@ public class WaypointsCommand extends BattleNightCommand {
         Waypoint w2 = manager.getExit();
 
         lines.add(ChatColor.WHITE + "Setup points: " + numSetup(w1, w2));
-        lines.add(getWaypointColour(w1) + "Lounge" + ChatColor.WHITE + " (/bn set lounge...)");
+        lines.add(getWaypointColour(w1) + "Lobby" + ChatColor.WHITE + " (/bn set lobby...)");
         lines.add(getWaypointColour(w2) + "Exit" + ChatColor.WHITE + " (/bn set exit...)");
 
         api.getMessenger().tell(sender, new ListPage("BattleNight Waypoints", lines));
