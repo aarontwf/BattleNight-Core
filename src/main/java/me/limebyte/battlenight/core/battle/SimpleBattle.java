@@ -209,7 +209,7 @@ public abstract class SimpleBattle implements Battle {
     protected String getWinMessage() {
         String message;
 
-        List<UUID> leading = new ArrayList<UUID>();
+        List<String> leading = new ArrayList<String>();
         int leadingScore = Integer.MIN_VALUE;
         Map<UUID, BattlePlayer> bPlayers = BattlePlayer.getPlayers();
 
@@ -223,13 +223,13 @@ public abstract class SimpleBattle implements Battle {
                 leading.clear();
                 leadingScore = score;
             }
-            leading.add(uuid);
+            leading.add(toPlayer(uuid).getName());
         }
 
         if (leading.isEmpty()) {
             message = Message.DRAW.getMessage();
         } else if (leading.size() == 1) {
-            message = api.getMessenger().format(Message.PLAYER_WON, toPlayer(leading.get(0)).getDisplayName(), leadingScore);
+            message = api.getMessenger().format(Message.PLAYER_WON, leading.get(0), leadingScore);
         } else {
             message = api.getMessenger().format(Message.PLAYER_WON, leading, leadingScore);
         }
