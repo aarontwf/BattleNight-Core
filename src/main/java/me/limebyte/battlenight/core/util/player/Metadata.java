@@ -21,7 +21,7 @@ public class Metadata {
     public static int getInt(Player player, String key) {
         MetadataValue value = getValue(player, key);
         if (value != null) return value.asInt();
-        return 0;
+        return -1;
     }
 
     public static PlayerClass getPlayerClass(Player player) {

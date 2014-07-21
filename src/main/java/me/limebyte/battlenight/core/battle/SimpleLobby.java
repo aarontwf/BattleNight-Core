@@ -144,7 +144,6 @@ public class SimpleLobby implements Lobby {
 
             BattlePlayer bPlayer = BattlePlayer.get(player.getUniqueId());
             bPlayer.setReady(false);
-            Metadata.remove(player, "voted");
             Metadata.remove(player, "vote");
             battle.addPlayer(player);
         }

@@ -39,16 +39,16 @@ public class VoteCommand extends BattleNightCommand {
                 return false;
             }
 
-            if (Metadata.getBoolean(player, "voted")) {
-                messenger.tell(sender, ChatColor.RED + "You have already voted!");
-                return false;
+            int prev = Metadata.getInt(player, "vote");
+            if (prev >= 0) {
+                Arena arena = api.getScoreManager().getVotableArenas().get(prev);
+                if (arena != null) arena.removeVote();
             }
 
             try {
                 int id = Integer.parseInt(args[0]) - 1;
                 Arena arena = api.getScoreManager().getVotableArenas().get(id);
                 arena.addVote();
-                Metadata.set(player, "voted", true);
                 Metadata.set(player, "vote", id);
                 return true;
             } catch (Exception e) {

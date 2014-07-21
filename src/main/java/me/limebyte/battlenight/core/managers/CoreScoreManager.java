@@ -160,13 +160,13 @@ public class CoreScoreManager implements ScoreManager {
         if (state != ScoreboardState.VOTING) return;
 
         votableArenas = api.getArenaManager().getReadyArenas(1);
-        for (int i = votableArenas.size() - 1; i >= 0; i--) {
+
+        for (int i = 0; i < votableArenas.size(); i++) {
             Arena arena = votableArenas.get(i);
-            String item = ChatColor.GOLD + "$1." + ChatColor.WHITE + " $2";
+            String item = ChatColor.GOLD + "$1 " + ChatColor.RESET + "$2";
             item = api.getMessenger().format(item, i + 1, arena.getDisplayName());
             String vote = item.length() > 16 ? item.substring(0, 16) : item;
             Score score = sidebar.getScore(vote);
-            score.setScore(1);
             score.setScore(arena.getVotes());
         }
     }
