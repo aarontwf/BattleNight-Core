@@ -7,95 +7,109 @@ classes:
     Scout:
         items:
             slot0:
-                type: stone_sword
+                type: stone-sword
                 enchantments: knockback~2
             slot1:
                 type: potion
                 data: 8262
         armour:
             boots:
-                type: iron_boots
-                enchantments: protection_fall~4
+                type: iron-boots
+                enchantments: protection-fall~4
         effects: speed~2, jump~2
+        max-health: 20.0
     Pyro:
         items:
             slot0:
-                type: wood_sword
-                enchantments: fire_aspect~2
+                type: wood-sword
+                enchantments: fire-aspect~2
             slot1:
-                type: flint_and_steel
+                type: flint-and-steel
             slot3:
                 type: tnt
                 amount: 8
         armour:
             helmet:
-                type: leather_helmet
-                enchantments: protection_fire~4
+                type: leather-helmet
+                enchantments: protection-fire~4
             chestplate:
-                type: leather_chestplate
-                enchantments: protection_fire~4
+                type: leather-chestplate
+                enchantments: protection-fire~4
             leggings:
-                type: leather_leggings
-                enchantments: protection_fire~4
+                type: leather-leggings
+                enchantments: protection-fire~4
             boots:
-                type: leather_boots
-                enchantments: protection_fire~4
-        effects: fire_resistance~1
+                type: leather-boots
+                enchantments: protection-fire~4
+        effects: fire-resistance~1
+        max-health: 20.0
     Tank:
         items:
             slot0:
-                type: stone_sword
+                type: stone-sword
         armour:
             helmet:
-                type: diamond_helmet
-                enchantments: protection_explosions~3
+                type: diamond-helmet
+                enchantments: protection-explosions~3
             chestplate:
-                type: diamond_chestplate
-                enchantments: protection_explosions~3
+                type: diamond-chestplate
+                enchantments: protection-explosions~3
             leggings:
-                type: diamond_leggings
-                enchantments: protection_explosions~3
+                type: diamond-leggings
+                enchantments: protection-explosions~3
             boots:
-                type: diamond_boots
-                enchantments: protection_explosions~3
-        effects: slow~1
+                type: diamond-boots
+                enchantments: protection-explosions~3
+        effects: slow~2
+        max-health: 30.0
     Swordsman:
         items:
             slot0:
-                type: diamond_sword
-                enchantments: damage_all~1
+                type: diamond-sword
+                enchantments: damage-all~1
+        armour:
+            helmet:
+                type: leather-helmet
+            chestplate:
+                type: leather-chestplate
+            leggings:
+                type: leather-leggings
+            boots:
+                type: leather-boots
+        max-health: 20.0
     Archer:
         items:
             slot0:
                 type: bow
-                enchantments: arrow_infinite~1, arrow_knockback~2
+                enchantments: arrow-knockback~2, arrow-infinite~1
                 name: Long Bow
             slot1:
-                type: ender_pearl
+                type: ender-pearl
                 amount: 4
             slot8:
                 type: arrow
         armour:
             helmet:
-                type: chainmail_helmet
-                enchantments: protection_projectile~2
+                type: chainmail-helmet
+                enchantments: protection-projectile~2
             chestplate:
-                type: chainmail_chestplate
-                enchantments: protection_projectile~2
+                type: chainmail-chestplate
+                enchantments: protection-projectile~2
             leggings:
-                type: chainmail_leggings
-                enchantments: protection_projectile~2
+                type: chainmail-leggings
+                enchantments: protection-projectile~2
             boots:
-                type: chainmail_boots
-                enchantments: protection_projectile~2
+                type: chainmail-boots
+                enchantments: protection-projectile~2
+        max-health: 20.0
     Medic:
         items:
             slot0:
-                type: gold_sword
+                type: gold-sword
                 enchantments: knockback~2
                 name: Rusty Syringe
             slot1:
-                type: golden_apple
+                type: golden-apple
             slot7:
                 type: potion
                 data: 16389
@@ -106,17 +120,18 @@ classes:
                 amount: 2
         armour:
             helmet:
-                type: leather_helmet
-                enchantments: protection_environmental~2
+                type: leather-helmet
+                enchantments: protection-environmental~2
                 colour: 177, 93, 155
+        max-health: 40.0
     Magician:
         items:
             slot0:
                 type: stick
                 name: Magic Staff
-                enchantments: damage_all~4, knockback~1
+                enchantments: damage-all~2, knockback~1
             slot1:
-                type: ender_pearl
+                type: ender-pearl
                 amount: 16
             slot5:
                 type: potion
@@ -128,34 +143,37 @@ classes:
             slot7:
                 type: potion
                 data: 16388
-                amount: 8
+                amount: 4
             slot8:
                 type: potion
                 data: 16458
+                amount: 4
         armour:
             helmet:
-                type: iron_helmet
+                type: iron-helmet
             chestplate:
-                type: iron_chestplate
+                type: iron-chestplate
             leggings:
-                type: iron_leggings
+                type: iron-leggings
             boots:
-                type: iron_boots
-                enchantments: protection_fall~4
+                type: iron-boots
+                enchantments: protection-fall~4
+        max-health: 20.0
     Spy:
         items:
             slot0:
-                type: iron_sword
+                type: iron-sword
                 name: Dagger
             slot1:
                 type: potion
                 data: 8206
-        effects: speed~1, water_breathing~1
+        effects: water-breathing~1
+        max-health: 10.0
     Miner:
         items:
             slot0:
-                type: diamond_pickaxe
-                enchantments: damage_all~2
+                type: diamond-pickaxe
+                enchantments: damage-all~1
                 name: Sharpened Pick
             slot1:
                 type: potion
@@ -163,31 +181,24 @@ classes:
                 amount: 4
         armour:
             helmet:
-                type: leather_helmet
-                enchantments: protection_environmental~3
-            chestplate:
-                type: leather_chestplate
-                enchantments: protection_environmental~3
-            leggings:
-                type: leather_leggings
-                enchantments: protection_environmental~3
-            boots:
-                type: leather_boots
-                enchantments: protection_environmental~3
-        effects: fast_digging~2
+                type: iron-helmet
+                enchantments: protection-environmental~3
+        effects: fast-digging~2
+        max-health: 20.0
     Dwarf:
         items:
             slot0:
-                type: diamond_axe
-                enchantments: damage_all~3
+                type: diamond-axe
+                enchantments: damage-all~1
                 name: Battle Axe
         armour:
             helmet:
-                type: leather_helmet
+                type: leather-helmet
             chestplate:
-                type: leather_chestplate
+                type: leather-chestplate
             leggings:
-                type: leather_leggings
+                type: leather-leggings
             boots:
-                type: leather_boots
-        effects: speed~2, slow_digging~8
+                type: leather-boots
+        effects: speed~1, slow-digging~8
+        max-health: 14.0
