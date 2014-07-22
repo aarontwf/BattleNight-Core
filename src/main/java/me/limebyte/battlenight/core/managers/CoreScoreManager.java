@@ -167,6 +167,7 @@ public class CoreScoreManager implements ScoreManager {
             item = api.getMessenger().format(item, i + 1, arena.getDisplayName());
             String vote = item.length() > 16 ? item.substring(0, 16) : item;
             Score score = sidebar.getScore(vote);
+            score.setScore(1);
             score.setScore(arena.getVotes());
         }
     }
