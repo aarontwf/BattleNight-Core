@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 
 public class BlockListener extends APIRelatedListener {
 
@@ -36,6 +37,13 @@ public class BlockListener extends APIRelatedListener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         event.setCancelled(shouldPrevent(event.getPlayer()));
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPaintingBreak(HangingBreakByEntityEvent event) {
+        if (event.getRemover() instanceof Player) {
+            event.setCancelled(shouldPrevent((Player) event.getRemover()));
+        }
     }
 
     private boolean shouldPrevent(Player player) {
