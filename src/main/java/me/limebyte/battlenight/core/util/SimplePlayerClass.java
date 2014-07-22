@@ -52,6 +52,8 @@ public class SimplePlayerClass implements PlayerClass {
         Metadata.set(player, "class", name);
 
         // Main Inventory
+        inv.clear();
+        player.updateInventory();
         inv.setContents(items.toArray(new ItemStack[items.size()]));
 
         // Armour
@@ -59,6 +61,8 @@ public class SimplePlayerClass implements PlayerClass {
         inv.setChestplate(armour.get(1));
         inv.setLeggings(armour.get(2));
         inv.setBoots(armour.get(3));
+
+        player.updateInventory();
 
         // Effects
         for (PotionEffect effect : player.getActivePotionEffects()) {
